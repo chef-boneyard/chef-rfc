@@ -10,32 +10,32 @@ There are a number of standard installation packages which can specified or dete
 Windows also supports installing features (formerly components) which are special packages that come with windows.
 Features map closely to the package resource in Chef, so we can make additional providers rather than add a core 'feature' resource.
 
-## Resources
+## New Core Resources/Providers
 
 ### WindowsPackage 
-Shortcut Resource Name: None
+Shortcut Resource Name: `none`
 
 This would be the default package provider on windows, so you would use the 'package' resource and wouldn't need a shortcut.
 A windows\_package shortcut resource would be overridden by the package LWRP in the windows cookbook, causing confusion if you were
 still using other parts of the windows cookbook.
 
 ### DISMPackage
-Shortcut Resource Name: dism\_package
+Shortcut Resource Name: `dism_package`
 
 ### ServerManagerPackage
-Shortcut Resource Name: server\_manager\_package
+Shortcut Resource Name: `server_manager_package`
 
 ## Windows Cookbook
 
 The existing windows cookbook contains two relevent LWRPs, package and feature.
 
 ### Resources
-* package
-    types: msi, inno, nsis, wise, installshield, custom
-    examples: putty-0.60-installer.exe, 7z920-x64.msi, 'Google Chrome'
-* feature
-    types: dism, servermanagercmd
-    examples: DHCPServer, TelnetClient, TFTP, CertificateServices
+* package  
+    types: msi, inno, nsis, wise, installshield, custom  
+    examples: putty-0.60-installer.exe, 7z920-x64.msi, 'Google Chrome'  
+* feature  
+    types: dism, servermanagercmd  
+    examples: DHCPServer, TelnetClient, TFTP, CertificateServices  
 
 ### Providers
 * package: handles different installers with a set of default flags for the options attribute
