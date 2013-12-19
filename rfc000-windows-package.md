@@ -16,14 +16,55 @@ Features map closely to the package resource in Chef, so we can make additional 
 Shortcut Resource Name: `none`
 
 This would be the default package provider on windows, so you would use the 'package' resource and wouldn't need a shortcut.
-A windows\_package shortcut resource would be overridden by the package LWRP in the windows cookbook, causing confusion if you were
+
+If we used a shortcut resource named windows\_package it would be overridden by the package LWRP in the windows cookbook, causing confusion if you were
 still using other parts of the windows cookbook.
+
+#### Examples
+
+```
+windows_package "PuTTY version 0.60" do
+  source "http://the.earth.li/~sgtatham/putty/latest/x86/putty-0.60-installer.exe"
+  installer_type :inno
+  action :install
+end
+```
+
+```
+windows_package "VLC media player 1.1.10" do
+  source "http://superb-sea2.dl.sourceforge.net/project/vlc/1.1.10/win32/vlc-1.1.10-win32.exe"
+  action :install
+end
+```
 
 ### DISMPackage
 Shortcut Resource Name: `dism_package`
 
+#### Examples
+```
+dism_package "IIS"
+```
+
+```
+package "IIS" do
+  provider Chef::Provider::Package::DISM
+  action :install
+```
+
 ### ServerManagerPackage
 Shortcut Resource Name: `server_manager_package`
+
+#### Examples
+
+```
+server_manager_package "Web-Server"
+```
+
+```
+package "Web-Server" do
+  provider Chef::Provider::Package::ServerManager
+  action :install
+```
 
 ## Windows Cookbook
 
