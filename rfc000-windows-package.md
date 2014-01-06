@@ -23,7 +23,7 @@ still using other parts of the windows cookbook.
 #### Examples
 
 ```
-windows_package "PuTTY version 0.60" do
+package "PuTTY version 0.60" do
   source "http://the.earth.li/~sgtatham/putty/latest/x86/putty-0.60-installer.exe"
   installer_type :inno
   action :install
@@ -31,7 +31,7 @@ end
 ```
 
 ```
-windows_package "VLC media player 1.1.10" do
+package "VLC media player 1.1.10" do
   source "http://superb-sea2.dl.sourceforge.net/project/vlc/1.1.10/win32/vlc-1.1.10-win32.exe"
   action :install
 end
