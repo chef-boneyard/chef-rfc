@@ -78,6 +78,7 @@ The following examples demonstrate the intended use cases enabled by the change.
     end
 ```
 
+
 #### Setting guard parameters
 
 ```ruby
