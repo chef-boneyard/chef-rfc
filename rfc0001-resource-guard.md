@@ -97,11 +97,11 @@ The following examples demonstrate the intended use cases enabled by the change.
     end
 ```ruby
 
-#### Current Guard Behavior for Powershell
+#### Current Guard Behavior for powershell_script
 
 ```ruby
 
-    # Yuk. Let me look up all the right cli args to powershell.
+    # Yuk. Let me look up all the right cli args to powershell.exe.
     # Oh, do I have to quote my cmd -- what kind of quotes again? So much fun
     # for me. This is CHEF-4553.
     powershell_script "oldguard" do
@@ -110,7 +110,7 @@ The following examples demonstrate the intended use cases enabled by the change.
     end
 ```
 
-#### New PowerShell default behaviors
+#### New powershell_script default behaviors
 
 ```ruby
 
@@ -133,7 +133,7 @@ The following examples demonstrate the intended use cases enabled by the change.
     end
 ```
 
-#### PowerShell boolean behavior
+#### powershell_script boolean behavior
 
 ```ruby
 
