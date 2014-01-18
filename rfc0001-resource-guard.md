@@ -78,7 +78,6 @@ The following examples demonstrate the intended use cases enabled by the change.
     end
 ```
 
-
 #### Setting guard parameters
 
 ```ruby
@@ -96,16 +95,13 @@ The following examples demonstrate the intended use cases enabled by the change.
         end
       end
     end
-```ruby
-
-
+```
 
 #### Current Guard Behavior for powershell_script
 
-
 ```ruby
 
-# Yuk. Let me look up all the right cli args to powershell.exe.
+    # Yuk. Let me look up all the right cli args to powershell.exe.
     # Oh, do I have to quote my cmd -- what kind of quotes again? So much fun
     # for me. This is CHEF-4553.
     powershell_script "oldguard" do
