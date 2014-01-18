@@ -101,7 +101,7 @@ The following examples demonstrate the intended use cases enabled by the change.
 
 ```ruby
 
-    # Yuk. Let me look up all the right cli args to powershell.exe.
+# Yuk. Let me look up all the right cli args to powershell.exe.
     # Oh, do I have to quote my cmd -- what kind of quotes again? So much fun
     # for me. This is CHEF-4553.
     powershell_script "oldguard" do
@@ -118,9 +118,9 @@ advantage of resource guard support.
 
 ```ruby
 
-    # Specifically for the powershell\_script resource, you can just specify
+    # Specifically for the powershell_script resource, you can just specify
     # a command string, and it will be executed with powershell, not cmd
-    powershell\_script "defaultguard" do
+    powershell_script "defaultguard" do
       code 'new-smbshare systemshare $env:systemdrive\'
       not_if 'get-smbshare systemshare' # This uses powershell, not cmd
     end
@@ -135,7 +135,7 @@ advantage of resource guard support.
     # itself? You can avoid extra scirpt code to translate the boolean into
     # a process exit code that results in the right true / false behavior 
     # for the guard
-    powershell\_script "set execution policy" do
+    powershell_script "set execution policy" do
       code "set-executionpolicy remotesigned"
       not_if "(get-executionpolicy) -eq 'remotesigned'" # Like I barely left Ruby -- wow!
     end
@@ -147,7 +147,7 @@ advantage of resource guard support.
 
     # And look, the not_if will run as an :i386 process because of the
     # :i386 attribute for the parent resource
-    powershell\_script "set i386 execution policy" do
+    powershell_script "set i386 execution policy" do
       architecture :i386
       code "set-executionpolicy remotesigned"
       not_if "if ((get-executionpolicy) -ne 'remotesigned') { exit 1 }"
