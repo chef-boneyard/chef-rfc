@@ -19,7 +19,7 @@ end of this document.
 
 ## Resource guard proposal
 
-A functional version of the proposal can be found at [here](https://github.com/opscode/chef/tree/adamed-chef-4553-dsl-interpolated-status).
+A functional version of the proposal can be found at https://github.com/opscode/chef/tree/adamed-chef-4553-dsl-interpolated-status.
 
 Guard expressions for all resources will be extended to include a method and
 block syntax like that used within the recipe DSL to enable the invocation of
@@ -120,6 +120,9 @@ The following examples demonstrate the intended use cases enabled by the change.
       code 'new-smbshare systemshare $env:systemdrive\'
       not_if 'get-smbshare systemshare' # This uses powershell, not cmd
     end
+```
+
+```ruby
 
     # And look, the not_if will run as an :i386 process because of the
     # :i386 attribute for the parent resource
