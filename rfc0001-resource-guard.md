@@ -111,29 +111,22 @@ The following examples demonstrate the intended use cases enabled by the change.
 ```
 
 #### New powershell_script default behaviors
+The examples below are changes to the powershell\_script resource that take
+advantage of resource guard support.
+
+##### PowerShell guard interpeter default
 
 ```ruby
 
-    # Specifically for the powershell_script resource, you can just specify
+    # Specifically for the powershell\_script resource, you can just specify
     # a command string, and it will be executed with powershell, not cmd
-    powershell_script "defaultguard" do
+    powershell\_script "defaultguard" do
       code 'new-smbshare systemshare $env:systemdrive\'
       not_if 'get-smbshare systemshare' # This uses powershell, not cmd
     end
 ```
 
-```ruby
-
-    # And look, the not_if will run as an :i386 process because of the
-    # :i386 attribute for the parent resource
-    powershell_script "set i386 execution policy" do
-      architecture :i386
-      code "set-executionpolicy remotesigned"
-      not_if "if ((get-executionpolicy) -ne 'remotesigned') { exit 1 }"
-    end
-```
-
-#### powershell_script boolean behavior
+##### powershell\_script boolean behavior
 
 ```ruby
 
@@ -142,9 +135,22 @@ The following examples demonstrate the intended use cases enabled by the change.
     # itself? You can avoid extra scirpt code to translate the boolean into
     # a process exit code that results in the right true / false behavior 
     # for the guard
-    powershell_script "set execution policy" do
+    powershell\_script "set execution policy" do
       code "set-executionpolicy remotesigned"
       not_if "(get-executionpolicy) -eq 'remotesigned'" # Like I barely left Ruby -- wow!
+    end
+```
+
+##### powershell\_script architecture inheritance 
+
+```ruby
+
+    # And look, the not_if will run as an :i386 process because of the
+    # :i386 attribute for the parent resource
+    powershell\_script "set i386 execution policy" do
+      architecture :i386
+      code "set-executionpolicy remotesigned"
+      not_if "if ((get-executionpolicy) -ne 'remotesigned') { exit 1 }"
     end
 ```
 
@@ -185,7 +191,7 @@ specific customizations that allow for usage of the PowerShell language via
 this resource to be much more intuitive within the context of Chef's
 Ruby-based syntax.
 
-##### Guard syntax for powershell_script
+##### Guard syntax for powershell\_script
 
 #### Conditional semantics
 
