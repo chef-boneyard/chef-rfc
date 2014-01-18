@@ -98,6 +98,7 @@ The following examples demonstrate the intended use cases enabled by the change.
     end
 ```ruby
 
+
 #### Current Guard Behavior for powershell_script
 
 ```ruby
