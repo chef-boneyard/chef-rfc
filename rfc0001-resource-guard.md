@@ -7,7 +7,7 @@ external script code in such expressions.
 
 ## Motivation
 This document proposes some general solutions to the specific issue raised with
-[chef-4553](https://tickets.opscode.com/browse/CHEF-4553). In particular, that
+[CHEF-4553](https://tickets.opscode.com/browse/CHEF-4553). In particular, that
 ticket posits that Windows users of the powershell\_script resource expect
 that guards (i.e. the only\_if and not\_if conditionals) evaluated in the context of a powershell_script
 block use the powershell\_script interpreter, not the cmd.exe (batch file)
@@ -146,7 +146,8 @@ advantage of resource guard support.
 ```ruby
 
     # And look, the not_if will run as an :i386 process because of the
-    # :i386 attribute for the parent resource
+    # architecture attribute for the parent resource which powershell_script
+    # resource guards will inherit from the enclosing resource
     powershell_script "set i386 execution policy" do
       architecture :i386
       code "set-executionpolicy remotesigned"
@@ -156,7 +157,7 @@ advantage of resource guard support.
 
 ### Resource guard formal description
 
-Resource guards' ipmact on the Chef DSL can be summarized as follows:
+Resource guards' impact on the Chef DSL can be summarized as follows:
 
 * Within a block passed as an argument to a guard, a resource block may be specified using a syntax similar to that used to specify a resource within a recipe
 * Such resource blocks may not specify an identifier
@@ -180,6 +181,30 @@ These changes are described in further detail below.
 
 #### Resource guard syntax
 
+The syntax for resources and guards in the existing Chef DSL is the following
+
+    resource ::= <resource_type_name> resource_identifier resource_block
+    resource_block ::= do LINEFEED
+        [attribute_assignment_sequence]
+        LINEFEED end
+    attribute_assignment_sequence ::= attribute_assignment |
+        attribute_assignment LINEFEED attribute_assignment_sequence
+    attribute_assignment ::= <attribute_name> ruby_expression |
+        guard_conditional
+    ruby_block ::= do LINEFEED
+        [ruby_code]
+        LINEFEED end
+    guard_block ::= ruby_block
+    guard_conditional guard_type ruby_string | ruby_block
+    guard_type not_if | only_if
+
+Resource guards add additional productions to the syntax:
+
+    guard_block ::= resource_guard_block
+    resource_guard_block ::= do LINEFEED
+    resource_type_name> resource_block
+    LINEFEED end
+
 As earlier examples imply, guard resources augment only\_if and not\_if
 attributes by allowing the block arguments for those attributes to contain a
 block of code that resembles a resource block, except that an identifier is
@@ -191,11 +216,129 @@ specific customizations that allow for usage of the PowerShell language via
 this resource to be much more intuitive within the context of Chef's
 Ruby-based syntax.
 
-##### Guard syntax for powershell\_script
-
 #### Conditional semantics
 
-##### PowerShell Conditional semantics
+Guards are ultimately evaluated as expressions with a Ruby boolean value, i.e.
+**true** or **false** in the Ruby language. As indicated in the syntax
+description, either a **string** or **block** may follow the not\_if or
+only\_if terminal:
+
+* When a string is passed to a guard, the existing implementation executes the /bin/sh interpreter on Unix or
+cmd.exe on Windows with that string to be evaluated as a script by the
+interpreter. If the interpreter exits with a 0 (success) code, this is
+interpreted as a boolean true, otherwise it is false.
+* When a block is passed to a guard, the code in the block will be executed,
+  and the value of the last line of code executed by the block will be the
+  boolean value of the block, converted to a boolean value in a manner
+  consistent with the Ruby \!\! operator.
+  
+Resource guards are an extension of the latter case, where a resource block is
+defined within the block passed to the guard and an action on the resource is executed. The truth value of
+that resource block is the truth value of the guard passed to the block, and
+the value is defined in the following way:
+
+* If the resource action executes without raising an exception, the value is **true**
+* If the action raises a resource-defined set of handled exceptions during
+  execution, the values is **false**
+* If any other exception occurs during execution of the action, the resource
+  containing the guard will fail execution with that exception, which will
+  ultimately terminate the Chef run as a failure
+
+##### script resource conditional semantics
+To enable the usage as guard resources of resources derived from **Chef::Resource::Script**,
+known colloquially as script resources, all such resources when executed as
+guard resources will handle **Mixlib::Shellout::ShellCommandFailed**. 
+
+By doing this, usage of script resources has the same conditional and
+exception behavior as the case described earlier when a string is passed to a
+not\_if or only\_if guard attribute since this exception is raised precisely
+in the case where a string passed as a guard would have been evaluated by
+/bin/sh or cmd.exe as exiting with a failure status code.
+
+This gives any script resource, for example bash, the ability to behave
+exactly as the string argument usage for guards, extending the range of shell
+script languages that may be used in guard expressions.
+
+#### powershell\_script conditional semantics
+
+#### powershell\_script result code interpolation
+Consider the Chef DSL fragment below where a string passed to an only\_if guard performs a
+boolean test using the sh "[" command:
+
+    bash "systemrestart" do
+      code '~/rebootnow.sh'
+      only_if '[ "$USER" == "root" ]'
+    end
+
+This results in the bash script 'rebootnow.sh' being executed only when this
+code is executed with chef-client running as root. The boolean-like expression
+in the sh script passed to the guard is treated as a boolean result for the
+guard, resulting in a natural way of using the sh interpreter from within Chef
+and Ruby.
+
+A similar mapping between boolean results for strings passed to guards on the
+Windows platform does not exist. This partially due to guards always being
+executed with cmd.exe. However, the behavior shown on Unix guards that
+interpret script strings is actually present in the script resources
+themselves when the same boolean-like code is executed as part of the **code**
+attribute. Here's an example:
+
+    bash "myfail" do
+      code '[ "$USER" == "root" ]'
+    end
+
+If this resource is run as the root user, it will succeed and subsequent
+resources in the recipe can be executed. If the user is not root, this will
+result in /bin/sh returning a non-zero exit code, and the execution will fail,
+terminating any chef-client run.
+
+While the utility of translating boolean values to interpreter exit codes is debatable within a resource executed
+at recipe scope, it is consistent with the much more useful guard behavior
+described in the previous example.
+
+Contrast this to the powershell\_script resource, which does not interpolate
+boolean results of scripts to exit codes consistent with truth or falsity in
+any context. To rectify this and enable the "boolean script as guard
+expression" scenario, we propose emulating such interpolation.
+
+The powershell\_script resource will get a new attribute,
+**convert\_boolean\_return**, which can take a value of **true* or **false**, 
+The default value if not specified is **true**, which means that if the
+PowerShell language would have evaluated the script defined in
+powershell\_script's code attribute as having a boolean type (PowerShell, like
+Ruby, is a typed language), the process exit code will be **0** if the value of
+the script fragment is **true** in the PowerShell language, otherwise it will
+be **1**. 
+
+This results in a behavior similar to the bash or sh interpreters, where the
+boolean-like result of the test command causes the interpreter process to exit with 0 if
+the test command resulted in a true result, 1 otherwise, assuming the test
+command was the last line of the script.
+
+This enables use cases where a test that can be expressed very cleanly with
+the PowerShell language can be used directly within a guard expression with no
+need to try to generate a process exit code that Chef will interpret as a true
+or false value. For example, the true or false value of a PowerShell
+expression like 
+
+    ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+
+or
+
+     (gi WSMan:\localhost\Shell\MaxMemoryPerShellMB).value -ge 300
+
+can be passed directly to Ruby and evaluated as true or false by the guard
+without specifying any additonal PowerShell code. This interpolation of
+boolean return values also happens when a string of code is passed to a guard
+in a powershell\_script resource, a scenario that builds on top of the
+previously described switch to the PowerShell language as the script interpreter of
+strings passed to guards in the powershell\_script resource.
+
+Since it is possible that usage of powershell\_script that predates this
+feature could be affected by this conversion, the **convert\_boolean\_return**
+attribute may be set to false to restore preexisting behavior.
+
+#### Attribute inheritance
 
 ### Questions
 Here are a few questions:
@@ -207,6 +350,9 @@ we foresee other side effects (positive or negative) beyond the intended
 * The interpetation of resource action execution into a boolean value is
   currently based on whether or not it returns an exception. This is somewhat
   arbitrary -- we could allow for some other other truth mapping.
+* Should the implementation enforce that only one resource guard may be used
+  within the block provided to the not\_if or only\_if attribute? There is no
+  use case for more than one.
 
 ### Issues with current behavior -- why change?
 The existing behavior is actually by design, but it's not delightful. Current behavior is that when a
@@ -227,9 +373,12 @@ provide this functionality in a more natural fashion.
 
 Even for Unix users, however, there is still room to be delightful since
 /bin/sh, while not the antediluvian relic that is cmd.exe on Windows, is
-certainly not a modern shell and thus requires users of, say, the bash resource
-to use two different dialects, a modern and familiar one for the code to be
-executed, and a more limited version for the guards. It's confusing behavior
+certainly not a modern shell. Thus the usage of requires users of, say, the bash resource,
+to use two different shell dialects. The bash dialect is a modern and familiar one for the code to be
+executed by the script resource, and sh is a more limited one for the guards. It's confusing behavior
 for new users. And even for those who are experienced,
-requires awkward workarounds like explicitly running bash or researching
-workarounds for missing features in sh.
+it requires awkward workarounds like explicitly running bash with some set of
+switches and/or researching workarounds for missing features in sh. Overall,
+it decreases the efficiency of using resources like bash -- one might just as
+well use the generic script or execute resources if knowledge of the best way
+to a given interpreter cannot be contained in the resource.
