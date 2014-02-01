@@ -1,10 +1,10 @@
 # Anonymous guards and simplification of conditionals
 
 Anonymous guards are a proposed extension of the Chef domain-specific language (DSL) to
-allow the use of resource within a guard expression (i.e. "only\_if" or
-"not\_if" block) in order to reduce the complexity in both number of languages
+allow the use of Chef resources within a guard expression (i.e. "only\_if" or
+"not\_if" block). The goal is to reduce the complexity in both number of languages
 and boilerplate code required to coerce interpreted script language results
-into meaningful boolean guard conditionals. Anonymous guards make Chef
+into meaningful Boolean guard conditionals. Anonymous guards make Chef
 resources delightful.
 
 ## Document status
@@ -19,7 +19,7 @@ An open source ticket for the Chef project describes part of a problem
 encountered by users of Chef:
 [CHEF-4553](https://tickets.opscode.com/browse/CHEF-4553). In particular, that
 ticket posits that Windows users of the powershell\_script resource expect
-that guards (i.e. the only\_if and not\_if conditionals) evaluated in the context of a powershell_script
+that guards (i.e. the only\_if and not\_if conditionals) evaluated in the context of a powershell\_script
 block use the powershell\_script interpreter, not the cmd.exe (batch file)
 interpreter. This is a change from the current state of affairs, since in general there is no link between the interpreter used by a
 script resource. This is an issue that affects both Windows and *nix users.
@@ -33,12 +33,12 @@ Anonymous guards and related improvements discussed in the document address
 the following issues:
 
 * CHEF-4553: Users of the powershell\_script resource are forced to execute
-  script guards with cmd.exe's batch language instead of the PowerShell
+  script guards with CMD?s batch language instead of the PowerShell
   language.
 * Users of the bash resource who want to use bash in script guards must explicitly invoke bash with properly quoted
   command arguments in the guard
 * Windows users of the powershell\_script resource do not have a way to use
-  PowerShell in script guards in a concise, intuitive, quasi-boolean fashion,
+  PowerShell in script guards in a concise, intuitive, quasi-Boolean fashion,
   while users of the script, csh, bash, and other resources have this
 * On Windows, script guards are always executed with the 32-bit process architecture and
   will be affected by the absence of system state exposed only to 64-bit
@@ -55,8 +55,7 @@ documented at http://docs.opscode.com/chef/resources.html.
 
 These definitions are used throughout the discussion:
 
-* **Chef resource or resource:** an element of the Chef DSL that represents or
-  system componentor any other aspect of system state to be managed by Chef.
+* **Chef resource or resource:** an element of the Chef DSL that represents configuration, system components, or any other aspect of system state to be managed by Chef.
   The resource contains attributes that define the desired state, and an
   action that can be taken by a provider evaluating the resource such as one
   that changes the actual state of the system the desired state. State such as
@@ -66,7 +65,7 @@ These definitions are used throughout the discussion:
     form of a string to be executed by a shell or a Ruby block. Such an
     expression is evaluated before running the resource's action, and
     depending on whether it results in a true or false value, will control
-    whether or not the resource'a action is executed or skipped.
+    whether or not the resource?s action is executed or skipped.
 * **script guard:** A guard expression that is given as a string to be
     evaluated by a shell command interpreter. When the interpreter's execution
     of the script results in a successful (i.e. non-zero) process exit code, the guard's value
@@ -82,7 +81,7 @@ These definitions are used throughout the discussion:
     failure process status) inside of a block guard. They are anonymous
     because unlike resources that are part of the chef-client's run context,
     anonymous resources have no unique name property because they exist in
-    isolation as a form of boolean expression, not as a unique part of the
+    isolation as a form of Boolean expression, not as a unique part of the
     client's execution.
 
 ## Overview
@@ -95,7 +94,7 @@ resources. The goals in doing this are:
 * Address [CHEF-4553](https://tickets.opscode.com/browse/CHEF-4553) -- simplify convoluted expressions such as that below for
 Windows users
 ```
-not_if 'powershell -noninteractive -noprofile -commmand "exit [int32]((Get-ExecutionPolicy) -eq 'RemoteSigned')"'
+not_if 'powershell -noninteractive -noprofile -command "exit [int32]((Get-ExecutionPolicy) -eq 'RemoteSigned')"'
 ```
 * For guard expressions, allow Unix and Windows users to make use of familiar modern shells such as
   bash and PowerShell rather than ancient interpreters like sh or cmd.exe with
@@ -117,12 +116,12 @@ execution of resource actions:
 * Remove the identifier attribute of resources executed within a guard, since they are not in a
   runlist and need no unique identity
 * Enable inheritance of attributes from a given resource A for any resource B
-  executed executed as part of a block passed to a guard attribute of resource
+  executed as part of a block passed to a guard attribute of resource
   A
-* Change the interpretation of boolean error codes for PowerShell code
-  executed by the powershell\_script resource so that it returns boolean
+* Change the interpretation of Boolean error codes for PowerShell code
+  executed by the powershell\_script resource so that it returns Boolean
   values the same way that Unix shells like bash do when they evaluate
-  "boolean-like" statements
+  "Boolean-like" statements
 * Use the PowerShell interpreter for string commands passed to guard
   attributes of the powershell\_script resource
 
@@ -169,7 +168,7 @@ The following examples demonstrate the intended use cases enabled by the change.
 ```ruby
 
     # The normal command string syntax for guards lets you
-    # specify parameters like cwd, etc -- you can do the same
+    # specify parameters like cwd, etc. -- you can do the same
     # here by specifying those parameters in the anonymous resource
     bash "Override my guard attributes" do
       code 'echo override me'
@@ -199,13 +198,13 @@ advantage of anonymous guard support.
     end
 ```
 
-#### powershell\_script boolean behavior
+#### powershell\_script Boolean behavior
 
 ```ruby
 
     # What if guards evaluated powershell script code that powershell
     # evaluates as a boolean type as the actual boolean value of the guard
-    # itself? You can avoid extra scirpt code to translate the boolean into
+    # itself? You can avoid extra script code to translate the boolean into
     # a process exit code that results in the right true / false behavior 
     # for the guard
     powershell_script "set execution policy" do
@@ -238,21 +237,21 @@ Anonymous guards' impact on the Chef DSL can be summarized as follows:
   to values inherited from the same attributes in the resource that contains
   the guard
 * The resource block will cause the block passed to the guard to be
-  interpreted as a boolean true if the resource executes without an exception
+  interpreted as a Boolean true if the resource executes without an exception
 * If the resource block raises an exception when an action is run, the block
   passed to the guard is evaluated as false
 
 In addition to these changes to the DSL, the following customizations are made
 to the powershell\_script resources' guard implementation
 
-* If a string rather than a block is passed to a guard attribute for a powershell\_script resource, the string will be evaluated by the the PowerShell interpreter instead of the cmd.exe interpreter
+* If a string rather than a block is passed to a guard attribute for a powershell\_script resource, the string will be evaluated by the PowerShell interpreter instead of the cmd.exe interpreter
 * If the last expression evaluated by PowerShell for the given string results
   in a PowerShell boolean data type, the guard will evaluate with the
-  same truth as that boolean PowerShell expression, rather true.
+  same truth as that Boolean PowerShell expression, rather than true.
 
 These changes are described in further detail below.
 
-### Anonyous guard syntax
+### Anonymous guard syntax
 
 The syntax for resources and guards in the existing Chef DSL is the following
 
@@ -293,7 +292,7 @@ Ruby-based syntax.
 
 ### Conditional semantics
 
-Guards are ultimately evaluated as expressions with a Ruby boolean value, i.e.
+Guards are ultimately evaluated as expressions with a Ruby Boolean value, i.e.
 **true** or **false** in the Ruby language. As indicated in the syntax
 description, either a **string** or **block** may follow the not\_if or
 only\_if terminal:
@@ -301,10 +300,10 @@ only\_if terminal:
 * When a string is passed to a guard, the existing implementation executes the /bin/sh interpreter on Unix or
 cmd.exe on Windows with that string to be evaluated as a script by the
 interpreter. If the interpreter exits with a 0 (success) code, this is
-interpreted as a boolean true, otherwise it is false.
+interpreted as a Boolean true, otherwise it is false.
 * When a block is passed to a guard, the code in the block will be executed,
   and the value of the last line of code executed by the block will be the
-  boolean value of the block, converted to a boolean value in a manner
+  Boolean value of the block, converted to a Boolean value in a manner
   consistent with the Ruby \!\! operator.
   
 The behaviors above precede this proposal and are active in Chef 11.10 and
@@ -375,17 +374,17 @@ the following more concise, less cumbersome, and less error-prone expression:
     end
 ```
 
-### powershell\_script boolean result code interpretation
+### powershell\_script Boolean result code interpretation
 
 The value of guard conditionals for powershell\_script gets the following
 modification:
 
 * The process exit code for a PowerShell script fragment executed by the
-  powershell\_script resource will support passing a the value of a boolean
+  powershell\_script resource will support passing a the value of a Boolean
   expression from the script through the interpreter exit code
-* Boolean interpretation is only valid if the script fragement could have been
+* Boolean interpretation is only valid if the script fragment could have been
   executed as the definition of a PowerShell function with a return type of
-  **bool**, a PowerShell type analogous to a typical boolean data type.
+  **bool**, a PowerShell type analogous to a typical Boolean data type.
 * In this case, if the function return value is the PowerShell value **$true**,
   the exit code is 0 (overloaded with 'success'), otherwise function return
   value is **$false** and the exit code is 1.
@@ -396,9 +395,9 @@ Currently, script code that resulted in a type other than **bool** for the
 last line executed will always return 0. This new behavior for
 powershell\_script is actually functionally equivalent to the behavior of the bash shell.
 
-#### Motivation for boolean result code
+#### Motivation for Boolean result code
 Consider the Chef DSL fragment below where a string passed to an only\_if guard performs a
-boolean test using the sh "[" command:
+Boolean test using the sh "[" command:
 
     bash "systemrestart" do
       code '~/rebootnow.sh'
@@ -406,16 +405,16 @@ boolean test using the sh "[" command:
     end
 
 This results in the bash script 'rebootnow.sh' being executed only when this
-code is executed with chef-client running as root. The boolean-like expression
-in the sh script passed to the guard is treated as a boolean result for the
+code is executed with chef-client running as root. The Boolean-like expression
+in the sh script passed to the guard is treated as a Boolean result for the
 guard, resulting in a natural way of using the sh interpreter from within Chef
 and Ruby.
 
-A similar mapping between boolean results for strings passed to guards on the
+A similar mapping between Boolean results for strings passed to guards on the
 Windows platform does not exist. This partially due to guards always being
 executed with cmd.exe. However, the behavior shown on Unix guards that
 interpret script strings is actually present in the script resources
-themselves when the same boolean-like code is executed as part of the **code**
+themselves when the same Boolean-like code is executed as part of the **code**
 attribute. Here's an example:
 
     bash "myfail" do
@@ -427,18 +426,18 @@ resources in the recipe can be executed. If the user is not root, this will
 result in /bin/sh returning a non-zero exit code, and the execution will fail,
 terminating any chef-client run.
 
-While the utility of translating boolean values to interpreter exit codes is debatable within a resource executed
+While the utility of translating Boolean values to interpreter exit codes is debatable within a resource executed
 at recipe scope, it is consistent with the much more useful guard behavior
 described in the previous example.
 
 Contrast this to the existing powershell\_script resource, which does not interpolate
-boolean results of scripts to exit codes consistent with truth or falsity in
+Boolean results of scripts to exit codes consistent with truth or falsity in
 any context. The added interpolation for powershell\_script rectifies the
 deficiency in this resource compared to bash and the other Unix shell-based resources.
 
 ### Symmetry with Unix shells
 The result is a behavior similar to the bash or sh interpreters, where the
-boolean-like result of the test command causes the interpreter process to exit with 0 if
+Boolean-like result of the test command causes the interpreter process to exit with 0 if
 the test command resulted in a true result, 1 otherwise, assuming the test
 command was the last line of the script.
 
@@ -456,25 +455,25 @@ or
     (gi WSMan:\localhost\Shell\MaxMemoryPerShellMB).value -ge 300
 
 can be passed directly to Ruby and evaluated as true or false by the guard
-without specifying any additonal PowerShell code. This interpolation of
-boolean return values also happens when a string of code is passed to a guard
+without specifying any additional PowerShell code. This interpolation of
+Boolean return values also happens when a string of code is passed to a guard
 in a powershell\_script resource, a scenario that builds on top of the
 previously described switch to the PowerShell language as the script interpreter of
 strings passed to guards in the powershell\_script resource.
 
 Since it is possible that usage of powershell\_script that predates this
-feature could be affected by this conversion, the **convert\_boolean\_return**
+feature could be affected by this conversion, the **convert\_Boolean\_return**
 attribute of powershell\_script may be set to false to restore preexisting behavior.
 
-#### convert\_boolean\_return\_code atttribute
-The convert\_boolean\_return\_code attribute of the powershell\_script
+#### convert\_Boolean\_return\_code attribute
+The convert\_Boolean\_return\_code attribute of the powershell\_script
 resource allows users to revert the
 interpolation behavior to provide the same exit code behavior that preceded
 the interpolation change.
 
-The default value of convert\_boolean\_return\_code if not specified is **true**, which means that if the
+The default value of convert\_Boolean\_return\_code if not specified is **true**, which means that if the
 PowerShell language would have evaluated the script defined in
-powershell\_script's code attribute as having a boolean type (PowerShell, like
+powershell\_script's code attribute as having a Boolean type (PowerShell, like
 Ruby, is a typed language), the process exit code will be **0** if the value of
 the script fragment is **true** in the PowerShell language, otherwise it will
 be **1**. 
@@ -546,7 +545,7 @@ allow arbitrary resources to be used as guards. Consider this usage of guard res
       code 'java-bashd-ctl.sh -start'
       not_if do
         bash do
-          environment environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
+          environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
           code 'java-bashd-ctl.sh -test-started'        
         end       
       end
@@ -623,13 +622,13 @@ Here are a few questions:
 * Should we restrict the guard behavior to script resources only?
 * Should we restrict the frequency of resource blocks within guards to occur
   only 0 or 1 times since the use case for more than one is unclear.
-* The interpetation of resource action execution into a boolean value is
+* The interpretation of resource action execution into a Boolean value is
   currently based on whether or not it returns an exception. This is somewhat
-  arbitrary -- we could allow for some other other truth mapping.
+  arbitrary -- we could allow for some other truth mapping.
 * Should the implementation enforce that only one anonymous guard may be used
   within the block provided to the not\_if or only\_if attribute? There is no
   use case for more than one.
-* Should we use the **convert\_boolean\_return** attribute to allow for
+* Should we use the **convert\_Boolean\_return** attribute to allow for
   backward compatibility with the powershell\_script resource in Chef 11.6 -
   11.10? Or should we simply make the behavior the default and dispense with
   the new attribute?
@@ -666,3 +665,4 @@ switches and/or researching workarounds for missing features in sh. Overall,
 it decreases the efficiency of using resources like bash -- one might just as
 well use the generic script or execute resources if knowledge of the best way
 to a given interpreter cannot be contained in the resource.
+
