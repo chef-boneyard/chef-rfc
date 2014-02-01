@@ -1,11 +1,11 @@
-# Anonymous guards and simplification of conditionals
+# Anonymous resources and simplification of conditionals
 
-Anonymous guards are a proposed extension of the Chef domain-specific language (DSL) to
+Anonymous resources are a proposed extension of the Chef domain-specific language (DSL) to
 allow the use of Chef resources within a guard expression (i.e. "only\_if" or
 "not\_if" block). The goal is to reduce the complexity in both number of languages
 and boilerplate code required to coerce interpreted script language results
-into meaningful Boolean guard conditionals. Anonymous guards make Chef
-resources delightful.
+into meaningful Boolean guard conditionals. Anonymous resources make the Chef DSL
+delightful.
 
 ## Document status
 
@@ -29,7 +29,7 @@ end of the document.
 
 ## Problems addressed
 
-Anonymous guards and related improvements discussed in the document address
+anonymous resources and related improvements discussed in the document address
 the following issues:
 
 * CHEF-4553: Users of the powershell\_script resource are forced to execute
@@ -45,7 +45,7 @@ the following issues:
   processes
 * 
 
-# Anonymous guard specification
+# Anonymous resource specification
 
 A functional version of the specification can be found at https://github.com/opscode/chef/tree/adamed-chef-4553-dsl-interpolated-status.
 
@@ -184,7 +184,7 @@ The following examples demonstrate the intended use cases enabled by the change.
 
 ### powershell\_script default behavior examples
 The examples below are changes to the powershell\_script resource that take
-advantage of anonymous guard support.
+advantage of anonymous resource support.
 
 #### powershell\_script guard interpeter default example
 
@@ -219,7 +219,7 @@ advantage of anonymous guard support.
 
     # And look, the not_if will run as an :i386 process because of the
     # architecture attribute for the parent resource which powershell_script
-    # anonymous guards will inherit from the enclosing resource
+    # anonymous resources will inherit from the enclosing resource
     powershell_script "set i386 execution policy" do
       architecture :i386
       code "set-executionpolicy remotesigned"
@@ -227,9 +227,9 @@ advantage of anonymous guard support.
     end
 ```
 
-## Anonymous guard formal description
+## Anonymous resource formal description
 
-Anonymous guards' impact on the Chef DSL can be summarized as follows:
+Anonymous resources' impact on the Chef DSL can be summarized as follows:
 
 * Within a block passed as an argument to a guard, a resource block may be specified using a syntax similar to that used to specify a resource within a recipe
 * Such resource blocks may not specify an identifier
@@ -251,7 +251,7 @@ to the powershell\_script resources' guard implementation
 
 These changes are described in further detail below.
 
-### Anonymous guard syntax
+### Anonymous resource syntax
 
 The syntax for resources and guards in the existing Chef DSL is the following
 
@@ -270,7 +270,7 @@ The syntax for resources and guards in the existing Chef DSL is the following
     guard_conditional guard_type ruby_string | ruby_block
     guard_type not_if | only_if
 
-Anonymous guards add additional productions to the syntax:
+Anonymous resources add additional productions to the syntax:
 
     guard_block ::= do LINEFEED
         anonymous_block
@@ -309,7 +309,7 @@ interpreted as a Boolean true, otherwise it is false.
 The behaviors above precede this proposal and are active in Chef 11.10 and
 earlier versions.  
   
-Anonymous guards are an extension of the latter case, where a resource block is
+Anonymous resources are an extension of the latter case, where a resource block is
 defined within the block passed to the guard and an action on the resource is executed. The truth value of
 that resource block is the truth value of the guard passed to the block, and
 the value is defined in the following way proposed for Chef 11.12 and later:
@@ -484,7 +484,7 @@ some attributes from the resource that contains the guard.
 
 Inheritance follows these rules:
 
-* An attribute in an anonymous guard is inherited from the parent resource only if the
+* An attribute in an anonymous resource is inherited from the parent resource only if the
   attribute is in a set of inheritable attributes defined by the type of the
   guard resource
 * To be inherited, the attribute must not have been specified in the guard
@@ -625,7 +625,7 @@ Here are a few questions:
 * The interpretation of resource action execution into a Boolean value is
   currently based on whether or not it returns an exception. This is somewhat
   arbitrary -- we could allow for some other truth mapping.
-* Should the implementation enforce that only one anonymous guard may be used
+* Should the implementation enforce that only one anonymous resource may be used
   within the block provided to the not\_if or only\_if attribute? There is no
   use case for more than one.
 * Should we use the **convert\_Boolean\_return** attribute to allow for
