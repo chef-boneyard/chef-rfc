@@ -21,7 +21,7 @@ end
 
 ### Declaring Parallel Safety
 
-In order to run inside an `in_parallel` block, a resource must declare that it is parallel safe.  To do this, it should override the `parallel_safe` method and return `true`.  If the `parallel_safe` method is missing or returns `false`, the recipe will fail to compile.
+In order to run inside an `in_parallel` block, a resource must declare that it is parallel safe.  To do this, it should override the `parallel_safe?` method and return `true`.  If the `parallel_safe?` method is missing or returns `false`, the recipe will fail to compile.
 
 ### Notifications
 
