@@ -35,6 +35,10 @@ If a resource in a parallel group notifies another resource, behavior will depen
 
 If a resource action in a parallel group fails, the parallel group will run all other actions to completion (or failure) before exiting the recipe.
 
+### Group notifications
+
+When the entire group finishes, it is sometimes desirable to send a single notification.  The `subscribes` and `notifies` primitives work inside a `resource_group` (whether it is serial or parallel) and if *any* resource is changed, the group will send the notification.
+
 ## Future Features
 
 ### Thread pool configuration
