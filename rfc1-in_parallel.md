@@ -39,6 +39,43 @@ If a resource action in a parallel group fails, the parallel group will run all 
 
 When the entire group finishes, it is sometimes desirable to send a single notification.  The `subscribes` and `notifies` primitives work inside a `resource_group` (whether it is serial or parallel) and if *any* resource is changed, the group will send the notification.
 
+resource_groups can also be given names if a string is passed as the first parameter:
+
+```
+resource_group 'hi' do
+  ...
+end
+file '/x.txt'
+  action :nothing
+  subscribes 'resource_group[hi]', :create
+end
+```
+
+### Output formatting: groups
+
+Groups are a form of nested resource (whose output would be similar to that of use_inline_resources).  Nested resources currently print something like this:
+
+```
+Recipe: @recipe_files::/Users/jkeiser/oc/code/opscode/chef-rfc/blah.rb
+  * compound_resource[a] action create  * file[/Users/jkeiser/x.txt] action create (up to date)
+  * file[/Users/jkeiser/y.txt] action create (up to date)
+ (up to date)
+```
+
+With this proposal, a resource_group or other compound resource would print like this:
+
+```
+Recipe: @recipe_files::/Users/jkeiser/oc/code/opscode/chef-rfc/blah.rb
+ * compound_resource[a] action create
+   * file[/Users/jkeiser/x.txt] action create (up to date)
+   * file[/Users/jkeiser/y.txt] action create (up to date)
+   compound_resource[a] action create (up to date)
+```
+
+### Output formatting: parallelism and batch
+
+There are two major ways of formatting output when many things run in parallel: batched output or streamed output.  In the batch case, we queue output for each resource and print it when the resource completes.  In the streamed case, we print each piece of output as the resource goes.  By default, output is batched.  Streamed output is a future enhancement.
+
 ## Future Features
 
 ### Thread pool configuration
@@ -75,3 +112,7 @@ end
 ## Custom parallelization
 
 Some resource types (such as packages) handle parallelization internally.  We will create a directive allowing multiple resources to collaborate and run a single parallel thing to handle multiple actions.  For example, if you wrote 10 package directives inside `resource_group :parallel`, they would cooperate and run a single package installation command, passing all the packages to it.
+
+### Output formatting: parallelism and streaming
+
+We will support streamed output from parallel groups, so that you can see when things start and when they end.  How this happens and what the output looks like will be specified later.
