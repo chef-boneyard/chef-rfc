@@ -408,6 +408,19 @@ Currently, script code that resulted in a type other than **bool** for the
 last line executed will always return 0. This new behavior for
 powershell\_script is actually functionally equivalent to the behavior of the bash shell.
 
+#### convert\_Boolean\_return\_code attribute
+The convert\_Boolean\_return\_code attribute of the powershell\_script
+resource allows users to revert the
+interpolation behavior to provide the same exit code behavior that preceded
+the interpolation change.
+
+The default value of convert\_Boolean\_return\_code if not specified is **true**, which means that if the
+PowerShell language would have evaluated the script defined in
+powershell\_script's code attribute as having a Boolean type (PowerShell, like
+Ruby, is a typed language), the process exit code will be **0** if the value of
+the script fragment is **true** in the PowerShell language, otherwise it will
+be **1**.
+
 #### Motivation for Boolean result code
 Consider the Chef DSL fragment below where a string passed to an only\_if guard performs a
 Boolean test using the sh "[" command:
@@ -454,8 +467,8 @@ Boolean results of scripts to exit codes consistent with truth or falsity in
 any context. The added interpolation for powershell\_script rectifies the
 deficiency in this resource compared to bash and the other Unix shell-based resources.
 
-### Symmetry with Unix shells
-The result is a behavior similar to the bash or sh interpreters, where the
+##### Boolean symmetry with Unix shells
+This proposed boolean behavior is similar to the bash or sh interpreters, where the
 Boolean-like result of the test command causes the interpreter process to exit with 0 if
 the test command resulted in a true result, 1 otherwise, assuming the test
 command was the last line of the script.
@@ -483,19 +496,6 @@ strings passed to guards in the powershell\_script resource.
 Since it is possible that usage of powershell\_script that predates this
 feature could be affected by this conversion, the **convert\_Boolean\_return**
 attribute of powershell\_script may be set to false to restore preexisting behavior.
-
-#### convert\_Boolean\_return\_code attribute
-The convert\_Boolean\_return\_code attribute of the powershell\_script
-resource allows users to revert the
-interpolation behavior to provide the same exit code behavior that preceded
-the interpolation change.
-
-The default value of convert\_Boolean\_return\_code if not specified is **true**, which means that if the
-PowerShell language would have evaluated the script defined in
-powershell\_script's code attribute as having a Boolean type (PowerShell, like
-Ruby, is a typed language), the process exit code will be **0** if the value of
-the script fragment is **true** in the PowerShell language, otherwise it will
-be **1**. 
 
 ### Attribute inheritance
 A new change is that a resource used within the context of a guard may inherit
