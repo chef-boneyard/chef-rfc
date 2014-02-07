@@ -376,7 +376,20 @@ the following more concise, less cumbersome, and less error-prone expression:
 
 ### powershell\_script Boolean result code interpretation
 
-The value of guard conditionals for powershell\_script gets the following
+Boolean result code interpretation allows guards that make use of the
+powershell\_script resource to treat PowerShell Boolean expressions as if they
+were Ruby boolean expressions as in the code below:
+
+```ruby
+
+    powershell_script "backup-dc" do
+      code "backup-domain-controller.ps1"
+      only_if "[Security.Principal.WindowsIdentity]::GetCurrent().IsSystem"
+    end
+```
+
+
+More formally, the value of guard conditionals for powershell\_script gets the following
 modification:
 
 * The process exit code for a PowerShell script fragment executed by the
@@ -399,10 +412,13 @@ powershell\_script is actually functionally equivalent to the behavior of the ba
 Consider the Chef DSL fragment below where a string passed to an only\_if guard performs a
 Boolean test using the sh "[" command:
 
+```ruby
+
     bash "systemrestart" do
       code '~/rebootnow.sh'
       only_if '[ "$USER" == "root" ]'
     end
+```
 
 This results in the bash script 'rebootnow.sh' being executed only when this
 code is executed with chef-client running as root. The Boolean-like expression
@@ -417,9 +433,12 @@ interpret script strings is actually present in the script resources
 themselves when the same Boolean-like code is executed as part of the **code**
 attribute. Here's an example:
 
+```ruby
+
     bash "myfail" do
       code '[ "$USER" == "root" ]'
     end
+```
 
 If this resource is run as the root user, it will succeed and subsequent
 resources in the recipe can be executed. If the user is not root, this will
@@ -518,12 +537,15 @@ through the Chef DSL.
 
 Consider the following example:
 
+```ruby
+
     script "javatooling" do
       environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
       code 'java-based-daemon-ctl.sh -start'
       not_if 'java-based-daemon-ctl.sh -test-started', :environment => 
         {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
     end
+```
 
 In the not\_if attribute, the same hash of environment variables specified for
 the resource must also be specified for the guard, both of which use a shell script
@@ -531,14 +553,19 @@ to that relies on the **JAVA_HOME** environment variable. With inheritance,
 the second environment variable specification (along with the possibility of
 an incorrect specification) can be eliminated with this simplified version:
 
+```ruby
+
     script "javatooling" do
       environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
       code 'java-based-daemon-ctl.sh -start'
       not_if 'java-based-daemon-ctl.sh -test-started'
     end
+```
 
 The simplification is more pronounced in conjunction with the changes that
 allow arbitrary resources to be used as guards. Consider this usage of guard resources:
+
+```ruby
 
     bash "javabashtooling" do
       environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
@@ -550,9 +577,12 @@ allow arbitrary resources to be used as guards. Consider this usage of guard res
         end       
       end
     end
+```
 
 Through inheritance, the second environment attribute in the fragment above
 can be removed since the same environment is simply inherited:
+
+```ruby
 
     bash "javabashtooling" do
       environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
@@ -563,6 +593,7 @@ can be removed since the same environment is simply inherited:
         end       
       end
     end
+```
 
 Further simplifications are available for powershell\_script scenarios, where a
 more aggressive approach is taken by extending inheritance to not just block
@@ -589,6 +620,8 @@ without allowing the architecture attribute to be inherited with a string
 guard, here is the recipe fragment we'd need to set the PowerShell execution
 policy for the x86 PowerShell interpreter:
 
+```ruby
+
     # This is what we'd write if we couldn't inherit the architecture
     # attribute when a string is passed to a guard -- we'd use a block
     # instead to set x86 PowerShell execution policy
@@ -602,16 +635,20 @@ policy for the x86 PowerShell interpreter:
         end
       end
     end
-    
+```
+
 By allowing inheritance, the expression is much more compact, requires less
 up-front consideration of options, and provides the least surprising behavior:
-    
+
+```ruby
+
     # Much more concise -- architecture attribute is inherited by the guard
     powershell_script "set i386 execution policy" do
       architecture :i386
       code "set-executionpolicy remotesigned"
       not_if "(get-executionpolicy) -eq 'remotesigned'"
     end
+```
 
 # Questions
 Here are a few questions:
