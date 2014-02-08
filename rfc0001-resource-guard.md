@@ -132,18 +132,18 @@ The following examples demonstrate the intended use cases enabled by the change.
 
 ```ruby
 
-    # This resource will run without errors because the guard uses
-    # the bash interpreter; if we had passed the same string
-    # directly to the only_if, this would have failed the 
-    # Chef run since that string is not valid for /bin/sh
-    bash "Use bash for only_if" do
-      code "echo I am $SHELL"
-      only_if  do
-        bash do
-          code '[[ 1 == 1 ]]' # won't work outside of bash
-        end
-      end
+# This resource will run without errors because the guard uses
+# the bash interpreter; if we had passed the same string
+# directly to the only_if, this would have failed the
+# Chef run since that string is not valid for /bin/sh
+bash "Use bash for only_if" do
+  code "echo I am $SHELL"
+  only_if do
+    bash do
+      code '[[ 1 == 1 ]]' # won't work outside of bash
     end
+  end
+end
 ```
 
 ### Inheritance is your friend
