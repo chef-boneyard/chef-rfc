@@ -684,7 +684,7 @@ resource. On Windows, there is no /bin/sh, so cmd.exe is what is always used.
 Both Unix and Windows experiences could be better. For Windows, cmd.exe is
 guaranteed to exist on the system, but that's about as much good as you can
 say for it. It's a vestigial component that still shows signs of its 1970's
-CP/M heritage even in 2014, and as Windows admins turn to powershell or are
+CP/M heritage even in 2014, and as Windows admins turn to PowerShell or are
 nudged toward it (often by Microsoft itself), it's asking a lot for people to know
 how to use legacy cmd to accomplish tasks. Most likely, users of powershell\_script
 will choose to run powershell.exe in the not\_if and only\_if blocks, and if
