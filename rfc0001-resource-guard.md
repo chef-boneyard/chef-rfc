@@ -150,36 +150,36 @@ end
 
 ```ruby
 
-    # This resource will run because the cwd of the guard
-    # is the same as that of the parent resource
-    bash "My cwd gets inherited" do
-      code 'echo inherit me'
-      cwd '/opt'
-      only_if do
-        bash do
-          code '[[ $PWD == "/opt" ]]' # Glad I didn't have to add cwd
-        end
-      end
+# This resource will run because the cwd of the guard
+# is the same as that of the parent resource
+bash "My cwd gets inherited" do
+  code 'echo inherit me'
+  cwd '/opt'
+  only_if do
+    bash do
+      code '[[ $PWD == "/opt" ]]' # Glad I didn't have to add cwd
     end
+  end
+end
 ```
 
 ### Setting guard parameters
 
 ```ruby
 
-    # The normal command string syntax for guards lets you
-    # specify parameters like cwd, etc. -- you can do the same
-    # here by specifying those parameters in the anonymous resource
-    bash "Override my guard attributes" do
-      code 'echo override me'
-      cwd '/var'
-      only_if do
-        bash do
-          cwd '/opt' # Don't try to put me in my place
-          code '[[ $PWD == "/opt" ]]' 
-        end
-      end
+# The normal command string syntax for guards lets you
+# specify parameters like cwd, etc. -- you can do the same
+# here by specifying those parameters in the anonymous resource
+bash "Override my guard attributes" do
+  code 'echo override me'
+  cwd '/var'
+  only_if do
+    bash do
+      cwd '/opt' # Don't try to put me in my place
+      code '[[ $PWD == "/opt" ]]'
     end
+  end
+end
 ```
 
 ### powershell\_script default behavior examples
@@ -190,41 +190,41 @@ advantage of anonymous resource support.
 
 ```ruby
 
-    # Specifically for the powershell_script resource, you can just specify
-    # a command string, and it will be executed with powershell, not cmd
-    powershell_script "defaultguard" do
-      code 'new-smbshare systemshare $env:systemdrive\'
-      not_if 'get-smbshare systemshare' # This uses powershell, not cmd
-    end
+# Specifically for the powershell_script resource, you can just specify
+# a command string, and it will be executed with powershell, not cmd
+powershell_script "defaultguard" do
+  code 'new-smbshare systemshare $env:systemdrive\'
+  not_if 'get-smbshare systemshare' # This uses powershell, not cmd
+end
 ```
 
 #### powershell\_script Boolean behavior
 
 ```ruby
 
-    # What if guards evaluated powershell script code that powershell
-    # evaluates as a boolean type as the actual boolean value of the guard
-    # itself? You can avoid extra script code to translate the boolean into
-    # a process exit code that results in the right true / false behavior 
-    # for the guard
-    powershell_script "set execution policy" do
-      code "set-executionpolicy remotesigned"
-      not_if "(get-executionpolicy) -eq 'remotesigned'" # Like I barely left Ruby -- wow!
-    end
+# What if guards evaluated powershell script code that powershell
+# evaluates as a boolean type as the actual boolean value of the guard
+# itself? You can avoid extra script code to translate the boolean into
+# a process exit code that results in the right true / false behavior 
+# for the guard
+powershell_script "set execution policy" do
+  code "set-executionpolicy remotesigned"
+  not_if "(get-executionpolicy) -eq 'remotesigned'" # Like I barely left Ruby -- wow!
+end
 ```
 
 #### powershell\_script architecture inheritance 
 
 ```ruby
 
-    # And look, the not_if will run as an :i386 process because of the
-    # architecture attribute for the parent resource which powershell_script
-    # anonymous resources will inherit from the enclosing resource
-    powershell_script "set i386 execution policy" do
-      architecture :i386
-      code "set-executionpolicy remotesigned"
-      not_if "(get-executionpolicy) -eq 'remotesigned'"
-    end
+# And look, the not_if will run as an :i386 process because of the
+# architecture attribute for the parent resource which powershell_script
+# anonymous resources will inherit from the enclosing resource
+powershell_script "set i386 execution policy" do
+  architecture :i386
+  code "set-executionpolicy remotesigned"
+  not_if "(get-executionpolicy) -eq 'remotesigned'"
+end
 ```
 
 ## Anonymous resource formal description
@@ -352,13 +352,13 @@ language in the expression passed to the guard is below:
 
 ```ruby
 
-    # Yuk. Let me look up all the right cli args to powershell.exe.
-    # Oh, do I have to quote my cmd -- what kind of quotes again? 
-    # So much fun for me. This is CHEF-4553.
-    powershell_script "oldguard" do
-      code 'new-smbshare systemshare $env:systemdrive'
-      not_if 'powershell.exe -inputformat none -noprofile -nologo -noninteractive -command get-smbshare systemshare'
-    end
+# Yuk. Let me look up all the right cli args to powershell.exe.
+# Oh, do I have to quote my cmd -- what kind of quotes again?
+# So much fun for me. This is CHEF-4553.
+powershell_script "oldguard" do
+  code 'new-smbshare systemshare $env:systemdrive'
+  not_if 'powershell.exe -inputformat none -noprofile -nologo -noninteractive -command get-smbshare systemshare'
+end
 ```
 
 With the change to allow strings passed to guards in the
@@ -367,11 +367,11 @@ the following more concise, less cumbersome, and less error-prone expression:
 
 ```ruby
 
-    # So PowerShell. Such short.
-    powershell_script "oldguard" do
-      code 'new-smbshare systemshare $env:systemdrive'
-      not_if 'get-smbshare systemshare'
-    end
+# So PowerShell. Such short.
+powershell_script "oldguard" do
+  code 'new-smbshare systemshare $env:systemdrive'
+  not_if 'get-smbshare systemshare'
+end
 ```
 
 ### powershell\_script Boolean result code interpretation
@@ -382,10 +382,10 @@ were Ruby boolean expressions as in the code below:
 
 ```ruby
 
-    powershell_script "backup-dc" do
-      code "backup-domain-controller.ps1"
-      only_if "[Security.Principal.WindowsIdentity]::GetCurrent().IsSystem"
-    end
+powershell_script "backup-dc" do
+  code "backup-domain-controller.ps1"
+  only_if "[Security.Principal.WindowsIdentity]::GetCurrent().IsSystem"
+end
 ```
 
 
@@ -427,10 +427,10 @@ Boolean test using the sh "[" command:
 
 ```ruby
 
-    bash "systemrestart" do
-      code '~/rebootnow.sh'
-      only_if '[ "$USER" == "root" ]'
-    end
+bash "systemrestart" do
+  code '~/rebootnow.sh'
+  only_if '[ "$USER" == "root" ]'
+end
 ```
 
 This results in the bash script 'rebootnow.sh' being executed only when this
@@ -448,9 +448,9 @@ attribute. Here's an example:
 
 ```ruby
 
-    bash "myfail" do
-      code '[ "$USER" == "root" ]'
-    end
+bash "myfail" do
+  code '[ "$USER" == "root" ]'
+end
 ```
 
 If this resource is run as the root user, it will succeed and subsequent
@@ -539,12 +539,12 @@ Consider the following example:
 
 ```ruby
 
-    script "javatooling" do
-      environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
-      code 'java-based-daemon-ctl.sh -start'
-      not_if 'java-based-daemon-ctl.sh -test-started', :environment => 
-        {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
-    end
+script "javatooling" do
+  environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
+  code 'java-based-daemon-ctl.sh -start'
+  not_if 'java-based-daemon-ctl.sh -test-started', :environment =>
+    {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
+end
 ```
 
 In the not\_if attribute, the same hash of environment variables specified for
@@ -555,11 +555,11 @@ an incorrect specification) can be eliminated with this simplified version:
 
 ```ruby
 
-    script "javatooling" do
-      environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
-      code 'java-based-daemon-ctl.sh -start'
-      not_if 'java-based-daemon-ctl.sh -test-started'
-    end
+script "javatooling" do
+  environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
+  code 'java-based-daemon-ctl.sh -start'
+  not_if 'java-based-daemon-ctl.sh -test-started'
+end
 ```
 
 The simplification is more pronounced in conjunction with the changes that
@@ -567,16 +567,16 @@ allow arbitrary resources to be used as guards. Consider this usage of guard res
 
 ```ruby
 
-    bash "javabashtooling" do
+bash "javabashtooling" do
+  environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
+  code 'java-bashd-ctl.sh -start'
+  not_if do
+    bash do
       environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
-      code 'java-bashd-ctl.sh -start'
-      not_if do
-        bash do
-          environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
-          code 'java-bashd-ctl.sh -test-started'        
-        end       
-      end
+      code 'java-bashd-ctl.sh -test-started'
     end
+  end
+end
 ```
 
 Through inheritance, the second environment attribute in the fragment above
@@ -584,15 +584,15 @@ can be removed since the same environment is simply inherited:
 
 ```ruby
 
-    bash "javabashtooling" do
-      environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
-      code 'java-bashd-ctl.sh -start'
-      not_if do
-        bash do
-          code 'java-bashd-ctl.sh -test-started'        
-        end       
-      end
+bash "javabashtooling" do
+  environment {"JAVA_HOME" => '/usr/lib/java/jdk1.7/home'}
+  code 'java-bashd-ctl.sh -start'
+  not_if do
+    bash do
+      code 'java-bashd-ctl.sh -test-started'
     end
+  end
+end
 ```
 
 Further simplifications are available for powershell\_script scenarios, where a
@@ -622,19 +622,19 @@ policy for the x86 PowerShell interpreter:
 
 ```ruby
 
-    # This is what we'd write if we couldn't inherit the architecture
-    # attribute when a string is passed to a guard -- we'd use a block
-    # instead to set x86 PowerShell execution policy
-    powershell_script "set i386 execution policy" do
+# This is what we'd write if we couldn't inherit the architecture
+# attribute when a string is passed to a guard -- we'd use a block
+# instead to set x86 PowerShell execution policy
+powershell_script "set i386 execution policy" do
+  architecture :i386
+    code "set-executionpolicy remotesigned"
+    not_if do
+      powershell_script do
       architecture :i386
-      code "set-executionpolicy remotesigned"
-      not_if do
-        powershell_script do
-          architecture :i386
-          code "(get-executionpolicy) -eq 'remotesigned'"
-        end
-      end
+      code "(get-executionpolicy) -eq 'remotesigned'"
     end
+  end
+end
 ```
 
 By allowing inheritance, the expression is much more compact, requires less
@@ -642,12 +642,12 @@ up-front consideration of options, and provides the least surprising behavior:
 
 ```ruby
 
-    # Much more concise -- architecture attribute is inherited by the guard
-    powershell_script "set i386 execution policy" do
-      architecture :i386
-      code "set-executionpolicy remotesigned"
-      not_if "(get-executionpolicy) -eq 'remotesigned'"
-    end
+# Much more concise -- architecture attribute is inherited by the guard
+powershell_script "set i386 execution policy" do
+  architecture :i386
+  code "set-executionpolicy remotesigned"
+  not_if "(get-executionpolicy) -eq 'remotesigned'"
+end
 ```
 
 # Questions
