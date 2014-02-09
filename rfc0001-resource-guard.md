@@ -29,7 +29,7 @@ end of the document.
 
 ## Problems addressed
 
-anonymous resources and related improvements discussed in the document address
+Anonymous resources and related improvements discussed in the document address
 the following issues:
 
 * CHEF-4553: Users of the powershell\_script resource are forced to execute
