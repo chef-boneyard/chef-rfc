@@ -105,6 +105,9 @@ The *certgen* command can be viewed as an analog of the *ssh-keygen* command use
 This command should be run on the Windows server. The command will add the
 certificate specified in the CERT-PATH to its certificate store. The CERT-PATH
 should point to a valid PKCS12 certificate.
+Options:
+
+    --listener-create: When this option is set, it will create the listener also on default port 5986.
 
 ### Listener creation command
 
@@ -116,7 +119,6 @@ Options:
 
     --thumbprint THUMBPRINT: The command will create winrm HTTPS listener on port 5986. The THUMBPRINT should be a valid thumbprint of the certificate that is installed to the certificate store of the windows server.
     --port: Specify a port other than 5986. To be used with --create option.
-	--certinstall: After creating the listener, if this option is set, then it will also install the certificate to the store.
 
 Once a listener is created with this command, a WinRM connection can be
 established from a remote process that presents a certificate with the
