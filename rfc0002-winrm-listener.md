@@ -107,7 +107,7 @@ certificate specified in the CERT-PATH to its certificate store. The CERT-PATH
 should point to a valid PKCS12 certificate.
 Options:
 
-    --listener-create: When this option is set, it will create the listener also on default port 5986.
+    --create-listener: When this option is set, it will create the listener also on default port 5986.
 
 ### Listener creation command
 
