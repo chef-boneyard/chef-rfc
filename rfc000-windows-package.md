@@ -12,8 +12,26 @@ Support for roles features will be handled by a separate resource.
 
 ### Chef::Resource::WindowsPackage
 Shortcut Resource Name: `windows_package`
+      
+This would be the default package provider on windows, so you would use the 'package' resource and wouldn't necessarily need a shortcut resource.
 
+### Attributes
 
+* package_name - defaults to the resource name
+* source - the location of package to install
+* installer_type - for future use to manually differentiate between installers
+* options - flags passed to the installer
+* version - version of the package to install, if applicable
+* returns - possible exit codes that indicate success
+
+Deprecated attributes:  
+
+* checksum  
+The existing cookbook allows source to be a URL, we'd rather use remote_file to download packages unless we're passing the URL directly to the installer to avoid code duplication and maintain 'primatives.'
+* success_codes  
+This will be renamed to returns to match other existing core providers
+
+### Platform specific resources
 Utilizing the platform-specific resource functionality introduced in [CHEF-2698](https://tickets.opscode.com/browse/CHEF-2698), add a new package resource with windows specific attributes 
 
 ```
@@ -34,9 +52,6 @@ class Chef
         @timeout = 600
         @success_codes = [0, 42, 127]
 ```      
-      
-This would be the default package provider on windows, so you would use the 'package' resource and wouldn't necessarily need a shortcut resource.
-
 
 ### Chef::Provider::Package::Windows
 
