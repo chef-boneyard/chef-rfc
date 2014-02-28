@@ -2,6 +2,8 @@
 
 The Ohai `cloud` plugin pushes information into `private_ips` and `public_ips`, but if networks have an alternate name they are overlooked. In EC2, HP and Rackspace for example, `local_ipv4` is mapped to `cloud.private_ipv4`, which is likely to be incorrect in some cases. Additional network data may be available from the metadata server (ec2, hp, openstack) but this should be confirmed and normalized within `cloud`.
 
+This was previously discussed internally at Chef at http://wiki.corp.opscode.com/display/CORP/RFC+Generalized+Network+Configuration+Specification+for+Knife+Cloud+Plugins
+
 ## OpenStack
 
 The Ohai `cloud` plugin is populated by cloud-specific code, but it generally pushes `local` attributes into `private` and anything else gets pushed into a list of additional `private_ips` (ie. `node['openstack']['local_ipv4']` becomes `['cloud']['local_ipv4']` and `['cloud']'['private_ips'][0]`).

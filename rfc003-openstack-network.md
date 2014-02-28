@@ -4,6 +4,8 @@ Proposal for generically supporting networks not named `public` or `private` wit
 
 For the existing knife plugins there has been a general assumption that virtual machines provisioned have a `public` and/or a `private` IP address. With OpenStack's capability of having essentially unlimited named networks this assumption falls short. There have been several proposed fixes, but a generalized solution that is adaptable for each use case is needed.
 
+This was previously discussed internally at Chef at http://wiki.corp.opscode.com/display/CORP/RFC+Generalized+Network+Configuration+Specification+for+Knife+Cloud+Plugins
+
 ## knife openstack server create
 
 `knife openstack server create` will provide support for bootstrapping nodes on networks other than `public` and `private` IP addresses.
