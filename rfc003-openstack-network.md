@@ -81,7 +81,9 @@ This will be part of a future knife-cloud-based release.
 
 #### Current
 
-Not currently available.
+Not currently available. There is a ticket open with patches that may be relevant:
+
+ * [KNIFE-423](https://tickets.opscode.com/browse/KNIFE-423) Add new command 'knife openstack network list'
 
 #### Proposal
 
