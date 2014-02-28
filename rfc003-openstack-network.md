@@ -22,7 +22,8 @@ There are also a number of networking-related tickets open with patches that may
 ### Proposal
 
  * `knife openstack server create --network [NAMES_OR_IDS]`: comma separated list of networks to attach to. Default is `public,private`
- * `knife openstack server create --private-network`: Use the private IP for bootstrapping rather than the public IP, unchanged behavior
+ * `knife openstack server create --bootstrap-network LABEL_OR_ID`: specify network to use for bootstrapping. Default is `public`
+ * `knife openstack server create --private-network`: Use the private IP for bootstrapping rather than the public IP, unchanged behavior but same as `--bootstrap-network private`
  * `knife openstack server create --no-network`: Names of networks are potentially unknown, if 'public' or 'private' are unavailable select first IP from first network alphabetically.
 
 ## knife openstack server delete
