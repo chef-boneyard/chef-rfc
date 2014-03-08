@@ -94,7 +94,7 @@ resources. The goals in doing this are:
 * Address [CHEF-4553](https://tickets.opscode.com/browse/CHEF-4553) -- simplify convoluted expressions such as that below for
 Windows users
 ```
-not_if 'powershell -noninteractive -noprofile -command "exit [int32]((Get-ExecutionPolicy) -eq 'RemoteSigned')"'
+not_if 'powershell -noninteractive -noprofile -command "exit [int32]((Get-ExecutionPolicy -scope localmachine) -eq 'RemoteSigned')"'
 ```
 * For guard expressions, allow Unix and Windows users to make use of familiar modern shells such as
   bash and PowerShell rather than ancient interpreters like sh or cmd.exe with
@@ -209,7 +209,7 @@ end
 # for the guard
 powershell_script "set execution policy" do
   code "set-executionpolicy remotesigned"
-  not_if "(get-executionpolicy) -eq 'remotesigned'" # Like I barely left Ruby -- wow!
+  not_if "(get-executionpolicy -scope localmachine) -eq 'remotesigned'" # Like I barely left Ruby -- wow!
 end
 ```
 
@@ -223,7 +223,7 @@ end
 powershell_script "set i386 execution policy" do
   architecture :i386
   code "set-executionpolicy remotesigned"
-  not_if "(get-executionpolicy) -eq 'remotesigned'"
+  not_if "(get-executionpolicy -scope localmachine) -eq 'remotesigned'"
 end
 ```
 
@@ -631,7 +631,7 @@ powershell_script "set i386 execution policy" do
     not_if do
       powershell_script do
       architecture :i386
-      code "(get-executionpolicy) -eq 'remotesigned'"
+      code "(get-executionpolicy -scope localmachine) -eq 'remotesigned'"
     end
   end
 end
@@ -646,7 +646,7 @@ up-front consideration of options, and provides the least surprising behavior:
 powershell_script "set i386 execution policy" do
   architecture :i386
   code "set-executionpolicy remotesigned"
-  not_if "(get-executionpolicy) -eq 'remotesigned'"
+  not_if "(get-executionpolicy -scope localmachine) -eq 'remotesigned'"
 end
 ```
 
