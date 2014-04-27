@@ -9,15 +9,16 @@ Guard interpreter customization makes the Chef DSL Delightful(tm).
 
 ## Document status
 
-This Request for Comments (RFC) document is an accepted part of Chef as of
-Chef 11.12.0. The document specifies the behavior and records the reasoning for the
+This Request for Comments (RFC) document's propsals are accepted as an an
+active implementation in Chef Client 11.12.0 and subsequent releases of Chef
+Client.
+
+Specifically, the document specifies the behavior and records the reasoning for the
 `guard_interpreter` and `convert_boolean_return` attributes of Chef resources
 as implemented in
 [Chef 11.12.0](http://www.getchef.com/blog/2014/04/08/release-chef-client-11-12-0-10-32-2/)
-and later versions of the Chef Client. The open source project source code for Chef Client
-can be found at <https://github.com/opscode/chef>. Please refer
-to <https://docs.opscode.com> or <https://github.com/opscode/chef> for the current
-and accepted specification of Chef.
+and later versions of the Chef Client. See  <https://docs.opscode.com> for
+authoritative, updated documentation on these features.
 
 ## Motivation
 
@@ -103,9 +104,9 @@ not_if 'powershell -noninteractive -noprofile -command "exit [int32]((Get-Execut
 At a high level, here are the changes proposed to simplify conditional
 execution of resource actions:
 
-* Add a `guard_interpreter` attribute to the Chef::Resource class that can
+* Add a `guard_interpreter` attribute to the `Chef::Resource` class that can
   take a symbol that corresponds to the name of a Chef resource derived from
-  Chef::Resource::Script. This resource will be used to evaluate the script
+  `Chef::Resource::Script`. This resource will be used to evaluate the script
   command passed to the guard.
 * Truth or false hood of such a guard is determined by whether the resource
   evaluating the script guard is updated, i.e. runs the script without raising
@@ -233,7 +234,7 @@ resource, Chef will evaluate the expression to produce a Ruby `true` or
 expression is provided to the `not_if` or `only_if` attribute, determines
 whether the resource's action will be executed or skipped:
 
-1. If the `guard_interpreter` resource is **not** specified for the resource, when a string is passed to a guard, the existing implementation executes the /bin/sh interpreter on Unix or
+1. If the guard_interpreter resource is **not** specified for the resource, when a string is passed to a guard, the existing implementation executes the /bin/sh interpreter on Unix or
 cmd.exe on Windows with that string to be evaluated as a script by the
 interpreter. If the interpreter exits with a 0 (success) code, this is
 interpreted as a Ruby `true` value, otherwise it is `false`.
@@ -264,9 +265,9 @@ will be executed to produce a truth value.
   the guard evaluating as `false`.
 
 ### script resource conditional semantics
-To enable the usage as guard resources of resources derived from **Chef::Resource::Script**,
+To enable the usage as guard resources of resources derived from `Chef::Resource::Script`,
 known colloquially as script resources, all such resources when executed as
-guard resources will handle the exception **Mixlib::Shellout::ShellCommandFailed**. 
+guard resources will handle the exception `Mixlib::Shellout::ShellCommandFailed`. 
 
 By doing this, usage of script resources has the same conditional and
 exception behavior as the case described earlier when a string is passed to a
@@ -363,7 +364,7 @@ end
 
 In the not\_if attribute, the same hash of environment variables specified for
 the resource must also be specified for the guard, both of which use a shell script
-to that relies on the **JAVA_HOME** environment variable. With inheritance,
+to that relies on the `JAVA_HOME` environment variable. With inheritance,
 the second environment variable specification (along with the possibility of
 an incorrect specification) can be eliminated with this simplified version:
 
@@ -387,7 +388,7 @@ end
   block, unlike other resources, inheritance of attributes occurs. The
   behavior of the PowerShell interpreter when executing that string is the same
   as if a `powershell_script` resource has been passed instead with the
-  **code** attribute set to the value of the string.
+  `code` attribute set to the value of the string.
 * Inherited attributes in this case may be overridden by specifying those same
   attributes as guard parameters using the existing guard parameter syntax
 
@@ -456,7 +457,7 @@ modification:
   evaluating a guard expression because the `guard_interpreter` attribute was
   set to `:powershell_script`, the value of `convert_boolean_return` is set to
   `true`. There is no backward compatibility issue for this default because the
-  `guard_interpreter` resource was not available prior to versions of Chef
+  guard_interpreter resource was not available prior to versions of Chef
   with the boolean interpolation feature.
 * Boolean interpolation only occurs if the script fragment could have been
   executed as the definition of a PowerShell function with a return type of
@@ -535,7 +536,7 @@ A similar mapping between Boolean results for strings passed to guards on the
 Windows platform does not exist. This partially due to guards always being
 executed with cmd.exe. However, the behavior shown on Unix guards that
 interpret script strings is actually present in the script resources
-themselves when the same Boolean-like code is executed as part of the **code**
+themselves when the same Boolean-like code is executed as part of the `code`
 attribute. Here's an example:
 
 ```ruby
