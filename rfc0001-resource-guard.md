@@ -1,15 +1,15 @@
 # Resources as custom guard interpreters 
 
 Guard language customization is a feature of Chef resources that
-allows the use of a Chef resource to evaluate a guard expression (i.e. "only\_if" or
-"not\_if" block). The goal of the this capability is to reduce the complexity in both number of languages
+allows the use of a Chef resource to evaluate a guard expression (i.e. `only_if` or
+`not_if` block). The goal of this capability is to reduce the complexity in both number of languages
 and boilerplate code found within a Chef recipe.
 
 Guard interpreter customization makes the Chef DSL Delightful(tm).
 
 ## Document status
 
-This Request for Comments (RFC) document's propsals are accepted as an an
+This Request for Comments (RFC) document's proposals are accepted as an
 active implementation in Chef Client 11.12.0 and subsequent releases of Chef
 Client.
 
@@ -46,7 +46,7 @@ the following use cases:
   command arguments in the guard
 * Windows users of the `powershell_script` resource do not have a way to use
   PowerShell in script guards in a concise, intuitive, quasi-Boolean fashion,
-  while users of the script, csh, bash, and other resources have this
+  while users of the `script`, `csh`, `bash`, and other resources have this
 * On Windows, script guards are always executed with the 32-bit process architecture and
   will be affected by the absence of system state exposed only to 64-bit
   processes
@@ -67,7 +67,7 @@ These definitions are used throughout the discussion:
     form of a string to be executed by a shell or a Ruby block. Such an
     expression is evaluated before running the resource's action, and
     depending on whether it results in a true or false value, will control
-    whether or not the resource?s action is executed or skipped.
+    whether or not the resource's action is executed or skipped.
 * **script guard:** A guard expression that is given as a string to be
     evaluated by a shell command interpreter. When the interpreter's execution
     of the script results in a successful (i.e. non-zero) process exit code, the guard's value
@@ -89,15 +89,15 @@ used to evaluate script guards. This is
 useful for testing conditions to ensure idempotence for non-idempotent resources such as script
 resources. The goals in doing this are:
 
-* Address [CHEF-4553](https://tickets.opscode.com/browse/CHEF-4553) -- simplify convoluted expressions such as that below for
+* To address [CHEF-4553](https://tickets.opscode.com/browse/CHEF-4553) -- simplify convoluted expressions such as that below for
 Windows users
 ```
 not_if 'powershell -noninteractive -noprofile -command "exit [int32]((Get-ExecutionPolicy -scope localmachine) -eq 'RemoteSigned')"'
 ```
-* For guard expressions, allow Unix and Windows users to make use of familiar modern shells such as
-  bash and PowerShell rather than ancient interpreters like sh or cmd.exe with
+* For guard expressions, to allow Unix and Windows users to make use of familiar modern shells such as
+  bash and PowerShell rather than ancient interpreters like `sh` or `cmd.exe` with
   limited or obscure syntax
-* Make Chef interactions with OS interfaces such as shells as natural for
+* To make Chef interactions with OS interfaces such as shells as natural for
   users of the OS as possible
 
 ## Summary of proposed changes
@@ -106,14 +106,16 @@ execution of resource actions:
 
 * Add a `guard_interpreter` attribute to the `Chef::Resource` class that can
   take a symbol that corresponds to the name of a Chef resource derived from
-  `Chef::Resource::Script`. This resource will be used to evaluate the script
+  `Chef::Resource::Script`. This guard interpreter resource will be used to evaluate the script
   command passed to the guard.
-* Truth or false hood of such a guard is determined by whether the resource
+* Truth or falsehood of such a guard is determined by whether the resource
   evaluating the script guard is updated, i.e. runs the script without raising
-  an exception and without the script returning a non-succcess code (0 is the
+  an exception and without the script returning a non-success code (0 is the
   default expected success exit code of the script interpreter).
-* Ensure that the guard interpreter resource is not executed using the run
-  context of the resource that contains the guard attribute.
+* Parameters passed in hash format after the guard command string are
+  interpreted as attributes to be set for the guard interpreter resource instance.
+* The guard interpreter resource is executed outside of the containing resource's
+  run context.
 * Enable inheritance of attributes from a given resource A for any resource B
   executed as part of a block passed to a guard attribute of resource
 * Add a `convert_boolean_return` attribute to the `powershell_script` resource
@@ -123,11 +125,12 @@ execution of resource actions:
   "Boolean-like" statements through commands such as the `test` command
 * Make `convert_boolean_return` default to `false` to provide for behavior
   identical to versions of Chef that did not have this feature, but make it
-  default to `true` when used to evalute a guard via the `guard_interpreter`
+  default to `true` when used to evaluate a guard via the `guard_interpreter`
   attribute to make guard expressions more concise and natural.
 
 ## Code examples
-The following examples demonstrate the intended use cases enabled by the change.
+The following examples demonstrate the intended use cases enabled by the
+change. Concepts such as inheritance are introduced in the examples which are explained in subsequent sections.
 
 ### Custom interpreter for script resources
 
@@ -223,41 +226,51 @@ end
 
 ## Guard interpreter formal specification
 
-### Guard conditional semantics
-
 The documented behavior for guards can be found at
-<http://docs.opscode.com/resource_common.html>. Guards are expressed via the
+<http://docs.opscode.com/resource_common.html>. Guards are expressed via the optional
 `not_if` and `only_if` attributes -- the expression following the attribute
-may be either a block or a string. Before executing the action for the
-resource, Chef will evaluate the expression to produce a Ruby `true` or
-`false` value as described below. That value, along with whether the
-expression is provided to the `not_if` or `only_if` attribute, determines
-whether the resource's action will be executed or skipped:
+may be either a block or a string.
 
-1. If the guard_interpreter resource is **not** specified for the resource, when a string is passed to a guard, the existing implementation executes the /bin/sh interpreter on Unix or
-cmd.exe on Windows with that string to be evaluated as a script by the
-interpreter. If the interpreter exits with a 0 (success) code, this is
+### Guard conditional semantics overview
+
+Guards allow for conditional execution of a resource. Before executing the action for the
+resource, Chef will evaluate the expression to produce a Ruby `true` or
+`false` value that is utilized in determining whether to execut the resource's
+action or to skip it:
+
+1. If the **guard_interpreter resource** is **not** specified for the resource, when a string is passed to a guard, the existing implementation executes the `/bin/sh` interpreter on Unix or
+`cmd.exe` on Windows with that string to be evaluated as a script by the
+interpreter. Chef will execute the interpreter with the code supplied to the
+string; if the interpreter exits with a 0 (success) code, this is
 interpreted as a Ruby `true` value, otherwise it is `false`.
 2. When a block is passed to a guard, the code in the block will be executed,
   and the value of the last line of code executed by the block will be the
   Boolean value of the block, converted to a Boolean value in a manner
-  consistent with the Ruby \!\! operator.
+  consistent with the Ruby \!\! operator, resulting in either the value `true`
+  or `false`.
+3. If the aforementioned string or block expression was supplied to an
+`only_if` attribute, the action of the resource containing the attribute will be skipped if
+the expression evaluated to `false` and executed if it evaluated to `true`.
+4. If the expression was supplied to a `not_if` attribute, the behavior of the
+resource is the inverse of that for `only_if`; the resource action is executed
+if the expression evaluated to `false` and skipped if it evaluated to `true`.
   
-Note that case (1) describes only the situation where there is no
-`guard_interpreter` attribute, which is the only case for string guard
-expressions for versions of Chef Client earlier than 11.12.0.
+This specification of guard behavior is accurate without the inclusion of
+`guard_interpreter` features described in this document. The
+`guard_interpreter` attribute allows for the interpreter to be something other
+than `/bin/sh` or `cmd.exe` and is described below.
 
 ### Conditional semantics with the guard_interpreter attribute
 
 In Chef Client versions 11.12.0 and later, the `guard_interpreter` attribute
 was introduced which provides the following behavior:
 
-* When the `guard_interpreter` attribute is specified in the resource as a value
+1. When the `guard_interpreter` attribute is specified in the resource as a value
 other than `:default`, a **guard interpreter resource** of the type specified in the
 `guard_interpreter` attribute is created with its `code` attribute set to the
 value of the string passed to the guard attribute. The guard interpreter resource's action
 will be executed to produce a truth value.
-* If the resource action updates the resource, the value is `true`.
+2. If the resource action updates the resource, the value is `true`.
   Resources can only be updated if the interpreter used by the resource
   specified in the `guard_interpreter` attribute returns a success code, `0`
   by default, though this can be overridden in attributes specified to the
@@ -271,13 +284,13 @@ guard resources will handle the exception `Mixlib::Shellout::ShellCommandFailed`
 
 By doing this, usage of script resources has the same conditional and
 exception behavior as the case described earlier when a string is passed to a
-not\_if or only\_if guard attribute since this exception is raised precisely
+`not_if` or `only_if` guard attribute since this exception is raised precisely
 in the case where a string passed as a guard would have been evaluated by
 /bin/sh or cmd.exe as exiting with a failure status code.
 
 This gives any script resource, for example bash, the ability to behave
 like the string argument usage for guards except that an alternative
-interpreter to /bin/sh is used to execute the command. This extends the range of shell
+interpreter to `/bin/sh` is used to execute the command. This extends the range of shell
 script languages that may be used in guard expressions.
 
 ### `powershell_script` guard_interpreter example
@@ -285,7 +298,7 @@ script languages that may be used in guard expressions.
 Use of `guard_interpreter` for the `powershell_script` resource addresses
 [CHEF-4553](https://tickets.opscode.com/browse/CHEF-4553). Without
 `guard_interpreter`, a user of the `powershell_script` resource who would like to use the same PowerShell
-language in the expression passed to the guard resors to the following
+language in the expression passed to the guard resource to the following
 cumbersome solution:
 
 ```ruby
@@ -301,7 +314,7 @@ end
 
 With the `guard_interpreter` attribute, we have
 the following more concise, less cumbersome, and less error-prone expression
-when for the same `powershell-script` use case given above:
+when for the same `powershell_script` use case given above:
 
 ```ruby
 
@@ -322,12 +335,11 @@ Inheritance follows these rules:
 * An attribute in a guard interpreter resource is inherited from the parent resource only if the
   attribute is in a set of inheritable attributes defined by the type of the
   guard resource
-* To be inherited, the attribute must not have been specified in the guard
-  resource.
-* For all resources except for `powershell_script`, inheritance occurs only
-  when the guard is given a block argument, but not with a string argument.
-* The Chef execute resource and all resources derived from it,
-  including script, bash, and `powershell_script`, can inherit the following
+* To be inherited from the parent, the attribute must not have been specified as a parameter to the guard
+  command -- whatever is passed to the guard command will override any parent
+  specification of the attribute.
+* The Chef `script` resource, i.e. `Chef::Resource::Script`, and all resources derived from it,
+  including `bash`, `python`, and `powershell_script`, can inherit the following
   attributes from the parent resource:
 
     :cwd
@@ -506,7 +518,7 @@ it decreases the efficiency of using resources like `bash` -- one might just as
 well use the generic script or execute resources if knowledge of the best way
 to a given interpreter cannot be contained in the resource.
 
-So the the addition of the `guard_interpreter` attribute as adopted via this
+So the addition of the `guard_interpreter` attribute as adopted via this
 RFC lets users choose to adopt a
 more natural way of expressing idempotence that lets you embed shell-specific
 expressions in the clean Chef DSL without all of the awkwardness and corner
@@ -515,7 +527,7 @@ infrastructure that doesn't sacrifice on the shell or underlying platform's
 native descriptive and functional capabilities.
 
 ### Boolean result code interpolation details
-Consider the Chef DSL fragment below where a string passed to an only\_if guard performs a
+Consider the Chef DSL fragment below where a string passed to an `only_if` guard performs a
 Boolean test using the sh "[" command:
 
 ```ruby
