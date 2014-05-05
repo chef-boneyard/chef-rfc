@@ -17,18 +17,18 @@ The goal is to extend Azure Cmdlets to generate the required JSON for Chef handl
 Azure SDK Tools: https://github.com/Azure/azure-sdk-tools/
 
 ## New Cmdlets
-There would be a new cmdlet: Set-ChefAzureVMExtension
+There would be a new cmdlet: Set-AzureVMChefExtension
 
-### Set-ChefAzureVMExtension
+### Set-AzureVMChefExtension
 Azure SDK has the cmdlet below to add an extension - Set-AzureVMExtension: https://github.com/Azure/azure-sdk-tools/blob/master/WindowsAzurePowershell/src/Commands.ServiceManagement/IaaS/Extensions/Common/SetAzureVMExtension.cs
 
 This command can be used to add Chef extension, currently as:
 $vmObj1 = Set-AzureVMExtension -VM $vmObj1 -ExtensionName ‘ChefAgent’ -Publisher ‘Chef.Azure’ -Version 11.6 -PublicConfigPath 'publicconfig.config' -PrivateConfigPath 'privateconfig.config'
 
 The above command would be customized to have a new command as:
-Set-ChefAzureVMExtension -VM $vmObj1 -Version 11.6 -ClientRb 'Path/client.rb' -ValidationPem '/path/validation.pem' -RunList '<runlist, eg: git,recipe[redis]>'
+Set-AzureVMChefExtension -VM $vmObj1 -Version 11.6 -ClientRb 'Path/client.rb' -ValidationPem '/path/validation.pem' -RunList '<runlist, eg: git,recipe[redis]>'
 
-The command Set-ChefAzureVMExtension will create the private & public files as needed and pass the params to Set-AzureVMExtension command.
+The command Set-AzureVMChefExtension will create the private & public files as needed and pass the params to Set-AzureVMExtension command.
 
 #### Using above command to create VM in Azure
 We use the following commands to create a VM in Azure:
@@ -41,7 +41,7 @@ We use the following commands to create a VM in Azure:
 	$username = 'MyUser'
 	$password = 'MyPassword@123'
 
-	$vmObj1 = Set-ChefAzureVMExtension -VM $vmObj1 -Version 11.6 -ClientRb 'Path/client.rb' -ValidationPem '/path/validation.pem' -RunList '<runlist, eg: git,recipe[redis]>'
+	$vmObj1 = Set-AzureVMChefExtension -VM $vmObj1 -Version 11.6 -ClientRb 'Path/client.rb' -ValidationPem '/path/validation.pem' -RunList '<runlist, eg: git,recipe[redis]>'
 
 	$svc = "MyCloudSvc"
 
