@@ -17,15 +17,15 @@ The goal is to extend Azure Cmdlets to generate the required JSON for Chef handl
 Azure SDK Tools: https://github.com/Azure/azure-sdk-tools/
 
 ## New Cmdlets
-There would be 2 cmdlets: Set-ChefAzureVMExtension and Create-AzureVMWithChefExtension
+There would be a new cmdlet: Set-ChefAzureVMExtension
 
 ### Set-ChefAzureVMExtension
 Azure SDK has the cmdlet below to add an extension - Set-AzureVMExtension: https://github.com/Azure/azure-sdk-tools/blob/master/WindowsAzurePowershell/src/Commands.ServiceManagement/IaaS/Extensions/Common/SetAzureVMExtension.cs
 
-The command can be used to add Chef extension, currently as:
+This command can be used to add Chef extension, currently as:
 $vmObj1 = Set-AzureVMExtension -VM $vmObj1 -ExtensionName ‘ChefAgent’ -Publisher ‘Chef.Azure’ -Version 11.6 -PublicConfigPath 'publicconfig.config' -PrivateConfigPath 'privateconfig.config'
 
-The above command would be customized as:
+The above command would be customized to have a new command as:
 Set-ChefAzureVMExtension -VM $vmObj1 -Version 11.6 -ClientRb 'Path/client.rb' -ValidationPem '/path/validation.pem' -RunList '<runlist, eg: git,recipe[redis]>'
 
 The command Set-ChefAzureVMExtension will create the private & public files as needed and pass the params to Set-AzureVMExtension command.
@@ -50,35 +50,21 @@ We use the following commands to create a VM in Azure:
 
 	New-AzureVM -Location 'West US' -ServiceName $svc -VM $vmObj1
 
-### Create-AzureVMWithChefExtension
-The group of commands mentioned above can be combined into a PS module to create a VM. The user will not have to remember the steps above. Running the cmdlet Create-AzureVMWithChefExtension will create a VM which will have the Chef Extension installed on the VM.
+#### Params Supported
 
-	function Create-AzureVMWithChefExtension
-	{
-		param (
-			[String]$img,
-			[string]$vm1,
-			[String]$username,
-			[String]$password,
-			[String]$client_rb,
-			[String]$validation_pem,
-			[String]$runlist,
-			[String]$svc
-		)
+	--Image <Image> [Optional, default to be a valid Windows 2012 image]
+	--VM-Name <VM Name> [Optional, defaults to some random name]
+	--Location <Location> [Optional, defaults to say, "West US"]
+	--Username <User Name> [Required]
+	--Password <Password> [Required]
+	--Client-rb <Client.rb file path> [Optional, if other params mentioned]
+	--Validation-pem <Validation.pem file path> [Required]
+	--Runlist <Runlist> [Optional, default is nil]
+	--Service <Service Name> [Optional, defaults to some random value]
+	--Server-Url <Chef Server URL> [Optional, overrides the value in client-rb]
+	--Organization <Chef Organization Name> [Optional, overrides the value in client-rb]
+	--Organization-Url <Chef Org URL> [Optional, overrides the value in client-rb]
+	--Validation-Client-Name <Chef Validation Client Name> [Optional, overrides the value in client-rb]
 		
-		# We can think of defaulting the image to be a Windows 2012 image. So that the image param will be optional.
-		# We can think of randomising VM name & Cloud Service name, if user does not enter those params.
-		# We can add "location" as one of the params & default it if user does not specify it
-
-		$vmObj1 = New-AzureVMConfig -Name $vm1 -InstanceSize Small -ImageName $img
-
-		$vmObj1 = Set-ChefAzureVMExtension -VM $vmObj1 -Version 11.6 -ClientRb $client_rb -ValidationPem $validation_pem -RunList $runlist
-
-		$vmobj1.ImageName = ''
-		$vmObj1 = Add-AzureProvisioningConfig -VM $vmObj1 -Password $password -AdminUsername $username –Windows
-
-		New-AzureVM -Location 'West US' -ServiceName $svc -VM $vmObj1
-	}
-
 ## Image Validation
 The change proposed above does not check to validate if the image specified by the user has the extension support. We assume that image validation will be done by the existing Azure cmdlets.
