@@ -3,15 +3,6 @@
 I'd like to add some more user-focused features in mixlib-config 3.0, allowing
 more flexibility in defining the actual file.
 
-Features:
-- group do ... end
-- merge
-- set
-- matching
-- set_matching
-- sub configs (key.key.key.rb) for groups
-- yamls, inis for groups?
-
 ## config do blocks
 
 Right now, to set multiple parameters in a ConfigContext, you need to do:
