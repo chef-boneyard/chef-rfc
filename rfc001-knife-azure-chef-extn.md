@@ -35,7 +35,7 @@ knife-azure: https://github.com/opscode/knife-azure
 
 ## New Commands
 
-knife azure server update existing_server_name <options to add/update extension>
+knife azure server update existing_server_name \[options to add/update extension\]
 
 
 
