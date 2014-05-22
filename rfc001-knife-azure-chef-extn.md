@@ -26,16 +26,15 @@ This document is a request for comments to add support for adding azure chef ext
 
 The goal is to extend knife-azure:
   - Add chef extension to a new VM during knife-azure server create.
-  - Update an existing VM using knife-azure to add or update chef extension
 
 ## Requirements
 
 knife-azure: https://github.com/opscode/knife-azure
 
 
-## New Commands
+## Modified Commands
 
-knife azure server update existing_server_name \[options to add/update extension\]
+knife azure server create server_name \[options to add chef extension\]
 
 
 
@@ -51,11 +50,8 @@ Azure chef extension is a package that is deployed on the VM by Azure and manage
 
 "knife azure server create" should be updated to specify azure chef extension parameters as described below.
 
-### Add/Update Extension to an existing VM managed by knife azure
 
-New "knife azure server update" command will be implemented to add extension to existing VM, or to update the extension version to a newer one.
-
-### Parameters required for managing azure chef extension
+### Parameters required for adding azure chef extension
 
   - client.rb [ this may be used directly from the --config option ]
   - validation.pem [ again this can be read using the path mentioned in client.rb or we can have additional param]
