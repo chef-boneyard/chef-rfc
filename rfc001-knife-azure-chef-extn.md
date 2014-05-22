@@ -25,7 +25,7 @@ This document is a request for comments to add support for adding azure chef ext
 ## Goal
 
 The goal is to extend knife-azure:
-  - Add chef extension during knife-azure server create.
+  - Add chef extension to a new VM during knife-azure server create.
   - Update an existing VM using knife-azure to add or update chef extension
 
 ## Requirements
@@ -41,7 +41,7 @@ knife azure server update existing_server_name \[options to add/update extension
 
 ## Overview
 
-The goal is extend the knife-azure gem to add support for managing azure chef extension.
+The goal is extend the knife-azure gem to add azure chef extension to a VM during server create.
 
 Azure chef extension is a package that is deployed on the VM by Azure and managed by "Guest Agent" running on the VMs. Extension package automates deployment on Chef-client on the VM and configuring the chef-client. Configuration includes generating client.rb, specifying initial runlist and validation.pem file for the chef-client registration with chef as a node.
 
