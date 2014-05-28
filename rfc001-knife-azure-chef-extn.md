@@ -36,6 +36,9 @@ knife-azure: https://github.com/opscode/knife-azure
 
 knife azure server create server_name \[options to add chef extension\]
 
+## New Commands
+
+knife azure server update \[options to add extension\]
 
 
 ## Overview
@@ -44,9 +47,20 @@ The goal is extend the knife-azure gem to add azure chef extension to a VM durin
 
 Azure chef extension is a package that is deployed on the VM by Azure and managed by "Guest Agent" running on the VMs. Extension package automates deployment on Chef-client on the VM and configuring the chef-client. Configuration includes generating client.rb, specifying initial runlist and validation.pem file for the chef-client registration with chef as a node.
 
+## Details
+The extension will be added to VM in two cases, creation of new VM and updating existing VM. Addition of extension should behave similar to bootstrap process which installs chef-client and does a initial chef-client run to register the node.
+
+Similary adding an extension to VM should ensure extension is added using azure API to VM and is installed but not enabled. 
+
+Azure by default calls install and enable commands on any newly added extension, so we will need to update azure-chef-extension gem to handle scenario where enable should run conditionally only when extension is added via portal/azure commandlet and not via knife azure.
+Status of extension installation will be retrieved via azure apis to check the progress of bootstrap.
+
 ## Impact on knife azure command
 
 ### Add Extension during VM creation using knife azure
+
+Addition of extension will be treated as bootstrap protocol option for ease of use. For example
+knife azure server create --bootstrap-protocol vmextension ...
 
 "knife azure server create" should be updated to specify azure chef extension parameters as described below.
 
@@ -58,6 +72,13 @@ Azure chef extension is a package that is deployed on the VM by Azure and manage
   - runlist [again existing param for runlist can be used]
   - azure chef extension package version.
   - platform [just for a note here, mostly this will be inferred from image os]
+
+### Add Extension to existing VM using knife azure
+
+"knife azure server update" should be implemented to add azure chef extension to an existing VM.
+
+### Parameters required for adding azure chef extension
+  same as those mentioned above for new VM creation scenario.
 
 ## Impact on the bootstrap process
 
