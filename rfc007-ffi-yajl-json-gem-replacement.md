@@ -41,14 +41,14 @@ into the gem and then tightly coupled and forked and patched independently of th
 doing the necessary archaeology to determine if the fixes in the gem have already been put into the upstream or not.
 
 The ffi-yajl gems build infrastructure is constructed differently.  It takes the upstream Yajl sources as a git submodule (ugly, but it establishes
-a hard boundary), and then copies those sources into the ruby build infrastructre and applies a few necessary patches.  It is structured more like
+a hard boundary), and then copies those sources into the ruby build infrastructure and applies a few necessary patches.  It is structured more like
 FreeBSD ports or SRPMs with separated upstream sources and patches.  It should be much easier to track the upstream yajl library and to allow
 distros to turn off the embedded library and use the distro supplied yajl 2.x library.
 
-There was also an attempt to wrap yajl with FFI bindings in the yajl-ruby gem which was also abandoned.
+There was also a previous attempt to wrap yajl with FFI bindings in the yajl-ruby gem which was abandoned.
 
 At the time when I first looked at fixing yajl-ruby it did not look like something that I would be successful at accomplishing, so I did not
-bother with that, and I wrote the FFI wrapper instead.  After having plagarized (MIT Licensed, so that's kosher) large chunks of the yajl-ruby gem
+bother with that, and I wrote the FFI wrapper instead.  After having plagiarized (MIT Licensed, so that's kosher) large chunks of the yajl-ruby gem
 for ffi-yajl, I understand it better and could probably work on fixing yajl-ruby now, but that would require a complete reset.
 
 ## Why not put any effort into fixing the JSON gem?
