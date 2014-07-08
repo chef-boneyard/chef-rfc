@@ -54,12 +54,12 @@ unless otherwise stated in advance.
 
 ### Timing
 
-Meetings should be run to a schedule. Agenda's should have draft time slots,
+Meetings should be run to a schedule. Agendas should have draft time slots,
 and the boundaries should be held.
 
-### Agenda's are shared prior to the meeting
+### Agendas are shared prior to the meeting
 
-Agenda's will be sent out 24 hours prior to the meeting, via email to the chef-dev
+Agendas will be sent out 24 hours prior to the meeting, via email to the chef-dev
 mailing list. If no agenda is sent out in advance, the standing agenda is the
 meetings agenda.
 
@@ -73,7 +73,7 @@ meetings agenda.
 
 ### Timing
 
-As an agenda item nears it's time limit, the moderator will give a 2 minute warning, then close the
+As an agenda item nears its time limit, the moderator will give a 2 minute warning, then close the
 topic.
 
 ### Questions and answers
