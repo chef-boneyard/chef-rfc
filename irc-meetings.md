@@ -79,7 +79,7 @@ topic.
 ### Questions and answers
 
 It is up to the moderator and speakers to manage the back-and-forth flow of questions and answers,
-depending on the nature of the topic on the agenda, and the comfort of the speaker. If the spearker
+depending on the nature of the topic on the agenda, and the comfort of the speaker. If the speaker
 requests participants hold questions to the end, please be respectful.
 
 ## Meeting Conduct
