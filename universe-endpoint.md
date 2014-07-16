@@ -39,9 +39,9 @@ look like
 Assuming the request meets all authentication and authorization
 requirements, the server responds with a JSON document containing the
 list of all cookbooks, their available versions, and the dependencies of
-each. The format of this document is identical to the format of the
-response given by the supermarket universe API, which is documented
-here: http://docs.opscode.com/api_cookbooks_site.html#universe
-
-
+each. The format of this document is mostly identical to the format of
+the response given by the supermarket universe API, which is documented
+here: http://docs.opscode.com/api_cookbooks_site.html#universe The
+response given by the chef server differs from the supermarket API in
+that the `location_type` field in the response is set to "chef_server".
 
