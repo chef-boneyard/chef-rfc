@@ -36,9 +36,6 @@ look like
 
   https://chef-server.example.org/organizations/org_name/universe
 
-**DISCUSSION:** BASE_SERVER_URL/cookbooks/_universe could be used
-instead and is consistent with other non-RESTful APIs.
-
 Assuming the request meets all authentication and authorization
 requirements, the server responds with a JSON document containing the
 list of all cookbooks, their available versions, and the dependencies of
