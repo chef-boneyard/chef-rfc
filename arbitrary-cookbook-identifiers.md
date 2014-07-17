@@ -74,6 +74,12 @@ look like:
 uploaded cookbook to allow full SemVer version numbers. This allows
 users to add extra information to the version field if they choose to do
 so.
+* If feasible, the `cookbook_artifacts` endpoint should provide a bulk
+API that allows an API consumer to request multiple cookbook objects
+in a single request response cycle. The existing server-side dependency
+solver endpoint at `/environments/:environment/cookbook_versions`
+provides this behavior, but is not be used by chef-client when
+fetching cookbooks via the new artifact-based API.
 
 ### How Chef Client Uses Cookbooks with Arbitrary IDs
 
