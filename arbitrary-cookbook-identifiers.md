@@ -54,7 +54,22 @@ object with the same identifier is always an error.
 * A GET request to `/cookbook_artifacts/:cookbook_name` should include
 extra information about each version of a cookbook, such as its SemVer
 version number, to facilitate tooling that provides a better user
-experience when working with opaque identifiers.
+experience when working with opaque identifiers. Extended metadata, such
+as a URL to the upstream source of this cookbook (e.g., supermarket,
+github, etc.) and associated upstream identifiers (e.g., git commit ID)
+may also be useful. The entry for an individual cookbook artifact could
+look like:
+
+```json
+  { "name": "apache2",
+    "identifier": "886757f9ae3cf2520c82b791195c27ecafd93656",
+    "version": "1.10.4",
+    "url": "https://chef.example.org/organizations/:org/cookbook_artifacts/apache2/886757f9ae3cf2520c82b791195c27ecafd93656",
+    "origin_url": "https://supermarket.getchef.com/cookbooks/apache2/versions/1.10.4/download",
+    "origin_id": "1.10.4"
+  }
+```
+
 * If feasible, we should relax validation on the version field of the
 uploaded cookbook to allow full SemVer version numbers. This allows
 users to add extra information to the version field if they choose to do
