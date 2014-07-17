@@ -88,9 +88,9 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 
 * Windows 7, 8, 8.1
 * RHEL 5.x, 6.x
-* Mac OS X 10.? - Mavericks (more to come)
+* Mac OS X 10.9
 
 ### Unsupported
 
 * Windows Vista, XP, 2000, ME, 98, 95, 3.11 for Workgroups
-* Mac OS X < 10.7, anything ppc
+* Mac OS X < 10.9, anything ppc
