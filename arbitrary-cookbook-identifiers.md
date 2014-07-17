@@ -15,10 +15,11 @@ workflows. For example, teams that iterate and publish rapidly may
 prefer to use an autoincrementing integer scheme, like svn; users that
 need to publish cookbooks to the server (either manually or as part of a
 Ci pipeline) to run integration tests may not be ready to assign a
-static version number to their content; very basic users (like
-beginners) may not have a need for versioning at all (yet); and users
-who have temporarily forked a third party cookbook have no way to
-publish it to a server without potentially conflicting with the
+static version number to their content; and very basic users (like
+beginners) may not have a need for versioning at all (yet).
+
+* Users who have temporarily forked a third party cookbook have no way
+to publish it to a server without potentially conflicting with the
 upstream's version.
 
 * In order to provide a compromise between users who do not need
@@ -43,6 +44,9 @@ other limitations such requiring the first character not be an
 underscore (so that the server can provide "special" URLs using an
 underscore in the path component). The URL for a cookbook instance would
 be `BASE_URL/cookbook_artifacts/:cookbook_name/:identifier`
+* There is no uniqueness constraint on cookbook name and version; this
+endpoint allows there to be (e.g.,) multiple distinct Apache2 1.0.0
+cookbooks as long as each one has a unique identifier.
 * Cookbooks uploaded to this endpoint are not visible to the
 `/environments/:environment/cookbook_versions` endpoint.
 * The endpoint has no concept of "freezing." Overwriting an existing
@@ -51,6 +55,10 @@ object with the same identifier is always an error.
 extra information about each version of a cookbook, such as its SemVer
 version number, to facilitate tooling that provides a better user
 experience when working with opaque identifiers.
+* If feasible, we should relax validation on the version field of the
+uploaded cookbook to allow full SemVer version numbers. This allows
+users to add extra information to the version field if they choose to do
+so.
 
 ### How Chef Client Uses Cookbooks with Arbitrary IDs
 
@@ -85,6 +93,27 @@ The existing cookbooks API remains as-is, for the following purposes:
 * It provides an "internal supermarket" for users to publish artifacts
 within their organization.
 
-After a sufficient period of time, we may remove the dependency solver
-from the chef-server if there is a compelling reason to do so.
+When both the old and new APIs are used concurrently, cookbooks uploaded
+to the new end point must, by default, be invisible to the old end
+point. The new end point allows multiple editions of a cookbook at the
+same version number to exist simultaneously and provides an implicit
+guarantee that uploading a cookbook will not interfere with any other
+active cookbooks.
+
+After a sufficient period of time (one or more major release cycles), we
+may remove the dependency solver from the chef-server if there is a
+compelling reason to do so.
+
+## Discussion
+
+Any implementation choices in this proposal are open for discussion. The
+design constraints on the solution are:
+
+* Must be able to store and fetch cookbooks according to arbitrary
+identifiers (subject to reasonable constraints on identifier size and
+URL-safety).
+* Must not impact workflows using the older API, even if both APIs are
+in use simultaneously.
+* Allowing extended version numbers when using the new API is desirable
+but not an absolute necessity.
 
