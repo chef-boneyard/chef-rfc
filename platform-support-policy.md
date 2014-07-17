@@ -27,6 +27,7 @@ CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
 Mac OS X | 10.6, 10.7, 10.8, 10.9 | x86_64 | dmg | Mac OS 10.7
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
+Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Solaris | 9, 10, 11 | sparc, x86 (10 and 11 only) | shar | Solaris 9
 Windows | 2003R2, 2008, 2008R2, 2012, 2012R2 | x86 and x86_64 | msi | Windows 2008R2
 Ubuntu Linux | 10.04LTS, 12.04LTS, 14.04LTS | x86 and x86_64 | deb | Ubuntu 10.04LTS
