@@ -39,10 +39,10 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * SUSE Linux Enterprise Server 10, 11
 * Scientific Linux 5.x, 6.x and 7.x (i386 and x86-64)
 * Debian Linux 6.x and 7.x
-* Gentoo Linux ***what versions?***
-* Arch Linux ***what versions?***
+* Gentoo Linux (rolling release)
+* Arch Linux (rolling release)
 * Fedora (current non-EOL revisions)
-* OpenSUSE ***what versions?***
+* OpenSUSE 12.3 (until EOL on 15 September 2014), 13.1
 
 ### Not Supported
 
@@ -73,7 +73,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 
 ### Supported
 
-* Ubuntu (which versions?)
+* Ubuntu 10.04LTS, 12.04LTS, 14.04LTS
 * RHEL 5.x and 6.x
 * CentOS 5.x and 6.x
 * Oracle 5.x and 6.x
@@ -95,3 +95,14 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 
 * Windows Vista, XP, 2000, ME, 98, 95, 3.11 for Workgroups
 * Mac OS X < 10.9, anything ppc
+
+## Appendix: Guiding Principles for Operating System Version Support
+
+Once Chef Software, Inc. decides to support an operating system, we will also develop rules to determine under what upstream vendor lifecycle we will continue to support products, and they will be documented in this section. Vendors have various terminology to describe support lifecycles ('standard support', 'extended support', etc.) and it is useful to clarify what those mean in the context of Chef's products.
+
+| Platform | Support Until | References
+| Mac OS X | Current version, plus two previous versions | Apple does not clearly announce EOLs, so we have made this choice
+| RHEL and EL-variants | End of RedHat Production 3 Phase | https://access.redhat.com/support/policy/updates/errata/
+| Solaris | End of Premier Support | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
+| Ubuntu | End of LTS lifecycle for LTS releases, end of standard release lifecycle for non-LTS releases | https://wiki.ubuntu.com/LTS
+| Windows | End of Extended Support | https://support.microsoft.com/lifecycle/?c2=1163
