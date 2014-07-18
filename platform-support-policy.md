@@ -100,9 +100,10 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 
 Once Chef Software, Inc. decides to support an operating system, we will also develop rules to determine under what upstream vendor lifecycle we will continue to support products, and they will be documented in this section. Vendors have various terminology to describe support lifecycles ('standard support', 'extended support', etc.) and it is useful to clarify what those mean in the context of Chef's products.
 
-| Platform | Support Until | References
-| Mac OS X | Current version, plus two previous versions | Apple does not clearly announce EOLs, so we have made this choice
-| RHEL and EL-variants | End of RedHat Production 3 Phase | https://access.redhat.com/support/policy/updates/errata/
-| Solaris | End of Premier Support | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
-| Ubuntu | End of LTS lifecycle for LTS releases, end of standard release lifecycle for non-LTS releases | https://wiki.ubuntu.com/LTS
-| Windows | End of Extended Support | https://support.microsoft.com/lifecycle/?c2=1163
+Platform | Support Until | References
+--- | --- | ---
+Mac OS X | Current version, plus two previous versions | Apple does not clearly announce EOLs, so we have made this choice
+RHEL and EL-variants | End of RedHat Production 3 Phase | https://access.redhat.com/support/policy/updates/errata/
+Solaris | End of Premier Support | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
+Ubuntu | End of LTS lifecycle for LTS releases, end of standard release lifecycle for non-LTS releases | https://wiki.ubuntu.com/LTS
+Windows | End of Extended Support | https://support.microsoft.com/lifecycle/?c2=1163
