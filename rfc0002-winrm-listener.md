@@ -52,7 +52,7 @@ of the generated certificate which contains the private key
 
 ### Certificate generation command
 
-    knife certificate winrm-certgen <options>
+    knife winrm certgen <options>
     
 The output of the command will be X509 certificate. The certificate will be
 generated in 2 formats:
@@ -70,11 +70,11 @@ The command can be run on any workstation.
 * `--cert-validity`: Default is 24 months.
 * `--cert-passphrase`: Default is winrmcertgen
 
-The *winrm-certgen* command can be viewed as an analogue of the *ssh-keygen* command used to create ssh keys.
+The *winrm certgen* command can be viewed as an analogue of the *ssh-keygen* command used to create ssh keys.
 
 ### Certificate installation command
 
-    knife certificate winrm-certinstall CERT-PATH
+    knife winrm certinstall CERT-PATH
 
 This command should be run on the Windows server. The command will add the certificate specified in the CERT-PATH to its certificate store. The CERT-PATH
 should point to a valid PKCS12 certificate.
@@ -85,7 +85,7 @@ Options:
 
 ### Listener creation command
 
-    knife listener winrm create
+    knife winrm listener create
 
 This command is run on the Windows server. The command will create the winrm listener. Default is HTTP listener on port 5985
 
@@ -96,7 +96,7 @@ Options:
 
 Once a listener is created with this command, a WinRM connection can be established from a remote process that presents a certificate with the appropriate private key.
 
-The *winrm-certinstall* command followed by the *winrm create* command can be viewed as similar to the configuration of ssh keys which is often accomplished by
+The *winrm certinstall* command followed by the *winrm listener create* command can be viewed as similar to the configuration of ssh keys which is often accomplished by
 copying an ssh key to a well-known configuration location for the ssh server process.
 
 ## Optional WinRM configuration commands
@@ -105,12 +105,12 @@ implementation that meets the requirements declared in this document.
 
 ### Listener deletion command
 
-    knife listener winrm delete HTTP/HTTPS
+    knife winrm listener delete HTTP/HTTPS
 
 This command is run on Windows server. The command will delete the listener
 specified.
 ### Listener list command
 
-    knife listener winrm list
+    knife winrm listener list
 
 This command is run on Windows server. The command will list the winrm listeners.
