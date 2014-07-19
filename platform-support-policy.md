@@ -12,25 +12,26 @@ This RFC does *not* address "What is the product lifecycle of Chef Software, Inc
 A Chef Client supported platform means:
 
 * Omnitruck won't fail or go into Yolo mode when confronted with the platform
-* The holy trinity of resources (package, service, template) works out of the box
+* The most important core resources (package, service, template) work out of the box
 * Ohai attributes for ```platform```, ```platform_family```, ```platform_version``` and ```kernel.machine``` are correct
 
-Chef Client support implies Ohai support.
+Chef Client support policies also apply to Ohai, since that is a dependency.
 
 ### Tier 1 Support
 
-Tier 1 supported platforms are those for which Chef builds native binary "Omnitruck" (full-stack installer) packages. For each platform, there is equipment in the CI pipeline to perform client verification tests on machines of that platform.
+Tier 1 supported platforms are those for which Chef builds native binary "Omnitruck" (full-stack installer) packages. For each platform, there is equipment in the CI pipeline to perform client verification tests (CVT) on machines of that platform.
 
 Platform | Versions | Architectures | Package Format | Built on 
 --- | --- | --- | --- | ---
+AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
 Mac OS X | 10.6, 10.7, 10.8, 10.9 | x86_64 | dmg | Mac OS 10.7
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Solaris | 9, 10, 11 | sparc, x86 (10 and 11 only) | shar | Solaris 9
-Windows | 2003R2, 2008, 2008R2, 2012, 2012R2 | x86 and x86_64 | msi | Windows 2008R2
-Ubuntu Linux | 10.04LTS, 12.04LTS, 14.04LTS | x86 and x86_64 | deb | Ubuntu 10.04LTS
+Windows | 2003R2, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi | Windows 2008R2
+Ubuntu Linux | 10.04, 12.04, 14.04 | x86, x86_64 | deb | Ubuntu 10.04
 
 ### Tier 2 Support
 
@@ -55,17 +56,9 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * NetBSD
 * Windows 2003, Windows 2000
 * RHEL/CentOS/Oracle/Scientific 4.x or older
+* RHEL or SLES on POWER (ppc64) or System/z
 * HP-UX
 * Mac OS X 10.5, older, or anything ppc-based
-
-### Not Supported but We're Working On It
-
-* AIX 6.1, 7.1 (ppc64)
-
-### Not Supported but We'd be Open To It
-
-* RHEL and SLES on POWER (ppc64)
-* RHEL on System/z (would have to think long and hard though, how would we build clients?)
 
 ## Chef Server
 
@@ -93,7 +86,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 
 ### Unsupported
 
-* Windows Vista, XP, 2000, ME, 98, 95, 3.11 for Workgroups
+* Windows Vista, XP, 2000
 * Mac OS X < 10.9, anything ppc
 
 ## Appendix: Guiding Principles for Operating System Version Support
