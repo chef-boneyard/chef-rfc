@@ -11,7 +11,7 @@ This RFC does *not* address "What is the product lifecycle of Chef Software, Inc
 
 A Chef Client supported platform means:
 
-* Omnitruck won't fail or go into Yolo mode when confronted with the platform
+* Omnitruck won't fail when confronted with the platform and version
 * The most important core resources (package, service, template) work out of the box
 * Ohai attributes for ```platform```, ```platform_family```, ```platform_version``` and ```kernel.machine``` are correct
 
