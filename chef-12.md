@@ -8,7 +8,7 @@ This document summarizes our current thinking for the next major version of Chef
 First some data for information purposes:
 
 * Currently Chef Client has two major versions that are supported. The latest versions that are soon to be released are 10.34.0 & 11.14.0. Chef 10 has been around since Jun 18 2012 and Chef 11 has been around since Feb 1 2013.
-* Chef Client is officially supported on Ruby versions `1.8.7` (End of Lifed on June  2013), `1.9.3-p484` (will End of Life on Feb 23 2015) & `2.1.2`.
+* All supported versions of Chef Client supports Ruby versions `1.8.7` (End of Lifed on June  2013), `1.9.3-p484` (will End of Life on Feb 23 2015) & `2.1.2`.
 * Based on the release cadence we've established around the time of [11.6.0](http://www.getchef.com/blog/2013/07/23/chef-client-11-6-0-ohai-6-18-0-and-more/) release, Chef Client ships with a minor version bump approximately every 3 months and with a major version bump approximately every year.
 
 ## Chef Support Statement
@@ -80,6 +80,58 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
 * **Impact:** Low
   * Short description of the impact: Guard expressions for the batch resource will run as 64-bit, which could cause different behaviors for an expression that was either intentionally or unintentionally running as 32-bit. It’s unlikely that people will hit this case, largely because if they didn’t do the workaround to use 64-bit, that’s probably a case where running as 32-bit is harmless (or they would have caught the problem). If they were working around it with guard_interpreter or sysnative, there will be no impact.
 
+#### Remove rest-client Dependency
+* **Breaks Backwards Compatibility? (Workstation):** (Yes)
+* **Breaks Backwards Compatibility? (Cookbooks):**   (Yes)
+* **User Benefit:** (Medium)
+  * Any user code (cookbooks, knife plugins,
+    etc.) that depends on rest-client will be able to set its own version
+    requirements. Currently some use cases are broken in the version of
+    rest-client that chef-client is locked to, but chef-client cannot upgrade
+    because of ruby version compatibility issues (1.8). chef-client itself no
+    longer depends on rest-client, so there is no reason to specify it as a
+    dependency other than backwards compatibility.
+* **Impact:** (Low)
+  * Any user code depending on rest-client
+    needs to ensure that it is installed via the appropriate mechanism.
+
+#### Require `name` Attribute in Cookbook Metadata
+* **Breaks Backwards Compatibility? (Workstation):** (Yes)
+* **Breaks Backwards Compatibility? (Cookbooks):**   (Yes)
+* **User Benefit:** (Medium)
+  * Users and tool authors will be able to
+    store cookbooks according to directory names of their choosing, for example
+    `COOKBOOK_NAME-VERSION` or any other desired scheme.
+* **Impact:** (Low)
+  * Currently the name field is ignored
+    entirely, so a user could have a cookbook with an incorrect name field that
+    is working "by accident".
+  * In the current implementation of cookbook
+    loading, `knife cookbook upload`, etc., there is an interdependency between
+    the existing behavior, the cookbook overlay feature, the performance of
+    `knife cookbook upload`, and a feature where invalid cookbook data in an
+    unrelated cookbook does not cause an error when uploading a different cookbook.
+
+#### Enable client-side key generation by default
+* **Breaks Backwards Compatibility? (Workstation):** (No)
+* **Breaks Backwards Compatibility? (Cookbooks):**   (No)
+* **User Benefit:** (Medium)
+  * Reduces server load when creating a large
+    number of servers concurrently; protects the client's key material from
+    confidentiality failures that can be caused by catastrophic SSL bugs (like heartbleed).
+* **Impact:** (Low)
+  * This is *technically* a breaking change
+    because it breaks support for the 10.x server API; however, that version
+    becomes unsupported when 12.x is released, so it does not break
+    compatibility with any supported version of the server.
+
+#### Add simple DSL method to interact with encrypted data bags
+ * **Breaks Backwards Compatibility? (Workstation):** No
+ * **Breaks Backwards Compatibility? (Cookbooks):**  No
+ * **User Benefit:** Low
+  * Short description of the benefit: It confused me when I was first introduced to Chef that data bags had a nice friendly DSL method (data_bag_item) and encrypted databags had to be access using Chef::EncryptedDataBagItem.load.  It seems like for consistency and helping out new users a new method encrypted_data_bag_item could be added that would simplify the code necessary to interact with encrypted data bags
+ * **Impact:** Medium
+  * Short description of the impact: Similar to some of the changes made to the DSL in Chef 11, this would make any cookbook using the new method a Chef 12 or later cookbook.
 
 **TODO: If you would like to propose a new major feature for Chef 12, please copy the example proposal below and submit a PR to this branch.**
 
