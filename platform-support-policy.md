@@ -44,6 +44,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * Arch Linux (rolling release)
 * Fedora (current non-EOL revisions)
 * OpenSUSE 12.3 (until EOL on 15 September 2014), 13.1
+* OmniOS stable and LTS releases
 
 ### Not Supported
 
@@ -83,6 +84,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 * Windows 7, 8, 8.1
 * RHEL 5.x, 6.x
 * Mac OS X 10.9
+* Ubuntu 12.04, 13.10
 
 ### Unsupported
 
