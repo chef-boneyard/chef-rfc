@@ -12,6 +12,9 @@ This Request for Comments (RFC) document proposes modifications to Chef Client a
 Specifically, the document specifies the new resources and other changes related to surfacing capabilities of PowerShell 4.0
 Desired State Configuration (DSC).
 
+Prototype source code in the form of a Chef cookbook for a subset of the functionality described in this document can be found
+at <https://github.com/opscode-cookbooks/dsc>.
+
 ## Motivation
 
 PowerShell DSC, like Chef, presents an interface and implementation for managing the state of an operating system
@@ -86,7 +89,7 @@ utilize DSC from within recipes.
 This document assumes familiarity with the Chef resource DSL, which is
 documented at <http://docs.opscode.com/chef/resources.html>.
 
-## Overview
+## Functional description
 
 Integration of Chef and DSC is defined in the following fashion:
 
@@ -109,6 +112,28 @@ The other resources, `dsc_script` and `dsc_mof` allow users who may have authore
 configuration artifacts (e.g. PowerShell scripts or MOF files) from other contexts to make use of that knowledge from within
 Chef. They also have few restrictions on what features of DSC can be used, so limitations on the data types that can be
 assigned to `dsc_resource` for example may be bypassed by using the less seamless `dsc_script` or `dsc_mof` resources.
+
+## Requirements
+
+The integration of DSC into Chef has the following requirements:
+
+* All interaction with DSC should happen through Chef resources in recipes
+* There should be an "easy" resource usage that requires no knowledge of DSC syntax, only standard Chef DSL
+* The easy mode should defend against script injection attacks
+* There should be a more direct resource interaction that allows those with knowledge of or access to DSC native language
+  artifacts defined with the PowerShell DSC or Managed Object Format (MOF) languages to use those languages from Chef recipes
+* The resources that abstract the direct integration should automate all actual interactions with DSC subsystems such as the
+  Local Configuration Manager.
+* Errors returned from the Local Configuration Manager should be surfaced in Chef error output within the narrowest lexical
+  scope possible to facilitate efficient debugging of recipes
+* In order to use DSC resources in Chef, Users unfamiliar with DSC should not be required to understand beyond knowing the
+following:
+    * How to find the name and purpose of a useful resource from easily accessible documentation
+    * How to find vendor-authored documentation for the resource
+    * How to identify the names and meanings of the DSC properties of the resource
+* For Chef resources used to access DSC, the Chef resource's idempotence in terms of changing state and reporting that the state was
+  changed (or not) should mirror that reported by applicable underlying DSC resources
+
 
 ### Simple examples
 
@@ -180,21 +205,102 @@ dsc_mof 'Chef Group MOF' do
 end
 ```
 
-## Functional description
+## Functional specification of Chef resources for DSC
 
-Details for this section coming soon.
+This section describes the Chef resources that interact with DSC in terms of their attributes and general DSL usage within Chef
+recipes. The behaviors implemented by the esources are also given in terms of how they would map to the equivalent PowerShell
+script that would implement the intended configuration on the system. While this PowerShell-based description may strongly imply
+an implementation for the Chef resources with regard to how they integrate with DSC, such an implementation is not in any way
+advocated or mandated here, and is likely to deviate significantly if not completely from how a released implementation of this
+document is realized.
 
-### Requirements
+### `dsc_resource` resource
 
-### Chef resources for DSC
+The `dsc_resource` resource surfaces any DSC resource as an instance of `dsc_resource` within a cookbook. This allows users with
+minimal knowledge of DSC resources to use the DSC resource within recipes.
 
-#### `dsc_resource` resource
+#### `dsc_resource` actions
+
+In addition to the standard `:nothing` action, this resource has the following actions
+
+|Action|Description|
+|------|-----------|
+|`:set`|This is the default action. This action is used to enact DSC configuration specified by the resource's attributes by supplying that DSC configuration to the DSC Local Configuration Manager and requesting that the system be updated to reflect it. This resource is only updated if the LCM makes changes as part of the aforementioned interaction|
+|`:test`|This action is similar to set, except that the LCM does not make changes, it only checks to see if changes to the system are needed to make the system compliant with the configuration expressed by the Chef resource. If changes are needed, the resource will be updated, otherwise it will not|
+
+#### `dsc_resource` attributes
+
+`dsc_resource` honors common resource attributes, as well as the following properties:
+
+|Attribute|Description|
+|---------|-----------|
+|`resource_name`|The name of the DSC resource to use for configuration.|
+|`property`| Optional. Multiple repetitions. This attribute is specified multiple times in each `dsc_resource`, once for each DSC resource property of the DSC resource type specified by `resource_name` that should be configured. The attribute takes two arguments -- a case-insensitive symbol that has the same lexical name as the DSC resource property and a second parameter for the value to which that property should be set|
+
+In more detail, the `property` attribute has these behaviors:
+
+* The second *value* argument of `property` must be one of the following types `String`, `Fixnum`, `Float`, `FalseClass`,
+  `TrueClass`, `NilClass`, or `Chef::Resource::DscResource` or an exception is raised at compile time for the resource.
+* The *value* argument will be converted to an equivalent .NET CLR data type since DSC consumes such types. The conversion will
+  happen according to rules for type safety described in a subsequent section.
+* If the `resource_name` attribute does not correspond to the name of DscResource installed on the system, an exception will be
+  raised at converge time.
+* For a given pair of *property name* and *value* passed to the `property` attribute, CLR type to which *value* is converted prior
+  to submission to the LCM according to the aforementioned type rules **MUST** match the CLR type of the property specified by
+  *property name* for the DSC resource specified by the `resource_name` attribute or an exception is raised at converge time.
+* The same *property name* argument of the `property` attribute may not be specified more than once in a given `dsc_resource` block.
+
+##### Type safety for `dsc_resource` `property` attributes
+
+Prior to submitting configuration to DSC, values specified to the `property` attribute will be converted to CLR types based on the Ruby type used for the value according
+to these rules:
+
+|Ruby type|CLR type|
+|---------|--------|
+|`String`|`string`|
+|`FixNum`|`int32`|
+|`Float`|`double`|
+|`TrueClass`|`bool`|
+|`FalseClass`|`bool`|
+|`NilClass`|`object`|
+|`Chef::Resource::DscResource`|`OMI_Resource`|
+
+Most of these type conversions should be umanbiguous and reversible, and mostly they should be direct and leave data
+unchanged. The `String` conversion for example should require no actual type conversion. The conversion for `NilClass` would
+simply present such a value as the CLR value `null`.
+
+Classes of `Chef::Resource::DscResource` will result in the CLR representation of the DSC resource being assigned to a
+property. This covers DSC use cases such as the following fragment of DSC PowerShell code below where an anonymous instance of
+the `MSFT_xWebBindingInformation` DSC resource is used to express the configuration of the `BindingInfo` property of an
+`xWebsite` instance:
+
+```
+  xWebsite NewWebsite
+        {
+            Ensure          = "Present"
+            Name            = $WebSiteName
+            State           = "Started"
+            PhysicalPath    = $DestinationPath
+            BindingInfo     = MSFT_xWebBindingInformation
+                             {
+                               Protocol              = "HTTPS"
+                               Port                  = 8443
+                               CertificateThumbprint ="71AD93562316F21F74606F1096B85D66289ED60F"
+                               CertificateStoreName  = "WebHosting"
+                             }
+            DependsOn       = "[File]WebContent"
+        }
+```
 
 #### `dsc_script` resource
 
 #### `dsc_mof` resource
 
 ## Detailed examples
+
+## Usability notes
+
+## Inapplicable DSC features
 
 ## Implementation notes
 
@@ -207,7 +313,7 @@ The initial implementation of this feature is assumed to function only on the Wi
 
 The following issues require specification before accepting the proposals in this document
 
-* For DSC resource proeprties with non-trivial (e.g. types that inherit from System.Object in the CLR), how should they be
+* For DSC resource properties with non-trivial (e.g. types that inherit from System.Object in the CLR), how should they be
   translated from Chef / Ruby via the `dsc_resource` resource into a DSC-consumable artifact? The `PSCredential` type commonly
   used in PowerShell cmdlets is an example of such a type. One option is to disallow such types in `dsc_resource` and require
   the use of `dsc_script` or `dsc_mof` for this use case.
