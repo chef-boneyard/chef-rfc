@@ -89,6 +89,24 @@ utilize DSC from within recipes.
 This document assumes familiarity with the Chef resource DSL, which is
 documented at <http://docs.opscode.com/chef/resources.html>.
 
+* **Chef resource**: This refers to the concept and implementation exposed through the Chef DSL as documented in Chef
+    documentation. Specifically, a Chef resource is an instance of a Ruby class that contains the Ruby class `Chef::Resource` in
+    its derivation tree. Resources have attributes that represent the desired state of configuration when the attributes are
+    assigned values in a Chef recipe. Resources also have actions, methods that perform idempotent operations on system state.
+* **DSC resource**: A [DSC resource](http://technet.microsoft.com/en-us/library/dn282125.aspx) models the same concept of system
+    configuration as a Chef resource. As such, many DSC resources are direct analogs of Chef resources right down to naming
+    (e.g. the `File` resource in Chef and the `File` resource in DSC). DSC resources contain *properties* that define the
+    desired characteristics of the configuration represented by the resource.
+* **DSC property**: A *property* of a DSC resource is the DSC analog of *attribute* of a Chef resource.
+* **DSC configuration document**: A serialized artifact that contains a representation of the DSC resources that model the
+    desired state of one or more operating system instances
+* **DSC Local Configuration Manager (LCM)**: The LCM is the system component of a single operating system instance that translates a DSC configuration document into
+    actual state changes that conform to the desired state expressed in the document. It is analogous to the **chef-client**
+    component of Chef which performs the same function on an operating system instance.
+* **Managed Object Format (MOF)**: MOF is an open standard format with the capability to represent object-oriented types
+composed of objects or strongly typed primitive data types and the relationships between those objects. It is used by DSC infrastructure to communicate desired state of
+one or more operating syste instances to implementations that enact changes to conform to the desired state such as the LCM.
+
 ## Functional description
 
 Integration of Chef and DSC is defined in the following fashion:
