@@ -48,7 +48,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 
 ### Not Supported
 
-"Not supported" means there may be code in-tree, but we don't build for and test on those platforms. We will take patches that don't break any tier 1 or tier 2 platforms, but we have no way of testing these.
+"Not supported" means there may be code in-tree, but we don't build for and test on those platforms. At our discrection, we may take patches that don't break any tier 1 or tier 2 platforms, but we have no way of testing these.
 
 * Solaris 8
 * AIX 5.1L
@@ -70,7 +70,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 * Ubuntu 10.04LTS, 12.04LTS, 14.04LTS
 * RHEL 5.x and 6.x
 * CentOS 5.x and 6.x
-* Oracle 5.x and 6.x
+* Oracle Enterprise Linux 5.x and 6.x
 
 ### Unsupported
 
