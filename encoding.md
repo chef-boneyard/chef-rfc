@@ -1,4 +1,4 @@
-## Related Encoding Tickets
+### Related Encoding Tickets
 
 https://tickets.opscode.com/browse/CHEF-5082
 https://tickets.opscode.com/browse/OHAI-564
@@ -6,7 +6,7 @@ https://tickets.opscode.com/browse/CHEF-3304
 
 Among many, many others.
 
-## Background: LC_ALL=C Breaks Fucking Everything
+### Background: LC_ALL=C Breaks Fucking Everything
 
 Generally with ruby >= 1.9.3 the cause of `"\xC8" on US-ASCII
 (Encoding::InvalidByteSequenceError)` errors is either:
@@ -26,7 +26,7 @@ from two sources:
   world)
 * The mixlib-shellout library and Chef internally sets a default `LC_ALL=C`
 
-## Background: English is an Internal Chef API
+### Background: English is an Internal Chef API
 
 It is a fact that we MUST parse localized strings out of commands and compare
 them against English language strings as part of interacting with the system in
@@ -37,7 +37,7 @@ utilities that have localization-independent ways of getting at all the data
 and state that we desire -- particular since it would also mean fixing old
 distros like CentOS5 that we have to support.
 
-## Background: Its Not Just Shellout
+### Background: Its Not Just Shellout
 
 CHEF-5082 is caused because someone had a metadata.rb which does an IO.read()
 on 'README.md' which contains UTF-8 code and the user is running knife under
@@ -47,7 +47,7 @@ and in some cases are ruby methods that aren't in the Chef codebase and are in
 cookbook files outside of our control to 'fix'.  Trying to bug-bash and
 whack-a-mole the problem is nearly infinitely unsolvable.
 
-## Background: Users Are Not Unicode Experts
+### Background: Users Are Not Unicode Experts
 
 I ran with `LC_ALL=C` for many years until I started to work on Chef because
 setting `LC_ALL=en_US.UTF-8` changes the output of `ls -la` to have dotfiles
@@ -78,7 +78,7 @@ users by detecting these problems and steering users towards solutions (Chef
 raising an Encoding::InvalidByteSequenceError is simply not helpful and we've
 lost the battle by the time that happens)
 
-## Proposal #1: mixlib-shellout
+### Proposal #1: mixlib-shellout
 
 There exists a hard-coded workaround in mixlib-shellout where failure to
 specify an 'LC_ALL' value will set the value to 'C'.  This was done,
@@ -106,7 +106,7 @@ Proposed:  major version bump of mixlib-shellout that removes this feature and
 the default behavior is that the `LC_ALL` value is passed through unchanged,
 and that setting `'LC_ALL' => nil` will unset the value.
 
-## Proposal #2: Chef shell_out LC_ALL=en_US.UTF-8 default
+### Proposal #2: Chef shell_out LC_ALL=en_US.UTF-8 default
 
 The existing `LC_ALL=C` behavior is just broken at this point, and ruby >=
 1.9.3 does not need the Encoding workaround that ruby 1.8.7 needed.  We are
@@ -128,7 +128,7 @@ apt_package against a package that produces UTF-8 output on the command line I
 suspect that chef-client will throw the very Encoding exception that
 shell_out_with_systems_locale is trying to prevent there).
 
-## Proposal #3:  Warn *LOUDLY* and *IMMEDIATELY*  when running in non-UTF-8 locales
+### Proposal #3:  Warn *LOUDLY* and *IMMEDIATELY*  when running in non-UTF-8 locales
 
 In Chef::Application we should have a test which determines if the default
 external encoding for ruby is UTF-8-compatible or not and if not, it warns the
@@ -136,12 +136,12 @@ user with some help to steer them away from `LC_ALL=C` or whatever they have
 done.  A banner message should be emitted similar to the one emitted for the
 SSL noverify configuration.
 
-## Proposal #4:  Config Option for Locale variables
+### Proposal #4:  Config Option for Locale variables
 
 You can already do this in config.rb since its just ruby and you can set your
 ENV['LC_ALL'] but we could provide config options and document them.
 
-## Proposal #5:  Enforce `LC_ALL=en_US` By Default
+### Proposal #5:  Enforce `LC_ALL=en_US` By Default
 
 This might be contentious, but this would largely eliminate Encoding errors due
 to misconfiguration entirely and would not require any user eduction about
@@ -163,7 +163,7 @@ are:
   command
 - set a default UTF-8 locale and prevent the exceptions from occurring.
 
-## My Recommendation
+#### My Recommendation
 
 Carpet Bombing Encoding with All Of The Above.
 
