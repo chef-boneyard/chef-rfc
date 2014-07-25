@@ -1,5 +1,5 @@
 ---
-CEP: draft
+RFC:
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Draft
 Type: Standards Track
