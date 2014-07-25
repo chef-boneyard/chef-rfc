@@ -40,8 +40,8 @@ The revised default lookup path would add `/` to the end:
 If the source attribute is given as an array, this will be used instead of the
 default lookup path.
 
-In a future release such as Chef 13, the default lookup path can be removed in
-favor of explicit specification of a lookup path when needed.
+The default lookup path can be deprecated in the future, but this is outside
+the scope of this RFC.
 
 ## Motivation
 
@@ -69,9 +69,7 @@ of the default lookup path.
 This change is effectively backwards compatible. It is possible some recipe code
 which currently results in an error will now converge successfully, but the
 impact of this is likely to be infinitesimal. By keeping the default lookup path
-for now, full compatibility with current cookbooks is maintained. The removal of
-the current default lookup path in a future release will be an incompatible
-change, and should have a long deprecation period.
+for now, full compatibility with current cookbooks is maintained.
 
 ## Copyright
 
