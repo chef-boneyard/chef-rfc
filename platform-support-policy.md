@@ -5,7 +5,7 @@ The purpose of this RFC is to clarify:
 * What specific operating system platforms and platform versions are supported by the software produced by Chef Software, Inc.
 * What is the meaning of "supported platform"
 
-This RFC does *not* address "What is the product lifecycle of Chef Software, Inc.'s software". That is covered in a separate RFC
+This RFC does *not* address "What is the product lifecycle of Chef Software, Inc.'s software". That is covered in a separate RFC.
 
 ## Chef Client
 
@@ -82,14 +82,15 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 ### Supported
 
 * Windows 7, 8, 8.1
-* RHEL 5.x, 6.x
-* Mac OS X 10.9
-* Ubuntu 12.04, 13.10
+* Fedora (current non-EOL releases)
+* RHEL 6.x
+* Mac OS X 10.8, 10.9
+* Ubuntu 12.04, 13.10, 14.04
 
 ### Unsupported
 
 * Windows Vista, XP, 2000
-* Mac OS X < 10.9, anything ppc
+* Mac OS X < 10.8, anything ppc
 
 ## Appendix: Guiding Principles for Operating System Version Support
 
