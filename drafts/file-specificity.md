@@ -64,6 +64,19 @@ end
 This allows for far more flexibility in file selection while reducing the magic
 of the default lookup path.
 
+The default lookup path can be emulated explicitly:
+
+```ruby
+template '/test' do
+  source %W{
+    host-#{node['fqdn']}/test.erb
+    #{node['platform']}-#{node['platform_version']}/test.erb
+    #{node['platform']}/test.erb
+    default/test.erb
+  }
+end
+```
+
 ## Compatibility
 
 This change is effectively backwards compatible. It is possible some recipe code
