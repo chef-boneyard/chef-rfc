@@ -68,9 +68,9 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 ### Supported
 
 * Ubuntu 10.04LTS, 12.04LTS, 14.04LTS
-* RHEL 5.x and 6.x
-* CentOS 5.x and 6.x
-* Oracle Enterprise Linux 5.x and 6.x
+* RHEL 5.x, 6.x, 7.x
+* CentOS 5.x, 6.x, 7.x
+* Oracle Enterprise Linux 5.x, 6.x, 7.x
 
 ### Unsupported
 
