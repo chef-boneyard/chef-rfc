@@ -163,7 +163,36 @@ are:
   command
 - set a default UTF-8 locale and prevent the exceptions from occurring.
 
+### NOTE:  shell_out_with_systems_locale
+
+It is reasonably to assume that people expect to be able to launch services in
+the locale of their system.  Someone in Germany will likely want 'de_DE.UTF-8'
+as their LC_ALL passed into their applications which are started from an
+service resource via an application_ruby LWRP.  Arguably, they should be more
+declarative and fix this in their application config.  They also could put
+this directly into the Chef resource that they use and decouple the system
+locale from their application locale.  However, I am assuming that we want to
+preserve and strengthen the guarantee that services will be launched in the
+systems locale (we probably have known or unknown outstanding bugs on this
+issue which should be fixed).
+
+We also should pass the systems locale by default to execute, bash, python, ruby,
+etc blocks.  Users will be surprised if their `de_DE.UTF-8` locale switches
+out from under them (or even if their 'C' locale disappears).  So, in all of
+these proposals I'm taking that as a given that we need to do that and/or
+strengthen that behavior.  Setting 'en_US.UTF-8' internally by Chef should be
+an internal behavior.
+
+In those resources that do this that may be tricky since service start/stop
+commands must execute with the systems locale, and then if we attempt to
+parse localized strings that may fail, so we would need to refactor to
+find other non-localized APIs to use.  OTOH, even within the service resource
+the `:enable` and `:disable` actions can use 'en_US.UTF-8' with no visible
+effect to the end user of Chef (outside of debug logging).
+
 #### My Recommendation
 
 Carpet Bombing Encoding with All Of The Above.
+
+
 
