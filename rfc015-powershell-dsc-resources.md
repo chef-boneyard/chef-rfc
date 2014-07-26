@@ -103,9 +103,11 @@ documented at <http://docs.opscode.com/chef/resources.html>.
 * **DSC Local Configuration Manager (LCM)**: The LCM is the system component of a single operating system instance that translates a DSC configuration document into
     actual state changes that conform to the desired state expressed in the document. It is analogous to the **chef-client**
     component of Chef which performs the same function on an operating system instance.
-* **Managed Object Format (MOF)**: MOF is an open standard format with the capability to represent object-oriented types
-composed of objects or strongly typed primitive data types and the relationships between those objects. It is used by DSC infrastructure to communicate desired state of
-one or more operating syste instances to implementations that enact changes to conform to the desired state such as the LCM.
+* **Managed Object Format (MOF)**: [MOF](http://en.wikipedia.org/wiki/Managed_Object_Format) is an open standard format with the capability to represent entities described by the
+[Common Information Model (CIM)](http://en.wikipedia.org/wiki/Common_Information_Model_(computing)) open standard. CIM
+represents objects as a composition a set of primitive data types and other previously defined objects, the operations
+allowed on those objects, and the relationships between classes of objects. It is used by DSC infrastructure to communicate desired state of
+one or more operating system instances to implementations that enact changes to conform to the desired state such as the LCM.
 
 ## Functional description
 
@@ -206,7 +208,7 @@ EOH
 end
 ```
 
-If you use `dsc_script` or `dsc_mof`, it's actually less likely that you'll directly embed the explicity PowerShell or MOF code
+If you use `dsc_script` or `dsc_mof`, it's actually less likely that you'll directly embed the explicitly PowerShell or MOF code
 in a recipe, and more likely that you already have PowerShell or MOF file artifacts that you'd like to re-use, like so:
 
 ```ruby
@@ -226,7 +228,7 @@ end
 ## Functional specification of Chef resources for DSC
 
 This section describes the Chef resources that interact with DSC in terms of their attributes and general DSL usage within Chef
-recipes. The behaviors implemented by the esources are also given in terms of how they would map to the equivalent PowerShell
+recipes. The behaviors implemented by the resources are also given in terms of how they would map to the equivalent PowerShell
 script that would implement the intended configuration on the system. While this PowerShell-based description may strongly imply
 an implementation for the Chef resources with regard to how they integrate with DSC, such an implementation is not in any way
 advocated or mandated here, and is likely to deviate significantly if not completely from how a released implementation of this
@@ -261,34 +263,82 @@ In more detail, the `property` attribute has these behaviors:
   `TrueClass`, `NilClass`, or `Chef::Resource::DscResource` or an exception is raised at compile time for the resource.
 * The *value* argument will be converted to an equivalent .NET CLR data type since DSC consumes such types. The conversion will
   happen according to rules for type safety described in a subsequent section.
-* If the `resource_name` attribute does not correspond to the name of DscResource installed on the system, an exception will be
+* If the `resource_name` attribute does not correspond to the name of a DSC resource installed on the system, an exception will be
   raised at converge time.
 * For a given pair of *property name* and *value* passed to the `property` attribute, CLR type to which *value* is converted prior
   to submission to the LCM according to the aforementioned type rules **MUST** match the CLR type of the property specified by
   *property name* for the DSC resource specified by the `resource_name` attribute or an exception is raised at converge time.
 * The same *property name* argument of the `property` attribute may not be specified more than once in a given `dsc_resource` block.
 
+#### `dsc_resource` usability
+
+In order to use `dsc_resource`, recipe authors will not need to know the PowerShell DSC language or even very much in the way of
+concepts around DSC. Use of DSC resources in Chef through `dsc_resource` requires the following knowledge:
+
+|Knowledge|Source|
+|---------|------|
+|Existence of relevant DSC resource|Internet search on DSC documentation|
+|DSC resource name|DSC documentation|
+|DSC resource property names|DSC documentation|
+|DSC resource property behavior|DSC documentation|
+
+That's it. As an example, consider the case of someone who wanted to see if DSC could be used to unzip a compressed file:
+
+1. She uses an Internet search engine with terms such as *"PowerShell DSC unzip file"* and browse the results
+2. Several results will show examples of a DSC resource called 'archive'
+3. Use of the search engine again with the terms *"powershell dsc archive"* returns a link to the
+[DSC Archive resource documentation](http://technet.microsoft.com/en-us/library/dn249917.aspx).
+4. The first sentence of the document indicates that it can unzip ".zip" files, so it's the resource she wants.
+5. The **syntax** section of the documentation states that the name of the resource is "Archive."
+6. A perusal of the **syntax** and **properties** section seems to indicate that setting the `Path` and `Destination` properties
+will result in the desired behavior of unzipping a file located at a given location into another directory.
+7. The example at the end of the documentation confirms the understanding above with a demonstration of the desired use case.
+8. The user then adds a `dsc_resource` instance to a Chef recipe, setting `resource_name` to `:Archive` and using the `property`
+attribute to set the `Path` and `Destination` attributes of the underlying DSC resource.
+9. The recipe runs this simple case with the results the user expected.
+
+These steps are fairly simple -- some Internet searches, followed by a very quick reading of documentation, and finally filling
+in the "template" provided by `dsc_resource` with literal transcriptions of syntax elements from the DSC documentation.
+
+More importantly, the steps above are almost the same as those that would be followed if a person with knowledge of the Chef DSL
+were to look for a Chef resource to use for a given purpose and then tested out that resource. And the knowledge required in
+both the case of the standard Chef resource and that of the use of `dsc_resource` is the same -- no real knowledge of DSC is
+required to use `dsc_resource`, all this is needed is an understanding of how to set attributes of `dsc_resource` to obtain
+behaviors described in the DSC documentation.
+
+Thus, using DSC resources in Chef is quite nearly as easy as simply using Chef resources -- additional documentation on
+`dsc_resource` that provides helpful links to DSC resources can make it even easier.
+
+##### Forbidden DSC properties
+
+Certain common properties of DSC resources may not be expressed using DSC resource, primarily because they have no utility in
+the context of the way in which Chef is using them or because they may interfere with reliable predictable functioning of the
+resource. Currently there is only one such property:
+
+* `dependson`: this property allows temporal dependencies between resources to be declared, thus allowing an order of
+  configuration execution across a set of DSC resources presented in a configuration document. Because `dsc_resource`
+
 ##### Type safety for `dsc_resource` `property` attributes
 
-Prior to submitting configuration to DSC, values specified to the `property` attribute will be converted to CLR types based on the Ruby type used for the value according
+Prior to submitting configuration to DSC, values specified to the `property` attribute will be converted to CIM types based on the Ruby type used for the value according
 to these rules:
 
-|Ruby type|CLR type|
+|Ruby type|CIM type|
 |---------|--------|
 |`String`|`string`|
-|`FixNum`|`int32`|
+|`Fixnum`|`int32`|
 |`Float`|`double`|
-|`TrueClass`|`bool`|
-|`FalseClass`|`bool`|
-|`NilClass`|`object`|
+|`TrueClass`|`boolean`|
+|`FalseClass`|`boolean`|
+|`NilClass`|`CIM_Object`|
 |`Chef::Resource::DscResource`|`OMI_Resource`|
 
-Most of these type conversions should be umanbiguous and reversible, and mostly they should be direct and leave data
-unchanged. The `String` conversion for example should require no actual type conversion. The conversion for `NilClass` would
-simply present such a value as the CLR value `null`.
+These type conversions should be unambiguous and reversible, and most of them should be direct and leave data representations
+unchanged. The `String` conversion for example should require no actual representational conversion. The conversion for `NilClass` would
+simply present such a value as the CIM value `null`.
 
-Classes of `Chef::Resource::DscResource` will result in the CLR representation of the DSC resource being assigned to a
-property. This covers DSC use cases such as the following fragment of DSC PowerShell code below where an anonymous instance of
+Classes of `Chef::Resource::DscResource` will result in the MOF representation of the DSC resource being assigned to a
+property in the resultant configuration document. This covers DSC use cases such as the following fragment of DSC PowerShell code below where an anonymous instance of
 the `MSFT_xWebBindingInformation` DSC resource is used to express the configuration of the `BindingInfo` property of an
 `xWebsite` instance:
 
@@ -316,14 +366,89 @@ the `MSFT_xWebBindingInformation` DSC resource is used to express the configurat
 
 ## Detailed examples
 
-## Usability notes
-
 ## Inapplicable DSC features
 
 ## Implementation notes
 
 The initial implementation of this feature is assumed to function only on the Windows operating system, and requires PowerShell
 4.0 or later.
+
+### Resource convergence
+
+For a given instance of a DSC resource, the provider for the resource will perform the following operations:
+
+1. Retrieve metadata from DSC API's DSC resource indicated by the `resource_name` attribute of the resource. It will also retrieve
+supported properties, and the types of each property, and the PowerShell module that implements the resource.
+    1. If DSC cannot locate the resource with the specified name, an exception is raised
+    2. If any of the DSC properties specified through the `property` attribute of the resource does not exist for the DSC resource
+    named by the `resource_name` attribute, an exception is raised
+    3. For any property specified in the resource through `property`, if the value specified for the property cannot be coerced
+    to the type returned for that property in the metadata retrieved earlier as defined by the previously described type safety
+    rules, an exception is raised.
+2. Property values specified by the Chef `property` attribute have their representation converted to one that will result in the
+    correct type for the DSC resource when a configuration document is generated for the DSC resource specified by the
+    `dsc_resource` resource. The type conversion "escapes" its input as described in the type safety rules and thus prevents
+    code injection through the `property` attribute.
+3. Using the name of the resource specified by the `resource_name` attribute and the property names and type-converted property
+values, a DSC MOF configuration document is generated
+4. In the context of the provider's `LoadCurrentResource` method, the LCM is presented with the document and queried to see if
+any changes would be made to the system if the document's configuration were to be enacted.
+5. In the context of the provider's `run_action` for the `:set` or `:test` actions:
+   1. If the `LoadCurrentResource` step indicates
+that no changes will occur, a `converge_by` block is executed that does nothing but return `false` so that no configuration change
+is executed and the return value of `false` means that the resource will be reported as being *"skipped."*
+   2. If `LoadCurrentResource` indicates that a change would occur with this configuration document and the action is `:test`,
+   a `converge_by` block is executed that does nothing but return `true` so that no changes are made to the system but the
+   resource will be reported as *"executed"* rather than "skipped."
+   3. If `LoadCurrentResource` indicates that a change in configuration should occur for the configuration document, then with a
+   `converge_by` block a call is made to the LCM and a value of `false` is returned of the LCM ends up not making changes (rare,
+   but could occur due to rare but unavoidable race conditions), or `true` if the LCM does make changes to the system
+   successfully. The resource is then reported as being "executed" or "skipped" depending on whether `true` or `false` was
+   returned by the `converge_by` block.
+
+This approach has the following properties:
+
+* For each instance of `dsc_resource` in a Chef run, DSC will be invoked with the generated configuration document twice for
+  every `:set` action of `dsc_resource`. The first invocation checks if DSC needs to execute to enact the configuration in the
+  Chef resource, and the second enacts the configuration.
+* Chef will only report an instance of `dsc_resource` as updated during the Chef client run if the LCM makes changes to the
+  system (or if it would have made changes in the case of the `:test` action).
+* Since the type conversions from Chef to MOF escapes strings and is otherwise restricted to emitting values of simple types
+  such as integers or boolean literals, code injection at the layer of the MOF runtime or above is mitigated.
+* Any configuration document submitted to the LCM by Chef as a representation of the intent of a `dsc_resource` instance will be
+  a syntactically well-formed document because Chef generates configuration documents from a known and fixed subset of methods
+  of generating such documents that can be shown to emit only such correct documents.
+
+#### Error reporting for `dsc_resource`
+
+Explicit care must be taken to handle errors in an actionable way for Chef users, since Chef itself has limited knowledge of the
+correctness of any DSC configuration that `dsc_resource` submits to the LCM. While Chef cannot interpret the correctness of the 
+document, it can and should rely on any information surfaced by interactions with the LCM regarding the document to relay the
+most relevant error information to Chef's standard error reporting channels so that authors and operators can take the same
+corrective actions as if they had natively authored the document in DSC's DSL.
+
+The classes of error cases and the required response by Chef is given below:
+
+|Error class|Response|
+|-----------|--------|
+|Unsupported value type for `property` attribute|Exception **MUST** be raised at converge time|
+|Non-existent DSC resource name specified to `resource_name` attribute|Exception **MUST** be raised in converge phase|
+|Non-existent DSC property name for the DSC resource specified by `resource_name`|Exception **MUST** be raised in converge phase|
+|Error when submitting the DSC configuration document to the LCM|Exception **MUST** be raised in converge phase|
+|Other errors interacting with DSC API's|Exception **MUST** be raised at converge time|
+
+When errors are reported, sufficient context should be given in exception messages surfaced to authors and operators in order to
+correct errors. The required error context can be described as follows:
+
+* **`property` type error**: If changing the Chef data type for a value supplied to the `property` attribute could fix the
+    error, the context should include the file and line number of the erroneous `property` attribute in the Chef recipe.
+* **Non-existent resource**: If correcting the value of the `resource_name` attribute or installing a PowerShell module on the
+    system the DSC attribute named by the `resource_name` attribute would address the error, the file and line number of the
+    erroneous `resource_name` attribute should be included in the reported error context.
+* **Errors returned from interaction with DSC API's**: Any such errors returned by an interaction with the LCM or other DSC
+    components **MUST** include the exception message from DSC and the line number and file name of the `dsc_resource` instance
+    that was the source of the error, along with the values of all Chef attributes **AND** DSC property values specified through
+    the `property` attribute.
 
 ## Future improvements
 
@@ -334,11 +459,70 @@ The following issues require specification before accepting the proposals in thi
 * For DSC resource properties with non-trivial (e.g. types that inherit from System.Object in the CLR), how should they be
   translated from Chef / Ruby via the `dsc_resource` resource into a DSC-consumable artifact? The `PSCredential` type commonly
   used in PowerShell cmdlets is an example of such a type. One option is to disallow such types in `dsc_resource` and require
-  the use of `dsc_script` or `dsc_mof` for this use case.
+  the use of `dsc_script` or `dsc_mof` for this use case. Another option is to provide a helper in the Chef DSL for these cases
+  that would generate the appropriate representation in the configuration document.
+
+## Appendices
+
+### Additional usability discussion
+
+Given that the integration of DSC capabilities into Chef implies some sort of "mapping" between language concepts and other
+capabilities of the systems, it is worth asking how much of this translation is the responsibility of cookbook authors and how
+much of it can be completely automated. The more that Chef can automate the mapping, the more seamless the experience for
+authors. Decreasing the cognitive burden of understanding both systems sufficiently to consciously map between the two is thus a
+priority.
+
+To get a clearer picture of the challenge, consider the knowledge workflow of a cookbook author simply using Chef resources
+built into `chef-client`. It looks something like this:
+
+1. Learn the concepts and syntax of the Chef DSL, along with a minimal amount of Ruby -- this only needs to be done once.
+2. When writing cookbooks, use the [Chef documentation site](https://docs.getchef.com) to find useful resources that allow for
+the configuration of state relevant to the task at hand.
+3. For each resource used in the recipe, identify the name of the resource, and the attributes and allowed values for
+configuring the resource according to the desired state
+4. Write the Chef code
+5. Use tools such as `chef-client --local-mode` or `test-kitchen` to execute and test the recipes -- use error information from
+`chef-client` to diagnose failures and fix problems
+6. Deploy the recipe in a cookbook and use it for production scenarios.
+
+Ideally, we'd prefer that the introduction of DSC into Chef not alter that workflow significantly, otherwise the greater the
+deviation the less of a net benefit the use of DSC is over, say, simply authoring your own resource using Chef + Ruby or other
+scripting languages with which the author is already familiar.
+
+Let's compare the workflow requirements for the two approaches presented in this document. The first is the `seamless` approach
+exemplified by `dsc_resource` in which the expression of the resource in the Chef DSL in recipes presents a resource that looks
+like any other Chef resource and gives no hint of the fact that it abstracts a DSC resource other than the prefix in the name
+`dsc_resource`.
+
+The second approach is that taken by `dsc_script` and `dsc_mof`, in which the recipes embed the DSC or MOF languages within the
+recipe. Whether the language is embedded literally in the recipe as the string value of a resource attribute, or it is implied
+by the presence of a path attribute with a value set to that of a file ending in a suggestive `.ps1` or `.mof` extension, the
+step outside of the Chef / Ruby language environment is evident. If that PowerShell or MOF code was not simply re-used but
+authored specifically for use in the recipe, then the author will have essentially been developing the cookbook in two languages
+simultaneously, perhaps in some way like the use of both HTML and JavaScript languages in web browsers.
+
+Here are the workflows with abbreviated descriptions:
+
+| Seamless approach | Embedded code approach |
+|-------------------|------------------------|
+|1. Learn the Chef DSL|1a. Learn the Chef DSL|
+|| 1b. Learn PowerShell DSC or MOF|
+|2. Consult the Chef docs| 2. Consult the Chef docs|
+||2b. Consult the DSC docs|
+|3. Identify DSC resources and properties| 3. Identify DSC resources and properties|
+|4a. Write Chef code | 4a. Write Chef code |
+|4b. Translate DSC attributes to Chef properties|4b. Embed DSC code in Chef code |
+|5. Test / debug the cookbook | Test / debug the cookbook |
+|6. Deploy to production |Deploy to production|
+
+Overall, the embedded code approach has 2 additional steps compared to the seamless method. And when comparing step 4b, the
+actual implementation for the seamless approach is fairly lightweight and requires no knowledge of DSC.
+
 
 ## References and further reading
 
 * Chef documentation: <http://docs.opscode.com>
+* DSC documentation: <http://technet.microsoft.com/en-us/library/dn249912.aspx>
 * Chef resource documentation: <http://docs.opscode.com/resource.html>
 * DSC cookbook integration prototype: <https://github.com/opscode-cookbooks/dsc>. 
 * Chef guard_interpreter documentation: <http://docs.opscode.com/resource_common.html>.
