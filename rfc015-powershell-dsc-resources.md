@@ -366,7 +366,7 @@ Thus, using DSC resources in Chef is quite nearly as easy as simply using Chef r
 The `dsc_script` resource allows authors to re-use existing DSC script
 artifacts. For example, an organization may have a library of PowerShell DSC
 scripts used interactively or by various tools that integrate with DSC. Such
-artifacts may alse be accessible if there is an internal or external community
+artifacts may also be accessible if there is an internal or external community
 around DSC that provides library scripts for common tasks.
 
 Re-use of such existing infrastructure is the primary use case for
@@ -414,7 +414,7 @@ The `dsc_mof` resource is similar to `dsc_script, except that the embedded
 language the user specifies to the resource is not the PowerShell-based DSC
 DSL, but MOF. 
 
-The use cases are similar with respsect to the focus on re-use of existing
+The use cases are similar with respect to the focus on re-use of existing
 content. There are some specific reasons why an organization may have MOF
 content instead of PowerShell DSC DSL configuration content:
 
@@ -479,7 +479,7 @@ described by the document to present in the system state
 4. If no changes are needed, then Chef takes no further actions for that
 resource and reports it as being up to date through standard Chef resource
 interfaces.
-5. If changes are needed, the configuration document is resbumitted to the DSC
+5. If changes are needed, the configuration document is resubmitted to the DSC
 API, this time with a request to apply the configuration.
 6. If the request to apply the configuration fails, an error is returned for
 the resource through standard Chef resource error conventions. Otherwise,
