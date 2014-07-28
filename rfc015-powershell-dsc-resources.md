@@ -37,7 +37,7 @@ which are listed in the table below:
 | Resource idempotence | Same | Resource |
 | Property | Attribute | Resource |
 | `set` method of resource | Converge actions | Resource |
-| `test` method of resource | LoadCurrentResource / whyrun | Resource |
+| `test` method of resource | `LoadCurrentResource` / "WhyRun" | Resource |
 
 The areas of sameness suggest integration points for which there is likely to be the most direct translation between systems and
 thus the most natural experience for Chef users when such a translation is invoked. These areas are:
@@ -345,7 +345,7 @@ That's it. As an example, consider the case of someone who wanted to see if DSC 
 will result in the desired behavior of unzipping a file located at a given location into another directory.
 7. The example at the end of the documentation confirms the understanding above with a demonstration of the desired use case.
 8. The user then adds a `dsc_resource` instance to a Chef recipe, setting `resource_name` to `:Archive` and using the `property`
-attribute to set the `Path` and `Destination` attributes of the underlying DSC resource.
+attribute to set the `Path` and `Destination` properties of the underlying DSC resource.
 9. The recipe runs this simple case with the results the user expected.
 
 These steps are fairly simple -- some Internet searches, followed by a very quick reading of documentation, and finally filling
@@ -400,13 +400,8 @@ supplying a source to DSC script:
 
 |Attribute|Description|
 |---------|-----------|
-|`configuration`| This attribute defines the DSC configuration to submit to
-|DSC using the PowerShell DSC DSL. The attribute is a `String` that contains
-|the literal PowerShell DSC code to configure the node. This attribute **MUST
-|NOT** be set to a non-`nil` value if the `path` attribute is to anything other than `nil`. |
-|`path`| Path to a file containing PowerShell DSC script code with which to
-|configure the node. This attribute **MUST NOT** be set to a non-`nil` value
-|if the `configuration` attribute is set to anything other than `nil`. |
+|`configuration`| This attribute defines the DSC configuration to submit to DSC using the PowerShell DSC DSL. The attribute is a `String` that contains the literal PowerShell DSC code to configure the node. This attribute **MUST NOT** be set to a non-`nil` value if the `path` attribute is to anything other than `nil`. |
+|`path`| Path to a file containing PowerShell DSC script code with which to configure the node. This attribute **MUST NOT** be set to a non-`nil` value if the `configuration` attribute is set to anything other than `nil`. |
 
 #### `dsc_mof` resource
 
@@ -440,13 +435,8 @@ with the key difference being the language used to describe the configuration:
 
 |Attribute|Description|
 |---------|-----------|
-|`configuration`| This attribute defines the DSC configuration to submit to
-|DSC using the MOF language. The attribute is a `String` that contains
-|the literal MOF code to configure the node. This attribute **MUST
-|NOT** be set to a non-`nil` value if the `path` attribute is to anything other than `nil`. |
-|`path`| Path to a file containing MOF code with which to
-|configure the node. This attribute **MUST NOT** be set to a non-`nil` value
-|if the `configuration` attribute is set to anything other than `nil`. |
+|`configuration`| This attribute defines the DSC configuration to submit to DSC using the MOF language. The attribute is a `String` that contains the literal MOF code to configure the node. This attribute **MUST NOT** be set to a non-`nil` value if the `path` attribute is to anything other than `nil`. |
+|`path`| Path to a file containing MOF code with which to configure the node. This attribute **MUST NOT** be set to a non-`nil` value if the `configuration` attribute is set to anything other than `nil`. |
 
 
 ## Detailed examples
