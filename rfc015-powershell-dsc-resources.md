@@ -484,7 +484,7 @@ follows:
 
 * `dsc_mof`: This translation should be trivial, since the resource attributes
   provide a MOF, and hence it can be submitted directly to DSC.
-* `dsc_mof`: This is a translation from the PowerShell-based DSC DSL to MOF,
+* `dsc_script`: This is a translation from the PowerShell-based DSC DSL to MOF,
   and since DSC provides an API to perform this, the process is still
   relatively simple.
 * `dsc_resource`: This is the most complex translation. This resource provides
