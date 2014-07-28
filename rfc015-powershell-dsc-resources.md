@@ -1,4 +1,4 @@
-Chef resources for PowerShell Desired State Configuration
+Chef Resources for PowerShell Desired State Configuration
 =========================================================
 
 Chef language and conceptual artifacts share direct analogs with the PowerShell Desired State Configuration (DSC) platform
