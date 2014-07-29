@@ -37,8 +37,6 @@ At a given time:
 
 This topic deserves an RFC of its own. Our own Julian Dunn is working on one [here](https://github.com/opscode/chef-rfc/pull/21) in parallel.
 
-**TODO:** Add a link the supported operating systems RFC once consensus is reached on it.
-
 ## Chef 12
 
 In the context of the above, here is how Chef 12 looks in terms of support and Ruby versions:
@@ -57,6 +55,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
 ### Feature Proposals
 
 #### Enable SSL Verification by Default
+* https://github.com/opscode/chef/issues/1542
 * **Breaks Backwards Compatibility? (Workstation):** Yes
 * **Breaks Backwards Compatibility? (Cookbooks):**   No
 * **User Benefit:** High
@@ -65,6 +64,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
   * Chef 11 already contains the necessary certificates and debugging tools to enable SSL verification if needed. Chef 12 will contain the necessary bootstrapping improvements to make the functionality work out of the box. Tooling around updating existing nodes with the required certificates will be available with the Chef 12 release.
 
 #### Guard interpreter default for powershell_script set to powershell_script
+* https://github.com/opscode/chef/issues/1714
 * **Breaks Backwards Compatibility? (Workstation):** No
 * **Breaks Backwards Compatibility? (Cookbooks):**  Yes
 * **User Benefit:** Medium
@@ -73,6 +73,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
   * Short description of the impact: powershell_script resources with guards not using guard_interpreter will return different results until guard expressions in those cookbooks are rewritten. Some scripts may execute more often than they should.
 
 #### Guard interpreter default for batch set to :batch
+* https://github.com/opscode/chef/issues/1713
 * **Breaks Backwards Compatibility? (Workstation):** No
 * **Breaks Backwards Compatibility? (Cookbooks):**  Yes
 * **User Benefit:** Medium
@@ -81,6 +82,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
   * Short description of the impact: Guard expressions for the batch resource will run as 64-bit, which could cause different behaviors for an expression that was either intentionally or unintentionally running as 32-bit. It’s unlikely that people will hit this case, largely because if they didn’t do the workaround to use 64-bit, that’s probably a case where running as 32-bit is harmless (or they would have caught the problem). If they were working around it with guard_interpreter or sysnative, there will be no impact.
 
 #### Remove rest-client Dependency
+* **DONE**
 * **Breaks Backwards Compatibility? (Workstation):** (Yes)
 * **Breaks Backwards Compatibility? (Cookbooks):**   (Yes)
 * **User Benefit:** (Medium)
@@ -96,6 +98,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
     needs to ensure that it is installed via the appropriate mechanism.
 
 #### Require `name` Attribute in Cookbook Metadata
+* https://github.com/opscode/chef/issues/1712
 * **Breaks Backwards Compatibility? (Workstation):** (Yes)
 * **Breaks Backwards Compatibility? (Cookbooks):**   (Yes)
 * **User Benefit:** (Medium)
@@ -113,6 +116,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
     unrelated cookbook does not cause an error when uploading a different cookbook.
 
 #### Enable client-side key generation by default
+* https://github.com/opscode/chef/issues/1711
 * **Breaks Backwards Compatibility? (Workstation):** (No)
 * **Breaks Backwards Compatibility? (Cookbooks):**   (No)
 * **User Benefit:** (Medium)
@@ -126,22 +130,24 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
     compatibility with any supported version of the server.
 
 #### Add simple DSL method to interact with encrypted data bags
- * **Breaks Backwards Compatibility? (Workstation):** No
- * **Breaks Backwards Compatibility? (Cookbooks):**  No
- * **User Benefit:** Low
+* https://github.com/opscode/chef/issues/1710
+* **Breaks Backwards Compatibility? (Workstation):** No
+* **Breaks Backwards Compatibility? (Cookbooks):**  No
+* **User Benefit:** Low
   * Short description of the benefit: It confused me when I was first introduced to Chef that data bags had a nice friendly DSL method (data_bag_item) and encrypted databags had to be access using Chef::EncryptedDataBagItem.load.  It seems like for consistency and helping out new users a new method encrypted_data_bag_item could be added that would simplify the code necessary to interact with encrypted data bags
- * **Impact:** Medium
+* **Impact:** Medium
   * Short description of the impact: Similar to some of the changes made to the DSL in Chef 11, this would make any cookbook using the new method a Chef 12 or later cookbook.
 
-**TODO: If you would like to propose a new major feature for Chef 12, please copy the example proposal below and submit a PR to this branch.**
+#### Homebrew As OS X Default Package Provider
 
-#### Example Feature Proposal
-* **Breaks Backwards Compatibility? (Workstation):** (Yes - No)
-* **Breaks Backwards Compatibility? (Cookbooks):**   (Yes - No)
-* **User Benefit:** (Low - Medium - High)
-  * Short description of the benefit.
-* **Impact:** (Low - Medium - High)
-  * Short description of the impact.
+* https://github.com/opscode/chef/issues/1709
+* **Breaks Backwards Compatibility? (Workstation):** No
+* **Breaks Backwards Compatibility? (Cookbooks):**  Yes
+* **User Benefit:** High
+  * Short description of the benefit: Homebrew is commonly used by members of the Chef community as a "package system" instead of Macports.
+* **Impact:** Medium
+  * Short description of the impact: This is a backwards incompatible change. It's unlikely that existing cookbooks would need to be rewritten if the package names are the same.
+* **Objections:** The most common objection is that the homebrew cookbook would still be required to get homebrew installed, since it doesn't come with OS X. However, the same is true of macports (it has a cookbook to install as well).
 
 ### Bug Fixes
 
