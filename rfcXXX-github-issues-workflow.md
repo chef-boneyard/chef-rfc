@@ -5,9 +5,9 @@ Status: Draft
 Type: Process
 ---
 
-# Chef Github Issues Workflow
+# Chef GitHub Issues Workflow
 
-Here at Chef, we track our issues and contributions using [Github Issues](https://github.com/opscode/chef/issues). This RFC codifies the workflow we're using while maintaining our projects in order to make a few things clear:
+Here at Chef, we track our issues and contributions using [GitHub Issues](https://github.com/opscode/chef/issues). This RFC codifies the workflow we're using while maintaining our projects in order to make a few things clear:
 
 * State of a contribution (pull request - PR) is visible when a user checks it out.
 * Chef maintainers can see the list of PRs which needs review.
@@ -15,7 +15,7 @@ Here at Chef, we track our issues and contributions using [Github Issues](https:
 
 ## Workflow
 
-![Chef Github Issues Workflow](./GithubIssuesWorkflow.png)
+![Chef GitHub Issues Workflow](./GithubIssuesWorkflow.png)
 
 
 ### Common Steps for Issues & PRs
