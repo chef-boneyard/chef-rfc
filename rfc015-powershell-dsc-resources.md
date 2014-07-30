@@ -2,8 +2,8 @@ Chef Resources for PowerShell Desired State Configuration
 =========================================================
 
 Chef language and conceptual artifacts share direct analogs with the PowerShell Desired State Configuration (DSC) platform
-introduced with PowerShell 4.0. DSC is becoming a popular automation standard for the Microsoft Windows operating system. By
-exposing DSC analogs in the Chef domain specific language, users of Chef gain all the *Delightful(tm)* benefits of DSC's wide scope of configuration capabilities.
+introduced with PowerShell 4.0. DSC is becoming a popular automation standard
+for the Microsoft Windows operating system. By enabling the Chef domain specific language (DSL) to surface these DSC analogs, Chef gives users all the *Delightful(tm)* benefits of DSC's wide scope of configuration capabilities.
 
 ## Document status
 
@@ -119,8 +119,7 @@ This means the integration allows Chef users to make use of DSC. This integratio
 resources which expose DSC functionality. These Chef resources are:
 
 * `dsc_resource`: Allows a named DSC resource to be used with Chef resource semantics and pure Chef language syntax
-* `dsc_script`: Allows specified PowerShell language script to be executed as a DSC configuration on the system
-* `dsc_mof`: Allows Managed Object Format (MOF) code to be executed as a DSC configuration on the system
+* `dsc_configuration`: Allows specified PowerShell language script to be executed as a DSC configuration on the system
 
 These resources make different tradeoffs between usability and full access to the DSC platform. For example, `dsc_resource`
 usage is nearly identical to that of any other resource in the Chef DSL. Authors must be able to understand basic Chef DSL to
@@ -128,10 +127,10 @@ use it, but almost no knowledge of DSC other than the name of the DSC resource t
 that resource. Knowledge of DSC's DSL, PowerShell, or MOF is not needed with this resource, so it is ideal for users simply
 looking for greater access to configuration who have not used DSC in other contexts.
 
-The other resources, `dsc_script` and `dsc_mof` allow users who may have authored DSC code or at least have access to DSC
-configuration artifacts (e.g. PowerShell scripts or MOF files) from other contexts to make use of that knowledge from within
+The `dsc_configuration` resource allows users who may have authored DSC code or at least have access to DSC
+PowerShell configuration artifacts (i.e. scripts)  from other contexts to make use of that knowledge from within
 Chef. They also have few restrictions on what features of DSC can be used, so limitations on the data types that can be
-assigned to `dsc_resource` for example may be bypassed by using the less seamless `dsc_script` or `dsc_mof` resources.
+assigned to `dsc_resource` for example may be bypassed by using this less seamless resource.
 
 ## Requirements
 
@@ -172,7 +171,7 @@ end
 You could just use the DSC DSL in PowerShell directly if you like:
 
 ```ruby
-dsc_script 'Chef Group DSC script' do
+dsc_configuration 'Chef Group DSC script' do
   code <<-EOH
   Configuration 'Chef users Group via DSC'
   {
@@ -185,43 +184,12 @@ dsc_script 'Chef Group DSC script' do
 EOH
 ```
 
-```ruby
-dsc_mof 'Chef Group mof' do
-  code <<-EOH
-instance of MSFT_GroupResource as $MSFT_GroupResource1ref
-{
-ResourceID = "[Group]ChefUsersGroup1";
- MembersToInclude = "administrator";
- Name = "ChefUsers";
- ModuleName = "PSDesiredStateConfiguration";
- ModuleVersion = "1.0";
-};
-
-instance of OMI_ConfigurationDocument
-{
- Version="1.0.0";
- Author="SysAdmin";
- GenerationDate="3/14/2014 1:41:42";
- GenerationHost="AdminBox";
-};
-EOH
-end
-```
-
-If you use `dsc_script` or `dsc_mof`, it's actually less likely that you'll directly embed the explicitly PowerShell or MOF code
-in a recipe, and more likely that you already have PowerShell or MOF file artifacts that you'd like to re-use, like so:
+If you use `dsc_configuration`, it's actually less likely that you'll directly embed the explicitly PowerShell code
+in a recipe, and more likely that you already have PowerShell file artifacts that you'd like to re-use, like so:
 
 ```ruby
-dsc_script 'Chef Group DSC script' do
+dsc_configuration 'Chef Group DSC script' do
   path "#{ENV['DSCDIR']}/scripts/chefgroup.ps1"
-end
-```
-
-Or for MOF:
-
-```ruby
-dsc_mof 'Chef Group MOF' do
-  path "#{ENV['DSCDIR']}/mofs/chefgroup/localhost.mof"
 end
 ```
 
@@ -360,16 +328,16 @@ Thus, using DSC resources in Chef is quite nearly as easy as simply using Chef r
 `dsc_resource` that provides helpful links to DSC resources can make it even easier.
 
 
-#### `dsc_script` resource
+#### `dsc_configuration` resource
 
-The `dsc_script` resource allows authors to re-use existing DSC script
+The `dsc_configuration` resource allows authors to re-use existing DSC script
 artifacts. For example, an organization may have a library of PowerShell DSC
 scripts used interactively or by various tools that integrate with DSC. Such
 artifacts may also be accessible if there is an internal or external community
 around DSC that provides library scripts for common tasks.
 
 Re-use of such existing infrastructure is the primary use case for
-`dsc_script` -- otherwise, any desired re-use with Chef requires a conversion of the
+`dsc_configuration` -- otherwise, any desired re-use with Chef requires a conversion of the
 scripts to the Chef DSL form mandated by `dsc_resource` or execution of script
 commands, neither of which is desirable from an implementation cost
 perspective nor that of maintainability / transparency.
@@ -379,10 +347,10 @@ resource places on expression of DSC intent. For example, DSC PowerShell
 script allows the use of all features of PowerShell (similar to the way all
 Ruby capabilities may be accessed from within the Chef DSL), and in some cases
 it may be convenient to express a configuration by making use of PowerShell
-types or cmdlets. By using `dsc_script`, users can trade off the simplicity
-and safety of `dsc_resource` for the deeper DSC knowledge and flexibility of `dsc_script`.
+types or cmdlets. By using `dsc_configuration`, users can trade off the simplicity
+and safety of `dsc_resource` for the deeper DSC knowledge and flexibility of `dsc_configuration`.
 
-#### `dsc_script` actions
+#### `dsc_configuration` actions
 
 In addition to the standard `:nothing` action, this resource has the following actions
 
@@ -390,9 +358,9 @@ In addition to the standard `:nothing` action, this resource has the following a
 |------|-----------|
 |`:set`|This is the default action. This action is used to enact DSC configuration specified by the resource's attributes by supplying that DSC configuration to the DSC Local Configuration Manager and requesting that the system be updated to reflect it. This resource is only updated if the LCM makes changes as part of the aforementioned interaction|
 
-#### `dsc_script` attributes
+#### `dsc_configuration` attributes
 
-`dsc_script` honors common resource attributes, as well as the following
+`dsc_configuration` honors common resource attributes, as well as the following
 properties, either of which defines the DSC configuration to set by simply
 supplying a source to DSC script:
 
@@ -400,44 +368,6 @@ supplying a source to DSC script:
 |---------|-----------|
 |`configuration`| This attribute defines the DSC configuration to submit to DSC using the PowerShell DSC DSL. The attribute is a `String` that contains the literal PowerShell DSC code to configure the node. This attribute **MUST NOT** be set to a non-`nil` value if the `path` attribute is to anything other than `nil`. |
 |`path`| Path to a file containing PowerShell DSC script code with which to configure the node. This attribute **MUST NOT** be set to a non-`nil` value if the `configuration` attribute is set to anything other than `nil`. |
-
-#### `dsc_mof` resource
-
-The `dsc_mof` resource is similar to `dsc_script, except that the embedded
-language the user specifies to the resource is not the PowerShell-based DSC
-DSL, but MOF. 
-
-The use cases are similar with respect to the focus on re-use of existing
-content. There are some specific reasons why an organization may have MOF
-content instead of PowerShell DSC DSL configuration content:
-
-1. DSC does not require PowerShell to function -- configuration documents
-might be generated by other tools or languages that produce MOF. Additionally,
-DSC can be consumed on systems that explicitly do not have a PowerShell
-runtime, specifically Unix-based systems. Since MOF is an open standard with
-implementations on Unix, recipes that invoke `dsc_mof` instead of `dsc_script`
-could potentially function on both Unix and Windows platforms.
-2. In general MOF is also viewed as a transport format for configuration. So
-in the event that configuration is sent from a centralized server to systems
-that will be set according to that configuration, `dsc_mof` can process any
-such configuration.
-
-#### `dsc_mof` actions
-
-`dsc_mof` has the same actions with the same semantics as those of `dsc_script`.
-
-#### `dsc_mof` attributes
-
-The attributes for `dsc_mof` are almost the same as those for `dsc_script`,
-with the key difference being the language used to describe the configuration:
-
-|Attribute|Description|
-|---------|-----------|
-|`configuration`| This attribute defines the DSC configuration to submit to DSC using the MOF language. The attribute is a `String` that contains the literal MOF code to configure the node. This attribute **MUST NOT** be set to a non-`nil` value if the `path` attribute is to anything other than `nil`. |
-|`path`| Path to a file containing MOF code with which to configure the node. This attribute **MUST NOT** be set to a non-`nil` value if the `configuration` attribute is set to anything other than `nil`. |
-
-
-## Detailed examples
 
 ## Inapplicable DSC features
 
@@ -451,8 +381,8 @@ The initial implementation of this feature is assumed to function only on the Wi
 Any general implementation of Chef resources that interface with DSC in the Chef client will perform the following sequence of operations:
 
 1. During a Chef client run, generate a DSC configuration document representation of the configuration
-declared in the Chef recipe by one of the Chef resources for DSC, `dsc_resource`,
-`dsc_script`, or `dsc_mof`. This document generation requires a translation
+declared in the Chef recipe by one of the Chef resources for DSC,
+`dsc_resource` or `dsc_configuration`. This document generation requires a translation
 of the Chef DSL representation via the particular resource to DSC's MOF format
 for configuration documents. The DSC API with which Chef and other systems
 interact requires the MOF format for any communication of configuration.
@@ -476,17 +406,13 @@ state conforms to the document and thus to the Chef resource from which it was
 generated, and will then result in Chef reporting the resource as successfully
 updated.
 
-It should be noted that among the 3 resources `dsc_resource`, `dsc_script`,
-and `dsc_mof`, the degree of complexity of the translation will likely vary as
-follows:
+It should be noted that among the 2 resources `dsc_resource` and `dsc_configuration`,
+the degree of complexity of the translation will likely vary as follows:
 
-* `dsc_mof`: This translation should be trivial, since the resource attributes
-  provide a MOF, and hence it can be submitted directly to DSC.
-* `dsc_script`: This is a translation from the PowerShell-based DSC DSL to MOF,
-  and since DSC provides an API to perform this, the process is still
-  relatively simple.
-* `dsc_resource`: This is the most complex translation. This resource provides
-  neither MOF nor a single attribute from which an existing API could make a
+* `dsc_configuration`: This is a translation from the PowerShell-based DSC DSL to MOF,
+  and since DSC provides an API to perform this, the process is relatively simple.
+* `dsc_resource`: This is the more complex translation. This resource provides
+  no a single attribute from which an existing API could make a
   translation. Instead, it provides a DSC resource name and DSC property values
   for those resources. That information is sufficient to generate a DSC MOF
   document with a configuration for that DSC resource.
@@ -495,58 +421,35 @@ Further details are given below on issues around translation from the Chef DSL
 to MOF, validation of the translation, and specifics of interaction with the
 DSC API from Chef.
 
-### Resource convergence for `dsc_mof`
+### Convergence
 
-The `dsc_mof` resource requires the user of the resource to explicitly provide a
-configuration document in MOF format as an attribute of the resource.
-Convergence works as follows:
+The convergence process described earlier can be divided into two phases: MOF
+generation and DSC interaction.
 
-1. Generation of a configuration document for use with LCM is trivial -- the
-document is actually given in a resource attribute and that attribute can be transmitted
-directly to LCM as the configuration document.
-2. In the context of the provider's `LoadCurrentResource` method, the LCM is presented with the document and queried to see if
-any changes would be made to the system if the document's configuration were to be enacted.
-3. In the context of the provider's `run_action` for the `:set` action:
-   1. If the `LoadCurrentResource` step indicates
-that no changes will occur, a `converge_by` block is executed that does nothing but return `false` so that no configuration change
-is executed and the return value of `false` means that the resource will be reported as being *"skipped."*
-   2. If `LoadCurrentResource` indicates that a change in configuration should
-   occur for the configuration document, then call is made to the LCM inside
-   of a `converg_by` block and a value of `false` is returned if the LCM ends up not making changes (rare,
-   but could occur due to rare but unavoidable race conditions), or `true` if the LCM does make changes to the system
-   successfully. The resource is then reported as being "executed" or "skipped" depending on whether `true` or `false` was
-   returned by the `converge_by` block.
+### Convergence step 1 of 2: MOF generation
 
-This approach has the following properties:
+In order to converge the DSC-based resource, a MOF must be generated to
+interact with DSC. Generation of the MOF varies between the
+`dsc_configuration` and `dsc_resource` resources.
 
-* For each instance of `dsc_mof` in a Chef run, DSC will be invoked with the generated configuration document twice for
-  every `:set` action of `dsc_resource`. The first invocation checks if DSC needs to execute to enact the configuration in the
-  Chef resource, and the second enacts the configuration.
-* Chef will only report an instance of `dsc_mof` as updated during the Chef client run if the LCM makes changes to the
-  system
+#### MOF generation for `dsc_configuration`
 
-### Resource convergence for `dsc_script`
+`dsc_configuration` allows the user to specify a configuration
+document in the form of a PowerShell DSC DSL script that itself can generate
+the MOF configuration document. MOF document generation occurs as follows:
 
-Like `dsc_mof`, `dsc_script` allows the user to specify a configuration
-document, but instead of doing this in MOF format, it does this indirectly by
-specifying PowerShell DSC DSL that itself can generate the configuration
-document. Convergence occurs as follows:
+1. The content of the attribute `configuration` attribute of the resource or the
+script located at the file system locaiton of the `path` attribute is executed
+by the PowerShell intepreter (only one of those attributes may be specified).
+2. This creates a configuration file in MOF format that can be transmitted to
+the LCM. Note that the language of this PowerShell code is not a proper subset of
+the PowerShell language; any valid PowerShell code that is present in the script,
+including that not related to DSC, will be executed.
 
-1. The attribute of `dsc_script` that supplies the PowerShell code for the
-document is executed -- this creates a configuration file in MOF format that
-can be transmitted to the LCM. Note that this PowerShell code is not subset of
-PowerShell -- any valid PowerShell code that is present in the script,
-including that not related to DSC, will be executed
-2. Convergence then proceeds the same as for `dsc_mof`, as if `dsc_mof`'s code
-attribute had been supplied the configuration document generated in the
-previous step.
+#### MOF generation for `dsc_resource`
 
-Idempotence behaviors are the same for `dsc_script` as for `dsc_mof`.
-
-### Resource convergence for `dsc_resource`
-
-Unlike `dsc_mof` and `dsc_script`, `dsc_resource` does not allow the user to
-specify configuration using a different language. Instead, only the Chef DSL
+Unlike `dsc_configurationt`, `dsc_resource` does not allow the user to express
+configuration with the PowerShell language. Instead, only the Chef DSL
 is used to specify the configuration, in this case by specifying attributes
 that define DSC properties of some DSC resource. 
 
@@ -565,26 +468,45 @@ supported properties, and the types of each property, and the PowerShell module 
     `dsc_resource` resource. The type conversion "escapes" its input as described in the type safety rules and thus prevents
     code injection through the `property` attribute.
 3. Using the name of the resource specified by the `resource_name` attribute and the property names and type-converted property
-values, a DSC MOF configuration document is generated
-4. From this point, convergence proceeds as it does for `dsc_mof` using the
-configuration document supplied above as if that document's contents were the
-value of the `configuration` attribute of `dsc_mof`.
+values, a DSC MOF configuration document is generated simply by building up a
+string of MOF via standard Ruby string / template libraries.
 
-This approach has the following properties in addition to sharing properties
-of the `dsc_mof resource:
+This approach has the following properties:
 
-* For each instance of `dsc_resource` in a Chef run, DSC will be invoked with the generated configuration document twice for
-  every `:set` action of `dsc_resource`. The first invocation checks if DSC needs to execute to enact the configuration in the
-  Chef resource, and the second enacts the configuration.
-* Chef will only report an instance of `dsc_resource` as updated during the Chef client run if the LCM makes changes to the
-  system.
 * Since the type conversions from Chef to MOF escapes strings and is otherwise restricted to emitting values of simple types
   such as integers or boolean literals, code injection at the layer of the MOF runtime or above is mitigated.
 * Any configuration document submitted to the LCM by Chef as a representation of the intent of a `dsc_resource` instance will be
   a syntactically well-formed document because Chef generates configuration documents from a known and fixed subset of methods
   of generating such documents that can be shown to emit only such correct documents.
 
-#### Error reporting for `dsc_resource`
+### Convergence step 2 of 2: DSC interaction
+
+Once a MOF that can be submitted to DSC's LCM has been generated, the
+remainder of the convergence process can proceed as follows:
+
+1. In the context of the provider's `LoadCurrentResource` method, the LCM is presented with the document and queried to see if
+any changes would be made to the system if the document's configuration were to be enacted.
+2. In the context of the provider's `run_action` for the `:set` action:
+   1. If the `LoadCurrentResource` step indicates
+that no changes will occur, a `converge_by` block is executed that does nothing but return `false` so that no configuration change
+is executed and the return value of `false` means that the resource will be reported as being *"skipped."*
+   2. If `LoadCurrentResource` indicates that a change in configuration should
+   occur for the configuration document, then call is made to the LCM inside
+   of a `converge_by` block and a value of `false` is returned if the LCM ends up not making changes (rare,
+   but could occur due to rare but unavoidable race conditions), or `true` if the LCM does make changes to the system
+   successfully. The resource is then reported as being "executed" or "skipped" depending on whether `true` or `false` was
+   returned by the `converge_by` block.
+
+This approach has the following properties:
+
+* For each instance of a DSC resource in a Chef run, DSC will be invoked with the generated configuration document twice for
+  every `:set` action. The first invocation checks if DSC needs to execute to enact the configuration in the
+  Chef resource, and the second enacts the configuration.
+* Chef will only report an instance of `dsc_configuration` or `dsc_resource`
+  as updated during the Chef client run if the LCM makes changes to the system
+  as part of the action invocation.
+
+### Error reporting for `dsc_resource`
 
 Explicit care must be taken to handle errors in an actionable way for Chef users, since Chef itself has limited knowledge of the
 correctness of any DSC configuration that `dsc_resource` submits to the LCM. While Chef cannot interpret the correctness of the 
@@ -592,7 +514,7 @@ document, it can and should rely on any information surfaced by interactions wit
 most relevant error information to Chef's standard error reporting channels so that authors and operators can take the same
 corrective actions as if they had natively authored the document in DSC's DSL.
 
-The classes of error cases and the required response by Chef is given below:
+The classes of error cases during the compile and converge phases and the required response by Chef is given below:
 
 |Error class|Response|
 |-----------|--------|
@@ -624,10 +546,21 @@ The following issues require specification before accepting the proposals in thi
 * For DSC resource properties with non-trivial (e.g. types that inherit from System.Object in the CLR), how should they be
   translated from Chef / Ruby via the `dsc_resource` resource into a DSC-consumable artifact? The `PSCredential` type commonly
   used in PowerShell cmdlets is an example of such a type. One option is to disallow such types in `dsc_resource` and require
-  the use of `dsc_script` or `dsc_mof` for this use case. Another option is to provide a helper in the Chef DSL for these cases
+  the use of `dsc_configuration` for this use case. Another option is to provide a helper in the Chef DSL for these cases
   that would generate the appropriate representation in the configuration document.
+* What type of output is available in `WhyRun` mode? Can we surface the
+  properties of the DSC resource that changed or otherwise give the output of
+  the change?
+* What should the output be for reporting data -- again, a list of changed
+  properties, some other lower-level output from DSC itself?
+
+### Previously opened issues that were resolved:
 * Should `dsc_mof` and `dsc_script` simply be the same resource, say
   `dsc_configuration` with an attribute to specify the language?
+  * Resolution: The functionality for `dsc_mof` which allowed direct use of
+    MOF rather than PowerShell from a Chef resource will not be part of the
+    initial specification, so there is no longer a question of whether or not
+    to collapse its functionality into another resource.
   
 ## Appendices
 
@@ -661,9 +594,9 @@ exemplified by `dsc_resource` in which the expression of the resource in the Che
 like any other Chef resource and gives no hint of the fact that it abstracts a DSC resource other than the prefix in the name
 `dsc_resource`.
 
-The second approach is that taken by `dsc_script` and `dsc_mof`, in which the recipes embed the DSC or MOF languages within the
+The second approach is that taken by `dsc_configuration`, in which the recipes embed the DSC or MOF languages within the
 recipe. Whether the language is embedded literally in the recipe as the string value of a resource attribute, or it is implied
-by the presence of a path attribute with a value set to that of a file ending in a suggestive `.ps1` or `.mof` extension, the
+by the presence of a path attribute with a value set to that of a file ending in a suggestive `.ps1` extension, the
 step outside of the Chef / Ruby language environment is evident. If that PowerShell or MOF code was not simply re-used but
 authored specifically for use in the recipe, then the author will have essentially been developing the cookbook in two languages
 simultaneously, perhaps in some way like the use of both HTML and JavaScript languages in web browsers.
