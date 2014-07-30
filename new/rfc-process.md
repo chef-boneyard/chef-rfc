@@ -51,7 +51,7 @@ Each RFC will generally include the following sections:
 
 1. Metadata – Yaml frontmatter including the RFC ID number, author(s), status,
 and type.
-2. Abstract – A short (~200 word) description of the technical issue being
+2. Description – A short (~200 word) description of the technical issue being
 addressed.
 3. Specification – The technical specification should describe the new feature
 or enhancement being proposed. This includes any DSL or server API changes.
@@ -64,7 +64,7 @@ describe alternate designs that were considered and related work, e.g. how the
 feature is supported in other tools. The rationale should provide evidence
 of consensus within the community and discuss important objections or concerns
 raised during discussion.
-6. Copyright/public domain – All RFCs must be placed in the public domain.
+6. Copyright – All RFCs must be placed in the public domain.
 
 ## RFC Review and Workflow
 
