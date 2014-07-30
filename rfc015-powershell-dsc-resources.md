@@ -246,7 +246,6 @@ In addition to the standard `:nothing` action, this resource has the following a
 |Action|Description|
 |------|-----------|
 |`:set`|This is the default action. This action is used to enact DSC configuration specified by the resource's attributes by supplying that DSC configuration to the DSC Local Configuration Manager and requesting that the system be updated to reflect it. This resource is only updated if the LCM makes changes as part of the aforementioned interaction|
-|`:test`|This action is similar to set, except that the LCM does not make changes, it only checks to see if changes to the system are needed to make the system compliant with the configuration expressed by the Chef resource. If changes are needed, the resource will be updated, otherwise it will not|
 
 #### `dsc_resource` attributes
 
@@ -390,7 +389,6 @@ In addition to the standard `:nothing` action, this resource has the following a
 |Action|Description|
 |------|-----------|
 |`:set`|This is the default action. This action is used to enact DSC configuration specified by the resource's attributes by supplying that DSC configuration to the DSC Local Configuration Manager and requesting that the system be updated to reflect it. This resource is only updated if the LCM makes changes as part of the aforementioned interaction|
-|`:test`|This action is similar to set, except that the LCM does not make changes, it only checks to see if changes to the system are needed to make the system compliant with the configuration expressed by the Chef resource. If changes are needed, the resource will be updated, otherwise it will not|
 
 #### `dsc_script` attributes
 
@@ -508,15 +506,13 @@ document is actually given in a resource attribute and that attribute can be tra
 directly to LCM as the configuration document.
 2. In the context of the provider's `LoadCurrentResource` method, the LCM is presented with the document and queried to see if
 any changes would be made to the system if the document's configuration were to be enacted.
-3. In the context of the provider's `run_action` for the `:set` or `:test` actions:
+3. In the context of the provider's `run_action` for the `:set` action:
    1. If the `LoadCurrentResource` step indicates
 that no changes will occur, a `converge_by` block is executed that does nothing but return `false` so that no configuration change
 is executed and the return value of `false` means that the resource will be reported as being *"skipped."*
-   2. If `LoadCurrentResource` indicates that a change would occur with this configuration document and the action is `:test`,
-   a `converge_by` block is executed that does nothing but return `true` so that no changes are made to the system but the
-   resource will be reported as *"executed"* rather than "skipped."
-   3. If `LoadCurrentResource` indicates that a change in configuration should occur for the configuration document, then with a
-   `converge_by` block a call is made to the LCM and a value of `false` is returned of the LCM ends up not making changes (rare,
+   2. If `LoadCurrentResource` indicates that a change in configuration should
+   occur for the configuration document, then call is made to the LCM inside
+   of a `converg_by` block and a value of `false` is returned if the LCM ends up not making changes (rare,
    but could occur due to rare but unavoidable race conditions), or `true` if the LCM does make changes to the system
    successfully. The resource is then reported as being "executed" or "skipped" depending on whether `true` or `false` was
    returned by the `converge_by` block.
@@ -527,7 +523,7 @@ This approach has the following properties:
   every `:set` action of `dsc_resource`. The first invocation checks if DSC needs to execute to enact the configuration in the
   Chef resource, and the second enacts the configuration.
 * Chef will only report an instance of `dsc_mof` as updated during the Chef client run if the LCM makes changes to the
-  system (or if it would have made changes in the case of the `:test` action).
+  system
 
 ### Resource convergence for `dsc_script`
 
@@ -581,7 +577,7 @@ of the `dsc_mof resource:
   every `:set` action of `dsc_resource`. The first invocation checks if DSC needs to execute to enact the configuration in the
   Chef resource, and the second enacts the configuration.
 * Chef will only report an instance of `dsc_resource` as updated during the Chef client run if the LCM makes changes to the
-  system (or if it would have made changes in the case of the `:test` action).
+  system.
 * Since the type conversions from Chef to MOF escapes strings and is otherwise restricted to emitting values of simple types
   such as integers or boolean literals, code injection at the layer of the MOF runtime or above is mitigated.
 * Any configuration document submitted to the LCM by Chef as a representation of the intent of a `dsc_resource` instance will be
