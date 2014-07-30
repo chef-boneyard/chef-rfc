@@ -1,5 +1,5 @@
 ---
-RFC:
+RFC: unassigned
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Draft
 Type: Process
@@ -106,10 +106,10 @@ the original one should be marked as Replaced.
 
 ```markdown
 ---
-RFC:
+RFC: unassigned
 Author: Alan Smithee <asmithee@example.com>
 Status: Draft
-Type: Standards Track
+Type: <Standards Track, Informational, Process>
 ---
 
 # Title
