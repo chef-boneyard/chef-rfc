@@ -49,7 +49,7 @@ feature or process if accepted.
 
 Each RFC will generally include the following sections:
 
-1. Preamble – Yaml frontmatter including the RFC ID number, author(s), status,
+1. Metadata – Yaml frontmatter including the RFC ID number, author(s), status,
 and type.
 2. Abstract – A short (~200 word) description of the technical issue being
 addressed.
