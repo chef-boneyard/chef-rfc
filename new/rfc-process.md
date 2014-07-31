@@ -49,22 +49,26 @@ feature or process if accepted.
 
 Each RFC will generally include the following sections:
 
-1. Metadata – Yaml frontmatter including the RFC ID number, author(s), status,
-and type.
-2. Description – A short (~200 word) description of the technical issue being
-addressed.
-3. Specification – The technical specification should describe the new feature
-or enhancement being proposed. This includes any DSL or server API changes.
-4. Motivation – The motivation should explain the reason for this change,
-especially if the change has an impact on compatibility. The the greatest
-extent possible, realistic use cases should be cited.
-5. Rationale – The rationale fleshes out the specification by describing what
-motivated the design and why particular design decisions were made. It should
-describe alternate designs that were considered and related work, e.g. how the
-feature is supported in other tools. The rationale should provide evidence
-of consensus within the community and discuss important objections or concerns
-raised during discussion.
-6. Copyright – All RFCs must be placed in the public domain.
+1. **Metadata** – Yaml frontmatter including the RFC ID number, author(s),
+status, and type.
+2. **Description** – A short (~200 word) description of the technical issue
+being addressed.
+3. **Motivation** – The **why** of this change, especially if the change has an
+impact on compatibility. The the greatest extent possible, realistic use cases
+should be cited. This generally includes an agile user story.
+4. **Specification** – The **what** of this change. The technical specification
+should describe the new feature or enhancement being proposed. This includes any
+DSL or server API changes.
+5. **Rationale** – The **how** of this change. The rationale fleshes out the
+specification by describing what motivated the design and why particular design
+decisions were made. It should describe alternate designs that were considered
+and related work, e.g. how the feature is supported in other tools. The
+rationale should provide evidence of consensus within the community and discuss
+important objections or concerns raised during discussion.
+6. **Copyright** – All RFCs must be placed in the public domain.
+
+This is neither an exhaustive list nor a set of requirements, but it is a good
+place to start.
 
 ## RFC Review and Workflow
 
@@ -95,12 +99,12 @@ the original one should be marked as Replaced.
 
 ### RFC Status Reference
 
-* Draft – The RFC is under discussion by the community.
-* Accepted – The RFC is approved for implementation.
-* Rejected – The RFC is not approved.
-* Withdrawn – The RFC has been voluntarily withdrawn from consideration.
-* Final – The RFC has been implemented. *(Standards Track type only)*
-* Replaced – The RFC has been superseded by another RFC.
+* **Draft** – The RFC is under discussion by the community.
+* **Accepted** – The RFC is approved for implementation.
+* **Rejected** – The RFC is not approved.
+* **Withdrawn** – The RFC has been voluntarily withdrawn from consideration.
+* **Final** – The RFC has been implemented. *(Standards Track type only)*
+* **Replaced** – The RFC has been superseded by another RFC.
 
 ## RFC Template
 
@@ -116,9 +120,13 @@ Type: <Standards Track, Informational, Process>
 
 Description.
 
-## Specification
-
 ## Motivation
+
+    As a <<user_profile>>,
+    I want to <<functionality>>,
+    so that <<benefit>>.
+
+## Specification
 
 ## Rationale
 
