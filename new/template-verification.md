@@ -59,7 +59,15 @@ template "/etc/nginx.conf" do
 end
 ```
 
-Alternatively, they could write custom verification logic in Ruby.
+Chef may ship built-in verifiers for common checks such as
+content-type verification. Built-in verifiers can be used by passing
+well-known symbols to the verify attribute:
+
+```ruby
+template "/etc/config.json" do
+  verify :json
+end
+```
 
 # Motivation
 
