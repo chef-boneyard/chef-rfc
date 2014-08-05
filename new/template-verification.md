@@ -1,17 +1,18 @@
-# Template Verification
+# File Content Verification
 
-The template resource should be able to verify a template's correctness
-via user-supplied instructions.
+File-based resources should be able to verify a file's content via
+user-supplied instructions before deploying the new content.
 
 # Specification
 
-The `verify` attribute of the `template` resource will take a
-user-provided block. At converge time, the block will be passed the
-path to the rendered template. If the block returns `true` the
-template provider will continue to update the file on disk as
-appropriate. If the template returns false, the provider will raise an
-error. If no verification block is supplied by the user, the template
-provider assumes the template is valid.
+The `verify` attribute of the `file`, `template`, `cookbook_file`, and
+`remote_file` resources will take a user-provided block. At converge
+time, the block will be passed the path to a temporary file holding
+the proposed content for the file. If the block returns `true` the
+provider will continue to update the file on disk as appropriate. If
+the block returns false, the provider will raise an error. If no
+verification block is supplied by the user, the provider assumes the
+content is valid.
 
 Multiple verify blocks may be provided by the user.  All given verify
 block must pass before the content is deployed.
