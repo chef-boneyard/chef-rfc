@@ -1,6 +1,6 @@
 # Template Verification
 
-The template resource should be able to verify a templates correctness
+The template resource should be able to verify a template's correctness
 via user-supplied instructions.
 
 # Specification
@@ -36,7 +36,7 @@ configuration:
 
 ```ruby
 template "/etc/nginx.conf" do
-  verify_template do |path|
+  verify do |path|
     `nginx -t -c #{path}`
     $? == 0
   end
@@ -49,13 +49,14 @@ Alternatively, they could write custom verification logic in Ruby.
 
 Typos and bugs in a template can lead Chef to render invalid
 configuration files on a node. In some cases, this will cause the
-related service to fail a notified restart, bringing down the users
+related service to fail a notified restart, bringing down the user's
 application. One hopes to catch such errors in testing, but that is
 not always possible.
 
 Many applications provide a means to verify a configuration file, but
 it is currently difficult to use these tools to verify a template
-without an elaborate series of resources, chained with notifications.
+without an elaborate series of resources chained together with
+notifications.
 
 # Related BUGS
 
