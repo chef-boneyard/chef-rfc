@@ -13,6 +13,9 @@ appropriate. If the template returns false, the provider will raise an
 error. If no verification block is supplied by the user, the template
 provider assumes the template is valid.
 
+Multiple verify blocks may be provided by the user.  All given verify
+block must pass before the content is deployed.
+
 As an example:
 
 ```ruby
@@ -28,6 +31,18 @@ template "/tmp/bar" do
   verify do |path|
     false
   end
+end
+
+# This should pass
+template "/tmp/baz" do
+  verify { true }
+  verify { 1 == 1 }
+end
+
+# This should raise an error
+template "/tmp/bat" do
+   verify { true }
+   verify { 1 == 0 }
 end
 ```
 
