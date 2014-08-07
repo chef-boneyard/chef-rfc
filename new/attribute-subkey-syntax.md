@@ -9,16 +9,16 @@ dealing with Ruby code:
    - Method calls: `node.key1.key2
 
 When attributes are referred to as strings inside Ruby code or on the
-command line, a dot(".") should be used a the key separator:
+command line, a dot(".") should be used as the key separator:
 
    - "key1.key2"
    - knife node show foo -a key1.key2
 
 # Specification
 
-The following are places examples of how node attributes should be
-accessed in different Chef contexts.  Cases that require a change from
-the current behavior have been called out:
+The following are the contexts in which users access nested
+attributes. Cases that require a change from the current behavior have
+been called out.
 
 ## In-recipe access
 
