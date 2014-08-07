@@ -8,7 +8,7 @@ This RFC declares what community meetings we hold and how we hold them.
 
 ### Time
 
-Every two weeks on Friday, at 9am Pacific. 1 hour.
+Every two weeks on Thursday, at 9am Pacific. 1 hour.
 
 ### Location
 
