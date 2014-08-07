@@ -35,7 +35,7 @@ At a given time:
 
 ### Operating System Versions
 
-This topic deserves an RFC of its own. Our own Julian Dunn is working on one [here](https://github.com/opscode/chef-rfc/pull/21) in parallel.
+Supported Operating Systems and versions are covered by a separate [proposed RFC](https://github.com/opscode/chef-rfc/pull/21).
 
 ## Chef 12
 
