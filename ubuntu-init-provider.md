@@ -51,8 +51,9 @@ to help vocalize the issue, but it still isn't a fix.
 
 ## Proposed Solution
 
-Leverage Lamuount's framework in the long term, but for the short term we need to
-either c
+Leverage Lamont's [framework](https://github.com/opscode/chef/pull/1596) to have a long term fix for this. Having a way to check for the different ways that the
+chef converge is intelligent enough to figure out the init mechanism seems like the correct answer.
+
 
 ## References and further reading
 
