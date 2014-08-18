@@ -11,11 +11,11 @@ For Ubuntu releases after 14.04 LTS, [Canonical](http://www.markshuttleworth.com
 
 This RFC serves as the groundwork to sanely address the provider support for all the permutations of init systems on the Ubuntu platform.
 
-| Ubuntu version     | system  |
-| ------------------ | ------  |
-| < 13.10            | init.d  |
-| > 13.10 or < 14.04 | upstart |
-| > 14.04            | systemd |
+| Ubuntu version       | system  |
+| ------------------   | ------  |
+| < 13.10              | init.d  |
+| >= 13.10 or <= 14.04 | upstart |
+| > 14.04              | systemd |
 
 ## Document status
 
