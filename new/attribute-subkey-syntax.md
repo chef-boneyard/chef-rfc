@@ -1,12 +1,7 @@
 # Attribute Subkey Syntax
 
 This RFC defines the syntax for accessing deeply nested keys inside
-the node attribute structure.  It recommends that Chef and
-Chef-related tooling support the following two key access methods when
-dealing with Ruby code:
-
-   - Hash access: `node['key1']['key2']`
-   - Method calls: `node.key1.key2
+the node attribute structure.
 
 When attributes are referred to as strings inside Ruby code or on the
 command line, a dot(".") should be used as the key separator:
@@ -14,43 +9,41 @@ command line, a dot(".") should be used as the key separator:
    - "key1.key2"
    - knife node show foo -a key1.key2
 
+Additionally, in order to avoid escaping for keys that might contain
+"." the following array syntax should also be supported.  In ruby:
+
+   - ['key1', 'key2']
+   - knife node show foo -a "[key2', key2']"
+
+When the array syntax is used "." has no special meaning.
+
 # Specification
 
 The following are the contexts in which users access nested
 attributes. Cases that require a change from the current behavior have
 been called out.
 
-## In-recipe access
-
-The following two access methods should be supported inside recipes
-and other code with access to the node object:
-
-```
-node['key1']['key2']
-node.key1.key2
-```
-
 ## Command-line access (knife)
 
 When specifying attributes on the command line, "." should be the
-key separator:
+key separator.  Alternatively, an array can be provided:
 
 ```
 knife node show foo -a key1.key2
+knife node show foo -a "[key2', key2']"
 ```
-
 ## Command-line access (other)
 
-*Requires Change* All other Chef-maintained tools should also use "."
-as the attribute key separator,
-including Ohai:
+*Requires Change* All other Chef-maintained tools should also use
+dot-separated strings and arrays to specify not attributes, including Ohai:
 
 ```
 ohai cpu.real
+ohai "['cpu', 'real']"
 ```
 
-Documentation for 3rd-party tool writers should encourage them to use
-"." as well.
+Documentation for 3rd-party tool writers should encourage the use of
+these formats as well.
 
 ## Search Syntax
 
@@ -71,12 +64,11 @@ well through Chef 12.
 knife search node "key1_key2:4"
 ```
 
-**Question**: Should the Server API also change?
-
 ## Partial Search Syntax
 
 *Requires Change*
 
+Search filters currently only supports the array syntax.  Dot-separated strings
 ```
 partial_search(:node, 'role:web', keys => { 'name' => [ 'name' ],
                                             'kernel_version' => 'kernel.version' })
@@ -84,21 +76,13 @@ partial_search(:node, 'role:web', keys => { 'name' => [ 'name' ],
 search(:node, 'role:web', :filter_result { 'kernel_version' => 'kernel.version'})
 ```
 
-This is a change from the current API which requires passing an array:
-
-```
-search(:node, 'role:web', :filter_result { 'kernel_version' =>
-['kernel', 'version']})
-```
-
-**Question**: Should the Chef Server API also change?
-
 ## Attribute Whitelisting
 
 *Requires Change*
 
 ```
-normal_attribute_whitelist = ["network.interfaces"]
+normal_attribute_whitelist = ['network.interfaces', 'fqdn']
+normal_attribute_whitelist = [['network', 'interfaces'], 'fqdn']
 ```
 
 Currently, "/" is used as the attribute separator.
@@ -115,11 +99,12 @@ Currently, Ohai 7 "provides" and "requires" statements use "/" as the attribute 
 
 ## Other Considerations
 
-### Array Syntax
+### [] accessor method on the node object
 
-When using the array access syntax in a recipe, Chef should not
-interpret the "." as the record separator.  Namely, `node['key1.key2']`
-should not be interpreted as `node['key1']['key2']`.
+When using the array accessor method([]) on node, Chef should not
+interpret the "." as the record separator.  Namely,
+`node['key1.key2']` should not be interpreted as
+`node['key1']['key2']`.
 
 ### Conflicts
 
@@ -135,10 +120,8 @@ When Chef tools encounter the attribute specification 'key1.key2' the
 deeply nested key will be preferred. Thus, given the above example
 'key1.key2' would refer to the attribute with the value "bar".
 
-To escape a ".", the user should prepend a the character "\". Thus, in
-the above example, `'key1\.key2'` refers to the attribute
-`node['key1.key2']`. `'key1\\.key2'` refers to the attribute
-`node['key1\.key2']`.
+The array syntax should be used in cases when the user needs to
+explicitly avoid the interpretation of ".".
 
 When no conflict exists, Chef should return the value of the given
 key. That is, if `node['key1.key2']` exists but
