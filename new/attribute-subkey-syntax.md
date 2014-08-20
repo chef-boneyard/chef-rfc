@@ -10,7 +10,7 @@ command line, a dot(".") should be used as the key separator:
    - knife node show foo -a key1.key2
 
 Additionally, in order to avoid escaping for keys that might contain
-"." the following array syntax should also be supported.  In ruby:
+"." the following array syntax should also be supported:
 
    - ['key1', 'key2']
    - knife node show foo -a "[key2', key2']"
