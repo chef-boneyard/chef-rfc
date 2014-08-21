@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 000
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
