@@ -25,7 +25,10 @@ decider is [Adam Jacob](mailto:adam@getchef.com). The decider can delegate their
 authority on a per-subsystem or per-RFC basis.
 2. The **Editors** manage the Chef RFC repository and assist with the RFC
 workflow. They are not responsible for managing the content of RFCs, only
-formatting and procedure. The current editors are:
+formatting and procedure. To volunteer as an editor please create a pull
+request against this document that adds your name to the list. The existing
+editors will vote on the request, with the Decider retaining veto power. The
+current editors are:
    * Noah Kantrowitz <noah@coderanger.net>
 3. The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
