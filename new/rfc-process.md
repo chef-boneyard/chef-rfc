@@ -11,26 +11,26 @@ A Chef RFC is a design document describing improvements to Chef. [more here]
 
 ## RFC Types
 
-1. A **Standards Track** RFC describes a new feature or improvement for Chef or
+* A **Standards Track** RFC describes a new feature or improvement for Chef or
 the Chef ecosystem.
-2. An **Informational** RFC describes a standard or guideline in the Chef
+* An **Informational** RFC describes a standard or guideline in the Chef
 community. It is not intended to be a binding requirement.
-3. A **Process** RFC describes a change to development process of Chef or
+* A **Process** RFC describes a change to development process of Chef or
 related projects.
 
 ## Roles
 
-1. The **Decider** has final say to accept or reject an RFC. The top-level
+* The **Decider** has final say to accept or reject an RFC. The top-level
 decider is [Adam Jacob](mailto:adam@getchef.com). The decider can delegate their
 authority on a per-subsystem or per-RFC basis.
-2. The **Editors** manage the Chef RFC repository and assist with the RFC
+* The **Editors** manage the Chef RFC repository and assist with the RFC
 workflow. They are not responsible for managing the content of RFCs, only
 formatting and procedure. To volunteer as an editor please create a pull
 request against this document that adds your name to the list. The existing
 editors will vote on the request, with the Decider retaining veto power. The
 current editors are:
-   * Noah Kantrowitz <noah@coderanger.net>
-3. The **Author(s)** submit RFCs and shepherd them through the process with the
+  * Noah Kantrowitz <noah@coderanger.net>
+* The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
 also implement the feature or process once accepted.
 
