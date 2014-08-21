@@ -148,7 +148,8 @@ neighboring rights to this work.
 ## Influences
 
 This document is heavily based on [PEP 1](http://legacy.python.org/dev/peps/pep-0001/).
-It also draws from [Django's DEP process](#), and [OpenStack's Blueprints](#).
+It also draws from [Django's DEP process](https://github.com/django/deps/blob/master/deps/0001.rst),
+and [OpenStack's Blueprints](https://wiki.openstack.org/wiki/Blueprints).
 
 ## Copyright
 
