@@ -26,7 +26,7 @@ authority on a per-subsystem or per-RFC basis.
 2. The **Editors** manage the Chef RFC repository and assist with the RFC
 workflow. They are not responsible for managing the content of RFCs, only
 formatting and procedure. The current editors are:
-   * TBD
+   * Noah Kantrowitz <noah@coderanger.net>
 3. The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
 also implement the feature or process once accepted.
