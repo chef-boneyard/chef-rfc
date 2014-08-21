@@ -1,7 +1,7 @@
 ---
-RFC:
+RFC: 017
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 Chef-Version: 12
 ---
@@ -86,5 +86,7 @@ for now, full compatibility with current cookbooks is maintained.
 
 ## Copyright
 
-To the extent possible under law, the person who associated CC0 with this work
-has waived all copyright and related or neighboring rights to this work.
+This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.
