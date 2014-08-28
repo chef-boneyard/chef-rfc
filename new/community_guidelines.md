@@ -5,7 +5,7 @@ Status: Draft
 Type: Informational
 ---
 
-# Chef Community Guidlines
+# Chef Community Guidelines
 
 A guideline that outlines the code of conduct expected when participating in the Chef Community and the remedies available when this code is not followed.
 
