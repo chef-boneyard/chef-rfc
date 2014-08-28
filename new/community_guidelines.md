@@ -46,7 +46,9 @@ The previous list applies to all forms of communication: IRC, the mailing list, 
 
 The strength of the community comes from all of the people in it, their wide range of backgrounds, and the unique contributions everyone makes. Let’s keep working together, learning from our mistakes, and making this community as awesome as it can be.
 
-(Inspired by the [Speak Up!](http://speakup.io/coc.html) project.)
+### Influences
+
+This Code of Conduct was forked from the example policy from the [Geek Feminism wiki, created by the Ada Initiative and other volunteers](http://geekfeminism.wikia.com/wiki/Conference_anti-harassment/Policy) which is under a Creative Commons Zero (CC0) license. This document has also been inspired by the [Speak Up!](http://speakup.io/coc.html) project and the [PyCon Code of Conduct](https://github.com/python/pycon-code-of-conduct).
 
 ## Copyright
 
