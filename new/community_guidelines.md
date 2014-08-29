@@ -19,7 +19,7 @@ The following shall become our Community Guidelines
 
 ### Community Guidelines
 
-The community is a mixture of professionals and volunteers who come from all over the world and work together to make Chef better, including mentoring, teaching, and connecting with other members of the community.
+The Chef community is a mixture of professionals and volunteers who come from all over the world and work together to make Chef better. Community members fulfill many roles, including mentoring, teaching, and connecting with other members of the community.
 
 Diversity is one of our biggest strengths, but it can also bring increased communication challenges at times.
 
@@ -44,14 +44,15 @@ Please keep in mind that:
 * Decisions that you make will often affect others in the community.
 * Disagreements happen, but should not be an excuse for poor behavior and bad manners. When disagreements do happen, let’s work together to solve them effectively and in a way that ensures that everyone understands what the disagreement was.
 * People may not understand jokes, sarcasm, and oblique references in the same way that you do. So remember that and be kind to the other members of the community.
-* Sexist, racist, or exclusionary comments are not welcome in the community.
+* Sexist, racist, and other prejudicial or exclusionary comments are not welcome in the community.
 
-Harassment includes offensive verbal or written comments related to gender, sexual orientation, disability, physical appearance, body size, race, religion, sexual images, deliberate intimidation, stalking, persistent following, harassing photography or recording, sustained disruption of talks or other events, inappropriate physical contact, and unwelcome sexual attention.
+#### Unacceptable Behavior
 
-Individuals asked to stop any harassing behavior are expected to comply immediately. Further unacceptable behavior will result in escalating sanctions.
+Harassment comes in many forms, including but not limited to: offensive verbal or written comments related to gender, sexual orientation, disability, physical appearance, body size, race, religion, and sexual images. 
 
+As a community that often meets at public spaces, harassment also includes: stalking, persistent following, harassing photography or recording, sustained disruption of talks or other events, inappropriate physical contact, and unwelcome sexual attention.
 
-The strength of the community comes from all of the people in it, their wide range of backgrounds, and the unique contributions everyone makes. Let’s keep working together, learning from our mistakes, and making this community as awesome as it can be.
+Any physical violence or intimidation, threatened or acted on, is a serious offense.    
 
 #### Procedure for Incident Handling
 
