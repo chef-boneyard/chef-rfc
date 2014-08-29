@@ -56,26 +56,19 @@ Any physical violence or intimidation, threatened or acted on, is a serious offe
 
 #### Procedure for Incident Handling
 
-Behavior outside of our community guidelines is unacceptable and should and will not be tolerated by anyone. If you encounter such behavior, please contact a member of the Chef community team immediately.
+Behavior outside of our community guidelines is unacceptable and should and will not be tolerated by anyone. If you encounter such behavior, please report it immediately.
 
-* Nathen Harvey, Community Director
+The Chef Community Team is well informed on how to deal with incidents and accordingly act as the community advocates. Report the harassment incident (preferably in writing) to one of the community advocates listed below.
+ 
+* Nathen Harvey, Chef Community Director
   * [nharvey@getchef.com](mailto:nharvey@getchef.com)
   * [@nathenharvey](https://twitter.com/nathenharvey)
   * +1 202-368-7264
-* Mary Thengvall, Community Manager
+* Mary Thengvall, Chef Community Manager
   * [mary@getchef.com](mailto:mary@getchef.com)
   * [@mary_grace](https://twitter.com/mary_grace)
-* Chef Community team
-  * [community@getchef.com](mailto:community@getchef.com)
 
-
-Report the harassment incident (preferably in writing) to a community manager. All reports are confidential. Please do not disclose public information about the incident until the staff have had sufficient time to address the situation. This is as much for your safety and protection as it is the other community members.
-
-**Editorial Note**:  *Need to add something here about how to identify who should receive incident reports.  Operators in IRC channels are obvious but that implies we need to also have some training and agreement on how one becomes an operator.  Barring any other obvious choice, reports should go to the community team employed by Chef.  The contact information for that team should be kept up-to-date in this document.*
-
-When reporting the incident, try to gather as much information as available but do not interview people about the incident. Staff will assist you in writing the report/collecting information.
-
-The important information consists of:
+The important information to report consists of:
 
 * Identifying information (name, email address, IRC nick, etc.) of the person doing the harassing
 * The behavior that was in violation
@@ -83,13 +76,9 @@ The important information consists of:
 * The circumstances surrounding the incident
 * Other people involved in the incident
 
-The community management team is well informed on how to deal with the incident and how to further proceed with the situation.
-
 If you feel your safety is in jeopardy please do not hesitate to contact local law enforcement.
 
 **Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the offenders, and the community at large, to grow, learn, and become better. The Chef community team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
-
-If at all possible, all reports should be made directly to [Nathen Harvey](mailto:nharvey@getchef.com), Community Director or [Mary Thengvall](mailto:mary@getchef.com), Community Manager.
 
 ### Influences
 
