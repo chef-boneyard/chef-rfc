@@ -11,9 +11,7 @@ A guideline that outlines the code of conduct expected when participating in the
 
 ## Motivation
 
-The community is a mixture of professionals and volunteers who come from all over the world and work together to make Chef better, including mentoring, teaching, and connecting with other members of the community.  Diversity is one of our biggest strengths, but it can also bring increased communication challenges at times.  
-
-Previous community guidelines have described the expected behavior but fall short of suggesting remedies when there are violations.
+As a member of the Chef community I want a set of ground rules that encourage respect and cooperation between members and provide a remediation process when there are violations so that I feel welcome and safe.
 
 ## Specification
 
