@@ -19,20 +19,6 @@ The following shall become our Community Guidelines
 
 ### Community Guidelines
 
-#### The Short Version
-
-Chef Software, Inc. is dedicated to a harassment-free community experience for everyone, regardless of gender, sexual orientation, disability, physical appearance, body size, race, or religion. We do not tolerate harassment of community members in any form.
-
-All communication should be appropriate for a professional audience including people of many different backgrounds. Sexual language and imagery is not appropriate for any venue.
-
-Be kind to others. Do not insult or put down other attendees. Behave professionally. Remember that harassment and sexist, racist, or exclusionary jokes are not appropriate.
-
-Community members violating these rules may be asked to cease participation in the community.
-
-Thank you for helping make this a welcoming, friendly community for all.
-
-#### The Longer Version
-
 The community is a mixture of professionals and volunteers who come from all over the world and work together to make Chef better, including mentoring, teaching, and connecting with other members of the community.
 
 Diversity is one of our biggest strengths, but it can also bring increased communication challenges at times.
