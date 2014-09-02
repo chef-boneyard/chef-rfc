@@ -1,6 +1,6 @@
 ---
 RFC: unassigned
-Author: Alan Smithee <asmithee@example.com>
+Author: John Keiser <jkeiser@getchef.com>
 Status: Draft
 Type: <Standards Track, Informational, Process>
 ---
