@@ -29,7 +29,7 @@ As you are working with other members of the community, please keep in mind the 
 
 The following list isn’t exhaustive; it is intended to help all of us communicate well so that the community can work better together:
 
-* **Be welcoming, friendly, and patient.**
+* **Be welcoming, inclusive, friendly, and patient.**
 * **Be considerate.**
 * **Be respectful.**
 * **Be professional.**
@@ -48,18 +48,18 @@ Please keep in mind that:
 
 #### Unacceptable Behavior
 
-Harassment comes in many forms, including but not limited to: offensive verbal or written comments related to gender, sexual orientation, disability, physical appearance, body size, race, religion, and sexual images. 
+Harassment comes in many forms, including but not limited to: offensive verbal or written comments related to gender, sexual orientation, disability, physical appearance, body size, race, religion, and sexual images.
 
-As a community that often meets at public spaces, harassment also includes: stalking, persistent following, harassing photography or recording, sustained disruption of talks or other events, inappropriate physical contact, and unwelcome sexual attention.
+As a community that often meets at public spaces, harassment also includes: stalking, persistent following, intrusive or otherwise unwanted photography or recording, sustained disruption of talks or other events, inappropriate physical contact, and unwelcome sexual attention.
 
-Any physical violence or intimidation, threatened or acted on, is a serious offense.    
+Any physical violence or intimidation, threatened or acted on, is a serious offense.
 
 #### Procedure for Incident Handling
 
 Behavior outside of our community guidelines is unacceptable and should and will not be tolerated by anyone. If you encounter such behavior, please report it immediately.
 
 The Chef Community Team is well informed on how to deal with incidents and accordingly act as the community advocates. Report the harassment incident (preferably in writing) to one of the community advocates listed below.
- 
+
 * Nathen Harvey, Chef Community Director
   * [nharvey@getchef.com](mailto:nharvey@getchef.com)
   * [@nathenharvey](https://twitter.com/nathenharvey)
@@ -78,7 +78,7 @@ The important information to report consists of:
 
 If you feel your safety is in jeopardy please do not hesitate to contact local law enforcement.
 
-**Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the offenders, and the community at large, to grow, learn, and become better. The Chef community team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
+**Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the community as a whole to grow, learn, and become better. The Chef community team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
 
 ### Influences
 
