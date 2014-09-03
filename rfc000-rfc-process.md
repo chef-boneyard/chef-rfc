@@ -32,7 +32,7 @@ formatting and procedure. To volunteer as an editor please create a pull
 request against this document that adds your name to the list. The existing
 editors will vote on the request, with the Decider retaining veto power. The
 current editors are:
-  * Noah Kantrowitz <noah@coderanger.net>
+  * Noah Kantrowitz \<noah@coderanger.net\>
 * The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
 also implement the feature or process once accepted.
