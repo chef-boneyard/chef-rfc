@@ -13,7 +13,7 @@ Additionally, in order to avoid escaping for keys that might contain
 "." the following array syntax should also be supported:
 
    - ['key1', 'key2']
-   - knife node show foo -a "[key2', key2']"
+   - knife node show foo -a "['key1', 'key2']"
 
 When the array syntax is used "." has no special meaning.
 
@@ -30,7 +30,7 @@ key separator.  Alternatively, an array can be provided:
 
 ```
 knife node show foo -a key1.key2
-knife node show foo -a "[key2', key2']"
+knife node show foo -a "['key1', 'key2']"
 ```
 ## Command-line access (other)
 
