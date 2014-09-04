@@ -1,5 +1,5 @@
 ---
-RFC: 000
+RFC: 18
 Author: Steven Danna <steve@getchef.com>
 Status: Accepted
 Type: Standards Track
