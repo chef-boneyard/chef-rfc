@@ -34,6 +34,7 @@ editors will vote on the request, with the Decider retaining veto power. The
 current editors are:
   * Noah Kantrowitz \<noah@coderanger.net\>
   * Jon Cowie \<jcowie@etsy.com\>
+  * Bryan McLellan \<btm@loftninjas.org\>
 * The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
 also implement the feature or process once accepted.
