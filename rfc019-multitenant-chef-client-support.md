@@ -47,6 +47,7 @@ Hosted Chef by default:
 Multitenant root URL support:
 1. A new configuration parameter, `Chef::Config.chef_server_root`, be added that points to the top of the server (above /organizations) where users and organization lists can be found.
 2. When this is set, `chef_server_url` defaults to `<chef_server_root>/organizations/<organization>`.
+3. Conversely, when `chef_server_url` is set to `https://blah.com/organizations/foo'`, `chef_server_root` defaults to `https://blah.com` and `organization` defaults to `foo`.
 
 Local multitenancy support by default:
 1. Local mode use chef-zero 3.x by default, with Enterprise mode on and the default organization `chef`.
