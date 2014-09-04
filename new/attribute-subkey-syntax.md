@@ -123,11 +123,6 @@ deeply nested key will be preferred. Thus, given the above example
 The array syntax should be used in cases when the user needs to
 explicitly avoid the interpretation of ".".
 
-When no conflict exists, Chef should return the value of the given
-key. That is, if `node['key1.key2']` exists but
-`node['key1']['key2']` does not, 'key1.key2' would refer to the
-attribute `node['key1.key2']`.
-
 # Motivation
 
 Inconsistent syntax for accessing subkeys confuses new users.  This is
