@@ -42,7 +42,7 @@ This requires extra logic to select the appropriate mapping of Ubuntu version to
 
 ## Work that has already been done
 
-Lamount has created a [framework](https://github.com/opscode/chef/pull/1596) to have a way to check for the system you are using.
+[Lamont Granquist](https://github.com/lamont-granquist) has created a [framework](https://github.com/opscode/chef/pull/1596) to have a way to check for the system you are using.
 Which could fix help move this forward, but it would need to be thourghly tested and
 would require each cookbook to be updated.
 
