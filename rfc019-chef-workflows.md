@@ -1,3 +1,11 @@
+---
+RFC: 19
+Author: Adam Jacob <adam@getchef.com>
+Status: Accepted
+Type: Standards Track
+Chef-Version: 12
+---
+
 # The Great Workflow RFC
 
 This RFC is about Chef Workflow - which ones exist in the wild, which ones are supported, and how we as a community go about teaching folks:
