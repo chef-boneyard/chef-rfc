@@ -37,11 +37,11 @@ No longer overwrites the 'bar' key with a new hash-like structure, but instead m
 
 ## Specification
 
-We purpose 2 additions and one change to accomplish these goals.
+We propose 2 additions and one change to accomplish these goals.
 
 ### Precedence Level Removals
 
-We purpose the simple:
+We propose the simple:
 
 ```ruby
 node.rm_default('foo', 'bar')
@@ -49,7 +49,8 @@ node.rm_default('foo', 'bar')
 
 Also likely aliased to `node.remove_default`
 
-This function would return the computed value of the key being deleted.
+This function would return the computed value of the key being deleted for the
+specified precedence level.
 
 #### Examples
 
