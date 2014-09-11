@@ -31,6 +31,7 @@ For the same reasons as above, being able to delete a key globally is important.
 As a side-effect of the changes in Chef 11, this code:
 
     node.default['foo']['bar']['baz'] = 12
+    node.role_default['foo']['bar']['baz'] = 52
     node.default['foo']['bar'] = {'thing' => 'stuff'}
 
 No longer overwrites the 'bar' key with a new hash-like structure, but instead merges these new entries into the existing Attribute. While this is desired for a variety of use-cases, having a way to fully assign the value of a key is important.
@@ -41,13 +42,16 @@ We propose 2 additions and one change to accomplish these goals.
 
 ### Precedence Level Removals
 
-We propose the simple:
+#### Syntax
 
 ```ruby
 node.rm_default('foo', 'bar')
+node.rm_normal('foo', 'bar')
+node.rm_override('foo', 'bar')
 ```
 
-Also likely aliased to `node.remove_default`
+Also likely aliased to `node.remove_default`, `node.remove_normal`, and
+`node.remove_override`.
 
 This function would return the computed value of the key being deleted for the
 specified precedence level.
@@ -78,7 +82,7 @@ node.force_default['foo']['bar']['thing'] = 'allthestuff'
 # When we remove default precedence of node['foo']['bar']
 node.rm_default('foo', 'bar') #=> {'baz' => 52, 'thing' => 'allthestuff'}
 
-# What's left under 'foo' is only 'bar'
+# What's left under 'foo' is only 'bat'
 node.default_attrs['foo'] #=> {'bat' => { 'things' => [5,6] } }
 ```
 
@@ -143,20 +147,22 @@ node.default_attrs['foo'] #=> { 'bar' => {'baz' => 55} }
 
 Non-existent key deletes return nil:
 
-```rugby
+```ruby
 # Delete Non-Existent Key
 node.rm_default("no", "such", "thing") #=> nil
 ```
 
 ### Global Level Removals
 
-We propose the simple:
+#### Syntax
 
 ```ruby
 node.rm('foo', 'bar')
 ```
 
 Also likely aliased to `node.remove`
+
+#### Examples
 
 ```ruby
 # Given a similar structure to before
@@ -193,7 +199,27 @@ We propose we stop making `!` an alias for `force_`, and use `!` as a modifier
 to functions to indicate this behavior.
 
 We propose that adding ! to a precedence-component-write function will clear out
-the key for that precedent for all "components" that merge earlier than it, and then complete the right.
+the key for that precedent for all "components" that merge earlier than it, and
+then complete the write.
+
+#### Syntax
+
+```ruby
+node.default!['foo']['bar'] = {...}
+node.force_default!['foo']['bar'] = {...}
+node.normal!['foo']['bar'] = {...}
+node.override!['foo']['bar'] = {...}
+node.force_override!['foo']['bar'] = {...}
+```
+
+Since `node.role_default`, `node.env_default`, and their override equivalents
+are considered private APIs, the `!` syntax will not be implemented for them,
+but the desire is that the `!` operator is defined clearly enough that such an
+implementation has a clear specification. For example, `node.role_default!`
+would clear the value for default, env_default, role_default before assignment,
+but not force_default.
+
+#### Examples
 
 Example 1: Just one component
 
