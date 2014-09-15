@@ -70,15 +70,19 @@ Community Advocates and the Ombudsman must be agreed on by the community while t
 
 Behavior outside of our community guidelines is unacceptable and should and will not be tolerated by anyone. If you encounter such behavior, please report it immediately.
 
-The Chef Community Team is well informed on how to deal with incidents and accordingly act as the community advocates. Report the harassment incident (preferably in writing) to one of the community advocates listed below.
+The Chef Community advocates are well informed on how to deal with incidents. Report the harassment incident (preferably in writing) to one of the community advocates listed below.  See the "Roles" section above for a description of each role.
 
-* Nathen Harvey, Chef Community Director
-  * [nharvey@getchef.com](mailto:nharvey@getchef.com)
-  * [@nathenharvey](https://twitter.com/nathenharvey)
-  * +1 202-368-7264
-* Mary Thengvall, Chef Community Manager
-  * [mary@getchef.com](mailto:mary@getchef.com)
-  * [@mary_grace](https://twitter.com/mary_grace)
+* Decider
+  * Adam Jacob - &lt;[adam@getchef.com](mailto:adam@getchef.com)&gt; - IRC: holoway
+* Ombudsman
+  * Nathen Harvey - &lt;[nharvey@getchef.com](mailto:nharvey@getchef.com)&gt; - +1 202-368-7264 - IRC: nathenharvey
+* Advocates -
+  * IRC - generally, individuals with operator in a channel are designated as community advocates
+    * \#chef -
+    * \#chef-hacking -
+  * chef@ mailing list -
+  * chef-dev@ mailing list -
+  * GitHub -
 
 The important information to report consists of:
 
