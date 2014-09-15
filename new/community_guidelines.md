@@ -40,7 +40,7 @@ The previous list applies to all forms of communication: IRC, the mailing list, 
 
 Please keep in mind that:
 
-* Your work will be used by other people, and you in turn will depend on the work of others.
+* Your work will be used by other people, and you, in turn, will depend on the work of others.
 * Decisions that you make will often affect others in the community.
 * Disagreements happen, but should not be an excuse for poor behavior and bad manners. When disagreements do happen, let’s work together to solve them effectively and in a way that ensures that everyone understands what the disagreement was.
 * People may not understand jokes, sarcasm, and oblique references in the same way that you do. So remember that and be kind to the other members of the community.
