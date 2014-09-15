@@ -54,6 +54,18 @@ As a community that often meets at public spaces, harassment also includes: stal
 
 Any physical violence or intimidation, threatened or acted on, is a serious offense.
 
+#### Roles
+
+* The **Decider** has final say on community guidelines and final authority on punitive actions and appeals. As per the [Chef RFC process](https://github.com/opscode/chef-rfc/blob/master/rfc000-rfc-process.md), the top-level decider is [Adam Jacob](mailto:adam@getchef.com).
+* The **Community Ombudsman** (or Champion? or Manager?) is responsible for keeping the community guidelines up-to-date, meeting regularly with community advocates, and helping enforce the community guidelines.  The Community Ombusdman is an employee of Chef Software, Inc.
+* A **Community Advocates** may be assigned for each area where the community convenes (IRC, email list, GitHub, etc.).  Advocates are responsible for helping shape and enforce the community guidelines.
+* A **Community Member** is anyone who participates with the community whether in-person or via online channels.
+
+Community Advocates and the Ombudsman must be agreed on by the community while the Decider retains veto power.  Create a pull request against this document to volunteer as a community advocate for a particular area.
+
+##### Current Roles
+
+
 #### Procedure for Incident Handling
 
 Behavior outside of our community guidelines is unacceptable and should and will not be tolerated by anyone. If you encounter such behavior, please report it immediately.
