@@ -96,6 +96,15 @@ If you feel your safety is in jeopardy please do not hesitate to contact local l
 
 **Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the community as a whole to grow, learn, and become better. The Chef community team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
 
+#### Documenting Incidents
+
+
+### Punitive Actions
+
+These are the punitive actions that may be taken when someone violates our community guidelines:
+
+
+
 ### Influences
 
 This Code of Conduct was forked from the example policy from the [Geek Feminism wiki, created by the Ada Initiative and other volunteers](http://geekfeminism.wikia.com/wiki/Conference_anti-harassment/Policy) which is under a Creative Commons Zero (CC0) license. This document has also been inspired by the [Speak Up!](http://speakup.io/coc.html) project and the [PyCon Code of Conduct](https://github.com/python/pycon-code-of-conduct).
