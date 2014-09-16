@@ -25,7 +25,7 @@ The Chef community is a mixture of professionals and volunteers who come from al
 
 Diversity is one of our biggest strengths, but it can also bring increased communication challenges at times.
 
-Be careful in the words that you choose. Remember that sexist, racist, and other exclusionary jokes can be offensive to those around you. If you think your conversation is making another community member uncomfortable, try to make amends and move forward.
+Be careful in the words that you choose.  Be kind to others. Do not insult or put down others.  Remember that sexist, racist, and other exclusionary jokes can be offensive to those around you. If you think your conversation is making another community member uncomfortable, try to make amends and move forward.
 
 Our community convenes in many physical and virtual spaces.  These guidelines may be used in any location where the Chef community has gathered or is working.  However, events that take place in public spaces, such as conferences and meetup groups, will generally have their own code of conduct or similar community guidelines.  As such, the guidelines for a specific event should be followed.
 
@@ -56,6 +56,17 @@ Harassment comes in many forms, including but not limited to: offensive verbal o
 
 As a community that often meets at public spaces, harassment also includes: stalking, persistent following, intrusive or otherwise unwanted photography or recording, sustained disruption of talks or other events, inappropriate physical contact, and unwelcome sexual attention.
 
+Harassment and other exclusionary behavior aren't acceptable. This includes, but is not limited to:
+
+* Violent threats or language directed against another person.
+* Sexist, racist, or otherwise discriminatory jokes and language.
+* Posting sexually explicit or violent material.
+* Posting (or threatening to post) other people's personally identifying information ("doxing").
+* Personal insults, especially those using racist or sexist terms.
+* Unwelcome sexual attention.
+* Advocating for, or encouraging, any of the above behavior.
+* Repeated harassment of others. In general, if someone asks you to stop, then stop.
+
 Any physical violence or intimidation, threatened or acted on, is a serious offense.
 
 #### Roles
@@ -69,9 +80,11 @@ Community Advocates must be agreed on by the community while the Decider retains
 
 #### Procedure for Incident Handling
 
-Behavior outside of our community guidelines is unacceptable and should and will not be tolerated by anyone. If you encounter such behavior, please report it immediately.
+**When we disagree, we consult others**
 
-The Chef Community advocates are well informed on how to deal with incidents. Report the harassment incident (preferably in writing) to one of the community advocates listed below.  See the "Roles" section above for a description of each role.
+Disagreements, both social and technical, happen all the time. When they occur, we seek to resolve disagreements and differing views constructively and with the help of the community and community processes. When disagreements escalate, we ask our community advocates to step in to moderate, mediate, and help resolve tense situations.
+
+The Chef Community advocates are well informed on how to deal with incidents. Report the incident (preferably in writing) to one of the community advocates listed below.  See the "Roles" section above for a description of each role.
 
 * Decider
   * Adam Jacob - &lt;[adam@getchef.com](mailto:adam@getchef.com)&gt; - IRC: holoway
@@ -103,7 +116,7 @@ All incident reports will be kept in a private repository that is shared with th
 
 ### Punitive Actions
 
-Crafting a list of quid pro quo punitive actions in our community guidelines would be incomplete and inhumane.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested punitive actions.
+Crafting a list of quid pro quo punitive actions in our community guidelines would be inadequate, incomplete, and inhumane.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested punitive actions.
 
 Our first response should always be to ensure the immediate safety and well being of all parties involved.  An attempt to stop and prevent the violation behavior should be made before any punitive action is decided.
 
