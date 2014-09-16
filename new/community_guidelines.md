@@ -5,6 +5,8 @@ Status: Draft
 Type: Informational
 ---
 
+*Date of Last Revision: September 16, 2014*
+
 # Chef Community Guidelines
 
 A guideline that outlines the code of conduct expected when participating in the Chef Community and the remedies available when this code is not followed.
@@ -24,6 +26,8 @@ The Chef community is a mixture of professionals and volunteers who come from al
 Diversity is one of our biggest strengths, but it can also bring increased communication challenges at times.
 
 Be careful in the words that you choose. Remember that sexist, racist, and other exclusionary jokes can be offensive to those around you. If you think your conversation is making another community member uncomfortable, try to make amends and move forward.
+
+Our community convenes in many physical and virtual spaces.  These guidelines may be used in any location where the Chef community has gathered or is working.  However, events that take place in public spaces, such as conferences and meetup groups, will generally have their own code of conduct or similar community guidelines.  As such, the guidelines for a specific event should be followed.
 
 As you are working with other members of the community, please keep in mind the following guidelines, which apply equally to founders, mentors, those who submit new features and pull requests, and to anyone who is seeking help and guidance.
 
@@ -57,14 +61,11 @@ Any physical violence or intimidation, threatened or acted on, is a serious offe
 #### Roles
 
 * The **Decider** has final say on community guidelines and final authority on punitive actions and appeals. As per the [Chef RFC process](https://github.com/opscode/chef-rfc/blob/master/rfc000-rfc-process.md), the top-level decider is [Adam Jacob](mailto:adam@getchef.com).
-* The **Community Ombudsman** (or Champion? or Manager?) is responsible for keeping the community guidelines up-to-date, meeting regularly with community advocates, and helping enforce the community guidelines.  The Community Ombusdman is an employee of Chef Software, Inc.
-* A **Community Advocates** may be assigned for each area where the community convenes (IRC, email list, GitHub, etc.).  Advocates are responsible for helping shape and enforce the community guidelines.
-* A **Community Member** is anyone who participates with the community whether in-person or via online channels.
+* The **Community Ombudsperson** guides and meets regularly with community advocates, helps enforce punitive actions, hears appeals, is responsible for maintaining a list of incidents, and ensures pertinent information is shared with necessary parties.  The Community Ombudsperson is appointed by the decider.
+* **Community Advocates** may be assigned for each area where the community convenes online (IRC, email list, GitHub, etc.).  Advocates are responsible for helping enforce the community guidelines.
+* A **Community Member** is anyone who participates with the community whether in-person or via online channels.  Community members are responsible for following the community guidelines, suggesting updates to the guidelines when warranted, and helping enforce community guidelines.
 
-Community Advocates and the Ombudsman must be agreed on by the community while the Decider retains veto power.  Create a pull request against this document to volunteer as a community advocate for a particular area.
-
-##### Current Roles
-
+Community Advocates must be agreed on by the community while the Decider retains veto power.  Create a pull request against this document to volunteer as a community advocate for a particular area.
 
 #### Procedure for Incident Handling
 
@@ -74,10 +75,10 @@ The Chef Community advocates are well informed on how to deal with incidents. Re
 
 * Decider
   * Adam Jacob - &lt;[adam@getchef.com](mailto:adam@getchef.com)&gt; - IRC: holoway
-* Ombudsman
+* Ombudsperson
   * Nathen Harvey - &lt;[nharvey@getchef.com](mailto:nharvey@getchef.com)&gt; - +1 202-368-7264 - IRC: nathenharvey
 * Advocates -
-  * IRC - generally, individuals with operator in a channel are designated as community advocates
+  * IRC - generally, individuals with operator in a channel are designated as community advocates.
     * \#chef -
     * \#chef-hacking -
   * chef@ mailing list -
@@ -94,20 +95,32 @@ The important information to report consists of:
 
 If you feel your safety is in jeopardy please do not hesitate to contact local law enforcement.
 
-**Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the community as a whole to grow, learn, and become better. The Chef community team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
+**Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the community as a whole to grow, learn, and become better. The community advocate team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
 
 #### Documenting Incidents
 
+All incident reports will be kept in a private repository that is shared with the Community Advocates, Community Ombudsperson, and the Decider.
 
 ### Punitive Actions
 
-These are the punitive actions that may be taken when someone violates our community guidelines:
+Crafting a list of quid pro quo punitive actions in our community guidelines would be incomplete and inhumane.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested punitive actions.
 
+Our first response should always be to ensure the immediate safety and well being of all parties involved.  An attempt to stop and prevent the violation behavior should be made before any punitive action is decided.
 
+When punitive action is warranted, a Community Advocate may use one or more of the following remedies:
+
+* Removal from the space where the incident occurred for a period of time.
+* Banned from the space where the incident occurred indefinitely.
+* Removed or banned from other online spaces.
+* Banned from one or more upcoming in-person events.
+
+#### Appeals
+
+People subjected to punitive action may appeal the action by contacting a community advocate, ombudsperson, or the decider.  An appeal will be acknoweldged within 48 hours and processed within seven days.  
 
 ### Influences
 
-This Code of Conduct was forked from the example policy from the [Geek Feminism wiki, created by the Ada Initiative and other volunteers](http://geekfeminism.wikia.com/wiki/Conference_anti-harassment/Policy) which is under a Creative Commons Zero (CC0) license. This document has also been inspired by the [Speak Up!](http://speakup.io/coc.html) project and the [PyCon Code of Conduct](https://github.com/python/pycon-code-of-conduct).
+This Code of Conduct was forked from the example policy from the [Geek Feminism wiki, created by the Ada Initiative and other volunteers](http://geekfeminism.wikia.com/wiki/Conference_anti-harassment/Policy) which is under a Creative Commons Zero (CC0) license. This document has also been inspired by the [Speak Up!](http://speakup.io/coc.html) project, [the Django code of conduct](https://www.djangoproject.com/conduct/), and the [PyCon Code of Conduct](https://github.com/python/pycon-code-of-conduct).
 
 ## Copyright
 
