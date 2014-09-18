@@ -85,7 +85,9 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 * Fedora (current non-EOL releases)
 * RHEL 6.x
 * Mac OS X 10.8, 10.9
-* Ubuntu 12.04, 13.10, 14.04
+* Ubuntu 12.04, 14.04
+
+ChefDK bundles Chef Client. Therefore, Chef Client is supported, by extension, on the foregoing client platforms, if not already mentioned explicitly in the Chef Client support matrix.
 
 ### Unsupported
 
