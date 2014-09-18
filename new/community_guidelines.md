@@ -76,7 +76,7 @@ Any physical violence or intimidation, threatened or acted on, is a serious offe
 * **Community Advocates** may be assigned for each area where the community convenes online (IRC, email list, GitHub, etc.).  Advocates are responsible for helping enforce the community guidelines.
 * A **Community Member** is anyone who participates with the community whether in-person or via online channels.  Community members are responsible for following the community guidelines, suggesting updates to the guidelines when warranted, and helping enforce community guidelines.
 
-Community Advocates must be agreed on by the community while the Decider retains veto power.  Create a pull request against this document to volunteer as a community advocate for a particular area.
+Community Advocates must be agreed on by the community:  a simple majority of other advocates must approve.  The Decider retains veto power.  Create a pull request against this document to volunteer or nominate someone as a community advocate for a particular area.  Create a pull request against this document to propose an area that needs coverage.
 
 #### Procedure for Incident Handling
 
@@ -97,6 +97,9 @@ The Chef Community advocates are well informed on how to deal with incidents. Re
   * chef@ mailing list -
   * chef-dev@ mailing list -
   * GitHub -
+  * Stackoverflow -
+  * LinkedIn Chef Users' Group -
+  * [chef_opscode reddit](https://www.reddit.com/r/chef_opscode/)
 
 The important information to report consists of:
 
@@ -116,9 +119,9 @@ All incident reports will be kept in a private repository that is shared with th
 
 ### Punitive Actions
 
-Crafting a list of quid pro quo punitive actions in our community guidelines would be inadequate, incomplete, and inhumane.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested punitive actions.
+Crafting a list of quid pro quo punitive actions in our community guidelines would be inadequate and incomplete.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested punitive actions.
 
-Our first response should always be to ensure the immediate safety and well being of all parties involved.  An attempt to stop and prevent the violation behavior should be made before any punitive action is decided.
+Our first response should always be to ensure the immediate safety and well being of all parties involved.  In the ideal case, an attempt to stop and prevent the violation behavior would be made before any punitive action is decided.
 
 When punitive action is warranted, a Community Advocate may use one or more of the following remedies:
 
