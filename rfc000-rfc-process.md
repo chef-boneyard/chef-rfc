@@ -35,6 +35,7 @@ current editors are:
   * Noah Kantrowitz \<noah@coderanger.net\>
   * Jon Cowie \<jcowie@etsy.com\>
   * Bryan McLellan \<btm@loftninjas.org\>
+  * Adam Leff \<adam@leff.co\>
   * Thom May \<thom@may.lt\>
 * The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
