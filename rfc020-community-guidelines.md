@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 20
 Author: Nathen Harvey <nharvey@getchef.com>
-Status: Draft
+Status: Accepted
 Type: Informational
 ---
 
@@ -132,7 +132,7 @@ When punitive action is warranted, a Community Advocate may use one or more of t
 
 #### Appeals
 
-People subjected to punitive action may appeal the action by contacting a community advocate, ombudsperson, or the decider.  An appeal will be acknoweldged within 48 hours and processed within seven days.  
+People subjected to punitive action may appeal the action by contacting a community advocate, ombudsperson, or the decider.  An appeal will be acknoweldged within 48 hours and processed within seven days.
 
 ### Influences
 
