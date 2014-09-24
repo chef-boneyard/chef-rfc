@@ -114,7 +114,8 @@ node.override['foo']['bar']['baz'] = 99
 node.rm_default('foo', 'bar') #=> { 'baz' => 52, 'thing' => 'allthestuff' }
 
 # But the other precedences are unaffected:
-node.override_attrs['foo'] #=> { 'bar' => {'baz' => 99}, 'bat' => { 'things' => [5,6] }
+node.override_attrs['foo'] #=> { 'bar' => {'baz' => 99} }
+node['foo'] #=> { 'bar' => {'baz' => 99}, 'bat' => { 'things' => [5,6] }
 ```
 
 Deletes an override when lower-precedence exists without touching them
@@ -236,7 +237,7 @@ Example 2: Multiple components; one "after" us:
 ```ruby
 node.default['foo']['bar'] = {'a' => 'b'}
 # Please don't ever do this in real code :)
-node.role_default['foo']['bar'] => {'c' => 'd'}
+node.role_default['foo']['bar'] = {'c' => 'd'}
 node.default!['foo']['bar'] = {'d' => 'e'}
 
 # The '!' write overwrote the "cookbook-default" value of 'bar',
@@ -249,7 +250,7 @@ Example 3: Multiple components; all "before" us:
 ```ruby
 node.default['foo']['bar'] = {'a' => 'b'}
 # Please don't ever do this in real code :)
-node.role_default['foo']['bar'] => {'c' => 'd'}
+node.role_default['foo']['bar'] = {'c' => 'd'}
 node.force_default!['foo']['bar'] = {'d' => 'e'}
 
 # Given a force_default!, there is no other data under 'bar' than
@@ -284,7 +285,7 @@ node.default!['foo']['bar'] = {}
 
 # Now we have role-default and force-default left in default
 # plus other precedences
-node.default_attrs['foo'] #=> {'bar' => {'baz' => 66}}
+node.default_attrs['foo'] #=> {'bar' => {'baz' => 66}, "bat"=>{"things"=>[5, 6]}}
 node.normal_attrs['foo'] #=> {'bar' => {'baz' => 88}}
 node.override_attrs['foo'] #=> {'bar' => {'baz' => 99}}
 node['foo']['bar'] #=> {'baz' => 99}
