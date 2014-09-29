@@ -1,3 +1,11 @@
+---
+RFC:
+Author: Steven Danna <steve@getchef.com>
+Status: Draft
+Type: Standards Track
+Chef-Version: 12
+---
+
 # File Content Verification
 
 File-based resources should be able to verify a file's content via
@@ -108,3 +116,10 @@ https://tickets.opscode.com/browse/CHEF-3634
 # Compatibility
 
 This feature is backwards compatible with existing recipes.
+
+# Copyright
+
+This work is in the public domain. In jurisdictions that do not allow
+for this, this work is available under CC0. To the extent possible
+under law, the person who associated CC0 with this work has waived all
+copyright and related or neighboring rights to this work.
