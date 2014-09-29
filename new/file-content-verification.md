@@ -6,13 +6,24 @@ user-supplied instructions before deploying the new content.
 # Specification
 
 The `verify` attribute of the `file`, `template`, `cookbook_file`, and
-`remote_file` resources will take a user-provided block. At converge
-time, the block will be passed the path to a temporary file holding
-the proposed content for the file. If the block returns `true` the
-provider will continue to update the file on disk as appropriate. If
-the block returns false, the provider will raise an error. If no
-verification block is supplied by the user, the provider assumes the
-content is valid.
+`remote_file` resources will take a user-provided block or string. At
+converge time, a block will be passed the path to a temporary file
+holding the proposed content for the file. If the block returns `true`
+the provider will continue to update the file on disk as
+appropriate. If the block returns false, the provider will raise an
+error.
+
+If a string argument to verify is passed, the characters '{}' will be
+replaced with the temporary path.  If '{}' does not appear in the
+string, the temporary path will be appended to the end of this string.
+This string will then be executed as a system command.  If the
+command's return code indicates success (0 on unix-like system) the
+provider will continue to update the file on disk as appropriate.  If
+the command's return code indicates failure, the provider will raise
+an error.
+
+If no verification block or string is supplied by the user, the
+provider assumes the content is valid.
 
 Multiple verify blocks may be provided by the user.  All given verify
 block must pass before the content is deployed.
@@ -27,11 +38,21 @@ template "/tmp/foo" do
   end
 end
 
+# This should succeed on most systems
+template "/tmp/wombat" do
+  verify "/usr/bin/true"
+end
+
 # This should raise an error
 template "/tmp/bar" do
   verify do |path|
     false
   end
+end
+
+# This should raise an error on most systems
+template "/tmp/turtle" do
+  verify "/usr/bin/false"
 end
 
 # This should pass
@@ -52,10 +73,7 @@ configuration:
 
 ```ruby
 template "/etc/nginx.conf" do
-  verify do |path|
-    `nginx -t -c #{path}`
-    $? == 0
-  end
+  verify "nginx -t -c {}"
 end
 ```
 
