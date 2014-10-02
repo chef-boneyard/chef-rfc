@@ -83,7 +83,7 @@ node.force_default['foo']['bar']['thing'] = 'allthestuff'
 node.rm_default('foo', 'bar') #=> {'baz' => 52, 'thing' => 'allthestuff'}
 
 # What's left under 'foo' is only 'bat'
-node.default_attrs['foo'] #=> {'bat' => { 'things' => [5,6] } }
+node.attributes.combined_default['foo'] #=> {'bat' => { 'things' => [5,6] } }
 ```
 
 Delete a default value when higher precedences exists, doesn't touch them
@@ -114,7 +114,7 @@ node.override['foo']['bar']['baz'] = 99
 node.rm_default('foo', 'bar') #=> { 'baz' => 52, 'thing' => 'allthestuff' }
 
 # But the other precedences are unaffected:
-node.override_attrs['foo'] #=> { 'bar' => {'baz' => 99} }
+node.attributes.combined_override['foo'] #=> { 'bar' => {'baz' => 99} }
 node['foo'] #=> { 'bar' => {'baz' => 99}, 'bat' => { 'things' => [5,6] }
 ```
 
@@ -143,7 +143,7 @@ node.force_override['foo']['bar']['baz'] = 99
 node.rm_override('foo', 'bar') #=> { 'baz' => 99, 'thing' => 'stuff' }
 
 # But the other precedences are unaffected:
-node.default_attrs['foo'] #=> { 'bar' => {'baz' => 55} }
+node.attributes.combined_default['foo'] #=> { 'bar' => {'baz' => 55} }
 ```
 
 Non-existent key deletes return nil:
@@ -285,18 +285,18 @@ node.default!['foo']['bar'] = {}
 
 # Now we have role-default and force-default left in default
 # plus other precedences
-node.default_attrs['foo'] #=> {'bar' => {'baz' => 66}, "bat"=>{"things"=>[5, 6]}}
-node.normal_attrs['foo'] #=> {'bar' => {'baz' => 88}}
-node.override_attrs['foo'] #=> {'bar' => {'baz' => 99}}
+node.attributes.combined_default['foo'] #=> {'bar' => {'baz' => 66}, "bat"=>{"things"=>[5, 6]}}
+node.attributes.combined_normal['foo'] #=> {'bar' => {'baz' => 88}}
+node.attributes.combined_override['foo'] #=> {'bar' => {'baz' => 99}}
 node['foo']['bar'] #=> {'baz' => 99}
 
 # If we then write with force_default!
 node.force_default!['foo']['bar'] => {}
 
 # We see the difference
-node.default_attrs['foo'] #=> {'bar' => {}}
-node.normal_attrs['foo'] #=> {'bar' => {'baz' => 88}}
-node.override_attrs['foo'] #=> {'bar' => {'baz' => 99}}
+node.attributes.combined_default['foo'] #=> {'bar' => {}}
+node.attributes.combined_normal['foo'] #=> {'bar' => {'baz' => 88}}
+node.attributes.combined_override['foo'] #=> {'bar' => {'baz' => 99}}
 node['foo']['bar'] #=> {'baz' => 99}
 ```
 
