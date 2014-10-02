@@ -1,3 +1,11 @@
+---
+RFC: 21
+Author: Julian Dunn <jdunn@getchef.com>
+Status: Accepted
+Type: Process
+---
+
+
 # Chef Platform Support Policy
 
 The purpose of this RFC is to clarify:
