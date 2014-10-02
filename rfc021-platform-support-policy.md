@@ -2,7 +2,7 @@
 RFC: 21
 Author: Julian Dunn <jdunn@getchef.com>
 Status: Accepted
-Type: Process
+Type: Informational
 ---
 
 
@@ -29,7 +29,7 @@ Chef Client support policies also apply to Ohai, since that is a dependency.
 
 Tier 1 supported platforms are those for which Chef builds native binary "Omnitruck" (full-stack installer) packages. For each platform, Chef performs some post-build verification on them or their equivalents. For example, we may elect to do post-build verification for Oracle Enterprise Linux using the same test results as Red Hat Enterprise Linux, since they are so similar).
 
-Platform | Versions | Architectures | Package Format | Built on 
+Platform | Versions | Architectures | Package Format | Built on
 --- | --- | --- | --- | ---
 AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
