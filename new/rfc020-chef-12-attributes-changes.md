@@ -24,6 +24,14 @@ entire nested value of a key at that precedence level, ala Chef 10.
 ### Precedence Key Deletion
 Due to the fact that a precedence levels in Chef 11 are made up of multiple components, simple deletes no longer work as they once did. However, it is important to be able to delete a key at a given precendence level as one once could. One may be doing a safety check and realize an entry in a hash is dangerous or bad.
 
+#### What's wrong?
+
+You can no longer call `node['foo'].delete('bar')` because writing without a precendence is forbidden in Chef 11, there is no functional delete.
+
+Further, you cannot delete at a precedence level because `node.default['foo'].delete('bar')` will end up acting on the cookbook_default sub-Mash inside the default precedence and not effect role defaults.
+
+And for the same reason there is no way to ovewrite a key at a precedence - you end up merging.
+
 ### Global Key Deletion
 For the same reasons as above, being able to delete a key globally is important.
 
