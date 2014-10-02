@@ -48,7 +48,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 
 ### Not Supported
 
-"Not supported" means there may be code in-tree, but we don't build for and test on those platforms. At our discrection, we may take patches that don't break any tier 1 or tier 2 platforms, but we have no way of testing these.
+"Not supported" means there may be code in-tree, but we don't build for and test on those platforms. At our discretion, we may take patches that don't break any tier 1 or tier 2 platforms, but we have no way of testing these.
 
 * Solaris 8
 * AIX 5.1L
