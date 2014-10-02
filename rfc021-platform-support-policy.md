@@ -113,3 +113,7 @@ RHEL and EL-variants | End of RedHat Production 3 Phase | https://access.redhat.
 Solaris | End of Premier Support | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
 Ubuntu | End of LTS lifecycle for LTS releases, end of standard release lifecycle for non-LTS releases | https://wiki.ubuntu.com/LTS
 Windows | End of Extended Support | https://support.microsoft.com/lifecycle/?c2=1163
+
+## Copyright
+
+This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.
