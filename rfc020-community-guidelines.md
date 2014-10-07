@@ -98,6 +98,7 @@ The Chef Community advocates are well informed on how to deal with incidents. Re
   * chef-dev@ mailing list -
   * GitHub -
   * Stackoverflow -
+  * Serverfault - Mike Fiedler @miketheman (http://serverfault.com/users/7309/mike-fiedler)
   * LinkedIn Chef Users' Group -
   * [chef_opscode reddit](https://www.reddit.com/r/chef_opscode/)
 
