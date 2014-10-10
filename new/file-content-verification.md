@@ -21,18 +21,18 @@ the provider will continue to update the file on disk as
 appropriate. If the block returns false, the provider will raise an
 error.
 
-If a string argument to verify is passed. The path to the temporary
-file with the proposed content will be available by using Ruby's
-sprinf formatting:
+If a string argument to verify is passed, it will then be executed as
+a system command. If the command's return code indicates success (0 on
+unix-like system) the provider will continue to update the file on
+disk as appropriate.  If the command's return code indicates failure,
+the provider will raise an error.
+
+The path to the temporary file with the proposed content will be
+available by using Ruby's sprinf formatting:
 
    "%{path}"
 
 other variables may be made available to commands in the future.
-
-If the command's return code indicates success (0 on unix-like system)
-the provider will continue to update the file on disk as appropriate.
-If the command's return code indicates failure, the provider will
-raise an error.
 
 If no verification block or string is supplied by the user, the
 provider assumes the content is valid.
