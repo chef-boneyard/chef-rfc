@@ -58,8 +58,7 @@ node.rm_normal('foo', 'bar')
 node.rm_override('foo', 'bar')
 ```
 
-Also likely aliased to `node.remove_default`, `node.remove_normal`, and
-`node.remove_override`.
+This will be aliased to `node.remove_default`, `node.delete_default`, `node.remove_normal`, `node.delete_normal`, `node.remove_override`, and `node.delete_override` respectively.
 
 This function would return the computed value of the key being deleted for the
 specified precedence level.
@@ -169,7 +168,10 @@ node.rm_default("no", "such", "thing") #=> nil
 node.rm('foo', 'bar')
 ```
 
-Also likely aliased to `node.remove`
+This will be aliased as `node.remove` and `node.delete`.
+
+The syntax `node['foo'].delete('bar')` wil throw an exception pointing you to
+the new API.
 
 #### Examples
 
