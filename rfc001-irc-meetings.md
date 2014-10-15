@@ -8,7 +8,10 @@ This RFC declares what community meetings we hold and how we hold them.
 
 ### Time
 
-Every two weeks on Friday, at 9am Pacific. 1 hour.
+Every two weeks on Thursday, at 9am Pacific. 1 hour.  Each meeting's agenda will include the date and time and be announced in advance on the chef-dev mailing list.
+
+[invite.ics](https://github.com/opscode/chef-rfc/blob/master/invite.ics)
+
 
 ### Location
 
@@ -26,7 +29,7 @@ it will change as we distribute more responsibility.)
 
 * Agenda Review, speaker Adam Jacob (holoway): 5 minutes
 * Previous Business, speaker Adam Jacob (holoway): 10 minutes
-* Community Update, speaker Nathen Harvey: 5 minutes
+* Community Update, speaker Nathen Harvey (nathenharvey): 5 minutes
 * Chef Software Update, speaker Adam Jacob (holoway): 5 minutes
 * Chef Client Update, speaker Serdar Sutay (serdar): 5 minutes
 * Chef Server Update, speaker Stephen Delano (stephen): 5 minutes
