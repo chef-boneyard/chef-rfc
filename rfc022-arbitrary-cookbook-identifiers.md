@@ -1,3 +1,11 @@
+---
+RFC: 22
+Author: Daniel DeLeo <ddeleo@getchef.com>
+Status: Accepted
+Type: Standards Track
+Chef-Version: 12
+---
+
 # Arbitrary Cookbook Identifiers
 
 ## Use Case
