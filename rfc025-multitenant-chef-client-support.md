@@ -6,7 +6,7 @@ Type: Standards Track
 Chef-Version: 12
 ---
 
-# Title
+# Multitenant Chef Client Support
 
 Add better support for multi-tenant Chef servers in Chef, and Hosted Chef in particular.
 

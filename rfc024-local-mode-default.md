@@ -6,7 +6,7 @@ Type: Standards Track
 Chef-Version: 12
 ---
 
-# Title
+# Local Mode Default
 
 Turn on Local Mode by default in Chef 12 (do not require -z).
 

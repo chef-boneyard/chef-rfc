@@ -6,9 +6,9 @@ Type: Standards Track
 Chef-Version: 12
 ---
 
-# Title
+# Remove HTTP Config Files
 
-Remove the ability to specify http config files with `chef-client -c http://blah.com/client.rb`.
+Remove the ability to specify HTTP config files with `chef-client -c http://blah.com/client.rb`.
 
 ## Motivation
 
@@ -22,7 +22,7 @@ Remove the ability to specify http config files with `chef-client -c http://blah
 
 ## Specification
 
-1. Get rid of all code that lets you treat Chef::Config.config_file as an http or https URL (in ConfigFetcher primarily).
+1. Get rid of all code that lets you treat Chef::Config.config_file as an HTTP or HTTPS URL (in ConfigFetcher primarily).
 2. Make it an error when you specify a config file that does not exist.
 
 ## Rationale
