@@ -1,8 +1,9 @@
 ---
-RFC: unassigned
+RFC: 24
 Author: John Keiser <jkeiser@getchef.com>
-Status: Draft
-Type: <Standards Track, Informational, Process>
+Status: Accepted
+Type: Standards Track
+Chef-Version: 12
 ---
 
 # Title
@@ -75,4 +76,3 @@ Before, that would have triggered an error related to not having a private key o
 
 This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.
 
-```

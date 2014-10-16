@@ -1,8 +1,9 @@
 ---
-RFC: unassigned
+RFC: 26
 Author: John Keiser <jkeiser@getchef.com>
-Status: Draft
+Status: Accepted
 Type: Standards Track
+Chef-Version: 12
 ---
 
 # Title

@@ -3,6 +3,7 @@ RFC: 23
 Author: Phil Dibowitz <phil@ipom.com>
 Status: Accepted
 Type: Standards Track
+Chef-Version: 12
 ---
 
 # Chef 12 Attributes Changes
