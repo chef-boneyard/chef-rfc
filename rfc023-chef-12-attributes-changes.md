@@ -1,13 +1,13 @@
 ---
-RFC: unassigned
+RFC: 23
 Author: Phil Dibowitz <phil@ipom.com>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
 # Chef 12 Attributes Changes
 
-Chef 11 added a variety of features and abilities to the Attributes ecosystem within Chef. Unfortuantely certain abilities were also lost.
+Chef 11 added a variety of features and abilities to the Attributes ecosystem within Chef. Unfortunately certain abilities were also lost.
 
 This proposal is the result of copious discussion between Daniel DeLeo, Adam Jacob, and myself on how to add the following in a consistent and clean way that preserves the goals behind the Chef 11 Attributes changes.
 
@@ -16,7 +16,7 @@ While these are mostly backwards compatible there are some minor breaking change
 The desired abilities are:
 * To be able to safely delete a key in the Attribute at a given precedence level
 * To be able to safely delete a key in the Attribute at all precedence levels
-* To be able to assign into a precendence level in a way that overwrites the
+* To be able to assign into a precedence level in a way that overwrites the
 entire nested value of a key at that precedence level, ala Chef 10.
 
 ## Motivation
@@ -26,11 +26,11 @@ Due to the fact that a precedence levels in Chef 11 are made up of multiple comp
 
 #### What's wrong?
 
-You can no longer call `node['foo'].delete('bar')` because writing without a precendence is forbidden in Chef 11, there is no functional delete.
+You can no longer call `node['foo'].delete('bar')` because writing without a precedence is forbidden in Chef 11, there is no functional delete.
 
 Further, you cannot delete at a precedence level because `node.default['foo'].delete('bar')` will end up acting on the cookbook_default sub-Mash inside the default precedence and not effect role defaults.
 
-And for the same reason there is no way to ovewrite a key at a precedence - you end up merging.
+And for the same reason there is no way to overwrite a key at a precedence - you end up merging.
 
 ### Global Key Deletion
 For the same reasons as above, being able to delete a key globally is important.
@@ -143,7 +143,7 @@ node.override['foo'] = {
 node.default['foo']['bar']['baz'] = 11
 
 # And a force at each precedence
-node.force_default['foo']['bar']['baz'] = 55 
+node.force_default['foo']['bar']['baz'] = 55
 node.force_override['foo']['bar']['baz'] = 99
 
 # Delete the override
@@ -170,7 +170,7 @@ node.rm('foo', 'bar')
 
 This will be aliased as `node.remove` and `node.delete`.
 
-The syntax `node['foo'].delete('bar')` wil throw an exception pointing you to
+The syntax `node['foo'].delete('bar')` will throw an exception pointing you to
 the new API.
 
 #### Examples
