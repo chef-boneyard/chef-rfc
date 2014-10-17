@@ -41,7 +41,7 @@ Plus all responsibilities of a maintainer
 
 Handle contributions on GitHub - first response to a PR within 48 hours
 Be available on IRC
-Attend the developers meeting (do not miss more than 3 in a row)
+Attend the developers meeting (do not miss more than 3 in a row - special dispensation can be made for difficult time zones)
 Be available to answer mailing list questions within 48 hours
 Weekends and local holidays in the maintainer’s jurisdiction are not counted for timeliness requirements. Absences for reasonable causes such as vacations, illness, etc. are also acceptable; Maintainers should notice of absences via the development mailing list whenever possible.
 Committed to 100% tests passing for your component
@@ -125,7 +125,8 @@ You can find a large set of community members in IRC, within the #chef channel o
 
 If you would like to speak to, or understand the position of, someone at Chef Software - feel free to drop a line to [info@getchef.com](mailto:info@getchef.com) - and we’ll get back to you. Or simply ask for the companies official perspective in any of the community spaces, and a representative will get back to you in that space.
 
-The MAINTAINERS file in Chef
+# The MAINTAINERS file in Chef
+
 # Maintainers
 
 This file lists how the Chef project is maintained. When making changes to the system, this
