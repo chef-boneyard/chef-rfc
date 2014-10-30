@@ -28,6 +28,8 @@ There doesn't exist a clear and easy way for `chef-solo` users to migrate to a `
 
 This RFC proposes to replace `chef-solo` with `chef-client --local-mode`. The`chef-solo` command will continue to exist, and to the extent possible, work with existing solo-specific workflows without modification.
 
+This means that `chef-solo` using "local mode" **must** be 100% backwards-compatible with existing `chef-solo` usage.
+
 The local mode feature of `chef-client` uses `chef-zero`, an in-memory API-complete implementation of the Chef Server. This would give "solo" users the capability of performing searches, "saving" node objects, and easily saving and retrieving data bags. The `chef-zero` server can persist data to disk, allowing that to be distributed to other nodes as necessary.
 
 The application implementation of `chef-solo` would be changed to invoke `chef-client` with `Chef::Config[:local_mode]` set to `true` by default in the application class.
