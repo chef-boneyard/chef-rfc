@@ -1,7 +1,7 @@
 ---
-RFC:
+RFC: 27
 Author: Steven Danna <steve@getchef.com>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 Chef-Version: 12
 ---
@@ -11,7 +11,7 @@ Chef-Version: 12
 File-based resources should be able to verify a file's content via
 user-supplied instructions before deploying the new content.
 
-# Specification
+## Specification
 
 The `verify` attribute of the `file`, `template`, `cookbook_file`, and
 `remote_file` resources will take a user-provided block or string. At
@@ -99,7 +99,7 @@ template "/etc/config.json" do
 end
 ```
 
-# Motivation
+## Motivation
 
 Typos and bugs in a template can lead Chef to render invalid
 configuration files on a node. In some cases, this will cause the
@@ -112,16 +112,16 @@ it is currently difficult to use these tools to verify a template
 without an elaborate series of resources chained together with
 notifications.
 
-# Related BUGS
+## Related BUGS
 
 https://tickets.opscode.com/browse/CHEF-4416
 https://tickets.opscode.com/browse/CHEF-3634
 
-# Compatibility
+## Compatibility
 
 This feature is backwards compatible with existing recipes.
 
-# Copyright
+## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow
 for this, this work is available under CC0. To the extent possible
