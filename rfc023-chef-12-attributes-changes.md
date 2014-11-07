@@ -296,17 +296,17 @@ node.default!['foo']['bar'] = {}
 
 # Now we have role-default and force-default left in default
 # plus other precedences
-node.attributes.combined_default['foo'] #=> {'bar' => {'baz' => 66}, "bat"=>{"things"=>[5, 6]}}
-node.attributes.combined_normal['foo'] #=> {'bar' => {'baz' => 88}}
+node.attributes.combined_default['foo'] #=> {'bar' => {'baz' => 66}, 'bat'=>{'things'=>[5, 6]}}
+node.attributes.normal['foo'] #=> {'bar' => {'baz' => 88}}
 node.attributes.combined_override['foo'] #=> {'bar' => {'baz' => 99}}
 node['foo']['bar'] #=> {'baz' => 99}
 
 # If we then write with force_default!
-node.force_default!['foo']['bar'] => {}
+node.force_default!['foo']['bar'] = {}
 
 # We see the difference
-node.attributes.combined_default['foo'] #=> {'bar' => {}}
-node.attributes.combined_normal['foo'] #=> {'bar' => {'baz' => 88}}
+node.attributes.combined_default['foo'] #=> {'bat'=>{'things'=>[5, 6]}, 'bar' => {}}
+node.attributes.normal['foo'] #=> {'bar' => {'baz' => 88}}
 node.attributes.combined_override['foo'] #=> {'bar' => {'baz' => 99}}
 node['foo']['bar'] #=> {'baz' => 99}
 ```
