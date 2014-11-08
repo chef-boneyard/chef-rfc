@@ -211,7 +211,9 @@ The token authentication scheme is designed to be overall compatible with
 OAuth2 without requiring the Chef Server to implement an Oauth2-compatible
 token request/creation API. This will allow the complex bits of Oauth to stay
 in oc-id, while once a token is issued it can be used directly with the Chef
-Server.
+Server. No support is outlined for the form-encoded style of passing
+bearer tokens as at this time Chef Server has no endpoints that accept
+form-encoded data.
 
 As token checking can happen at the same point in the request cycle as the
 current key verification, the new authentication modes will be transparent to
