@@ -48,12 +48,26 @@ Committed to 100% tests passing for your component
 Has full commit/merge access to the relevant repositories
 Has ops on IRC
 
-# How a patch gets merged
+# Contributing Patches
+
+##How a patch gets merged
 
 * Open Pull Request (anyone)
 * Sign a CLA on Supermarket, tied to your github account.
 * Code reviewed by a maintainer, lieutenant, or project lead. Approval is indicated by :+1: on the pull request.
 * Merged on :+1: by an absolute majority of maintainers for the subsystems affected by your patch with no vetoes
+
+## Patch Appeals Process
+
+Although the approval of a contribution requires an absolute majority of the maintainers responsible for that component to vote for it, there may be cases where someone wishes to appeal a particular decision.
+
+In this event, the "chain of command" for the appeals process is as follows.
+
+* In the event that the actions of a Maintainer are to be appealed, the appeal should be directed to the Lieutenant for that component. As stated above, a Lt retains veto power for the component(s) for which they are responsible. 
+
+* In the event that the actions of a Lieutenant are to be appealed, the appeal should be directed to the Project Lead. As stated above, the Project Lead retains universal veto power over all components.
+
+Although Lieutenants and the Project Lead retain veto powers over certain components, use of this veto power is not guaranteed by the submission of an appeal to that person. It is expected that the majority decisions of component maintainers and lieutenants will be respected in all but the most exceptional circumstances.
 
 # How to become a...
 
