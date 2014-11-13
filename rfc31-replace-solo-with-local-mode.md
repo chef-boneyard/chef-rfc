@@ -1,11 +1,11 @@
 ---
-RFC: unassigned
+RFC: 31
 Author: Joshua Timberman <joshua@getchef.com>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
-# Title
+# Replace chef-solo with chef-client local mode
 
 Replace chef-solo's core with chef-client "local-mode," to run chef without an external Chef Server
 
