@@ -107,7 +107,7 @@ The selection process is intended to be open, transparent, and guided by objecti
 
 * Project Lead:  Initial Project Lead will be Adam Jacob.  Any new Project Lead candidate will be selected by a majority vote of the Lieutenants, and approved by Company Leadership. This selection will happen according to the Maintenance Policy.
 
-* All Other Seats:  Candidates who meet the criteria for each group identified above will be elected by at least a majority vote of all qualified voters: +1
+* All Other Seats:  Candidates who meet the criteria for each group identified above will be elected by at least a majority vote of all qualified voters: +1. Qualified voters are defined as those holding an open account on Chef Supermarket.
 
 ##### Succession
 
