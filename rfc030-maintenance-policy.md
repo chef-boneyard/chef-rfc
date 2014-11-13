@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 30
 Author: Adam Jacob <adam@getchef.com>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
@@ -37,7 +37,7 @@ Resolves disputes within their subsystem
 Has localized veto power
 Plus all responsibilities of a maintainer
 
-## Maintainer 
+## Maintainer
 
 Handle contributions on GitHub - first response to a PR within 48 hours
 Be available on IRC
@@ -63,7 +63,7 @@ Although the approval of a contribution requires an absolute majority of the mai
 
 In this event, the "chain of command" for the appeals process is as follows.
 
-* In the event that the actions of a Maintainer are to be appealed, the appeal should be directed to the Lieutenant for that component. As stated above, a Lt retains veto power for the component(s) for which they are responsible. 
+* In the event that the actions of a Maintainer are to be appealed, the appeal should be directed to the Lieutenant for that component. As stated above, a Lt retains veto power for the component(s) for which they are responsible.
 
 * In the event that the actions of a Lieutenant are to be appealed, the appeal should be directed to the Project Lead. As stated above, the Project Lead retains universal veto power over all components.
 
@@ -135,7 +135,7 @@ You can find a large set of community members in IRC, within the #chef channel o
 
 # Where can I find Chef Software Inc?
 
-[The history of the Chef Project](http://www.getchef.com/blog/2014/07/03/chef-as-a-community/) is linked to the existence of a for-profit company, [Chef Software](http://www.getchef.com). Many employees of the company are active members of the community. When they participate in the community, they do so as individuals subject to the guidelines in this file. 
+[The history of the Chef Project](http://www.getchef.com/blog/2014/07/03/chef-as-a-community/) is linked to the existence of a for-profit company, [Chef Software](http://www.getchef.com). Many employees of the company are active members of the community. When they participate in the community, they do so as individuals subject to the guidelines in this file.
 
 If you would like to speak to, or understand the position of, someone at Chef Software - feel free to drop a line to [info@getchef.com](mailto:info@getchef.com) - and we’ll get back to you. Or simply ask for the companies official perspective in any of the community spaces, and a representative will get back to you in that space.
 
@@ -148,7 +148,7 @@ file tells you who needs to review your patch - you need a simple majority of ma
 for the relevant subsystems to provide a :+1: on your pull request. Additionally, you need
 to not receive a veto from a Lieutenant or the Project Lead.
 
-[Check out HOW_CHEF_IS_MAINTAINED](link to come) for details on the process, how to become
+[Check out HOW_CHEF_IS_MAINTAINED](#soon) for details on the process, how to become
 a maintainer, lieutenant, or the project lead.
 
 # Project Lead

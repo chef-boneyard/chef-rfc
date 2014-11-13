@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 29
 Author: Adam Jacob <adam@getchef.com>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
@@ -113,7 +113,7 @@ The selection process is intended to be open, transparent, and guided by objecti
 
 (i)	Project Lead:  If a new Project Lead is nominated and receives majority vote of the Lieutenants, and not vetoed by Company Leadership.
 
-(ii)	All Other Seats:  All other members of the CBGB will be replaced upon any of the following:  (1) End of term; or (2) majority vote of all other members of the CBGB. 
+(ii)	All Other Seats:  All other members of the CBGB will be replaced upon any of the following:  (1) End of term; or (2) majority vote of all other members of the CBGB.
 
 ## Operation
 
@@ -149,7 +149,7 @@ Open Licensing: code should be licensed using approved, standard, open-source li
 
 When a member has a concern about the Chef Project, the member may raise that concern with the CBGB.  If the member is not satisfied with the result, the member can raise the concern directly with the Project Lead.   All appeals and discussions will be open, transparent and public.
 
-Please help us improve this draft by sending your comments and feedback to governance@getchef.com.
+Please help us improve this draft by sending your comments and feedback to [governance@getchef.com](mailto:governance@getchef.com).
 
 ## Copyright
 
