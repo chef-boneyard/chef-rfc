@@ -1,11 +1,11 @@
 ---
-RFC: unassigned
-Author: Julian C. Dunn (<jdunn@aquezada.com>)
-Status: Draft
-Type: Process
+RFC: 28
+Author: Julian C. Dunn <jdunn@aquezada.com>
+Status: Accepted
+Type: Informational
 ---
 
-# Title
+# Mailing List Migration
 
 This RFC proposes the migration of all existing Chef mailing lists
 (namely, `{chef,chef-dev}@lists.opscode.com`) into Google Groups.
