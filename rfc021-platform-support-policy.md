@@ -34,7 +34,7 @@ Platform | Versions | Architectures | Package Format | Built on
 AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
-Mac OS X | 10.6, 10.7, 10.8, 10.9 | x86_64 | dmg | Mac OS 10.7
+Mac OS X | 10.6, 10.7, 10.8, 10.9, 10.10 | x86_64 | dmg | Mac OS 10.7
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Solaris | 9, 10, 11 | sparc, x86 | shar | Solaris 9
@@ -92,7 +92,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 * Windows 7, 8, 8.1
 * Fedora (current non-EOL releases)
 * RHEL 6.x
-* Mac OS X 10.8, 10.9
+* Mac OS X 10.8, 10.9, 10.10
 * Ubuntu 12.04, 14.04
 
 ChefDK bundles Chef Client. Therefore, Chef Client is supported, by extension, on the foregoing client platforms, if not already mentioned explicitly in the Chef Client support matrix.
