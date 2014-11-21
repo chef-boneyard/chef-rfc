@@ -87,7 +87,7 @@ create it.
 
 Tokens must be 16 characters from the set `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`.
 
-A new token can also be generated for a user from their username and password.
+A new token can also be created for a user using their username and password.
 This API will be limited to the webui key as it is now. This will allow a web
 interface to entirely avoid using the impersonation key behavior as it does now.
 
