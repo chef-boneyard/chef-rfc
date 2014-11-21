@@ -73,7 +73,7 @@ class Chef::Dialect::Example < Chef::Dialect
   register_dialect '.txt'
 
   def compile_role(role, filename)
-    role.name(File.basename(filename, '.rb')
+    role.name(File.basename(filename, '.rb'))
     role.description(IO.read(filename))
   end
 end
