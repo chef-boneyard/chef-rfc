@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 33
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
