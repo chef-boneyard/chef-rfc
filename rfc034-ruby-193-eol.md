@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 34
 Author: Daniel DeLeo <dan@getchef.com>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
