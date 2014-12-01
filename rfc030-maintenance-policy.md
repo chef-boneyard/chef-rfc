@@ -167,6 +167,8 @@ another component.
 
 ### Maintainers
 
+* [Tyler Ball](https://github.com/tyler-ball)
+
 ## Dev Tools
 
 Chef Zero, Knife, Chef Apply and Chef Shell.
@@ -223,4 +225,4 @@ The specific components of Chef related to a given platform - including (but not
 
 ### Maintainers
 
-
+* [Tyler Ball](https://github.com/tyler-ball)
