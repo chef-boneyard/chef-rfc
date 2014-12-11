@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 35
 Author: Claire McQuin <claire@getchef.com>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
