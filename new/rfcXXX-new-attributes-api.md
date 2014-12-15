@@ -124,6 +124,26 @@ existing API, it is difficult to improve the performance further. The
 proposed API should allow for straightforward implementation of a
 granular merged attribute cache.
 
+### Method Missing Method Name Collisions
+
+The current attributes system allows attributes to be accessed via a
+`method_missing` API, e.g., `node["fqdn"]` can also be accessed as
+`node.fqdn`. While this makes the code appear more readable,
+implementing it directly on the `node` object leads to method name
+collisions which can be confusing for users. For example:
+
+```
+node.foo              # returns node['foo']
+
+node.chef_environment # returns the environment, which is an ivar on the
+                      # node object
+
+node.class            # returns the Chef::Node symbol
+```
+
+Providing a new API where attribute access occurs via arguments to
+statically defined methods eliminates this source of ambiguity.
+
 ## Specification
 
 ### Ohai Data Access
@@ -136,7 +156,12 @@ TBD
 
 ### Node-Specific Data Storage Set and Access
 
-TBD
+Syntax is TBD.
+
+Node-specific storage will initially be implemented as a facade on top
+of the existing "normal" attributes structure. In the future we may
+propose additional enhancements to this API to provide pluggability,
+orchestration support, and/or improved authorization behaviors.
 
 ## Rationale
 
