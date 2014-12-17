@@ -1,3 +1,10 @@
+---
+RFC: 14
+Author: Daniel DeLeo <dan@getchef.com>
+Status: Accepted
+Type: Standards Track
+---
+
 # Universe Endpoint for Chef Server
 
 ## Use Case
@@ -45,3 +52,9 @@ here: http://docs.opscode.com/api_cookbooks_site.html#universe The
 response given by the chef server differs from the supermarket API in
 that the `location_type` field in the response is set to "chef_server".
 
+## Copyright
+
+This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.
