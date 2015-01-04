@@ -116,6 +116,18 @@ the original one should be marked as Replaced.
 * **Final** – The RFC has been implemented. *(Standards Track type only)*
 * **Replaced** – The RFC has been superseded by another RFC.
 
+### Changing an Accepted RFC
+
+An accepted RFC may be modified in two ways, depending on the type of RFC:
+
+1) To support software implementations meeting the specifications of an RFC,
+Standards Track RFCs must be replaced by a new RFC. This is done by specifying
+the RFC that is being replaced using the Replaces header in the metadata of the
+new RFC.
+
+To simplify their evolution, existing Informational and Process RFCs may also
+be updated by pull request.
+
 ## RFC Template
 
 ```markdown
@@ -124,6 +136,7 @@ RFC: unassigned
 Author: Alan Smithee <asmithee@example.com>
 Status: Draft
 Type: <Standards Track, Informational, Process>
+<Replaces: RFCxxx>
 ---
 
 # Title
