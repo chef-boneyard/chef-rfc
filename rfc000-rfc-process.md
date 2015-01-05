@@ -120,13 +120,15 @@ the original one should be marked as Replaced.
 
 An accepted RFC may be modified in two ways, depending on the type of RFC:
 
-1) To support software implementations meeting the specifications of an RFC,
-Standards Track RFCs must be replaced by a new RFC. This is done by specifying
-the RFC that is being replaced using the Replaces header in the metadata of the
-new RFC.
+1) Most RFCs can be updated by opening a pull request against them with the
+proposed changes. Once the changes are approved by the Decider, the pull
+request is merged and considered Accepted.
 
-To simplify their evolution, existing Informational and Process RFCs may also
-be updated by pull request.
+2) To support software implementations meeting the specifications of an RFC,
+Standards Track RFCs that are Final must be replaced by a new RFC. The Author
+should specify the RFC that is being replaced using the Replaces header in the
+metadata of the new RFC. Once Accepted, the replaced RFC with have its status
+updated to Replaced by an Editor.
 
 ## RFC Template
 
