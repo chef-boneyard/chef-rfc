@@ -49,7 +49,6 @@ top key would be treated as a comment, and the second key would be the value:
 but this is both confusing to someone reading the data bag item, and does not seem clean.
 
 #####2. Special character which recipes know to trim
-
 In the example you will see below, if including a special character (such as `|`), the recipe(s)
 could be smart enough to know everything following a `|` character is a comment, and strip the
 comment off before using the value.
@@ -67,6 +66,12 @@ comment off before using the value.
 ```
 But this presents it's own problems, such as data which might contain a `|` character. Like the
 multiple key workaround outlined above, this also feels like it would be confusing to readers.
+
+#####3. Gist from **[@jtimberman](https://github.com/jtimberman)**
+[This Gist](https://gist.github.com/jtimberman/2359433) which outlines how to use Ruby data bag items
+works but only with a Chef Server involved (`chef-client`). When running cookbooks to develop and
+test our Chef code, we are not using `chef-client`, but are using `chef-solo`. Therefore, this
+workaround did not prove to be a working solution for our team (or anyone not using the Chef Server).
 
 # Specification
 
