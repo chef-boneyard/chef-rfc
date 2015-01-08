@@ -112,6 +112,25 @@ and reduce the maintenance burden.
 This will also help unify file loading logic between things like chef_fs and
 knife. This could allow moving forward with [RFC 31](https://github.com/opscode/chef-rfc/blob/master/rfc31-replace-solo-with-local-mode.md).
 
+## Acceptance
+
+In order to reduce the risk of community fragmentation, no new dialects will be
+implemented in Chef core. The follow dialects will be supported as they reflect
+the current state of Chef:
+
+
+* Attributes: `.rb`
+* Recipes: `.rb`
+* Templates: `.erb`
+* Metadata: `.rb` and `.json`
+* Roles: `.rb` and `.json`
+* Data bags: `.json`
+* Environments: `.rb` and `.json`
+* Nodes: `.rb` and `.json`
+
+The only allow externally visible changes are in unifiying the loading behavior
+between Chef and chef_fs.
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
