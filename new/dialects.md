@@ -115,7 +115,7 @@ knife. This could allow moving forward with [RFC 31](https://github.com/opscode/
 ## Acceptance
 
 In order to reduce the risk of community fragmentation, no new dialects will be
-implemented in Chef core. The follow dialects will be supported as they reflect
+implemented in Chef core. The following dialects will be supported as they reflect
 the current state of Chef:
 
 
