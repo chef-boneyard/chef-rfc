@@ -25,28 +25,28 @@ This file is the canonical source for how the Chef project is maintained.
 
 ## Project Lead
 
-Resolves disputes
-Provides vision and roadmap
-Has universal veto power
+* Resolves disputes
+* Provides vision and roadmap
+* Has universal veto power
 
 ## Lieutenants
 
-Publish a roadmap (two quarters out)
-Release calendar for code outside of chef client/chef server
-Resolves disputes within their subsystem
-Has localized veto power
-Plus all responsibilities of a maintainer
+* Publish a roadmap (two quarters out)
+* Release calendar for code outside of chef client/chef server
+* Resolves disputes within their subsystem
+* Has localized veto power
+* Plus all responsibilities of a maintainer
 
 ## Maintainer
 
-Handle contributions on GitHub - first response to a PR within 48 hours
-Be available on IRC
-Attend the developers meeting (do not miss more than 3 in a row - special dispensation can be made for difficult time zones)
-Be available to answer mailing list questions within 48 hours
-Weekends and local holidays in the maintainer’s jurisdiction are not counted for timeliness requirements. Absences for reasonable causes such as vacations, illness, etc. are also acceptable; Maintainers should notice of absences via the development mailing list whenever possible.
-Committed to 100% tests passing for your component
-Has full commit/merge access to the relevant repositories
-Has ops on IRC
+* Handle contributions on GitHub - first response to a PR within 48 hours
+* Be available on IRC
+* Attend the developers meeting (do not miss more than 3 in a row - special dispensation can be made for difficult time zones)
+* Be available to answer mailing list questions within 48 hours
+* Weekends and local holidays in the maintainer’s jurisdiction are not counted for timeliness requirements. Absences for reasonable causes such as vacations, illness, etc. are also acceptable; Maintainers should notice of absences via the development mailing list whenever possible.
+* Committed to 100% tests passing for your component
+* Has full commit/merge access to the relevant repositories
+* Has ops on IRC
 
 # Contributing Patches
 
