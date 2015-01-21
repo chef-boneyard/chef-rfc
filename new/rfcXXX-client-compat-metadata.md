@@ -8,7 +8,7 @@ Type: Standards Track
 
 # Add client_compat field to cookbook metadata
 
-Increasingly, as momentum on Chef development continues to grow, it is necessary to release modifications to the recipe DSL or core resources which break backwards compatibility and result in cookbooks potentially breaking under old versions of chef-client. Further, it is often necessary to make these changes in minor chef-client releases rather than waiting multiple months for the next major release cycle. There is currently no way to surface this version requirement to Chef users.
+Increasingly, as momentum on Chef development continues to grow, it is necessary to release modifications to the recipe DSL or core resources which can result in backwards incompatible cookbook code that may result in cookbooks using those features breaking under old versions of chef-client. Further, it is often necessary to make these changes in minor chef-client releases rather than waiting multiple months for the next major release cycle. There is currently no way to surface this version requirement to Chef users.
 
 This RFC proposes the addition of the "client_compat" field (name up for discussion) to cookbook metadata to indicate the required version of chef-client needed to run that cookbook. 
 
