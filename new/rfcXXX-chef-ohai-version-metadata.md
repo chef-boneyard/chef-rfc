@@ -22,7 +22,9 @@ This change would require adding two additional fields to the supported list of 
 
 This change would potentially break backwards compatibility for older versions of chef-client which would not expect the presence of that field, but I propose that the benefit gained from easily being able to surface chef-client and ohai version requirements to cookbook users in all future versions makes this worthwhile. It may also be possible to implement the addition of these fields in a backwards compatible manner.
 
-The addition of these fields would also permit this information to be easily surfaced in Chef Supermarket, and to potentially even have chef-client display a friendly warning if it tries to compile a cookbook which requires a more recent version of chef-client - that's probably a separate RFC though.
+During a chef-client run, it will check these fields in all cookbooks against the currently running version of chef-client and ohai. In the event that a version requirement is not satisfied at any level of the dependency tree, the Chef run will fail with a meaningful error, for example:
+
+```FATAL: Cookbook 'apache' depends on chef-client version >= 12.0.4, but the running chef-client version is 12.0.3. Exiting.```
 
 ## Copyright
 
