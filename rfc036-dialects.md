@@ -1,5 +1,5 @@
 ---
-RFC: unassigned
+RFC: 36
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Draft
 Type: Standards Track
@@ -10,6 +10,9 @@ Type: Standards Track
 Currently Chef supports a mix of Ruby DSLs and JSON for it's data. This RFC
 proposes to add hooks in to Chef to allow cookbooks and knife plugins to support
 additional formats.
+
+In order to reduce the risk of community fragmentation, no new dialects will be
+implemented in Chef core.
 
 ## Motivation
 
