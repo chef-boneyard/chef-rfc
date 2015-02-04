@@ -42,12 +42,22 @@ prevent concurrent chef runs in different nodes
 ```ruby
 lock_key = "#{node.chef_environment}/#{node.name}"
 
-on :run_start do
+on :converge_start do |run_context|
   Etcd.lock_acquire(lock_key)
 end
 
-on :run_completed do
+on :converge_complete do
   Etcd.lock_release(lock_key)
+end
+```
+
+Following is another example of sending a hipchat alert on a key config change
+
+```ruby
+on :resource_updated do |resource, action|
+  if resource.to_s == 'template[/etc/nginx/nginx.conf]'
+    Helper.hipchat_message("#{resource} was updated by chef")
+  end
 end
 ```
 
