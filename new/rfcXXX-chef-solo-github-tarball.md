@@ -5,31 +5,31 @@ Status: Draft
 Type: Standards Track
 ---
 
-# GitHub repository tarball as cookbook source for chef-solo
+# GitHub repository tarball as cookbook source for chef-client local mode
 
-Allow chef-solo to consume github repository tarballs as cookbook
+Allow chef-client to consume github repository tarballs as cookbook
 source
 
 ## Motivation
 
-chef-solo can fetch cookbook tarballs from an URL, and GitHub already provide
+chef-client in local mode can fetch cookbook tarballs from an URL. Also, GitHub already provide
 repository source as tarball (both per branch as well as per release tags).
 But since github release tarballs generated with a different folder structure,
-chef-solo can not consume theefm out of the box.
+chef-client can not consume theem out of the box.
 
-Letting chef-solo directly consume GitHub releases will ease the cookbook deployment by
+Letting chef-client directly consume GitHub releases will ease the cookbook deployment by
 eleminating the need of maintaining additional tooling to generate and
 host cookbook tarballs.
 
 
 ## Specification
 
-Introduce a `--github` CLI flag in chef-solo. If this flag is supplied
-along with `--recipe-url` then chef-solo will do additional tar ball processing
+Introduce a `--github` CLI flag in chef-client. If this flag is supplied
+along with `--recipe-url` in local mode then chef-client will do additional tarball processing
 assuming its a github release.
 
 ```sh
-chef-solo -o 'recipe[awesome]' -r https://github.com/user/repo/archive/master.tar.gz --github
+chef-client -z -o 'recipe[test]' -r https://github.com/ranjib/chef-repo/archive/master.tar.gz --github
 ```
 
 ## Copyright
