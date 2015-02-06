@@ -64,7 +64,7 @@ status, and type.
 2. **Description** – A short (~200 word) description of the technical issue
 being addressed.
 3. **Motivation** – The **why** of this change, especially if the change has an
-impact on compatibility. The the greatest extent possible, realistic use cases
+impact on compatibility. To the greatest extent possible, realistic use cases
 should be cited. This generally includes an agile user story.
 4. **Specification** – The **what** of this change. The technical specification
 should describe the new feature or enhancement being proposed. This includes any
