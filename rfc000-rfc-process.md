@@ -10,7 +10,7 @@ Type: Process
 A Chef RFC is a design document describing improvements to Chef. We as a
 community use RFCs to document, discuss, and plan improvements to Chef and
 other Chef ecosystem tools. You can always find the list of accepted RFCs at
-https://github.com/opscode/chef-rfc.
+https://github.com/chef/chef-rfc.
 
 ## RFC Types
 
