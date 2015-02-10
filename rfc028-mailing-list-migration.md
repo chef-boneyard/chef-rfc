@@ -1,11 +1,21 @@
 ---
 RFC: 28
 Author: Julian C. Dunn <jdunn@aquezada.com>
-Status: Accepted
+Status: Completed
 Type: Informational
 ---
 
 # Mailing List Migration
+
+The Mailing Lists have been migrated to Google Groups.
+
+* [chef@lists.chef.io](https://groups.google.com/a/lists.chef.io/forum/#!forum/chef)
+* [chef-dev@lists.chef.io](https://groups.google.com/a/lists.chef.io/forum/#!forum/chef-dev)
+
+Details about the migration can be found the blog posts about the migration:
+
+* [Our mailing lists have moved!](https://www.chef.io/blog/2015/02/10/our-mailing-lists-have-moved/)
+* [Mailing List Migration](https://www.chef.io/blog/2015/02/04/14389/)
 
 This RFC proposes the migration of all existing Chef mailing lists
 (namely, `{chef,chef-dev}@lists.opscode.com`) into Google Groups.
