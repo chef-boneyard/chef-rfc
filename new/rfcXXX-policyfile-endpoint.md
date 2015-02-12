@@ -1,0 +1,367 @@
+---
+RFC: unassigned
+Author: Daniel DeLeo <dan@chef.io>
+Status: Draft
+Type: Standards Track
+---
+
+# Policyfile HTTP Resource API
+
+Policyfiles are a new feature of Chef that allow the user to specify a
+`run_list` and exact set of cookbooks that `chef-client` will use to
+converge a node (host) to a desired state. In contrast with the current
+behaviors of Chef Client and Server, Policyfiles provide a way to
+describe and manage configuration code on a whole-node basis, reducing
+Chef Client's use of shared, mutable resources hosted on the server and
+providing operators easier visibility into configuration code and
+changes. For further description of the Policyfile feature, read the dedicated
+[POLICYFILE README.](https://github.com/chef/chef-dk/blob/master/POLICYFILE_README.md)
+
+A preview implementation of the Policyfile feature is currently available; in
+this implementation, Policyfile documents are stored as data bag items.
+Although this implementation works, it does not provide the baseline quality
+users expect. In particular, there is no validation, no means to make any
+relational queries, and documents are indexed for search as data bag items.
+
+This RFC describes a new Policyfile HTTP Resource API that remediates these
+issues.
+
+## Motivation
+
+    As a Chef user,
+    I want Policyfiles to have a dedicated HTTP Resource API,
+    so that Policyfiles will be validated upon upload
+    and I can query the relationships between Policyfiles and other objects,
+    and Policyfiles will not be indexed as an incorrect data type.
+
+## Specification
+
+### General Concepts
+
+A Policyfile lock is a JSON document that specifies a node's run list and the
+set of cookbooks a node will use to converge the node.
+
+A Policy Group is a set of nodes defined by a single token. Nodes must be a
+member of a Policy Group in order to use the Policyfile feature, and nodes may
+only be a member of one policy group.
+
+### Policyfile Lock
+
+A Policyfile lock is a JSON document that has the following structure:
+
+```json
+{
+  "revision_id": "edd40c30c4e0ebb3658abde4620597597d2e9c17",
+  "name": "some_policy_name",
+  "run_list": [
+    "recipe[policyfile_example_cookbook::default]"
+  ],
+  "cookbook_locks": {
+    "policyfile_example_cookbook": {
+      "version": "1.0.0",
+      "identifier": "f04cc40faf628253fe7d9566d66a1733fb1afbe9"
+    }
+  }
+}
+
+```
+
+#### `revision_id` Field (required)
+
+The `revision_id` field is used to distinguish revisions of a Policyfile lock
+document. It is a JSON String. It may contain alphanumeric characters, hyphens,
+underscores, the dot character and the colon character. In regular expression
+form: `/^[\-[:alnum:]_\.\:]+$/`. The revision ID is limited to a maximum of 255
+characters. The Chef Server must reject a Policyfile lock document when the
+revision ID does not meet these requirements.
+
+In ChefDK the revision will be calculated by hashing other content in the
+Policyfile lock document and thus will be a hexidecimal number. In order to
+allow alternate implementations to generate revision IDs according to different
+schemes (perhaps timestamps or Ci build numbers), this field will not be
+required to be a hexidecimal string.
+
+#### `name` Field (required)
+
+The `name` field describes the functional role that is fulfilled by a node that
+applies this policy. It may contain alphanumeric characters, hyphens,
+underscores, the dot character and the colon character. In regular expression
+form: `/^[\-[:alnum:]_\.\:]+$/`. The name is also limited to a maximum of 255
+characters. The Chef Server must reject a Policyfile lock document if the name
+does not meet these criteria.
+
+#### `run_list` Field (required)
+
+The `run_list` field gives the ordered list of recipes that Chef client should
+apply to converge a node. Each item MUST be in fully qualified form, that is,
+`recipe[COOKBOOK_NAME::RECIPE_NAME]`. Roles are not valid run list items in the
+Policyfile lock document, and the Chef Server MUST reject run lists that
+contain roles.
+
+#### `cookbook_locks` Field (required)
+
+The `cookbook_locks` Field is a JSON object (Ruby Hash). The keys are cookbook
+names. The Chef Server MUST validate the keys according to the same validation
+rules applied to cookbook names for other APIs. The values are JSON objects
+that contain information about the cookbook.  These objects MUST have a
+`version` field that gives the cookbook's version number. The server must apply
+the same validation rules to this field as it applies to cookbooks uploaded to
+the cookbook artifacts API, described in [Chef RFC022.](https://github.com/chef/chef-rfc/blob/master/rfc022-arbitrary-cookbook-identifiers.md)
+They MUST also have an `identifier` field. This gives the cookbook's
+identifier, as described in Chef RFC022. The Chef Server must validate this
+field according to the same rules as applied to cookbooks uploaded to the
+cookbook artifacts API.  Cookbook lock objects MAY contain other fields with
+arbitrary information about the cookbook. The Chef Server must accept and
+persist this data. For example, ChefDK generates Policyfile lock documents that
+include source URLs, version control information, and the name of the directory
+where the cookbook is stored in ChefDK's cache. Cookbook lock objects MAY
+contain a `dotted_decimal_identifier` field which contains a representation of
+the identifier as a version number.  This field is used when cookbooks are
+stored on a server that does not support the arbitrary cookbook identifier API
+described in Chef RFC022.
+
+Example cookbook locks including optional fields:
+
+```json
+    "policyfile_demo": {
+      "version": "0.1.0",
+      "identifier": "f04cc40faf628253fe7d9566d66a1733fb1afbe9",
+      "dotted_decimal_identifier": "67638399371010690.23642238397896298.25512023620585",
+      "source": "cookbooks/policyfile_demo",
+      "cache_key": null,
+      "scm_info": {
+        "scm": "git",
+        "remote": "git@github.com:danielsdeleo/policyfile-jenkins-demo.git",
+        "revision": "edd40c30c4e0ebb3658abde4620597597d2e9c17",
+        "working_tree_clean": false,
+        "published": false,
+        "synchronized_remote_branches": [
+
+        ]
+      },
+      "source_options": {
+        "path": "cookbooks/policyfile_demo"
+      }
+    },
+    "apt": {
+      "version": "2.6.1",
+      "identifier": "5f7045a8aeaf6ccda3b3594258df9ee982b3a023",
+      "dotted_decimal_identifier": "26863567272587116.57882360917678303.174725757378595",
+      "cache_key": "apt-2.6.1-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io/api/v1/cookbooks/apt/versions/2.6.1/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io/api/v1/cookbooks/apt/versions/2.6.1/download",
+        "version": "2.6.1"
+      }
+    },
+```
+
+#### Other Optional Fields
+
+A Policyfile lock can contain arbitrary information in other top-level fields.
+The Chef Server MUST accept and preserve the data in these fields (though the
+server MAY enforce a limit on overall document size). ChefDK currently uses a
+`solution_dependencies` field to store a list of all dependencies relevant to
+the cookbook set.
+
+### API Schema
+
+#### `/policy_groups`
+
+Container for policy groups.
+
+##### `GET /policy_groups`
+
+Returns a list of policy groups that exist.
+
+#### `/policy_groups/:policy_group_name/_acl`
+
+Authorization endpoint for the policy group `:policy_group_name`
+
+#### `/policy_groups/:policy_group_name/policies/:policy_name`
+
+##### `GET /policy_groups/:policy_group_name/policies/:policy_name`
+
+Returns the policyfile lock document at the revision that is currently
+associated with the given policy group and policy name.
+
+##### `PUT /policy_groups/:policy_group_name/policies/:policy_name`
+
+Sets the active revision of `:policy_name` for the policy group
+`:policy_group_name` to the policyfile lock document in the request body. The
+policy group, policy name, and policyfile lock revision will be created if any
+does not exist.
+
+##### `POST /policy_groups/:policy_group_name/policies/:policy_name`
+
+Sets the current active revision of `:policy_name` for the `:policy_group_name`
+to the value given in the POST body. The revision must already exist on the
+server. For example, to set the active revision of the 'appserver' policy in
+the 'qa' policy group, you would POST to
+`/policy_groups/qa/policies/appserver`, with a POST body like the following:
+
+```json
+{
+  "revision_id": "bfec256f76a52ff707ca72e71b464a41c410b229"
+}
+```
+
+#### `/policy_groups/:policy_group_name/nodes`
+
+##### `GET /policy_groups/:policy_group_name/nodes`
+
+Returns a list of nodes that belong to the policy group. Can be filtered for a
+specific `:policy_name` with the `policy_name` query parameter, using a URL of
+the form: `GET /policy_groups/:policy_group_name/nodes?policy_name=:policy_name`
+
+#### `/policies/:policy_name`
+
+TODO: This is where AuthZ for policies goes, does it do anything else?
+
+#### `/policies/:policy_name/revisions/`
+
+##### `POST /policies/:policy_name/revisions/`
+
+Create a new Policyfile lock document. The POST body MUST be a valid Policyfile
+lock document, as described above. The document can subsequently be retrieved
+at the relative URL `/policies/:policy_name/revisions/:revision_id`
+
+##### `GET /policies/:policy_name/revisions/`
+
+Returns a list of the available revisions for the given policy name
+
+#### `/policies/:policy_name/revisions/:revision_id`
+
+##### `GET /policies/:policy_name/revisions/:revision_id`
+
+Returns the policyfile lock document with the given name and revision ID.
+
+##### `DELETE /policies/:policy_name/revisions/:revision_id`
+
+Deletes the policyfile lock document with the given name and revision ID.
+
+#### `/policies/:policy_name/revisions/:revision_id/policy_groups`
+
+##### `GET /policies/:policy_name/revisions/:revision_id/policy_groups`
+
+Returns the list of policy groups that are associated with the given policy
+name at the given revision ID.
+
+### Promotion API (Optional)
+
+In addition to the basic REST interface described above, the server may also
+provide a promotion API. The promotion API facilitates defining the deployment
+cycle for policies (i.e., the order in which policies move through policy
+groups) and allows policies to be promoted to subsequent stages of the
+deployment cycle with a single API call.
+
+#### `/policy_groups/:policy_group_name`
+
+#### `GET /policy_groups/:policy_group_name`
+
+Returns the policy group configuration for `:policy_group_name`. The document
+will contain the name of the next policy group in the deployment cycle. Exact
+format is TBD, but it could look like:
+
+```json
+{
+  "name": "development",
+  "next_group_name": "qa"
+}
+```
+
+#### `PUT /policy_groups/:policy_group_name`
+
+Set the policy group configuration for `:policy_group_name`. Exact format is
+TBD, but will be identical to the document format described above for `GET`.
+
+#### `POST /policy_groups/:policy_group_name/promote`
+
+Promotes all or some of the policyfile lock revisions currently active in
+`:policy_group_name` to the next stage of the deployment cycle. POST body
+format is TBD.
+
+### End to End API Calls
+
+The user generates a Policyfile lock document locally. When using ChefDK, the
+policyfile lock document is generated by gathering requirements specified in a
+Ruby DSL (e.g., the `Policyfile.rb`) and solving cookbook dependencies, but
+users may create the policyfile lock document in some other way if desired.
+
+Before the Policyfile lock document is published to the Chef Server, all
+cookbooks described in the `cookbook_locks` section of the document are
+uploaded to the cookbook artifacts API.
+
+#### Policyfile Lock Document Upload
+
+The policyfile lock document may be uploaded in a single step:
+
+* `PUT /policy_groups/:policy_group_name/policies/:policy_name`
+
+Or it may be uploaded in two steps:
+
+* `POST /policies/:policy_name/revisions/`: Upload the policy to the Chef Server
+* `POST /policy_groups/:policy_group_name/policies/:policy_name`: make the
+  policyfile lock document revision uploaded in the previous step the active
+  one for the specified policy group.
+
+#### Chef Client Policyfile Lock Document Download
+
+Chef Client is configured with both a desired `:policy_group_name` and
+`:policy_name`. Given that information, it can retrieve the Policyfile lock
+document with a single request:
+
+* `GET /policy_groups/:policy_group_name/policies/:policy_name`: Get the policy
+  document with the run list and cookbook set for the chef run.
+
+## Rationale
+
+### Policy Groups
+
+The means by which a node is associated to a Policyfile lock is designed such
+that it is possible to have more than one revision of a Policyfile lock active
+in a Chef organization at one time. That is, it must be possible to update the
+Policyfile lock for only some nodes with a given functional role. For example,
+a configuration code change may deploy a newer version of some important
+software that must be tested in a non-production environment before production
+deployment, or may cause a service restart that temporarily reduces capacity.
+
+It is also desirable that the Policyfile lock document itself not contain any
+information about which nodes it is applied to, as this simplifies the overall
+design and makes it easy to create tooling to manage promotion of a Policyfile
+lock through the phases of a deployment cycle.
+
+To accommodate these two constraints, Policyfile locks are associated to a node
+via both the policy name and policy group. The policy group models the phases
+of a deployment cycle, such as "development", "staging" and "production."
+Each policy group can have a different revision of a Policyfile lock, which
+enables configuration code to be updated in one policy group without any effect
+on the configuration code in other policy groups.
+
+### HTTP Resource API Considerations
+
+TODO: This section needs to be cleaned up somewhat. But anyway, here's a list
+of questions we'd like to be able to answer via the API, which informs why it's
+designed the way it is.
+
+* what nodes are in group X?
+* what nodes are in group X and use policy Y?
+* what is the active policy for app X in group Y?
+* what's different in the active policy for app X between groups Y and Z
+* what groups exist?
+* (acls) who can change the policy in group X?
+* what policy types/names are available?
+* node create wizard/dialog would need group names and policy names
+* what groups are using policy lock X? (where is this code deployed)
+* auto-cleanup?
+  * what happens to a group with no nodes?
+  * what happens to a group with no policies?
+  * what happens to a policy lock that is not active anywhere?
+
+## Copyright
+
+This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.
+
