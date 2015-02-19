@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 37
 Author: Jon Cowie (jcowie@etsy.com)
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
