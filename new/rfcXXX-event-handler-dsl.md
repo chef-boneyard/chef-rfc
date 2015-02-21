@@ -8,32 +8,31 @@ Type: Standards Track
 
 # Recipe DSL method for event handler hooks
 
-Allow cookbook authors easily add custom logic on Chef events.
+Allow cookbook authors to easily add custom logic on Chef events.
 
 
 ## Motivation
 
-Chef has an extensive event handler mechanism, but incorporating
-some custom logic with any of the events is onerous process which involves
-subclassing the based evant handler and adding it via the config. This RFC
-proposes a recipe DSL method to ease this. For new chef users this increases
-the entry barrier, while for experienced chef users this amounts to writing
-boilerplate code.
+Chef has an extensive event [disptach mechanism](https://github.com/chef/chef/blob/master/lib/chef/event_dispatch/base.rb).
+But incorporating some custom logic against any of the events is an onerous process which involves
+subclassing the based event handler and adding it via the config. This RFC
+proposes a recipe DSL method to ease this. For new chef users this will reduce
+the entry barrier.
 
-## Specificatiin
+## Specification
 
 Currently chef client sets up couple of default handlers (doc, base) during
-initialization. An additional empty event handler (i.e. just subclass
-of base handler without any custom logic) can be added along side the
-existing hanlder which will used as a space holder for user specific hooks.
+initialization. An additional empty event handler (a subclass
+of the base handler without any custom logic) can be added alongside the
+existing handlers which will used as a placeholder for user specific hooks.
 
-A top level (::Chef) method will be introduced (`event_handler`) along side the
+A top level (::Chef) method will be introduced (`event_handler`) to wrap the
 main event handler DSL (`on`). Users can tap into one of the event types
-(as specified in base dispatcher) using this DSL to execute their business logic.
+(as specified in base dispatcher) using this DSL to execute their custom logic.
 
-The additional top level method will allow the handler DSL usage in and outside
-of recipes, and also ease writing backward compatible changes in the actual `on`
-method.
+The additional top level method(`Chef.event_handler`) will allow the handler
+DSL usage in and outside of recipes and also ease writing backward compatible
+changes for the `on` method if need be.
 
 Following is an example of sending hipchat notification on chef run failure.
 
