@@ -178,6 +178,13 @@ Returns a list of policy groups that exist.
 
 Authorization endpoint for the policy group `:policy_group_name`
 
+#### `/policy_groups/:policy_group_name/policies/`
+
+##### `GET /policy_groups/:policy_group_name/policies/`
+
+Returns a JSON object showing the active policy names and revision IDs for the
+policy group `:policy_group_name`.
+
 #### `/policy_groups/:policy_group_name/policies/:policy_name`
 
 ##### `GET /policy_groups/:policy_group_name/policies/:policy_name`
@@ -217,6 +224,9 @@ the form: `GET /policy_groups/:policy_group_name/nodes?policy_name=:policy_name`
 #### `/policies/:policy_name`
 
 TODO: This is where AuthZ for policies goes, does it do anything else?
+
+This implies that a PUT to /policy\_groups/foo/policies/bar has to authorize
+against both policies/\_acl and policy\_groups/\_acl which maybe is weird (?).
 
 #### `/policies/:policy_name/revisions/`
 
@@ -314,6 +324,84 @@ document with a single request:
 * `GET /policy_groups/:policy_group_name/policies/:policy_name`: Get the policy
   document with the run list and cookbook set for the chef run.
 
+### Authorization
+
+The Chef Server authorizes an actor to access the Policyfile API separately for
+policy groups and policy names (i.e., the set of all policyfile lock documents
+with the same name). For operations that affect both policy groups and policy
+names, an actor must have all relevant permissions to perform the requested
+operation.
+
+#### Policy Groups
+
+Container-level Authorization:
+
+* An actor must have `Create` permission on the `policy_groups` container to
+  create a new group.
+* An actor must have `List` permission on the `policy_groups` container to list
+  groups.
+
+Object-level Authorization:
+
+* An actor must have `Read` permission on a specific `policy_group` to read the
+  promotion configuration for that group (promotion API only)
+* An actor must have `Read` permission on a specific `policy_group` to read the
+  list of active policies and revisions.
+* An actor must have `Update` permission to set the active revision for a given
+  `policy_name` to a specific revision via `POST /policy_groups/:policy_group_name/policies/:policy_name`
+* An actor must have `Read` permission on a specific `policy_group` and `List`
+  permission on the `nodes` container to list nodes in a policy group via
+  `GET /policy_groups/:policy_group_name/nodes`
+* An actor must have `Delete` permission on a specific `policy_group` to delete it.
+
+
+#### Policy Names
+
+Authorization for policy names is similar to cookbook versions and data bags in
+that actions on individual objects are authorized based on permissions to the
+collection; individual policy file lock revisions do not have independent ACLs.
+
+Container-level Authorization:
+
+* An actor must have `Create` permission on the `policies` container to
+  create a new `policy_name`. This applies when creating a new policyfile lock
+  revision via `POST /policies/:policy_name/revisions/` and no existing
+  policyfile lock document with the same name exists.
+* An actor must have `List` permission on the `policies` container to list
+  all policy names.
+
+Object-level Authorization:
+
+* An actor must have `Update` to create a new policyfile lock revision. This
+  applies when creating a new revision of a policy name via `POST /policies/:policy_name/revisions/`
+  and there is an existing policyfile lock document with the same name.
+* An actor must have `Read` to list the available revisions for a given
+  `policy_name` via `GET /policies/:policy_name/revisions/`.
+* An actor must have `Read` to retrieve a specific revision of a given `policy_name`
+  via `GET /policies/:policy_name/revisions/:revision_id`.
+* An actor must have `Delete` to delete a specific revision of a given `policy_name`.
+
+
+#### Both
+
+For convenience and to reduce HTTP round-trips, some APIs update and/or
+disclose information about different object types. An actor is permitted to
+perform the requested action only if authorized for all of the requested
+actions individually,
+
+* An actor must have `Read` permission on a specific `policy_group` and also
+  have `Read` on a specific `policy_name` to retrieve the active policy lock
+  document revision for the given group and name.
+* To set the current active policy lock revision via `PUT /policy_groups/:policy_group_name/policies/:policy_name`,
+  an actor must have either `Update` permission on the given `policy_group` if
+  it exists, or `Create` on the `policy_groups` container to create the desired
+  group, AND either `Update` permission on the given `policy_name` if it exists
+  or `Create` on the `policies` containter to create the the desired policy if
+  it doesn't exist.
+* An actor must have `Read` permission on a sepcific `policy_name` and `List`
+  permission on the `policy_groups` container to list the groups associated
+  with a given policy at a given revision via `GET /policies/:policy_name/revisions/:revision_id/policy_groups`
+
 ## Rationale
 
 ### Policy Groups
@@ -338,25 +426,55 @@ Each policy group can have a different revision of a Policyfile lock, which
 enables configuration code to be updated in one policy group without any effect
 on the configuration code in other policy groups.
 
-### HTTP Resource API Considerations
+### HTTP Resource API Design Goals
 
-TODO: This section needs to be cleaned up somewhat. But anyway, here's a list
-of questions we'd like to be able to answer via the API, which informs why it's
-designed the way it is.
+#### Retrive the Active Policy for a Given Policy Group and Policy Name
 
-* what nodes are in group X?
-* what nodes are in group X and use policy Y?
-* what is the active policy for app X in group Y?
-* what's different in the active policy for app X between groups Y and Z
-* what groups exist?
-* (acls) who can change the policy in group X?
-* what policy types/names are available?
-* node create wizard/dialog would need group names and policy names
-* what groups are using policy lock X? (where is this code deployed)
+This is how `chef-client` retrieves the policy it will apply for the current
+`chef-client` run. It is also possible to compare (diff) the active policy for
+two different policy groups by retrieving the active policy for each group and
+computing the difference.
+
+#### Query the List of Group Names
+
+This enables a GUI to provide a list of groups for navigational purposes and
+for list-based input (such as selecting the policy group for a new node object).
+
+#### Query the List of Policy Names
+
+This enables a GUI to provide a list of policy names for navigational purposes
+and for list-based input.
+
+#### List Nodes By Group And Policy Name
+
+When the node document is updated to include the policy group and policy name
+(a future change outside the scope of this RFC), this information will be
+accessible via search; however, the information can be easily retrieved via a
+relational database query for use in a web-based UI.
+
+#### Data Cleanup
+
+TODO: this needs to be figured out
+
 * auto-cleanup?
   * what happens to a group with no nodes?
   * what happens to a group with no policies?
   * what happens to a policy lock that is not active anywhere?
+
+### Authorization Design Goals and Considerations.
+
+The authorization behaviors for Policyfiles are designed to allow the user to
+limit access by either deployment phase or host's functional role.
+
+In the first case, it may be desirable, for example, to limit access to
+production policy groups to a subset of individuals or perhaps a Ci system
+while still giving users access to update dev environments or create one-off
+dev environments for testing.
+
+In the second case, a business may have some types of systems where access must
+be restricted to a smaller set of individuals, perhaps because those machines
+store sensitive data or require expertise from other teams to vet changes
+(e.g., a DBA must review changes to database nodes).
 
 ## Copyright
 
