@@ -225,9 +225,6 @@ the form: `GET /policy_groups/:policy_group_name/nodes?policy_name=:policy_name`
 
 TODO: This is where AuthZ for policies goes, does it do anything else?
 
-This implies that a PUT to /policy\_groups/foo/policies/bar has to authorize
-against both policies/\_acl and policy\_groups/\_acl which maybe is weird (?).
-
 #### `/policies/:policy_name/revisions/`
 
 ##### `POST /policies/:policy_name/revisions/`
