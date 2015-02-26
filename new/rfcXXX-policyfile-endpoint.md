@@ -124,6 +124,7 @@ Example cookbook locks including optional fields:
 
 ```json
     "policyfile_demo": {
+      "revision_id": "edd40c30c4e0ebb3658abde4620597597d2e9c17",
       "version": "0.1.0",
       "identifier": "f04cc40faf628253fe7d9566d66a1733fb1afbe9",
       "dotted_decimal_identifier": "67638399371010690.23642238397896298.25512023620585",
@@ -156,6 +157,70 @@ Example cookbook locks including optional fields:
     },
 ```
 
+#### `named_run_lists` Field (Optional)
+
+Named run lists provide a replacement for the override run list feature in Chef
+Client, which is not compatible with Policyfiles because the run list and
+cookbook set must be bundled together in a Policyfile lock document.
+
+Then `named_run_lists` field is a JSON object; inside this object, the keys are
+the names of the named run lists and values are JSON arrays of run list items.
+As with the top-level `run_list` field, run list items for named run lists MUST
+be in fully qualified recipe form, and roles are not accepted.
+
+A named run list name may contain alphanumeric characters, hyphens,
+underscores, the dot character and the colon character. In regular expression
+form: `/^[\-[:alnum:]_\.\:]+$/`. It must be a least one character long and
+cannot exceed 255 characters.
+
+```json
+  "named_run_lists": {
+    "update_jenkins": [
+      "recipe[jenkins::master]",
+      "recipe[policyfile_demo::default]"
+    ]
+  },
+```
+
+TODO: if named run lists are computed by expanding a run list containing roles,
+they will have different attributes from those associated with the default run
+list (see attributes below). This will need to be accounted for, either by
+making the fields for each named run list a JSON object with `run_list` and
+attributes fields or having a corresponding top-level field for named run
+lists' attributes.
+
+#### Attributes Fields (Optional)
+
+A Policyfile lock may contain default and override attributes. Chef Client will
+treat these attributes the same as it currently treats role attributes. For
+attributes associated with the top-level run list, there are two proposals for
+how these are specified in the Policyfile lock JSON. One proposal is to store
+default and override attributes as separate top-level keys:
+
+```json
+{
+  "default_attributes": {},
+  "override_attributes": {}
+}
+```
+
+The alternative is to store both in a top-level "attributes" key:
+
+```json
+{
+  "attributes":
+  {
+    "default": {},
+    "override": {}
+  }
+}
+```
+
+TODO: The author will do UX testing to determine if either proposal generates
+more readable diffs (particularly in the context of a git repo). If one
+proposal tends to result in more readable diffs, it will be favored.
+
+
 #### Other Optional Fields
 
 A Policyfile lock can contain arbitrary information in other top-level fields.
@@ -163,6 +228,7 @@ The Chef Server MUST accept and preserve the data in these fields (though the
 server MAY enforce a limit on overall document size). ChefDK currently uses a
 `solution_dependencies` field to store a list of all dependencies relevant to
 the cookbook set.
+
 
 ### API Schema
 
