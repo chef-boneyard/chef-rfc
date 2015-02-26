@@ -199,6 +199,12 @@ Sets the active revision of `:policy_name` for the policy group
 policy group, policy name, and policyfile lock revision will be created if any
 does not exist.
 
+Policyfile lock revisions may not be updated. When the server already has a
+Policyfile lock document with the same `revision_id` as given in the request
+body, the effect of the request is to set the current active revision of
+`:policy_name` for the given `:policy_group_name` to the revision specified in
+the request body and ignore the other fields in the request body.
+
 ##### `POST /policy_groups/:policy_group_name/policies/:policy_name`
 
 Sets the current active revision of `:policy_name` for the `:policy_group_name`
@@ -232,6 +238,10 @@ TODO: This is where AuthZ for policies goes, does it do anything else?
 Create a new Policyfile lock document. The POST body MUST be a valid Policyfile
 lock document, as described above. The document can subsequently be retrieved
 at the relative URL `/policies/:policy_name/revisions/:revision_id`
+
+Policyfile lock revisions cannot be updated. If the server already has a
+Policyfile lock document with the same `revision_id` as given in the body of
+the request, the server MUST return 409 response.
 
 ##### `GET /policies/:policy_name/revisions/`
 
