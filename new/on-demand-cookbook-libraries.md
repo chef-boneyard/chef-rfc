@@ -35,14 +35,14 @@ When a user creates a cookbook, they can add the following directive to the meta
 # metadata.rb
 name "mylibrary"
 version "0.0.1"
-load_libraries_on_demand true
+eager_load_libraries false
 ```
 
-If `load_libraries_on_demand` is true, Chef Client would instead append it to the ruby load path.  This would occur in the phase where the `libraries` files of a cookbook otherwise be automatically required in alphabetical order.  All recipes, libraries, and other Ruby code running in the Chef Client can then use `require 'filename'`` and it will load `cookbooks/mycookbook/libraries/filename` if present.
+If `eager_load_libraries` is false, Chef Client would instead append it to the ruby load path.  This would occur in the phase where the `libraries` files of a cookbook otherwise be automatically required in alphabetical order.  All recipes, libraries, and other Ruby code running in the Chef Client can then use `require 'filename'`` and it will load `cookbooks/mycookbook/libraries/filename` if present.
 
-If a file named `default.rb` exists in `libraries`, it will be required automatically.  No other files will be automatically loaded if `load_libraries_on_demand` is true.
+If a file named `default.rb` exists in `libraries`, it will be required automatically.  No other files will be automatically loaded if `eager_load_libraries` is false.
 
-If `load_libraries_on_demand` is false or not specified, Chef Client loads the top level of files in alphabetical order, as before.
+If `eager_load_libraries` is true or not specified, Chef Client loads the top level of files in alphabetical order, as before.
 
 ## Rationale
 
