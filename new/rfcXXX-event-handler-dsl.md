@@ -13,7 +13,7 @@ Allow cookbook authors to easily add custom logic on Chef events.
 
 ## Motivation
 
-Chef has an extensive event [disptach mechanism](https://github.com/chef/chef/blob/master/lib/chef/event_dispatch/base.rb).
+Chef has an extensive event [dispatch mechanism](https://github.com/chef/chef/blob/master/lib/chef/event_dispatch/base.rb).
 But incorporating some custom logic against any of the events is an onerous process which involves
 subclassing the based event handler and adding it via the config. This RFC
 proposes a recipe DSL method to ease this. For new chef users this will reduce
