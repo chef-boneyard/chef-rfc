@@ -31,7 +31,6 @@ This file is the canonical source for how the Chef project is maintained.
 
 ## Lieutenant
 
-* Publishes a roadmap (two quarters out)
 * Provides a release calendar for code outside of chef client/chef server
 * Resolves disputes within their component
 * Has localized veto power
