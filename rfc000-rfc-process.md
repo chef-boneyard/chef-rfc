@@ -36,7 +36,7 @@ current editors are:
   * Jon Cowie \<jcowie@etsy.com\>
   * Bryan McLellan \<btm@loftninjas.org\>
   * Adam Leff \<adam@leff.co\>
-  * Thom May \<thom@may.lt\>
+  * Thom May \<tmay@chef.io\>
 * The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
 also implement the feature or process once accepted.
