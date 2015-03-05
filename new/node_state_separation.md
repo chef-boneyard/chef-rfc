@@ -256,8 +256,7 @@ behavior (a breaking change).
 
 ### ChefFS Changes
 
-The ChefFS repo will be extended to support a "nodes/runtime" directory (NOTE: if anyone has a node named "runtime" they'll have
-a bad day here).
+The ChefFS repo will be extended to support a "nodes/runtime" directory.
 
 The knife download command will attempt to download the individual node data from /nodes/:name/configuration
 and /nodes/:name/runtime and place them in `nodes/<nodename>.json` and `/nodes/runtime/<nodename>.json` respectively.  If the
