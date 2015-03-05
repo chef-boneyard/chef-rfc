@@ -276,6 +276,10 @@ to the new and old server APIs.
 
 Any change to the underlying node object will need to be sent to Solr for indexing.
 
+## Thanks
+
+This was liberally stolen and plagiarized from John Keiser's work:  https://gist.github.com/jkeiser/6628674
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
