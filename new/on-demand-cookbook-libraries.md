@@ -40,9 +40,9 @@ eager_load_libraries false
 
 If `eager_load_libraries` is false, Chef Client would instead append it to the ruby load path.  This would occur in the phase where the `libraries` files of a cookbook otherwise be automatically required in alphabetical order.  All recipes, libraries, and other Ruby code running in the Chef Client can then use `require 'filename'`` and it will load `cookbooks/mycookbook/libraries/filename` if present.
 
-If a file named `default.rb` exists in `libraries`, it will be required automatically.  No other files will be automatically loaded if `eager_load_libraries` is false.
+If `eager_load_libraries` contains a list of files or globs, the library path is appended to the Ruby load path, and the listed files are loaded during the library load phase.
 
-If `eager_load_libraries` is true or not specified, Chef Client loads the top level of files in alphabetical order, as before.
+If `eager_load_libraries` is `true` or not specified, Chef Client loads the top level of files in alphabetical order, as before.
 
 ## Rationale
 
