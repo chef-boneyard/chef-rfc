@@ -7,21 +7,37 @@ Type: <Standards Track>
 
 # Chef Server API Versioning
 
-The purpose of this RFC is to provide a graceful deprecation mechanism
-for the Chef Server REST API.
+The purpose of this RFC is to specify the means by which Chef Server will support a range of
+API versions in a given release.
 
-As the capabilities of the Chef Server API expand, it becomes necesasry
-to deprecate and desupport old API behaviors.  However, consumers of the
-API such as chef-client may not yet be able to support changed API behaviors.
-The version indicator is used by a client to indicate which level of
-API behavior it can support.
+Each server API version indicates the behavior of the server API as a whole,
+at the given version level. For comparison, consider the way a git commit SHA
+is representative of the state of the entire repository as of that commit.
+
+Supporting a range of API versions (minimum and maximum) in any given release will allow
+API behavior to change, while providing reasonable deprecation expectations for the older behaviors.
+This also allows the Server to remain focused on supporting a finite range of behaviors, rather than
+needing to support old behaviors indefinitely.
 
 Any given release of the Chef Server will include documentation of the current minimum
 and maximum supported API versions, as well as behavior changes between any newly
 introduced version and the one prior to it. It will also include, if appropriate,
 which version has been deprecated, and which version has been retired.
 
-API Versioning is independent of product versioning.
+An important note: API Versioning is determined independently of product versioning.
+Product support lifecycle will determine which range of API versions are supported in
+a given product release.
+
+Arbitrary examples with no significance:
+
+* Chef Server 12.0 - API Versions 0-3
+* Chef Server 12.1 - API Versions 0-4
+* Chef Server 13.0 - API Versions 3-15.
+
+This means that if you are using Chef Server 12.1, any supported client will behave
+as it did with Chef Server 12.1.  However when you upgrade Chef Server 13.0 you will need to
+upgrade the client to one that supports the behaviors introduced or changes in
+API Version 1 and 2 at minimum.
 
 ## Motivation
 
@@ -29,7 +45,7 @@ API Versioning is independent of product versioning.
     I want to be able to consume significant changes at my own pace
     so that they don't break my usage of the API.
 
-    As a user chef-client at a supported version level,
+    As a user of chef-client at a supported version level,
     I want to ensure that changes to the server API don't affect me until I'm ready to upgrade
     so that all my nodes continue to converge even as Chef Server API continues to mature.
 
@@ -43,11 +59,12 @@ The Chef Server API Version (Version from this point forward) is indicated as a 
 starting at zero. Zero indicates the behavior of the API at the time of this RFC's acceptance.
 
 If a client does not indicate a version preference, it MUST receive the behavior
-of the OLDEST supported API version.
+of the oldest supported API version.
 
 If a particular endpoint does not implement versioning due to remaining unchanged, it MUST
 behave in a forward-compatible way through the range of currently supported version. In
-documentation these will be specified as having compatibility with versions 0+.
+documentation these will be specified as having compatibility with versions X+ where X is the first
+version in which the API was introduced (or zero if existing).
 
 If a particular endpoint does implement versioning and remains unchanged, it MUST behave in a
 forward-compatible way through the range of currently supported versions. In documentation
@@ -56,19 +73,88 @@ these will be specified as N+, where N is the version at which it was last modif
 For this section, "API" refers to any combination of a method and endpoint, eg `GET /users`,
 `POST /organizations/$org/clients`, et al.
 
+### Versioning is Global
+No restrictions or requirements are placed on the number of APIs that can be changed in a given API Version.
+There is no guarantee of a 1:1 relationship between API changes and server versions. For example,
+Server API Version 1 may change the `GET /nodes` endpoint behavior, while Version 2 may change the behaviors of `GET /roles`,
+`PUT /users/:name/keys` and `DELETE /users/:name`
+
+Changes grouped into a single version are not guaranteed to be related, except that the
+changes were created near the same points in time.
+
+### Example Usage
+
+As an example scenario, we'll assume a case where the field `username` is being replaced with `name` in the body
+response in the `users` endpoint. For this case, we'll state that:
+
+* Minimum Server API Version is 10
+* Maximum Server API Version if 14
+* This change in behavior to the users endpoint is introducing Server API Version 15.
+
+For demonstration, the example request is `GET /users/bob` with...
+
+* ... X-Ops-Server-API-Version not specified by client
+  * `{ "username": "bob", ... }`
+* ... `X-Ops-Server-API-Version: 10`
+  * `{ "username": "bob", ... }`
+* ... `X-Ops-Server-API-Version: 14`
+  * `{ "username": "bob", ... }`
+* ... `X-Ops-Server-API-Version: 15`
+  * `{ "name": "bob", ... }`
+
+
+To continue the example, let's say we've moved forward a year and are now shipping Chef Server 13. At that time we
+announce that our new supported API Range is 12-20, and the API Versions 12-14 are considered deprecated.
+
+The GET request from the examples above would generate the following responses:
+
+* ... X-Ops-Server-API-Version not specified by client
+  * `{ "username": "bob", ... }`
+* ... `X-Ops-Server-API-Version: 10`
+```
+  HTTP 406
+   { "error" : "invalid-x-ops-server-api-version",
+     "message" : "Specified version 10 not supported",
+     "min_api_version" : 14,
+     "max_api_version": 20 }
+```
+* ... `X-Ops-Server-API-Version: 14`
+  * `{ "username": "bob", ... }`
+* ... `X-Ops-Server-API-Version: 15`
+  * `{ "name": "bob", ... }`
+
+Moving forward another year and we have released Chef Server 14.  We announce that API Versions 12-14 are retired
+and that our new supported API Version Range is 15-22.
+
+* ... X-Ops-Server-API-Version not specified by client
+  * `{ "name": "bob", ... }`
+* ... `X-Ops-Server-API-Version: 10`
+```
+  HTTP 406
+   { "error" : "invalid-x-ops-server-api-version",
+     "message" : "Specified version 10 not supported",
+     "min_api_version" : 15,
+     "max_api_version": 22 }
+```
+* ... `X-Ops-Server-API-Version: 14`
+```
+  HTTP 406
+   { "error" : "invalid-x-ops-server-api-version",
+     "message" : "Specified version 14 not supported",
+     "min_api_version" : 15,
+     "max_api_version": 22 }
+```
+* ... `X-Ops-Server-API-Version: 15`
+  * `{ "name": "bob", ... }`
+
+
 ### Request
 
-A client MAY request version compatibility via custom header as
-follows:
+A client MAY request version compatibility via custom header as follows:
 
 `X-Ops-Server-API-Version: $version`
 
-`$version` MUST be one of:
-
-* the desired version number indicated by a whole integer
-* `current` - indicating the behavior of the highest supported version
-* `stable` - indicating the behavior of the lowest supported version
-* `next` - indicating current, plus any experimental/in-development behaviors.
+`$version` MUST be one of the desired version number, indicated by a whole integer.
 
 ### Response
 
@@ -78,8 +164,8 @@ If a client does include this header and `$version` is...
   server MUST respond with an HTTP 406 with `application/json` body specified below.
 * ... greater than the current maximum Version supported,
   the server MUST respond with an HTTP 406 and an `application/json` body specified below.
-* ... of a value other than a valid version, `current`, `stable`, or `next`, the server
-  MUST respond with an HTTP 406 and the body specified below.
+  * ... of a value other than a valid version, the server MUST respond with an HTTP 406
+  and the body specified below.
 
 
 If `$version` is valid or is not specified, the API response will contain the headers:
@@ -130,10 +216,6 @@ minimum supported version.
 
 Given a value of version, it MUST be resolved as follows:
 
-* The version label `stable` shall resolve to the minimum supported version.
-* The version label `current` shall resolve to the maximum supported version.
-* The version label `next` shall resolve to the internal identifier `next`.  When no such behavior
-is applicable, the resource MUST treat this as if it were the maximum supported version.
 * A numeric version MUST be validated against current minimum and maximum versions as
 specified under section "Response".
 * Any other value is invalid and the server MUST respond to the client with a 406
@@ -187,13 +269,10 @@ The `GET` response body MUST look as follows:
 
 ````
 { "min_api_version" : $x,
-  "max_api_version" : $y,
-  "additional_versions", [ "stable", "current", "next" ] }
+  "max_api_version" : $y }
 ````
 
 `$x` and `$y` refer to the current minimum and maximum supported versions, respectively.
-
-`additional_versions` indicate the non-specific version labels which may be used by the client.
 
 ### New Endpoint: /server\_api\_versions/extended
 
@@ -265,6 +344,12 @@ Would receive the response:
 ````
 
 ## Rationale
+
+As the capabilities of the Chef Server API expand, it becomes necesasry
+to deprecate and desupport old API behaviors.  However, consumers of the
+API such as chef-client may not yet be able to support changed API behaviors.
+The version indicator is used by a client to indicate which level of
+API behavior it can support.
 
 We have decided on the use of a single custom header to indicate version (instead of url-based or
 `Accept` header-based) for several reasons:
