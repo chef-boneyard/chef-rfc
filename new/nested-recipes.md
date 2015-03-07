@@ -42,8 +42,8 @@ in run lists and `my_cookbook::install::client` in recipes.
 
 Additionally, a recipe and a directory may have the same name and won't conflict.
 
-`my_cookbook/recipes/config.rb` and `my__cookbook/recipes/config/` are treated as both a
-recipe *and* a namespace. Therefore, `recipe[my_cookbook::config]` and `recipe[my_cookbook::config::server.rb`
+`my_cookbook/recipes/config.rb` and `my_cookbook/recipes/config/` are treated as both a
+recipe *and* a namespace. Therefore, `recipe[my_cookbook::config]` and `recipe[my_cookbook::config::server.rb]`
 are valid references.
 
 ## Rationale
