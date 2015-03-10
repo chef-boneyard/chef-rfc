@@ -1,14 +1,15 @@
 ---
 RFC: 28
 Author: Julian C. Dunn <jdunn@aquezada.com>
-Status: Accepted
+Status: Proposed
 Type: Informational
 ---
 
 # Mailing List Migration
 
 This RFC proposes the migration of all existing Chef mailing lists
-(namely, `{chef,chef-dev}@lists.opscode.com`) into Google Groups.
+(namely, `{chef,chef-dev}@lists.opscode.com`) to 
+[Discourse](http://www.discourse.org/).
 
 ## Motivation
 
@@ -23,7 +24,7 @@ This RFC proposes the migration of all existing Chef mailing lists
 ## Specification
 
 This RFC proposes to migrate the existing Sympa-run mailing lists at
-`lists.opscode.com` to Google Groups.
+`lists.opscode.com` to [Discourse](http://www.discourse.org/).
 
 There are only two mailing lists of note: `chef` and `chef-dev`. The
 desired group names would be the same, but if `chef` is already taken,
@@ -32,13 +33,15 @@ we propose that the new group name become `chef-users`.
 ### Subscriber Migration
 
 All existing subscribers on the current mailing list(s) would be
-migrated to their counterparts on Google Groups.
+migrated to their counterparts on Discourse.
 
 ### Archive Migration
 
 Chef Software, Inc. will make a reasonable attempt to migrate the
 archives of each of these mailing lists out of Sympa, potentially
-using a tool like [sympa-data-exporter](https://github.com/cdelacroix/sympa-data-extract) and into Google Groups.
+using a tool like 
+[sympa-data-exporter](https://github.com/cdelacroix/sympa-data-extract) and into 
+Discourse.
 
 However, we recognize that this may not be feasible. If it is not,
 we will simply create a static HTML site of the old Sympa archives
@@ -46,16 +49,15 @@ and publish that.
 
 ## Rationale
 
-The existing mailing list system at [lists.opscode.com](http://lists.opscode.com), Sympa, is very old and fragile.
+The existing mailing list system at 
+[lists.opscode.com](http://lists.opscode.com), Sympa, is very old and fragile.
 Additionally, it is not a delightful experience for end-users of
 Chef, who must navigate a non-intuitive interface to subscribe to,
 unsubscribe from, and view the archives of the Chef user and developer
 mailing lists.
 
-There have been [previous efforts dating to 2012](http://archive.lists.chef.io/sympa/arc/chef-dev/2012-06/msg00029.html) to try and migrate off Sympa,
-but no action has been taken thus far. By codifying the direction in
-this RFC, we hope to pave the way for this migration to be done in
-an expeditious way.
+There have been [previous efforts dating to 2012](http://archive.lists.chef.io/sympa/arc/chef-dev/2012-06/msg00029.html) to 
+try and migrate off Sympa, but none have succeeded thus far.
 
 ## Copyright
 
