@@ -193,15 +193,7 @@ maximum supported versions, respectively.
 
 ### Server Implementation
 
-The minimum version MUST NOT be configurable, as it indicates the level supported in the code.
-
-The maximum version MUST be configurable, allowing an installation to explicitly
-limit the introduction of new behaviors.  The configured value MUST NOT exceed the maximum
-supported by the codebase; if such a value is specified, or if a value is not configured,
-the supported maximum MUST be assumed.
-
-The configured value MUST NOT be less than the supported minimum version. If such a value is specified,
-the supported minimum MUST Be assumed.
+Minimum and maximum version are set in code, and MUST NOT be configurable. 
 
 Minimum and maximum values in effect MUST be logged at server startup.  Further, current API support levels
 MUST be exposed through a new endpoint, `GET /server_api_version` as specified below.
