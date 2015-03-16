@@ -7,7 +7,8 @@ Type: Process
 
 # Chef GitHub Issues Workflow
 
-This RFC codifies the workflow Chef uses to track bug reports and contributions using [GitHub Issues](https://github.com/opscode/chef/issues). Goals of this workflow are:
+This RFC codifies the workflow Chef uses to track bug reports and contributions using [GitHub Issues](https://github.com/opscode/chef/issues).
+The terms and policies used in this workflow are defined by [RFC 30](https://github.com/chef/chef-rfc/blob/master/rfc030-maintenance-policy.md).
 
 ## Terms
 
@@ -16,10 +17,10 @@ In the context of this document below terms are used:
 * **Chef Users:** End users of Chef who participate in this workflow by filing **issues**.
 * **Contributors:** Users of Chef who would like to improve Chef. They participate in this workflow by submitting **contributions** to Chef.
 * **Chef Maintainers:** Developers of Chef who are responsible for one or more **subcomponents**.
-* **Lieutenants:** (Lt.) Developers of Chef who lead the maintenance of a subcomponent.
+* **Lieutenants:** Developers of Chef who lead the maintenance of a subcomponent.
 * **Issue**: A filed **Github Issue** which can be a bug report, feature request, style change request.
 * **Contribution**: A filed **Github Pull Request** (PR).
-* **Subcomponents**: A sub-area of Chef project which is lead by a **Lt.** and a set of **maintainers**.
+* **Subcomponents**: A sub-area of Chef project which is lead by a **Lieutenant** and a set of **maintainers**.
 
 ## Goals
 
@@ -56,7 +57,8 @@ The issues workflow can be broken down into these high level steps:
 1. Identify the major version the issue should be fixed in.
 1. Label the issue to indicate completeness of **Triage** process.
 
-After this point any fix for an issue should follow the contribution workflow.
+Any code or contributions associated with the issue will follow the
+contribution workflow documented below.
 
 #### Rules
 
@@ -67,24 +69,24 @@ After this point any fix for an issue should follow the contribution workflow.
 The contribution workflow can be broken down into these high level steps:
 
 1. Maintainers check the contribution and give **:+1:** if the code is looking good, or leave a comment that clearly identifies what is needed for the contribution to move forward.
-1. If the simple majority of maintainers **:+1:** a PR, it is marked with `Ready to Merge` label.
+1. Once at least two maintainers **:+1:** a PR, the last reviewer should:
+  * If clean up, such as a Changelog entry or a rebase, is required, mark the PR with the `Ready to Merge` label.
+  * If no further work is required, merge the PR.
 1. PRs marked with `Ready to Merge` will be merged by maintainers of the subcomponent after including the required documentation updates.
-1. `Waiting for Response` label indicates that an action is needed from the contributor.
-1. `Needs Review` label indicates that an action is needed from Chef maintainers.
-
-**NOTE:** Handling of `Waiting for Response` & `Needs Review` labels will ideally be automated with a bot like Curry.
+1. `Waiting for Contributor Response` label indicates that an action is needed from the contributor.
+1. `Needs Maintainer Review` label indicates that an action is needed from Chef maintainers.
 
 #### Rules
 
-* PRs labeled with `Waiting for Response` and not updated for more than a month is closed.
-* PRs labeled with `Needs Review` and not reviewed for 2 weeks escalates to the Lt. of the subcomponent.
-* PRs labeled with `Ready to Merge` and not merged for 2 weeks escalates to the Lt. of the subcomponent.
+* PRs labeled with `Waiting for Contributor Response` and not updated for more than a month are closed.
+* PRs labeled with `Needs Maintainer Review` and not reviewed for 2 weeks escalate to the Lieutenants of the subcomponent.
+* PRs labeled with `Ready to Merge` and not merged for 2 weeks escalate to the Lieutenants of the subcomponent.
 
 ## Queries
 
-* List of PRs that needs review for a subcomponent:
-  * Search Query: `is:open is:pr label:"Needs Review" label: "subcomponent_name"`
+* List of PRs that need review for a subcomponent:
+  * Search Query: `is:open is:pr label:"Needs Maintainer Review" label: "subcomponent_name"`
   * **TODO** Add link to the query
-* List of Issues that needs investigation for a subcomponent:
+* List of Issues that need investigation for a subcomponent:
   * Search Query: `is:open is:issue label:"subcomponent_name" -label:Bug -label:Enhancement -label:"Tech Cleanup"`
   * **TODO** Add link to the query
