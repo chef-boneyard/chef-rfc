@@ -143,7 +143,7 @@ Type: <Standards Track, Informational, Process>
 
 # Title
 
-Description.
+Description and rationale.
 
 ## Motivation
 
@@ -152,8 +152,6 @@ Description.
     so that <<benefit>>.
 
 ## Specification
-
-## Rationale
 
 ## Copyright
 
