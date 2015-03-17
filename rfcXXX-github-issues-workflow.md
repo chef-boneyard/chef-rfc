@@ -18,11 +18,15 @@ In the context of this document below terms are used:
 * **Contributors:** Users of Chef who would like to improve Chef. They participate in this workflow by submitting **contributions** to Chef.
 * **Chef Maintainers:** Developers of Chef who are responsible for one or more **subcomponents**.
 * **Lieutenants:** Developers of Chef who lead the maintenance of a subcomponent.
-* **Issue**: A filed **Github Issue** which can be a bug report, feature request, style change request.
-* **Contribution**: A filed **Github Pull Request** (PR).
+* **Issue**: A filed **GitHub Issue** which can be a bug report, feature request, style change request.
+* **Contribution**: A filed **GitHub Pull Request** (PR).
 * **Subcomponents**: A sub-area of Chef project which is lead by a **Lieutenant** and a set of **maintainers**.
 
 ## Goals
+
+Everyone can:
+
+* Make contributions in a timely and efficient manner
 
 Chef Users can:
 
@@ -47,7 +51,7 @@ Chef Maintainers can:
 
 ### Common Steps for Issues & PRs
 
-The first step of Chef Github Issues Workflow is to identify the subcomponent for which the issue or PR belongs to. Once the subcomponent is identified, the rest of the workflow is the responsibility of the maintainers of the identified subcomponent.
+The first step of Chef GitHub Issues Workflow is to identify the subcomponent for which the issue or PR belongs to. Once the subcomponent is identified, the rest of the workflow is the responsibility of the maintainers of the identified subcomponent.
 
 ### Issues Workflow
 
@@ -78,7 +82,8 @@ The contribution workflow can be broken down into these high level steps:
 
 #### Rules
 
-* PRs labeled with `Waiting for Contributor Response` and not updated for more than a month are closed.
+* PRs labeled with `Waiting for Contributor Response` and not updated for more than a month are labelled as `Incomplete Contribution`.
+* PRs labeled with `Incomplete Contribution` for 6 months are closed.
 * PRs labeled with `Needs Maintainer Review` and not reviewed for 2 weeks escalate to the Lieutenants of the subcomponent.
 * PRs labeled with `Ready to Merge` and not merged for 2 weeks escalate to the Lieutenants of the subcomponent.
 
