@@ -21,7 +21,7 @@ overwrites the administrator's changes to the `run_list`.
 
 The approach that will be taken is to split up the data so that the node is not constantly
 overwriting its own `run_list`.  This solution does not implement locking around the node
-data, so it is still open to some edge conditions that may still cause race conditions.
+data, so it is still open to some edge conditions that may cause race conditions.
 
 The proposed implementation will also support separately ACL'ing the desired state from
 the current state.  This will allow locking down the desired state so that the node will
