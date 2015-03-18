@@ -9,34 +9,34 @@ Type: <Standards Track>
 
 The purpose of this RFC is to logically split up the description of a node from its
 "desired" state (typically what the administrator imposes - `run_list`, `environment`,
-`tags) and the "current" state (typically what the node itself discovers -- automatic
+`tags`) and the "current" state (typically what the node itself discovers -- automatic
 ohai variables and default and override attributes constructed as part of the chef
 client run).
 
 This proposal fixes [CHEF-4978](https://tickets.opscode.com/browse/CHEF-4978).  The
 major bug which constantly occurs due to this is where a chef-client run is in flight
 and has done the initial GET request of the node, while a human administrator changes
-the run_list, and then the in-flight chef-client run finishes and POSTs the node and
-overwrites the administrator's changes to the run_list.
+the `run_list`, and then the in-flight chef-client run finishes and POSTs the node and
+overwrites the administrator's changes to the `run_list`.
 
 The approach that will be taken is to split up the data so that the node is not constantly
-overwriting its own run_list.  This solution does not implement locking around the node
+overwriting its own `run_list`.  This solution does not implement locking around the node
 data, so it is still open to some edge conditions that may still cause race conditions.
 
 The proposed implementation will also support separately ACL'ing the desired state from
 the current state.  This will allow locking down the desired state so that the node will
-not be allowed to update its own run_list.  This addresses security concerns where hostile
-compromised nodes could 'inject' themselves into search results via changing their run_list
+not be allowed to update its own `run_list`.  This addresses security concerns where hostile
+compromised nodes could 'inject' themselves into search results via changing their `run_list`
 and/or environment which may make other infrastructure components redirect traffic at them
 and could be used to compromise an environment.
 
 Both systems of ACLs will be supported so that some customers may allow nodes to update their
-run_lists, and other customers may restrict nodes to not be able to update their run_lists.
+`run_lists`, and other customers may restrict nodes to not be able to update their `run_lists`.
 It would also be possible to mix and match at one site, although if any host is able to
-update its own run_list then if it gets hacked into the security is defeated so it is not
+update its own `run_list` then if it gets hacked into the security is defeated so it is not
 clear that mixed-mode will be useful.
 
-The choice of which mode should be the default (secure by default vs codable by default) is out
+The choice of which mode should be the default (secure by default vs codeable by default) is out
 of the scope of this RFC.  For backwards compatibility, we must allow nodes to update their
 desired state by default to begin with as changing that default would be a breaking change.
 
