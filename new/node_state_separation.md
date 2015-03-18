@@ -228,6 +228,22 @@ This method will create a new node object and its semantics will be unchanged.
 
 This method returns a list of all node URIs on the server and its semantics will be unchanged.
 
+### Core Chef Server Changes
+
+#### Nodes As Composed Objects
+
+The implementation of this will break up the node object into different objects for the current and
+desired state.  This will imply a migration to the new code which will take existing node objects
+in a server and will break them up into the new current and desired objects in the database.
+
+The ACLs on the node will also be composed of the ACLs on the underlying current and desired
+objects.  As part of the data migration on the server upgrade the ACLs on the node objects will be
+copied to both the desired and the current state (preserving the default behavior that nodes may
+update their own desired state).  The ACLs on the composed endpoints (e.g. `GET /nodes/:name`) will
+be composed of the ACLs on the underlying desired and current state and will require both of those
+to be allowed for the operation to succeed.  There will be no support for getting partial results
+back if the client has only partial permissions to the node components.
+
 ### Core Chef Client Changes
 
 #### Node Retrieval
