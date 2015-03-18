@@ -9,7 +9,9 @@ Type: Informational
 
 This RFC proposes the migration of all existing Chef mailing lists
 (namely, `{chef,chef-dev}@lists.opscode.com`) to 
-[Discourse](http://www.discourse.org/).
+[Discourse](http://www.discourse.org/).  Discourse is a modern web application
+for discussion forums that can also be used like a mailing list with 
+subscriptions and mail-in responses and posts.
 
 ## Motivation
 
@@ -58,6 +60,12 @@ mailing lists.
 
 There have been [previous efforts dating to 2012](http://archive.lists.chef.io/sympa/arc/chef-dev/2012-06/msg00029.html) to 
 try and migrate off Sympa, but none have succeeded thus far.
+
+In February, 2015, we attempted a move to Google Groups.  This failed because we 
+immediately exceeded the allowable number of messages for our group.  Our group 
+is tied to our business google apps account which should have the limit 
+increased in April of 2015 but there's no guarantee that the system will then 
+support our group.  It's best not to proceed with Google Groups.
 
 ## Copyright
 
