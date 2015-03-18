@@ -303,7 +303,7 @@ behavior (a breaking change).
 The ChefFS repo will be extended to support a "nodes/current" directory.
 
 The knife download command will attempt to download the individual node data from /nodes/:name/desired
-and /nodes/:name/current and place them in `nodes/<nodename>.json` and `/nodes/current/<nodename>.json` respectively.  If the
+and /nodes/:name/current and place them in `/nodes/<nodename>.json` and `/nodes/current/<nodename>.json` respectively.  If the
 endpoints 404 then the `/nodes/:name` endpoint will be used and the data will be split out into the new format.  In other words,
 the knife download command will be able to talk to servers that do and do not support this API and will always write in the
 new format.
@@ -317,7 +317,8 @@ to the new and old server APIs.
 
 ### Solr Indexing
 
-Any change to the underlying node object will need to be sent to Solr for indexing.
+Any change to either the desired or current state will result in the whole node object being submitted to solr for
+indexing.
 
 ## Thanks
 
