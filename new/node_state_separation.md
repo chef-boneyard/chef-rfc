@@ -43,7 +43,7 @@ desired state by default to begin with as changing that default would be a break
 ## Motivation
 
     As a user of the knife CLI
-    I want to be able to update my nodes run_list
+    I want to be able to update my node's run_list
     and have the changes not be reverted by an in-flight Chef run
 
     As a user of search who cares about security
