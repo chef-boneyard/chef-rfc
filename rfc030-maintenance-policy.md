@@ -15,7 +15,7 @@ The Maintenance Policy defines how we make decisions about what happens with Che
 
 It is intended to be short, flexible, and clear.
 
-This file is related to the MAINTAINERS file in Chef. During the draft period, the first version of that file is included in this RFC.
+This file is related to the MAINTAINERS file in Chef.
 
 # How the project is maintained
 
