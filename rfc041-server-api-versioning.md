@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 41
 Author: Marc Paradise <marc@chef.io>
-Status: Draft
-Type: <Standards Track>
+Status: Accepted
+Type: Standards Track
 ---
 
 # Chef Server API Versioning
