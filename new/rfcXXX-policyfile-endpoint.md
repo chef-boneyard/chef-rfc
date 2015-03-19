@@ -69,17 +69,14 @@ A Policyfile lock is a JSON document that has the following structure:
 #### `revision_id` Field (required)
 
 The `revision_id` field is used to distinguish revisions of a Policyfile lock
-document. It is a JSON String. It may contain alphanumeric characters, hyphens,
-underscores, the dot character and the colon character. In regular expression
-form: `/^[\-[:alnum:]_\.\:]+$/`. The revision ID is limited to a maximum of 255
-characters. The Chef Server must reject a Policyfile lock document when the
-revision ID does not meet these requirements.
+document. It is a JSON String containing a hash of the canonicalized content of
+the Policyfile lock, given in hexadecimal form. A fully compliant server MUST
+independently compute the `revision_id` and reject a creation request if the
+submitted `revision_id` is incorrect.
 
-In ChefDK the revision will be calculated by hashing other content in the
-Policyfile lock document and thus will be a hexidecimal number. In order to
-allow alternate implementations to generate revision IDs according to different
-schemes (perhaps timestamps or Ci build numbers), this field will not be
-required to be a hexidecimal string.
+The canonicalized form of the Policyfile lock is not finalized at this time,
+but will be provided in a future update to this document. Note that the format
+will not be based on JSON, as JSON has no canonical form.
 
 #### `name` Field (required)
 
@@ -157,6 +154,10 @@ Example cookbook locks including optional fields:
     },
 ```
 
+Note that a future update to Chef RFC 022 will introduce a standardized format
+for cookbook identifiers based on the content of the cookbook and will
+introduce strict server-side checking of the identifier field.
+
 #### `named_run_lists` Field (Optional)
 
 Named run lists provide a replacement for the override run list feature in Chef
@@ -182,20 +183,11 @@ cannot exceed 255 characters.
   },
 ```
 
-TODO: if named run lists are computed by expanding a run list containing roles,
-they will have different attributes from those associated with the default run
-list (see attributes below). This will need to be accounted for, either by
-making the fields for each named run list a JSON object with `run_list` and
-attributes fields or having a corresponding top-level field for named run
-lists' attributes.
-
 #### Attributes Fields (Optional)
 
 A Policyfile lock may contain default and override attributes. Chef Client will
-treat these attributes the same as it currently treats role attributes. For
-attributes associated with the top-level run list, there are two proposals for
-how these are specified in the Policyfile lock JSON. One proposal is to store
-default and override attributes as separate top-level keys:
+treat these attributes the same as it currently treats role attributes. Default
+and override attributes are stored in separate top-level keys:
 
 ```json
 {
@@ -203,23 +195,6 @@ default and override attributes as separate top-level keys:
   "override_attributes": {}
 }
 ```
-
-The alternative is to store both in a top-level "attributes" key:
-
-```json
-{
-  "attributes":
-  {
-    "default": {},
-    "override": {}
-  }
-}
-```
-
-TODO: The author will do UX testing to determine if either proposal generates
-more readable diffs (particularly in the context of a git repo). If one
-proposal tends to result in more readable diffs, it will be favored.
-
 
 #### Other Optional Fields
 
@@ -422,6 +397,10 @@ Object-level Authorization:
   list of active policies and revisions.
 * An actor must have `Update` permission to set the active revision for a given
   `policy_name` to a specific revision via `POST /policy_groups/:policy_group_name/policies/:policy_name`
+* An actor must have `Update` permission to set the active revision for a given
+  `policy_name` to a specific revision via the promotion API.
+* An actor must have `Update` permission to modify the promotion policy for a
+  given `policy_group`.
 * An actor must have `Read` permission on a specific `policy_group` and `List`
   permission on the `nodes` container to list nodes in a policy group via
   `GET /policy_groups/:policy_group_name/nodes`
@@ -470,7 +449,7 @@ actions individually,
   it exists, or `Create` on the `policy_groups` container to create the desired
   group, AND either `Update` permission on the given `policy_name` if it exists
   or `Create` on the `policies` containter to create the the desired policy if
-  it doesn't exist.
+  it doesn't exist. The same restrictions apply to the promotion API.
 * An actor must have `Read` permission on a sepcific `policy_name` and `List`
   permission on the `policy_groups` container to list the groups associated
   with a given policy at a given revision via `GET /policies/:policy_name/revisions/:revision_id/policy_groups`
@@ -527,12 +506,9 @@ relational database query for use in a web-based UI.
 
 #### Data Cleanup
 
-TODO: this needs to be figured out
-
-* auto-cleanup?
-  * what happens to a group with no nodes?
-  * what happens to a group with no policies?
-  * what happens to a policy lock that is not active anywhere?
+Although the design of Policyfile and related APIs greatly simplifies the task
+of finding and deleting unused cookbook versions (cookbook artifacts in this
+case), no such feature is proposed at this time.
 
 ### Authorization Design Goals and Considerations.
 
