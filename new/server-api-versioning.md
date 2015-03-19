@@ -35,9 +35,9 @@ Arbitrary examples with no significance:
 * Chef Server 13.0 - API Versions 3-15.
 
 This means that if you are using Chef Server 12.1, any supported client will behave
-as it did with Chef Server 12.1.  However when you upgrade Chef Server 13.0 you will need to
-upgrade the client to one that supports the behaviors introduced or changes in
-API Version 1 and 2 at minimum.
+as it did with Chef Server 12.0, though API v4 will be availalbe to those clients who can use it.  
+However when you upgrade Chef Server 13.0 you will need to upgrade the client to one that supports
+the behaviors introduced or changes in API Version 1 and 2 at minimum.
 
 ## Motivation
 
