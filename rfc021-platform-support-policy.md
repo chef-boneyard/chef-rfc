@@ -102,7 +102,7 @@ ChefDK bundles Chef Client. Therefore, Chef Client is supported, by extension, o
 * Windows Vista, XP, 2000
 * Mac OS X < 10.8, anything ppc
 
-## Appendix: Guiding Principles for Operating System Version Support
+## Appendix 1: Guiding Principles for Operating System Version Support
 
 Once Chef Software, Inc. decides to support an operating system, we will also develop rules to determine under what upstream vendor lifecycle we will continue to support products, and they will be documented in this section. Vendors have various terminology to describe support lifecycles ('standard support', 'extended support', etc.) and it is useful to clarify what those mean in the context of Chef's products.
 
@@ -113,6 +113,15 @@ RHEL and EL-variants | End of RedHat Production 3 Phase | https://access.redhat.
 Solaris | End of Premier Support | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
 Ubuntu | End of LTS lifecycle for LTS releases, end of standard release lifecycle for non-LTS releases | https://wiki.ubuntu.com/LTS
 Windows | End of Extended Support | https://support.microsoft.com/lifecycle/?c2=1163
+
+## Appendix 2: Timeline of Platform Addition/Removal
+
+The current Supported Platforms document is listed here: https://docs.chef.io/supported_platforms.html
+As platforms are added and removed, the timeline of the changes needs to be recorded.
+
+Platform | Change | References
+--- | --- | ---
+Solaris 9 | Removed October 2014 | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
 
 ## Copyright
 
