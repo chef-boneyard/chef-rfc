@@ -28,10 +28,11 @@ This file is the canonical source for how the Chef project is maintained.
 * Resolves disputes
 * Provides vision and roadmap
 * Has universal veto power
+* There can be only one
 
 ## Lieutenant
 
-* Publishes a roadmap (two quarters out)
+* Each component in the project may have at most one Lieutenant
 * Provides a release calendar for code outside of chef client/chef server
 * Resolves disputes within their component
 * Has localized veto power
@@ -39,6 +40,7 @@ This file is the canonical source for how the Chef project is maintained.
 
 ## Maintainer
 
+* Each component may have multiple Maintainers
 * Handles contributions on GitHub - first response to a PR within 48 hours
 * Is available on IRC
 * Attends the developers meeting (do not miss more than 3 in a row - special dispensation can be made for difficult time zones)
