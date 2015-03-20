@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 42
 Author: Daniel DeLeo <dan@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
