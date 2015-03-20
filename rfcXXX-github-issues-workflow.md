@@ -73,6 +73,7 @@ contribution workflow documented below.
 The contribution workflow can be broken down into these high level steps:
 
 1. Maintainers check the contribution and give **:+1:** if the code is looking good, or leave a comment that clearly identifies what is needed for the contribution to move forward.
+1. At their discretion, the reviewer may choose to complete a contribution by writing tests. This can be a fantastic mentoring opportunity for our community.
 1. Once at least two maintainers **:+1:** a PR, the last reviewer should:
   * If clean up, such as a Changelog entry or a rebase, is required, mark the PR with the `Ready to Merge` label.
   * If no further work is required, merge the PR.
