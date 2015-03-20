@@ -23,14 +23,11 @@ implementation status is.
 
 ## Specification
 
-### Tracking and ShippedIn Metadata Field
+### Tracking Metadata Field
 
 RFCs will now include a metadata field called Tracking, which will generally be
 a list of URLs to issues or PRs where the feature is tracked, and may also link
 to blog posts about relevant releases.
-
-RFCs will now include a ShippedIn field, which is a list of software versions the
-feature was shipped in.
 
 For example, rfc015 metadata would look like this:
 
