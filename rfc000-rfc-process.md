@@ -36,7 +36,7 @@ current editors are:
   * Jon Cowie \<jcowie@etsy.com\>
   * Bryan McLellan \<btm@loftninjas.org\>
   * Adam Leff \<adam@leff.co\>
-  * Thom May \<thom@may.lt\>
+  * Thom May \<tmay@chef.io\>
 * The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
 also implement the feature or process once accepted.
@@ -116,6 +116,20 @@ the original one should be marked as Replaced.
 * **Final** – The RFC has been implemented. *(Standards Track type only)*
 * **Replaced** – The RFC has been superseded by another RFC.
 
+### Changing an Accepted RFC
+
+An accepted RFC may be modified in two ways, depending on the type of RFC:
+
+1) Most RFCs can be updated by opening a pull request against them with the
+proposed changes. Once the changes are approved by the Decider, the pull
+request is merged and considered Accepted.
+
+2) To support software implementations meeting the specifications of an RFC,
+Standards Track RFCs that are Final must be replaced by a new RFC. The Author
+should specify the RFC that is being replaced using the Replaces header in the
+metadata of the new RFC. Once Accepted, the replaced RFC with have its status
+updated to Replaced by an Editor.
+
 ## RFC Template
 
 ```markdown
@@ -124,11 +138,12 @@ RFC: unassigned
 Author: Alan Smithee <asmithee@example.com>
 Status: Draft
 Type: <Standards Track, Informational, Process>
+<Replaces: RFCxxx>
 ---
 
 # Title
 
-Description.
+Description and rationale.
 
 ## Motivation
 
@@ -137,8 +152,6 @@ Description.
     so that <<benefit>>.
 
 ## Specification
-
-## Rationale
 
 ## Copyright
 
