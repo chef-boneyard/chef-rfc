@@ -21,3 +21,10 @@ Since `public` and `private` may not even be applicable (but are almost definite
  * `node['cloud']['networks']['NAME_OR_ID']['ipv4']`, list of IPv4 addresses on this network, likely to be singular
  * `node['cloud']['networks']['NAME_OR_ID']['ipv6']`, list of IPv6 addresses on this network, likely to be singular
  * `node['cloud']['networks']['NAME_OR_ID']['hostnames']`, list of hostnames associated with this network, likely to be singular
+
+## Copyright
+
+This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.
