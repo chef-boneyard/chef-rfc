@@ -10,7 +10,7 @@ The Ohai `cloud` plugin is populated by cloud-specific code, but it generally pu
 
 ## Proposal
 
-This will be an Ohai 7 plugin.
+This will be an Ohai 8 or later plugin.
 
 Since `public` and `private` may not even be applicable (but are almost definitely expected by many current users, so may require longterm deprecation), the proposal is made to add an additional `networks` attribute with all of the node's networks embedded within. This allows new attributes without removing existing attributes and minimizes namespace collisions.
 
