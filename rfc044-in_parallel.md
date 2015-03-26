@@ -1,3 +1,10 @@
+---
+RFC: 44
+Author: John Keiser <jkeiser@chef.io>
+Status: Accepted
+Type: Standards Track
+---
+
 # Parallelization in Chef Recipes
 
 Chef presently runs the resources in a recipe serially, one after the next.  In this proposal, groups of resources can be created which will run in parallel.
