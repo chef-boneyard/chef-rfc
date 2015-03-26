@@ -78,6 +78,8 @@ There are two major ways of formatting output when many things run in parallel: 
 
 ## Future Features
 
+This is intended to give a flavor of the future--anything underspecified here will require a new RFC.
+
 ### Thread pool configuration
 
 The `Chef::Config.concurrency` parameter, and `--concurrency` argument to `chef-client`, limits the number of concurrent parallel resources globally.  To limit them specifically, you add parameters to the `in_parallel` directive like so:
