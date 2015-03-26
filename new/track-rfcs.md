@@ -59,7 +59,7 @@ Tracking:
 
 ALL accepted Standards Track RFCs will have:
 
-- Status of Accepted, Orphaned or Final
+- Status of Accepted or Final
 - Tracking URLs (unless it is an old RFC with Final status, in which case
   Tracking URLs are optional)
 - Chef-Version (if Final)
@@ -67,11 +67,9 @@ ALL accepted Standards Track RFCs will have:
 ### RFC "Orphaned" status
 
 When an RFC is orphaned--when its author is no longer willing to work on it and
-no one has stepped up to do it--the RFC is updated to reflect that fact with a
-new Orphaned status.  The Orphaned status implies Accepted status.
-
-This RFC does not specify a process for abandoning an Accepted RFC, as that
-seems like a whole new process with its own snarls.
+no one has stepped up to do it--the RFC is updated to reflect that fact with the
+Withdrawn status.  If someone else wants to step back up, they will need to
+re-present the RFC and have it Accepted again.
 
 ### RFC Acceptance Process Modification
 
@@ -88,7 +86,7 @@ was shipped.  Issue URLs remain on the RFCs for historical purposes.
 ### Existing RFCs
 
 All existing Accepted Standards Track RFCs will either be marked Final or have
-Tracking attached to them.  They may optionally be marked Orphaned.
+Tracking attached to them.  They may optionally be marked Withdrawn if they are Orphaned.
 
 ## Copyright
 
