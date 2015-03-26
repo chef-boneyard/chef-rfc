@@ -15,7 +15,7 @@ The Maintenance Policy defines how we make decisions about what happens with Che
 
 It is intended to be short, flexible, and clear.
 
-This file is related to the MAINTAINERS file in Chef. During the draft period, the first version of that file is included in this RFC.
+This file is related to the MAINTAINERS and ROADMAP files in Chef.
 
 # How the project is maintained
 
@@ -33,6 +33,7 @@ This file is the canonical source for how the Chef project is maintained.
 ## Lieutenant
 
 * Each component in the project may have at most one Lieutenant
+* Provides guidance on future direction for their component
 * Provides a release calendar for code outside of chef client/chef server
 * Resolves disputes within their component
 * Has localized veto power
@@ -49,6 +50,29 @@ This file is the canonical source for how the Chef project is maintained.
 * Committed to 100% tests passing for your component
 * Has full commit/merge access to the relevant repositories
 * Has ops on IRC
+
+# Roadmap
+
+All project roles should work together to determine the best opportunities for the improvement of the project. This should produce direction for the project, which should be highlighted in the ROADMAP.
+
+As a project role does not necessarily control resources other than their own labor, they should encourage contributors to participate in furthering development of the project toward the goals of the ROADMAP.
+
+Releases should not block on features on the roadmap, rather they should happen as features are completed. The ROADMAP should be organized by general time periods, not by versions
+## Example Roadmap entries
+
+```
+# 2015 Q2
+* Component - Roadmap Item
+  Description
+  
+# 2015 Q4
+* Core - Support for Drone Automation
+  Significant time could be saved in enterprise datacenters by using drones to stack and rack servers
+ 
+# 2016 Q1
+* Core - Support Internet of Things
+  As a Chef user, I look forward to the singularity
+```
 
 # Contributing Patches
 
