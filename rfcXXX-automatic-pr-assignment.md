@@ -38,6 +38,9 @@ For each new Pull Request, the bot will automatically assign a reviewer
 based on the list retrieved from the maintainers file. It will attempt
 to ensure that no-one has too many PRs assigned to them at any one time.
 
+Any reviewer must be able to place themselves on vacation, which
+would prevent the bot assigning any PRs to them.
+
 A list of file paths will be associated with each component so that the
 bot can correctly choose to use either a subsystem maintainer or a core
 maintainer, prefering the most specific possible.
