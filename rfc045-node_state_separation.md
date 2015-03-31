@@ -1,5 +1,9 @@
---- RFC: unassigned Author: Lamont Granquist <lamont@chef.io> Status: Draft
-Type: <Standards Track> ---
+---
+RFC: 45
+Author: Lamont Granquist <lamont@chef.io> 
+Status: Accepted
+Type: Standards Track
+---
 
 # Node State Separation
 
