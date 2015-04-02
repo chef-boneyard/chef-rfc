@@ -47,7 +47,7 @@ RFCs are managed in the [chef-rfc GitHub repository](#). When creating a new
 RFC, add it to the `new/` folder. A template is provided [below](#). Submit a
 pull-request with your new RFC. The Editors will review your submission and when
 it is formatted correctly, they will assign it an RFC number which should then
-be added to the filename and metadata. [ed: do we just want to use ticket numbers?]
+be added to the filename and metadata.
 
 The community will discuss the proposed changes and when the Decider feels
 consensus has been reached, they will accept or reject the RFC.
