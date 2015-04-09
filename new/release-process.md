@@ -28,11 +28,22 @@ so I can react accordingly.
 
 ### Releasing
 
+#### Release Candidates
+
+Each major and minor release should have at least one week where a public RC is available
+for Chef users to test and report feedback.
+
+Patch releases should only include fixes for regressions of the current minor version.
+These releases should mostly include small changes and should be safe to release without
+a release candidate.
+
+#### Chef's Release Process
+
 * Verify CHANGELOG.md
 * Update lib/chef/version.rb Version RFC/Semver/something in another section here?
 * Create annotated git tag for the version
 * Kick of CI
-* Write a blog post
+* Write a blog post. Make it a public draft
 * push gem
 * have someone push to package cloud
 * have someone build AIX
