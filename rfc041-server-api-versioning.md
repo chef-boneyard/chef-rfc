@@ -1,7 +1,7 @@
 ---
 RFC: 41
 Author: Marc Paradise <marc@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 
