@@ -3,7 +3,6 @@ RFC: unassigned
 Author: Sean OMeara <sean@chef.io>
 Status: Draft
 Type: <Standards Track, Informational, Process>
-<Replaces: RFCxxx>
 ---
 
 # Title
