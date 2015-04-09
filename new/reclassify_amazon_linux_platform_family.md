@@ -2,7 +2,7 @@
 RFC: unassigned
 Author: Sean OMeara <sean@chef.io>
 Status: Draft
-Type: <Standards Track, Informational, Process>
+Type: Standards
 ---
 
 # Title
