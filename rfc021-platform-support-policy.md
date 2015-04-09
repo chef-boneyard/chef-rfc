@@ -37,7 +37,7 @@ FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
 Mac OS X | 10.8, 10.9, 10.10 | x86_64 | dmg | Mac OS 10.8
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
-Solaris | 9, 10, 11 | sparc, x86 | shar | Solaris 9
+Solaris | 10, 11 | sparc, x86 | shar | Solaris 10
 Windows | 7, 8, 8.1, 2003R2, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi | Windows 2008R2
 Ubuntu Linux | 10.04, 12.04, 14.04 | x86, x86_64 | deb | Ubuntu 10.04
 
@@ -58,7 +58,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 
 "Not supported" means there may be code in-tree, but we don't build for and test on those platforms. At our discretion, we may take patches that don't break any tier 1 or tier 2 platforms, but we have no way of testing these.
 
-* Solaris 8
+* Solaris < 10
 * AIX 5.1L
 * FreeBSD 8
 * OpenBSD
