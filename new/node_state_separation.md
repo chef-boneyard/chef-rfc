@@ -320,6 +320,20 @@ to the new and old server APIs.
 Any change to either the desired or current state will result in the whole node object being submitted to solr for
 indexing.
 
+### Future
+
+In order to implement the ability to make the desired state read-only there will need to be some additional changes outside of
+the scope of this RFC.  The implementation of read-only desired state will most likely require using an adminstrative key to
+create both the client and the node (a form of validatorless bootstrapping).  To have the client create both the new current
+and desired state object and then drop its perms on the desired node object would require a client to drop its own GRANT
+perms which is an antipattern and should not be allowed.  Instead an admin key will need to create both the new client and
+the new desired and current state node objects.  A helper API endpoint may be written to move that logic server-side and keep
+it consistent.  It also may be useful to introduce per-org configuration state to control default ACLs and other behavior of
+that endpoint.  Those implementation details are well beyond the scope of this RFC.  The implementation of this node state
+seperation, however, allows for all of those future implementations.
+
+This RFC does not directly solve the problem of configuring servers so that desired node state is read-only to the node.
+
 ## Thanks
 
 This was liberally stolen and plagiarized from John Keiser's work:  https://gist.github.com/jkeiser/6628674
