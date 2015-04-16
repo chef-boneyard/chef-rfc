@@ -114,6 +114,18 @@ If you feel your safety is in jeopardy please do not hesitate to contact local l
 
 **Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the community as a whole to grow, learn, and become better. The community advocate team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
 
+#### Guidelines for handling conflict
+
+Disagreements happen, but should not be an excuse for poor behavior and bad manners. When disagreements do happen, let’s work together to solve them effectively and in a way that ensures that everyone understands what the disagreement was.  Here are some guidelines to consider when conflicts or disagreements occur:
+
+* Step away from the disagreement or conflict - walking away from a situation is often a great way to prevent escalation.
+* Consider the other person's experience and view point
+* Consider the other person's perception of your experience and view point
+* Be respectful and follow our community guidelines
+* Listen to what the other person has to say
+* Ask open-ended, clarifying questions
+* Bring the conflict to some resolution or escalate to a community advocate.
+
 #### Guidelines for handling incidents
 
 Community Advocates are volunteers who have the best interests of our community in mind and act in good faith to help enforce our community guidelines and respond to incidents when they occur.  When an advocate notices someone behaving in a way that is outside of our guidelines (a violator) the advocate should make every reasonable attempt to:
