@@ -91,7 +91,7 @@ The Chef Community advocates are well informed on how to deal with incidents. Re
 * Ombudsperson
   * Nathen Harvey - &lt;[nharvey@getchef.com](mailto:nharvey@getchef.com)&gt; - +1 202-368-7264 - IRC: nathenharvey
 * Advocates -
-  * IRC - generally, individuals with operator in a channel are designated as community advocates.
+  * IRC
     * \#chef - jonlives, zts
     * \#chef-hacking - jonlives, zts
   * chef@ mailing list -
