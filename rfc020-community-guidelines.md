@@ -119,11 +119,11 @@ If you feel your safety is in jeopardy please do not hesitate to contact local l
 Disagreements happen, but should not be an excuse for poor behavior and bad manners. When disagreements do happen, let’s work together to solve them effectively and in a way that ensures that everyone understands what the disagreement was.  Here are some guidelines to consider when conflicts or disagreements occur:
 
 * Step away from the disagreement or conflict - walking away from a situation is often a great way to prevent escalation.
-* Consider the other person's experience and view point
-* Consider the other person's perception of your experience and view point
-* Be respectful and follow our community guidelines
-* Listen to what the other person has to say
-* Ask open-ended, clarifying questions
+* Consider the other person's experience and view point.
+* Consider the other person's perception of your experience and view point.
+* Be respectful and follow our community guidelines.
+* Listen to what the other person has to say.
+* Ask open-ended, clarifying questions.
 * Bring the conflict to some resolution or escalate to a community advocate.
 
 #### Guidelines for handling incidents
