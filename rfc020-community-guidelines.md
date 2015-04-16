@@ -114,6 +114,18 @@ If you feel your safety is in jeopardy please do not hesitate to contact local l
 
 **Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the community as a whole to grow, learn, and become better. The community advocate team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
 
+#### Guidelines for handling incidents
+
+Community Advocates are volunteers who have the best interests of our community in mind and act in good faith to help enforce our community guidelines and respond to incidents when they occur.  When an advocate notices someone behaving in a way that is outside of our guidelines (a violator) the advocate should make every reasonable attempt to:
+
+* Remind the violator about our Community Guidelines and provide a link to this document.
+* Ask the violator to stop the unacceptable behavior.
+* Raise the issue with a fellow community advocate, the ombudsperson, or the decider.
+* Allow time for the violator to correct the behavior.
+* Consult with another community advocate to make a judgement call about what reasonable punitive actions are warranted.
+* Apply the punitive action.
+* Document the incident.
+
 #### Documenting Incidents
 
 All incident reports will be kept in a private repository that is shared with the Community Advocates, Community Ombudsperson, and the Decider.
