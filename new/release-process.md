@@ -26,6 +26,33 @@ so I can react accordingly.
 
 ## Specification
 
+### Versioning
+
+We aim to adhere to the Semantic Version scheme published [here](http://semver.org/). However, there are existing exceptions. Most notably, we do not consistently and clearly delinate which public methods are also part of the public API and guaranteed to only change with major version releases.
+
+From Semantic Versioning:
+
+```
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+MAJOR version when you make incompatible API changes,
+MINOR version when you add functionality in a backwards-compatible manner, and
+PATCH version when you make backwards-compatible bug fixes.
+Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
+```
+
+Chef Client specific additions:
+
+```
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+MAJOR version when the release will break existing functionality
+MINOR version when you add any new features
+PATCH version when you are only fixing bugs, typically regressions
+```
+
+FIXME: examples
+
 ### Releasing
 
 #### Release Candidates
@@ -33,22 +60,25 @@ so I can react accordingly.
 Each major and minor release should have at least one week where a public RC is available
 for Chef users to test and report feedback.
 
-Patch releases should only include fixes for regressions of the current minor version.
-These releases should mostly include small changes and should be safe to release without
-a release candidate.
+Patch releases are expected to have only small changes which are extensively tested, and thus may be safe to release without a release candidate.
 
-#### Chef's Release Process
+#### Chef Client Release Process
 
-* Verify CHANGELOG.md
-* Update lib/chef/version.rb Version RFC/Semver/something in another section here?
-* Create annotated git tag for the version
-* Kick of CI
-* Write a blog post. Make it a public draft
-* push gem
-* have someone push to package cloud
-* have someone build AIX
-* tweet the blog post
-* email the chef and chef-dev lists
+* Verify the CHANGELOG.md is accurate for the current release
+* Update ```lib/chef/version.rb``` to the appropriate next version
+* Create an annotated git tag for the version
+* Trigger a build in CI
+* Write a blog post and share a public draft (e.g. a gist)
+
+Once the CI pipeline completes successfully:
+
+* Promote the build to Omnitruck in CI
+* Locally build and release the gems FIXME: git clean -fdx, rake gem, gem push pkg/*.gem and foreach and all that
+* Ask Chef Release Engineering to release to package cloud
+* Ask Chef Release Engineering to build and release AIX
+* Publish the blog post
+* Tweet the blog post
+* Email the chef and chef-dev mailing lists
 
 ### Critical Regression Handling
 
