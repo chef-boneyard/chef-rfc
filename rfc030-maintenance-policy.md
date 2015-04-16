@@ -154,7 +154,7 @@ The broader Chef community gathers in a small number of designated places. Parti
 
 ## IRC
 
-You can find a large set of community members in IRC, within the #chef channel on irc.freenode.net. Development updates and conversations also happen on #chef-hacking. In both channels, those with “ops” are the Maintainers, Lieutenants, and the Project Lead. Those with “voice” are MVPs for Chef releases.
+You can find a large set of community members in IRC, within the #chef channel on irc.freenode.net. Development updates and conversations also happen on #chef-hacking. In both channels, those with “ops” are the Maintainers, Lieutenants, the Project Lead, and Community Advocates. Those with “voice” are MVPs for Chef releases.
 
 ## Mailing Lists
 
