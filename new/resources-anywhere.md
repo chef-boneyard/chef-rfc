@@ -22,11 +22,14 @@ This proposal addresses:
 
 ### Resources outside of `Chef::Resource`
 
-Users who wish to register a resource named `my_resource` can presently do it by creating a class inside the `Chef::Resource` namespace and another in `Chef::Provider`.  Chef then uses magical namespace lookups to
+Users who wish to register a resource named `my_resource` can presently do it by creating a class inside the `Chef::Resource` namespace and another in `Chef::Provider`.  Chef then uses magical namespace lookups to find the resource and corresponding provider.
 
 ```ruby
-# chef/resource/
+# chef/resource/my_resource.rb
 class Chef::Resource::MyResource < Chef::Resource
+end
+# chef/resource/my_provider.rb
+class Chef::Provider::MyResource < Chef::Resource
 end
 ```
 
@@ -85,25 +88,13 @@ This has several nice benefits:
 - Encourages the creation of providers in the same file as the resource.
 - An absolute minimum of extra typing when linking a resource to a provider.
 
-### Creating a non-DSL resource
-
-Some users create base resources and .  This can be accomplished by calling `chef_recipe_dsl false` in the class, which will undef the DSL for it:
-
-```ruby
-class SuperAwesomeBaseResource < Chef::Resource
-  chef_recipe_dsl false
-
-  ...
-end
-```
-
 ### Creating a DSL resource with a different name
 
-Sometimes the name of your class isn't the name that you need.  In that case, you can change the DSL with `chef_recipe_dsl`.
+Sometimes the name of your class isn't the name that you need.  In that case, you can change the DSL with `provides`.
 
 ```ruby
 class SuperMountPointResource < Chef::Resource
-  chef_recipe_dsl name: 'mount_point'
+  provides :mount_point
 end
 ```
 
@@ -111,13 +102,13 @@ This will remove the `super_mount_point_resource` DSL and add `mount_point` as D
 
 ### Single File LWRPs
 
-Since HWRPs are now easily declared in a single file, it would be macabre of us not to allow single file LWRPs as well.  We propose two new syntaxes in LWRP resources to enable this:
+Since HWRPs are now easily declared in a single file, it would be macabre of us not to allow single file LWRPs as well.  We propose a new method in LWRP resources to enable this:
 
-1. `action :create do ... end` (in the resource)
-   - Creates a Provider class extending LWRPBase if it does not already exist.
-   - Sets `use_inline_resources` to true if not explicitly set.
-   - Adds `:create` to `allowed_actions` on the resource.
-   - Calls `action :create do ... end` on the Provider class.
+`action :create do ... end` (in the resource)
+- Creates a Provider class extending LWRPBase if it does not already exist.
+- Sets `use_inline_resources` to true if not explicitly set.
+- Adds `:create` to `allowed_actions` on the resource.
+- Calls `action :create do ... end` on the Provider class.
 
 NOTE: this does not address `load_current_resource`, as there are other proposals brewing that may address that in other ways.  Users can open up the provider class with `class Provider < Chef::Provider::LWRPBase` if they need to implement this.
 
@@ -160,21 +151,17 @@ We will avoid the second thing by checking whether the method `my_resource` is a
 
 It is possible to replace a class in Ruby (you can simply go assign ).  Due to the way this is implemented, the new class will in fact be used (which is sort of what a user would expect).  However, it's janky and something we'd like to warn about.  When the user attempts to use the resource (by typing `my_resource`), we will check in `build_resource` that the class has not changed from what was originally registered, and emit a warning that the class isn't what we expect and that they should contact the author of the new class to get the warning fixed.
 
-To *legitimately* do this, you should use `chef_recipe_dsl` instead.
+To *legitimately* do this, you should use `provides` instead.
 
 #### `resources` conflicts between cookbooks
 
-Cookbooks will now be given an official namespace, `Chef::LoadedCookbooks::NAME`, to place things in.  Resources in `resources/x.rb` (and providers in ) will be created in that namespace to avoid these conflicts.  Constant access will remain the same (since superclasses are in the constant lookup chain).
+In Chef 13, LWRPs will not be placed in any namespace at all.  We will use a new anonymous class (`Class.new(Chef::Resource)`) and we will explicitly call `provides :name`.  If the user calls `provides :name` themselves, we will *not* give it an implicit name (this is how they can override it).
 
-Accessing such resources directly via `Chef::Resource` is deprecated.  For backwards compatibility, these resources will also be aliased into `Chef::Resource` in Chef 12, with a deprecation warning for people who subclass or initialize from that location.
+Accessing these LWRPs directly via `Chef::Resource` is deprecated in Chef 12.  For backwards compatibility, these resources will also be aliased into `Chef::Resource` in Chef 12, with a deprecation warning for people who subclass or initialize from that location.
 
 #### `require 'chef/resource/file'`
 
 As the resources are moving, *requires* are also moving.  In Chef 12, we will emit a deprecation warning when you require 'chef/resource/x' instead of 'chef/resources/x', but it will still work.
-
-#### Redefining `dsl_name`
-
-Redefining `dsl_name` is deprecated and will not work in 13.  In Chef 12, the base `Chef::Resource` will include a `method_defined` hook that lets us detect this, cause the DSL to change, and emit a warning.
 
 #### Creating anonymous resource classes
 
