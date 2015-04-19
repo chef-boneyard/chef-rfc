@@ -13,6 +13,20 @@ This proposal:
 - Removes all special treatment of classes in the Chef::Resource and Chef::Provider namespaces
 - Automatically adds resource DSL for all named descendants of Chef::Resource, no matter what their namespace
 
+## Compatibility
+
+In Chef 12, three behavior changes will be noted:
+
+- Stack traces for resource declarations will usually no longer contain
+  `method_missing` (and will instead contain the name of the resources).
+- Classes outside of the Chef::Resource namespace will now be placed in recipe
+  DSL automatically.
+- Warnings are issued for deprecated behavior that will change in Chef 13 (see
+  Deprecations section).
+
+In Chef 13, deprecated behavior will be removed (along with method_missing).  All
+of these have deprecation warnings enabled for Chef 12 (see Deprecations section).
+
 ## Motivation
 
     As a Chef user,
@@ -61,6 +75,47 @@ messages for cookbook conflicts such as "superclass mismatch for class MyResourc
 Chef will now automatically call `provides` on all new, named resource classes,
 using `ResourceClass.dsl_name` (a transform of the class name, i.e.
 MyPackage::MyResource -> my_resource) as the provided class.
+
+```ruby
+class MyPackage::MyResource < Chef::Resource
+end
+# now you can type 'my_resource' in a recipe.
+```
+
+#### Explicit vs. Implicit `provides`
+
+If you specify `provides :something_else` in a class, that will override the
+auto-class-creation behavior.
+
+```ruby
+class MyPackage::MyResource < Chef::Resource
+  provides :shazam
+end
+# Now `shazam` will work fine in a recipe, but `my_resource` will not.
+```
+
+If you want to still provide the original name, you must be explicit:
+
+```ruby
+class MyPackage::MyResource < Chef::Resource
+  provides :my_resource
+  provides :shazam
+end
+# Now both `shazam` and `my_resource` work in a recipe
+```
+
+#### `does_not_provide`
+
+If you want to (for example) create a base class that does not have an actual
+DSL method, you can specify `does_not_provide` or `does_not_provide :my_name` in
+the class:
+
+```ruby
+class MyPackage::MyResourceBase < Chef::Resource
+  does_not_provide
+end
+# my_resource_base will not exist in recipe DSL
+```
 
 ### Move LWRPs out of the Chef::Resource namespace
 
