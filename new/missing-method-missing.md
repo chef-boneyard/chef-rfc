@@ -202,6 +202,8 @@ still work (possibly emitting deprecation warnings):
 - chef-rewind
 - Poise
 - Crazytown
+- Halite
+- foodcritic
 
 ## Copyright
 
