@@ -71,8 +71,8 @@ Any physical violence or intimidation, threatened or acted on, is a serious offe
 
 #### Roles
 
-* The **Decider** has final say on community guidelines and final authority on punitive actions and appeals. As per the [Chef RFC process](https://github.com/opscode/chef-rfc/blob/master/rfc000-rfc-process.md), the top-level decider is [Adam Jacob](mailto:adam@chef.io).
-* The **Community Ombudsperson** guides and meets regularly with community advocates, helps enforce punitive actions, hears appeals, is responsible for maintaining a list of incidents, and ensures pertinent information is shared with necessary parties.  The Community Ombudsperson is appointed by the decider.
+* The **Decider** has final say on community guidelines and final authority on corrective actions and appeals. As per the [Chef RFC process](https://github.com/opscode/chef-rfc/blob/master/rfc000-rfc-process.md), the top-level decider is [Adam Jacob](mailto:adam@chef.io).
+* The **Community Ombudsperson** guides and meets regularly with community advocates, helps enforce corrective actions, hears appeals, is responsible for maintaining a list of incidents, and ensures pertinent information is shared with necessary parties.  The Community Ombudsperson is appointed by the decider.
 * **Community Advocates** may be assigned for each area where the community convenes online (IRC, email list, GitHub, etc.).  Community Advocates are volunteers who have the best interests of our community in mind.  They act in good faith to help enforce our community guidelines and respond to incidents when they occur.
 * A **Community Member** is anyone who participates with the community whether in-person or via online channels.  Community members are responsible for following the community guidelines, suggesting updates to the guidelines when warranted, and helping enforce community guidelines.
 
@@ -126,8 +126,8 @@ When an advocate notices someone behaving in a way that is outside of our guidel
 
 The advocate should take the following steps if the behavior is not brought inline with our guidelines or the incident is not resolved.
 
-* Consult with another community advocate to make a judgement call about what reasonable punitive actions are warranted.
-* Apply the punitive action.
+* Consult with another community advocate to make a judgement call about what reasonable corrective actions are warranted.
+* Apply the corrective action.
 * Document the incident.
 
 #### Documenting Incidents
@@ -146,13 +146,13 @@ If you feel your safety is in jeopardy please do not hesitate to contact local l
 
 **Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the community as a whole to grow, learn, and become better. The community advocate team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
 
-### Punitive Actions
+### Corrective Actions
 
-Crafting a list of quid pro quo punitive actions in our community guidelines would be inadequate and incomplete.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested punitive actions.
+Crafting a list of quid pro quo corrective actions in our community guidelines would be inadequate and incomplete.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested corrective actions.
 
-Our first response should always be to ensure the immediate safety and well being of all parties involved.  In the ideal case, an attempt to stop and prevent the violation behavior would be made before any punitive action is decided.
+Our first response should always be to ensure the immediate safety and well being of all parties involved.  In the ideal case, an attempt to stop and prevent the violation behavior would be made before any corrective action is decided.
 
-When punitive action is warranted, a Community Advocate may use one or more of the following remedies:
+When corrective action is warranted, a Community Advocate may use one or more of the following remedies:
 
 * Removal from the space where the incident occurred for a period of time.
 * Banned from the space where the incident occurred indefinitely.
@@ -161,7 +161,7 @@ When punitive action is warranted, a Community Advocate may use one or more of t
 
 #### Appeals
 
-People subjected to punitive action may appeal the action by contacting a community advocate, ombudsperson, or the decider.  An appeal will be acknowledged within 48 hours and processed within seven days.
+People subjected to corrective action may appeal the action by contacting a community advocate, ombudsperson, or the decider.  An appeal will be acknowledged within 48 hours and processed within seven days.
 
 ### Influences
 
