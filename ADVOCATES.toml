@@ -79,29 +79,29 @@ More information can be found in the [Chef Community Guidelines](https://github.
 [people]
   [people.adamhjk]
     Name = "Adam Jacob"
-    GitHub = adamhjk
-    IRC = holoway
+    GitHub = "adamhjk"
+    IRC = "holoway"
 
   [people.nathenharvey]
     Name = "Nathen Harvey"
-    GitHub = nathenharvey
-    Twitter = nathenharvey
-    IRC = nathenharvey
-    email = nharvey@chef.io
-    Phone = +1-202-368-7264
+    GitHub = "nathenharvey"
+    Twitter = "nathenharvey"
+    IRC = "nathenharvey"
+    email = "nharvey@chef.io"
+    Phone = "+1-202-368-7264"
 
   [people.jonlives]
     Name = "Jon Cowie"
-    GitHub = jonlives
-    IRC = jonlives
+    GitHub = "jonlives"
+    IRC = "jonlives"
   
   [people.zts]
     Name = "Zac Stevens"
-    GitHub = zts
-    IRC = zts
+    GitHub = "zts"
+    IRC = "zts"
     
   [people.miketheman]
     Name = "Mike Fiedler"
-    GitHub = miketheman
-    ServerFault = http://serverfault.com/users/7309/mike-fiedler
+    GitHub = "miketheman"
+    ServerFault = "http://serverfault.com/users/7309/mike-fiedler"
     
