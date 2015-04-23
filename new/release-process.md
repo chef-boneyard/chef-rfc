@@ -28,7 +28,7 @@ so I can react accordingly.
 
 ### Versioning
 
-We aim to adhere to the Semantic Version scheme published [here](http://semver.org/). However, there are existing exceptions. Most notably, we do not consistently and clearly delinate which public methods are also part of the public API and guaranteed to only change with major version releases.
+We aim to adhere to the Semantic Version scheme published [here](http://semver.org/). However, there are existing exceptions. Most notably, we do not consistently and clearly delineate which public methods are also part of the public API and guaranteed to only change with major version releases.
 
 From Semantic Versioning:
 
@@ -41,7 +41,7 @@ PATCH version when you make backwards-compatible bug fixes.
 Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
 ```
 
-Chef Client specific additions:
+Chef Client specific clarifications:
 
 ```
 Given a version number MAJOR.MINOR.PATCH, increment the:
@@ -51,7 +51,24 @@ MINOR version when you add any new features
 PATCH version when you are only fixing bugs, typically regressions
 ```
 
-FIXME: examples
+##### Prerelease versions
+
+Any prerelease must be versioned in the format MAJOR.MINOR.PATCH.PRETYPE.PREVER, where:
+
+PRETYPE is the description of the prerelease that the Releaser chooses based on the state of the prerelease, e.g. alpha, beta, rc, dev.
+PREVER is an incremented number starting at zero.
+
+For example: 12.0.0.dev.0, 12.2.0.alpha.2, 12.3.0.rc.3
+
+#### Examples
+
+Major: When changing the load order of any cookbook segments (e.g. attributes, templates), the major version number shall be incremented.
+
+Minor: When adding support to the mount provider for special filesystem types that were previously unsupported, the minor version number shall be incremented.
+
+Patch: When a minor release is made that contains a new feature to a service provider that causes the service provider to no longer work for users on an older but still supported version of the platform, the patch version number shall be implemented.
+
+Changes that require the minor or patch version number to be implemented may be included in a release that increments a higher version number without incrementing a lower version number. That is, new features that don not exist in version 1.1.0 may be released in 2.0.0 without any intermediary releases.
 
 ### Releasing
 
@@ -67,14 +84,12 @@ Patch releases are expected to have only small changes which are extensively tes
 * Verify the CHANGELOG.md is accurate for the current release
 * Update ```lib/chef/version.rb``` to the appropriate next version
 * Create an annotated git tag for the version
-* Trigger a build in CI
+* Trigger a build in CI (chef-trigger-release)
 * Write a blog post and share a public draft (e.g. a gist)
 
 Once the CI pipeline completes successfully:
 
-* Promote the build to Omnitruck in CI
-* Locally build and release the gems FIXME: git clean -fdx, rake gem, gem push pkg/*.gem and foreach and all that
-* Ask Chef Release Engineering to release to package cloud
+* Locally build and release the gems
 * Ask Chef Release Engineering to build and release AIX
 * Publish the blog post
 * Tweet the blog post
