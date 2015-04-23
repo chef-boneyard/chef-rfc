@@ -1,3 +1,10 @@
+---
+RFC: 46
+Author: Matt Ray <matt@chef.io>
+Status: Accepted
+Type: Standards Track
+---
+
 # Enhanced Ohai Network Support
 
 The Ohai `cloud` plugin pushes information into `private_ips` and `public_ips`, but if networks have an alternate name they are overlooked. In EC2, HP and Rackspace for example, `local_ipv4` is mapped to `cloud.private_ipv4`, which is likely to be incorrect in some cases. Additional network data may be available from the metadata server (ec2, hp, openstack) but this should be confirmed and normalized within `cloud`.
