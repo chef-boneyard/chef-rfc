@@ -78,12 +78,12 @@ More information can be found in the [Chef Community Guidelines](https://github.
         
 [people]
   [people.adamhjk]
-    Name = Adam Jacob
+    Name = "Adam Jacob"
     GitHub = adamhjk
     IRC = holoway
 
   [people.nathenharvey]
-    Name = Nathen Harvey
+    Name = "Nathen Harvey"
     GitHub = nathenharvey
     Twitter = nathenharvey
     IRC = nathenharvey
@@ -91,17 +91,17 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Phone = +1-202-368-7264
 
   [people.jonlives]
-    Name = Jon Cowie
+    Name = "Jon Cowie"
     GitHub = jonlives
     IRC = jonlives
   
   [people.zts]
-    Name = Zac Stevens
+    Name = "Zac Stevens"
     GitHub = zts
     IRC = zts
     
   [people.miketheman]
-    Name = Mike Fiedler
+    Name = "Mike Fiedler"
     GitHub = miketheman
     ServerFault = http://serverfault.com/users/7309/mike-fiedler
     
