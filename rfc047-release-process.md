@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 47
 Author: Jay Mundrawala <jmundrawala@chef.io>
 Author: Bryan McLellan <btm@chef.io>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
