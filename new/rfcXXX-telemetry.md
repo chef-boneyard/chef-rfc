@@ -16,21 +16,21 @@ Chef telemetry
   so that I can identify areas that can be optimized
 
 As we automate more things with chef and control more system resources,
-chef run time gets longer, chef client process consume more memory and cpu.
-As a configuration management system, it is important that chef run
+chef run time increases, and the chef client process consumes more memory and cpu.
+As a configuration management system, it is important that a chef run
 does not impact the underlying host performance. Over the last few years
 Chef community has shared a number of optimization techniques. Aim of this
 RFC is to facilitate some of those common patterns by providing a robust
 telemetry system in core chef. If configured, the telemetry system will give users fine
 grained metrics about chef run that can be used to find out
-performance hiccups. This will also help users quatify how a chef
-run impacts the uderlying system.
+performance hiccups. This will also help users quantify how a chef
+run impacts the underlying system.
 
 ## Specification
 
 Telemetry module will provide following metrics:
 
-- Time spent on key chef run milestones: At which stage chef run spends how long? Telemetry system
+- Time spent on key chef run milestones: How long does the chef run take for each stage? Telemetry system
   will declare  a subset of the current events as major milestones, these are: run_start,
   ohai_completed, node_load_completed, cookbook_resolution_complete, converge_start,
   converge_complete, run_completed/failed. Metrics will be captured during these milestones via event handlers.
@@ -38,7 +38,7 @@ Telemetry module will provide following metrics:
   convergence phase etc.
 
 - Time spent on individual resource & recipe convergence. This information is already available
-  using the API, telemtry system will just consolidate them, along side the other metrics.
+  using the API, telemetry system will just consolidate them, along side the other metrics.
 
 - GC related data. Ruby's internal memory usage obtained from
   GC.stat, captured during the chef run milestones.
@@ -61,8 +61,9 @@ end
 In addition to capturing these metrics, telemetry system will also allow publishing
 them via statsd or saving them as node attribute.
 
-Telemtry sysetm will be configured via the standard chef config file and it will be
-disabled by default. Following is an example of configuring the telemetry subsystem
+Telemetry sysetm can be configured via the standard chef config file or using a dedicated
+CLI flag for chef-client and chef-solo. It will be disabled by default.
+Following is an example of configuring the telemetry subsystem
 
 ```ruby
 
@@ -78,7 +79,12 @@ config_context(:telemetry) do
   attribute 'chef-metrics' # save all metrics under node['chef-metrics'] attribute
 end
 ```
+Eaxmple of enabling telemetry using the CLI flag
 
+```sh
+chef-client --enable-telemetry
+chef-solo --enable-telemetry
+```
 
 ## Copyright
 
