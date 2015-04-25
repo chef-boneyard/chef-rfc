@@ -59,33 +59,11 @@ Here we propose that all resource and definition DSL be added to
 subject to inspection and the stack traces can be followed.  This will happen
 automatically when the user declares resources and definitions.
 
-### Automatically add new resources and providers to DSL, regardless of namespace
+### Stop automatically adding resources to recipe DSL
 
-Presently, when you type `my_resource` in the Chef DSL, in the absence of any
-`provides` directives to direct Chef to the correct resource class, the
-namespaces `Chef::Resource` is explicitly searched for
-`Chef::Resource::MyResource`.
-
-This means that if you have seen examples of classes in Chef::Resource, and want
-to do the obvious thing and just move to your own namespace, it doesn't
-immediately work and it is far from apparent why. The result? A massive traffic
-jam of non-core resources in the `Chef::Resource` namespace and puzzling error
-messages for cookbook conflicts such as "superclass mismatch for class MyResource."
-
-Chef will now automatically call `provides` on all new, named resource classes,
-using `ResourceClass.dsl_name` (a transform of the class name, i.e.
-MyPackage::MyResource -> my_resource) as the provided class.
-
-```ruby
-class MyPackage::MyResource < Chef::Resource
-end
-# now you can type 'my_resource' in a recipe.
-```
-
-#### Explicit vs. Implicit `provides`
-
-If you specify `provides :something_else` in a class, that will override the
-auto-class-creation behavior.
+Presently, when you create a class under `Chef::Resource`, a magical Chef DSL
+based on the class name (`my_resource`) will automatically work.  Now you will
+need to use `provides` to explicitly mark the DSL you provide:
 
 ```ruby
 class MyPackage::MyResource < Chef::Resource
@@ -94,25 +72,22 @@ end
 # Now `shazam` will work fine in a recipe, but `my_resource` will not.
 ```
 
-If you want to still provide the original name, you must be explicit:
+We will ensure that all existing core Chef classes in the `chef`, `cheffish`,
+and `chef-provisioning*` gems use `provides` to avoid warnings.  LWRPs will
+automatically do this as well.
 
-```ruby
-class MyPackage::MyResource < Chef::Resource
-  provides :my_resource
-  provides :shazam
-end
-# Now both `shazam` and `my_resource` work in a recipe
-```
+### Remove the `dsl_name` and `resource_name` class methods
 
-#### `does_not_provide`
+When resource DSL becomes explicit, the idea that a class has a single DSL name
+no longer makes sense.  We will remove `self.dsl_name` from `Resource` and `self.resource_name` from `Chef::Resource::LWRPBase`.
 
-If you want to (for example) create a base class that does not have an actual
-DSL method, you can specify `does_not_provide` or `does_not_provide :my_name` in
-the class:
+### `provides_nothing`
+
+If you want to turn off method DSL for a class, you can call `provides_nothing`:
 
 ```ruby
 class MyPackage::MyResourceBase < Chef::Resource
-  does_not_provide
+  provides_nothing
 end
 # my_resource_base will not exist in recipe DSL
 ```
@@ -134,25 +109,11 @@ Removing `method_missing` means several methods of creating resource names canno
 be caught.  These are the cases.  We will issue deprecation warnings for each one
 and remove them (and method_missing) come Chef 13.
 
-### Chef::Resource::MyResource = <resource>
+### Chef::Resource::MyResource without `provides`
 
-When you assign an anonymous class or a resource from another namespace into
-`Chef::Resource`, your new resource will currently be accessible via the DSL.
-Since there is no Ruby method that lets us catch the assignment of a constant,
-there is no way for us to assign an explicit DSL method to handle the resource.
-
-```ruby
-# Deprecated
-Chef::Resource::Blah = Class.new(Chef::Resource)
-```
-
-We will catch this in method_missing, issue a warning letting the user know they
-should use the `provides` directive on their class to get it into the DSL, and remove it come Chef 13.
-
-```ruby
-# Not deprecated (though the assignment becomes unnecessary)
-Chef::Resource::Blah = Class.new(Chef::Resource) { provides :blah }
-```
+When you have a class in the `Chef::Resource` namespace without `provides`, the
+DSL will no longer work in Chef 13.  In 12 we will issue a deprecation warning
+whenever the user tries to use a DSL class without corresponding DSL.
 
 ### Calling `method_missing` directly
 
@@ -176,7 +137,7 @@ end
 
 The implications of this are that we have to scan every single resource when
 you type `blah` in a recipe, just so we can catch this one.  In Chef 12 we will
-issue a warning and tell you to do this instead:
+issue a deprecation warning and tell you to do this instead:
 
 ```ruby
 class MyResource < Chef::Resource
@@ -194,8 +155,8 @@ the name `Chef::Resource::MyLwrpResource` will receive a warning.
 
 ## Risks To Specific Software
 
-While we're trying to maintain full compatibility, there's risk here, particularly for people doing metaprogramming of resources.  We will run the tests of the following packages, and make sure current versions
-still work (possibly emitting deprecation warnings):
+While we're trying to maintain full compatibility, there's risk here, particularly for people doing metaprogramming of resources.  We will run the tests of the following packages, and make sure current versions still work (possibly emitting
+deprecation warnings):
 
 - chef-sugar
 - chefspec
