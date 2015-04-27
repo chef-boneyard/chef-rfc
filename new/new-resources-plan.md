@@ -28,6 +28,7 @@ There are a number of separable RFCs that connect into a given whole (Resources
 ### Cookbook Scope
 
 Aim: allow for private resources that others should not use.
+
 ```ruby
 # cookbooks/mycook/libraries/myresource.rb
 provides :mycook_myresource, to: :cookbook_only
@@ -80,12 +81,43 @@ end
 
 ### Defaults
 
-Aim: allow user to create defaults.
+Aim: allow user to create defaults applied to a resource.
+
+```ruby
+resource_defaults :file do
+  owner 'jkeiser'
+  mode 0666
+end
+```
 
 ### Aliases
 
 Aim: allow user to create resource aliases that let you type A and use custom
 code to invoke resource B.
+
+```ruby
+resource_alias :service, :systemd_service
+```
+
+### Custom DSL
+
+Aim: allow user to declare arguments differently
+
+### DSL Provider Checking
+
+Aim: allow user to create different resources on different platforms
+
+```ruby
+class Service < Chef::Resource
+  provides :service, platform_family: 'ubuntu' do
+    if SystemdService.is_installed?
+      SystemdService
+    elsif RunitService.is_installed?
+      RunitService
+    end
+  end
+end
+```
 
 ### Custom Scope
 
@@ -93,11 +125,58 @@ Aim: allow user to create resources, defaults and aliases in a custom scope, to
 do what things like `with_chef_server` and `with_driver` do, but in a generic
 way.
 
+```ruby
+with_scope 'My mode and user are the default dag nab it' do
+  defaults :file do
+    user 'jkeiser'
+    mode 0666
+  end
+
+  file '/x.txt' do
+  end
+end
+```
+
 #### Custom Scope Inheritance
 
 Aim: allow user to tweak other recipes and resources by providing defaults or
 changing underlying behavior of the resources they use.  (This can easily be a
 part of the official interface of a recipe.)
+
+```ruby
+class SomeResource < Chef::Resource
+  action :create do
+    file '/x.txt' do
+      content 'Hello World'
+    end
+  end
+end
+
+with_scope 'My mode and user are the default dag nab it' do
+  defaults :file do
+    user 'jkeiser'
+    mode 0666
+  end
+
+  # All three of these use the defaults
+
+  include_recipe 'some_resource'
+
+  some_resource 'blah'
+
+  file '/x.txt' do
+  end
+end
+
+# These do not use the defaults
+
+include_recipe 'some_resource'
+
+some_resource 'blah'
+
+file '/x.txt' do
+end
+```
 
 ## Stage 2: Resource Structure
 
