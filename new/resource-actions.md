@@ -120,27 +120,6 @@ end
 `converge_by` (the current way of converging / updating) a resource will still
 be available for those who are used to it.
 
-### `Resource.why_run_description`
-
-When why run is enabled, we automatically prepend "Would" to the text of the
-why run description.  This doesn't always read well.  Herein we propose adding
-parameters for why-run safety to resources.
-
-The `converge_description` and `why_run_description` methods on a resource let
-you customize this if you want.  (By default, they will emit the same text as
-before.)
-
-```ruby
-ruby_block 'Delete /x.txt' do
-  why_run_description 'Would totally delete /x.txt'
-  only_if { File.exist?('/x.txt') }
-  action :run
-end
-```
-
-The `why_run_description` and `converge_description` can be lazy, and can thus
-be a calculated value run in lieu of the block.
-
 ## Changes to existing things
 
 ### Resource
