@@ -70,8 +70,8 @@ run.
   is declared.
 - Delayed and immediate notifications are local to the action.
 
-This is equivalent to `use_inline_providers` in a Provider, and in fact is
-implemented that way.  We just call out the behavior here to make it clear what will happen.
+This is equivalent to what `use_inline_resources` in an LWRP does, and we will
+keep them orthogonal as much as possible.
 
 #### Action composition and inheritance
 
@@ -83,7 +83,7 @@ class's version of the current action.
 class MyFile < Chef::Resource::File
   action :create do
     puts "I am a file yo"
-    super
+    super()
   end
 end
 ```
