@@ -5,15 +5,23 @@ Status: Draft
 Type: Standards Track
 ---
 
-# Providerless Resources
+# Resource Actions
 
 In this proposal, we allow actions to be specified as recipes, directly in resources.
 
 ## Motivation
 
-    As a <<user_profile>>,
-    I want to <<functionality>>,
-    so that <<benefit>>.
+    As a Chef user,
+    I want to be able to write actions in resources,
+    so that I don't have to learn and reason about `Provider`s (less friction).
+
+    As a Chef user,
+    I want to be able to write actions in resources,
+    so that I don't have to switch contexts to understand what resources do.
+
+    As a Chef user,
+    I want actions to be specified as recipes by default,
+    so that I can use concepts I already know to create good test-and-set resources.
 
 ## Specification
 
