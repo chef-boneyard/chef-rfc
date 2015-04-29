@@ -88,37 +88,6 @@ class MyFile < Chef::Resource::File
 end
 ```
 
-### Inline resource output
-
-When `use_inline_resources` runs, the output can be much more verbose than the
-user expects.  Particularly, they see a number of resources and actions that they didn't declare:
-
-```
-* x[blah] action blah
-  * file[/Users/jkeiser/x.txt] action create (up to date)
-   (up to date)
-```
-
-We suggest not actually showing sub-resources as separate things in output:
-
-```
-* x[blah] action blah (up to date)
-```
-
-An "update" would look like this (again, removes the extra nesting):
-
-```
-* x[blah] action blah
-  - create new file /Users/jkeiser/x.txt
-  - update content in file /Users/jkeiser/x.txt from none to a591a6
-  --- /Users/jkeiser/x.txt	2015-04-29 08:15:14.000000000 -0700
-  +++ /Users/jkeiser/.x.txt20150429-56731-6xk0lx	2015-04-29 08:15:14.000000000 -0700
-  @@ -1 +1,2 @@
-  +Hello World
-```
-
-The principle is: the user doesn't see resources they don't type.
-
 ### inline_recipe resource
 
 People need to support test-and-set and why-run in their resources. Given that
