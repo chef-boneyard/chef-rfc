@@ -30,16 +30,15 @@ The recipe in between the do ... end block will be run when the action is
 performed.
 
 ```ruby
-class MyResource < Chef::Resource
+class MyResource < Chef::Resource::LWRPBase
   attribute :path, name_attribute: true
   attribute :content
   attribute :mode
 
   action :create do
-    if content != IO.read(path)
-      inline_block "Update content of #{path}" do
-        IO.write(path, content)
-      end
+    ruby_block "Update content of #{path}" do
+      only_if { content != IO.read(path) }
+      block { IO.write(path, content) }
     end
 
     execute "Update mode of #{path}" do
@@ -54,6 +53,8 @@ There is no change to providers or the way we run actions.  This is just a way
 of defining a provider without having to type or think about the word.  Providers
 do not go away, so much as become a secondary concept, a sort of house for the
 primary concept of actions.
+
+`action` will work for any resource extending from `Chef::Resource`.
 
 ### Action details
 
@@ -118,12 +119,7 @@ An "update" would look like this (again, removes the extra nesting):
 
 The principle is: the user doesn't see resources they don't type.
 
-### Help defining recipes
-
-A bare recipe can do quite a lot of the work of convergence.  But there are a
-few tweaks that help with this:
-
-#### inline_recipe resource
+### inline_recipe resource
 
 People need to support test-and-set and why-run in their resources. Given that
 actions are defined as recipes, the typical (and best) way to do that is
@@ -152,6 +148,9 @@ inline_recipe 'Create that one file' do
 end
 ```
 
+`converge_by` (the current way of converging / updating) a resource will still
+be available for those who are used to it.
+
 ### `Resource.why_run_description`
 
 When why run is enabled, we automatically prepend "Would" to the text of the
@@ -170,8 +169,8 @@ ruby_block 'Delete /x.txt' do
 end
 ```
 
-The `why_run_description` can be lazy, and can thus be a calculated value run
-in lieu of the block (for example, if the user ).
+The `why_run_description` and `converge_description` can be lazy, and can thus
+be a calculated value run in lieu of the block.
 
 ## Changes to existing things
 
@@ -188,10 +187,6 @@ And modify the following:
 - `default_action`: defaults to `allowed_actions.first`.
 
 ### Provider
-
-We add the following public API to `Provider`:
-
-- `use_inline_resources`: moved up from LWRPBase.
 
 Resources in LWRP actions will no longer report in output as nested actions
 (they will do the same thing as recipe actions).
