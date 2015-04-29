@@ -125,10 +125,17 @@ few tweaks that help with this:
 
 #### inline_recipe resource
 
-The `inline_recipe` resource lets you write recipe code. It also has the parent
-in scope (so you can still access instance variables).  The resources inside
-will compile immediately and be available in `inline_recipe.resources`.  The
-resources will converge when the `inline_recipe` converges.
+People need to support test-and-set and why-run in their resources. Given that
+actions are defined as recipes, the typical (and best) way to do that is
+resources (which have `not_if` and `only_if`, etc.). These resources work well,
+but sometimes you want to do a clump of actions based on a single `if`, or you
+want to nest them.
+
+`inline_recipe` is designed to do that job.  resource lets you write recipe
+code. It also has the parent in scope (so you can still access instance
+variables). The resources inside will compile immediately and be available in
+`inline_recipe.resources`.  The resources will converge when the `inline_recipe`
+converges.
 
 Like recipe actions, the resources inside the `inline_recipe` are not
 referenceable by `notifies` outside.  Unlike recipe actions, the resources show
@@ -186,8 +193,8 @@ We add the following public API to `Provider`:
 
 - `use_inline_resources`: moved up from LWRPBase.
 
-Resources in LWRP actions will no longer report as nested actions (they will do
-the same thing as recipe actions).
+Resources in LWRP actions will no longer report in output as nested actions
+(they will do the same thing as recipe actions).
 
 ## Copyright
 
