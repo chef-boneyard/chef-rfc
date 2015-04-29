@@ -23,162 +23,7 @@ There are a number of separable RFCs that connect into a given whole (Resources
 
 ## Specification
 
-## Stage 1: DSL
-
-### Cookbook Scope
-
-Aim: allow for private resources that others should not use.
-
-```ruby
-# cookbooks/mycook/libraries/myresource.rb
-provides :mycook_myresource, to: :cookbook_only
-attribute :myattr
-
-# cookbooks/mycook/libraries/myresource
-mycook_myresource 'blah' do
-  myattr 1
-end
-
-# cookbooks/OTHER/libraries/myresource
-# ERROR: resource not found
-mycook_myresource 'blah' do
-  myattr 1
-end
-```
-
-#### Dependent Cookbook Scope
-
-Aim: provide resources to a cookbook and *dependent* cookbooks only, to allow
-for disambiguation when two cookbooks use different resources with similar
-names.
-
-```ruby
-# cookbooks/mycook/libraries/myresource.rb
-provides :mycook_myresource, to: :cookbook
-attribute :myattr
-
-# cookbooks/dependent/metadata.rb
-name 'dependent'
-version '1.0.0'
-depends 'mycook'
-
-# cookbooks/mycook/libraries/myresource
-mycook_myresource 'blah' do
-  myattr 1
-end
-
-# cookbooks/dependent/libraries/myresource
-mycook_myresource 'blah' do
-  myattr 1
-end
-
-# cookbooks/OTHER/libraries/myresource
-# ERROR: resource not found
-mycook_myresource 'blah' do
-  myattr 1
-end
-```
-
-### Defaults
-
-Aim: allow user to create defaults applied to a resource.
-
-```ruby
-resource_defaults :file do
-  owner 'jkeiser'
-  mode 0666
-end
-```
-
-### Aliases
-
-Aim: allow user to create resource aliases that let you type A and use custom
-code to invoke resource B.
-
-```ruby
-resource_alias :service, :systemd_service
-```
-
-### Custom DSL
-
-Aim: allow user to declare arguments differently
-
-### DSL Provider Checking
-
-Aim: allow user to create different resources on different platforms
-
-```ruby
-class Service < Chef::Resource
-  provides :service, platform_family: 'ubuntu' do
-    if SystemdService.is_installed?
-      SystemdService
-    elsif RunitService.is_installed?
-      RunitService
-    end
-  end
-end
-```
-
-### Custom Scope
-
-Aim: allow user to create resources, defaults and aliases in a custom scope, to
-do what things like `with_chef_server` and `with_driver` do, but in a generic
-way.
-
-```ruby
-with_scope 'My mode and user are the default dag nab it' do
-  defaults :file do
-    user 'jkeiser'
-    mode 0666
-  end
-
-  file '/x.txt' do
-  end
-end
-```
-
-#### Custom Scope Inheritance
-
-Aim: allow user to tweak other recipes and resources by providing defaults or
-changing underlying behavior of the resources they use.  (This can easily be a
-part of the official interface of a recipe.)
-
-```ruby
-class SomeResource < Chef::Resource
-  action :create do
-    file '/x.txt' do
-      content 'Hello World'
-    end
-  end
-end
-
-with_scope 'My mode and user are the default dag nab it' do
-  defaults :file do
-    user 'jkeiser'
-    mode 0666
-  end
-
-  # All three of these use the defaults
-
-  include_recipe 'some_resource'
-
-  some_resource 'blah'
-
-  file '/x.txt' do
-  end
-end
-
-# These do not use the defaults
-
-include_recipe 'some_resource'
-
-some_resource 'blah'
-
-file '/x.txt' do
-end
-```
-
-## Stage 2: Resource Structure
+## Stage 1: Resource Structure
 
 Aim: reduce friction for creating resources.
 
@@ -260,7 +105,6 @@ class MyResource < Chef::Resource
 end
 ```
 
-
 ### Nested Resource Types
 
 Aim: namespaced resource types
@@ -277,12 +121,12 @@ end
 class Aws::Instance < Chef::Resource
   provides :instance, to_parent: Aws, parent_attribute: :aws
 
-  attribute :aws, in_scope: true
+  attribute :aws
   attribute :instance_id, name_attribute: true
   attribute :description
 
   action :create do
-    connection.instances[instance_id].description = description
+    aws.connection.instances[instance_id].description = description
   end
 end
 
@@ -292,9 +136,14 @@ aws 'us-east-1' do
   instance 'i-45964586' do
   end
 end
+
+east = aws('us-east-1')
+east.instance 'i-13423431' do
+  instance_description 'blah'
+end
 ```
 
-## Stage 3: Property
+## Stage 2: Property
 
 Aim: disambiguate resource attributes from node attributes; allow easier
 specification of valid types/values.
@@ -337,36 +186,71 @@ property :size, must_be: [ :large, :medium, :small, nil ]
 ### Coercion
 
 Aim: allow varied user input with strictly typed values for easy resource writing.
+Aim: allow JSON-capable
 
 ```ruby
-# Allow user to specify string or symbol
-property :key, Symbol, coerce: proc { |s| s.to_sym }
-# Allow an in-memory key *or* a path to be set
-property :value, RSA::PrivateKey,
-                 coerce: proc { |s| s.is_a?(String) ? RSA::PrivateKey.read(s) : s }
+class EncryptedThing < Chef::Resource
+  property :name, Symbol
+  property :value, Symbol, coerce: proc { |s| s.to_sym }
+  property :key, RSA::PrivateKey,
+                 coerce: proc { |s| s.is_a?(String) ? RSA::PrivateKey.read(s) }
+
+  action :run do
+    IO.write(path)
+  end
+end
+
+encrypted_thing 'blah' do
+  key_name 'x'
+  key '/x.pem'
+end
 ```
 
-### Composite Types
+### Collection Types
 
 Aim: allow laziness, coercion and type checking of array and hash members.
 
+Laziness:
+
 ```ruby
-property :child_instances, Array[MyInstance]
-class MyInstance < Chef::Resource
-  property :child_instances, Array[MyInstance]
+class Machine < Chef::Resource
+  property :machine_options, Hash
+end
+
+machine 'blah' do
+  machine_options({
+    bootstrap_options: lazy { get_bootstrap_options }
+    ssh_username: lazy { ENV['USERNAME'] }
+  })
+end
+```
+
+Coercion and Type Checking:
+
+```ruby
+class LoadBalancer < Chef::Resource
+  property :machines, Array[Machine]
+
+  recipe :create do
+    AWS.make_load_balancer(machines.map { |m| m.name })
+  end
+end
+
+load_balancer 'lb' do
+  machines 'web1', 'web2', 'web3'
 end
 ```
 
 ### Path Type
 
-Aim: make common case of path easy to handle and cross-platform
+Aim: make common case of path properties easy to handle and cross-platform.
 
 ```ruby
 property :chef_config_dir, Path, default: '~/.chef'
 property :chef_config_file, Path, default: 'config.rb', relative_to: lazy { chef_config_dir }
 ```
 
-## Stage 4: Read and Write
+## Stage 3: Read and Write
 
 ### Read API
 
@@ -416,7 +300,7 @@ my_resource '/x.txt' do
 end
 ```
 
-## Stage 5: Dynamism
+## Stage 4: Dynamism
 
 ### Value Waits and Events
 
@@ -427,7 +311,49 @@ of Chef
 
 ### Immediate Mode
 
-## Stage 6: More
+Aim: an execution model that is easier to reason about.
+
+Resources converge immediately after compiling.
+
+
+
+# Value Proposition
+
+## Provisioning 2.0
+
+## External APIs
+
+## Reusable Community Cookbooks
+
+### Configuration As Code
+
+Since the interface to a recipe is node attributes, everything has to
+be determined *before* any code runs on the node.  This means if you want to
+change anything about the cookbook based on something else that happens in your
+recipe,
+
+### Configurability
+
+Recipes are a relatively friendly to constants and hostile to variables ... the
+path to adding a new variable involves a number of difficult things:
+
+- Deciding how to structure the attributes hash
+- Deciding how to interact it with attribute defaults
+- Writing the large, nasty expression to retrieve (and set) an attribute.
+
+### Multi-Instantiability
+
+### Monolithicness
+
+Resources solve this problem by extending
+
+### Difficulty Of Writing Resources
+
+
+
+
+
+## Stage 5: More
 
 ### Parameterized Actions
 
@@ -436,6 +362,13 @@ of Chef
 Aim: namespacing for resource *names*.
 
 ### Using Chef Outside Chef
+
+### Resource `attribute` and `action` DSL declared in an included superclass
+
+Aim: allow users to override an attribute or action declared by DSL, and call
+`super` to call the actual action.
+
+
 
 
 
