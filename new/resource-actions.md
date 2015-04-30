@@ -134,11 +134,6 @@ And modify the following:
 - `allowed_actions`: defaults to all actions in the resource's provider class(es).
 - `default_action`: defaults to `allowed_actions.first`.
 
-### Provider
-
-Resources in LWRP actions will no longer report in output as nested actions
-(they will do the same thing as recipe actions).
-
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
