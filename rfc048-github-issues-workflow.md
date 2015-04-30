@@ -1,7 +1,8 @@
 ---
-RFC:
-Author: Serdar Sutay <serdar@getchef.com>
-Status: Draft
+RFC: 48
+Author: Serdar Sutay <serdar@chef.io>
+Author: Thom May <thom@chef.io>
+Status: Accepted
 Type: Process
 ---
 
@@ -41,10 +42,9 @@ Chef Maintainers can:
 * See the list of contributions they need to review in a single page.
 * See the list of issues they need to investigate in a single page.
 
-
 ## Workflow
 
-![Chef GitHub Issues Workflow](./GithubIssuesWorkflow.png)
+![Chef GitHub Issues Workflow](./support/rfc048-GithubIssuesWorkflow.png)
 
 
 ## Notes
@@ -96,3 +96,10 @@ The contribution workflow can be broken down into these high level steps:
 * List of Issues that need investigation for a subcomponent:
   * Search Query: `is:open is:issue label:"subcomponent_name" -label:Bug -label:Enhancement -label:"Tech Cleanup"`
   * **TODO** Add link to the query
+
+## Copyright
+
+This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.
