@@ -81,17 +81,6 @@ automatically do this as well.
 When resource DSL becomes explicit, the idea that a class has a single DSL name
 no longer makes sense.  We will remove `self.dsl_name` from `Resource` and `self.resource_name` from `Chef::Resource::LWRPBase`.
 
-### `provides_nothing`
-
-If you want to turn off method DSL for a class, you can call `provides_nothing`:
-
-```ruby
-class MyPackage::MyResourceBase < Chef::Resource
-  provides_nothing
-end
-# my_resource_base will not exist in recipe DSL
-```
-
 ### Move LWRPs out of the Chef::Resource namespace
 
 With Chef::Resource no longer a special place for class lookup, LWRPs no longer
