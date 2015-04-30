@@ -88,38 +88,6 @@ class MyFile < Chef::Resource::File
 end
 ```
 
-### inline_recipe resource
-
-People need to support test-and-set and why-run in their resources. Given that
-actions are defined as recipes, the typical (and best) way to do that is
-resources (which have `not_if` and `only_if`, etc.). These resources work well,
-but sometimes you want to do a clump of actions based on a single `if`, or you
-want to nest them.
-
-`inline_recipe` is designed to do that job.  resource lets you write recipe
-code. It also has the parent in scope (so you can still access instance
-variables). The resources inside will compile immediately and be available in
-`inline_recipe.resources`.  The resources will converge when the `inline_recipe`
-converges.
-
-Like recipe actions, the resources inside the `inline_recipe` are not
-referenceable by `notifies` outside.  Unlike recipe actions, the resources show
-up in nested output (because the user typed them in the recipe).
-
-```ruby
-inline_recipe 'Create that one file' do
-  only_if { File.exist?('/please_create_that_file.txt') }
-
-  directory '/x' do
-  end
-  file '/x/y.txt' do
-  end
-end
-```
-
-`converge_by` (the current way of converging / updating) a resource will still
-be available for those who are used to it.
-
 ## Changes to existing things
 
 ### Resource
