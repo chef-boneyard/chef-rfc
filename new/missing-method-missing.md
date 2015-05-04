@@ -104,6 +104,22 @@ When you have a class in the `Chef::Resource` namespace without `provides`, the
 DSL will no longer work in Chef 13.  In 12 we will issue a deprecation warning
 whenever the user tries to use a DSL class without corresponding DSL.
 
+There is a backwards compatibility break related to moving a `Chef::Resource`
+class from not having `provides`, to having `provides`.  Specifically, in Chef 12
+we don't check for `Chef::Resource::FooBar` until after we have asked all
+resources if `provides?` is true.  This gave `provides` classes an implicit
+*priority* over non-provides `Chef::Resource` classes.
+
+If someone is (knowingly or unknowingly) taking advantage of this implicit
+priority, and adds `provides :foo_bar` to `Chef::Resource::FooBar`, it would be
+considered (and possibly selected) along with other classes that say things like
+`provides :foo_bar, os: 'linux'`.  If there are multiple matches, we pick the
+first class alphabetically.  This would change behavior.
+
+The correct workaround for the user in this case is to use
+`Chef.set_resource_priority_array :foo_bar [Linux::FooBar, Chef::Resource::FooBar]`, which will bring the correct version into ascendancy
+again.
+
 ### Calling `method_missing` directly
 
 If people call `method_missing` directly to invoke DSL methods, and we don't
