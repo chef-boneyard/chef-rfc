@@ -75,9 +75,8 @@ keep them orthogonal as much as possible.
 
 #### Action composition and inheritance
 
-The action recipes are all added to a `Provider` class which inherits from the
-parent resource's provider class.  You may call `super` to call the parent
-class's version of the current action.
+If the parent class's action is defined using `action`, you may call `super()`
+to call the parent class's version of the current action.
 
 ```ruby
 class MyFile < Chef::Resource::File
