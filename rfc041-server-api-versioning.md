@@ -35,7 +35,7 @@ Arbitrary examples with no significance:
 * Chef Server 13.0 - API Versions 3-15.
 
 This means that if you are using Chef Server 12.1, any supported client will behave
-as it did with Chef Server 12.0, though API v4 will be availalbe to those clients who can use it.  
+as it did with Chef Server 12.0, though API v4 will be available to those clients who can use it.  
 However when you upgrade Chef Server 13.0 you will need to upgrade the client to one that supports
 the behaviors introduced or changes in API Version 1 and 2 at minimum.
 
@@ -50,7 +50,7 @@ the behaviors introduced or changes in API Version 1 and 2 at minimum.
     so that all my nodes continue to converge even as Chef Server API continues to mature.
 
     As a developer of the Chef Server API,
-    I want to be able to add potentially breaking feabtures without breaking customers on supported versions
+    I want to be able to add potentially breaking features without breaking customers on supported versions
     so that the state of the Server API can continue to advance.
 
 ## Specification
@@ -58,8 +58,9 @@ the behaviors introduced or changes in API Version 1 and 2 at minimum.
 The Chef Server API Version (Version from this point forward) is indicated as a whole number,
 starting at zero. Zero indicates the behavior of the API at the time of this RFC's acceptance.
 
-If a client does not indicate a version preference, it MUST receive the behavior
-of the oldest supported API version.
+If a client does not indicate a version preference, it will be assumed to request API version zero.
+Once zero is not supported, clients must request a specific API version, or the server will not process
+the request and return a 406.
 
 If a particular endpoint does not implement versioning due to remaining unchanged, it MUST
 behave in a forward-compatible way through the range of currently supported version. In
@@ -74,6 +75,7 @@ For this section, "API" refers to any combination of a method and endpoint, eg `
 `POST /organizations/$org/clients`, et al.
 
 ### Versioning is Global
+
 No restrictions or requirements are placed on the number of APIs that can be changed in a given API Version.
 There is no guarantee of a 1:1 relationship between API changes and server versions. For example,
 Server API Version 1 may change the `GET /nodes` endpoint behavior, while Version 2 may change the behaviors of `GET /roles`,
@@ -106,31 +108,60 @@ For demonstration, the example request is `GET /users/bob` with...
 To continue the example, let's say we've moved forward a year and are now shipping Chef Server 13. At that time we
 announce that our new supported API Range is 12-20, and the API Versions 12-14 are considered deprecated.
 
+See `Response` below for full understanding of the `X-Ops-Server-API-Version` response header content.
+For now, just note that `request_version` is `"-1"` when an invalid API version was sent (non-integer) and
+and response_version is `"-1"` when the `request_version` is not supported, indicating that the request was not
+responded to.
+
 The GET request from the examples above would generate the following responses:
 
 * ... X-Ops-Server-API-Version not specified by client
-  * `{ "username": "bob", ... }`
+```
+  HTTP 406
+  X-Ops-Server-API-Version: {"min_version":"12","max_version":"22","request_version":"0", "response_version":"-1"},
+  { "username": "bob", ... }
+```
+* ... `X-Ops-Server-API-Version: Not-An-Integer`
+```
+  HTTP 406
+  X-Ops-Server-API-Version: {"min_version":"12","max_version":"22","request_version":"-1", "response_version":"-1"},
+  { "username": "bob", ... }
+```
 * ... `X-Ops-Server-API-Version: 10`
 ```
   HTTP 406
+   X-Ops-Server-API-Version: {"min_version":"12","max_version":"20","request_version":"10", "response_version":"-1"},
    { "error" : "invalid-x-ops-server-api-version",
      "message" : "Specified version 10 not supported",
-     "min_api_version" : 14,
+     "min_api_version" : 12,
      "max_api_version": 20 }
 ```
 * ... `X-Ops-Server-API-Version: 14`
-  * `{ "username": "bob", ... }`
+```
+  HTTP EXPECTED CODE
+  X-Ops-Server-API-Version: {"min_version":"12","max_version":"22","request_version":"14", "response_version":"14"},
+  { "username": "bob", ... }
+```
 * ... `X-Ops-Server-API-Version: 15`
-  * `{ "name": "bob", ... }`
+```
+  HTTP EXPECTED CODE
+  X-Ops-Server-API-Version: {"min_version":"12","max_version":"22","request_version":"15", "response_version":"15"},
+  { "username": "bob", ... }
+```
 
 Moving forward another year and we have released Chef Server 14.  We announce that API Versions 12-14 are retired
 and that our new supported API Version Range is 15-22.
 
 * ... X-Ops-Server-API-Version not specified by client
-  * `{ "name": "bob", ... }`
+```
+  HTTP 406
+  X-Ops-Server-API-Version: {"min_version":"15","max_version":"22","request_version":"0", "response_version":"-1"},
+  { "username": "bob", ... }
+```
 * ... `X-Ops-Server-API-Version: 10`
 ```
   HTTP 406
+   X-Ops-Server-API-Version: {"min_version":"15","max_version":"22","request_version":"10", "response_version":"-1"},
    { "error" : "invalid-x-ops-server-api-version",
      "message" : "Specified version 10 not supported",
      "min_api_version" : 15,
@@ -139,14 +170,33 @@ and that our new supported API Version Range is 15-22.
 * ... `X-Ops-Server-API-Version: 14`
 ```
   HTTP 406
+   X-Ops-Server-API-Version: {"min_version":"15","max_version":"22","request_version":"14", "response_version":"-1"},
    { "error" : "invalid-x-ops-server-api-version",
      "message" : "Specified version 14 not supported",
      "min_api_version" : 15,
      "max_api_version": 22 }
 ```
 * ... `X-Ops-Server-API-Version: 15`
-  * `{ "name": "bob", ... }`
-
+```
+  HTTP EXPECTED CODE
+  X-Ops-Server-API-Version: {"min_version":"15","max_version":"22","request_version":"15", "response_version":"15"},
+  { "name": "bob", ... }
+```
+* ... `X-Ops-Server-API-Version: 22`
+```
+  HTTP EXPECTED CODE
+  X-Ops-Server-API-Version: {"min_version":"15","max_version":"22","request_version":"22", "response_version":"15"},
+  { "name": "bob", ... }
+```
+* ... `X-Ops-Server-API-Version: 30`
+```
+HTTP 406
+ X-Ops-Server-API-Version: {"min_version":"15","max_version":"22","request_version":"30", "response_version":"-1"},
+ { "error" : "invalid-x-ops-server-api-version",
+   "message" : "Specified version 30 not supported",
+   "min_api_version" : 15,
+   "max_api_version": 22 }
+```
 
 ### Request
 
@@ -167,33 +217,51 @@ If a client does include this header and `$version` is...
   * ... of a value other than a valid version, the server MUST respond with an HTTP 406
   and the body specified below.
 
+#### Response Header
 
-If `$version` is valid or is not specified, the API response will contain the headers:
 
-````
-X-Ops-Server-API-Version: $actual_version
-Vary: X-Ops-Server-API-Version`
-````
+In the response header, `X-Ops-Server-API-Version` will return json of the format:
 
-`$actual_version` MUST indicate the API version level of the response.  The `Vary` header is included
-in the event it becomes desirable to support caching of specific responses.
+```
+{
+  "min_version":"<non-negative integer>",
+  "max_version":"<non-negative integer>",
+  "request_version":"<integer>",
+  "response_version":"<integer>"
+}
+```
+
+Where:
++ `min_version` is the minimum API version the server supports.
++ `max_version` is the maximum API version the server supports.
++ `request_version` is an integer representing the desired API version from the client passed via X-Ops-Server-API-Version
+defaulting to 0 if X-Ops-Server-API-Version was not sent by the client. If X-Ops-Server-API-Version sent by the client contained
+an invalid value (not an integer), then -1 is returned in `request_version`.
++ `response_version` is an integer representing the API version used by the server to process the request.
+It either matches what the client requested in X-Ops-Server-API-Version or is -1 if a 406 occurred (which happens
+when X-Ops-Server-API-Version sent by the client was invalid or not in the supported range of the server).
+
+`X-Ops-Server-API-Version` is needed to implement client-side support for the multiple versioned API
+and to distinguish between servers that have implemented this RFC and servers that do not support multiple versioning.
+
+The `Vary` header is included in the event it becomes desirable to support caching of specific responses.
 
 #### 406 Response Body
 
 When the server provides a 406 response due to unsupported API version, the response body
 will be of type `application/json` and MUST look as follows:
 
-    { "error" : "invalid-x-ops-server-api-version",
-      "message" : "Specified version $version not supported",
+    { "error"           : "invalid-x-ops-server-api-version",
+      "message"         : "Specified version $version not supported",
       "min_api_version" : $x,
-      "max_api_version": $y }
+      "max_api_version" : $y }
 
 `$version` indicates the requested version. `$x` and `$y` are the current minimum and
 maximum supported versions, respectively.
 
 ### Server Implementation
 
-Minimum and maximum version are set in code, and MUST NOT be configurable. 
+Minimum and maximum version are set in code, and MUST NOT be configurable.
 
 Minimum and maximum values in effect MUST be logged at server startup.  Further, current API support levels
 MUST be exposed through a new endpoint, `GET /server_api_version` as specified below.
@@ -337,8 +405,8 @@ Would receive the response:
 
 ## Rationale
 
-As the capabilities of the Chef Server API expand, it becomes necesasry
-to deprecate and desupport old API behaviors.  However, consumers of the
+As the capabilities of the Chef Server API expand, it becomes necessary
+to deprecate and de-support old API behaviors.  However, consumers of the
 API such as chef-client may not yet be able to support changed API behaviors.
 The version indicator is used by a client to indicate which level of
 API behavior it can support.
@@ -368,4 +436,3 @@ This work is in the public domain. In jurisdictions that do not allow for this,
 this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.
-
