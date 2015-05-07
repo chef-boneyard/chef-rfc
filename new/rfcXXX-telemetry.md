@@ -85,7 +85,7 @@ config_context(:telemetry) do
 end
 
 ```
-Eaxmple of enabling telemetry using the CLI flag
+Example of enabling telemetry using the CLI flag
 
 ```sh
 chef-client --enable-telemetry
