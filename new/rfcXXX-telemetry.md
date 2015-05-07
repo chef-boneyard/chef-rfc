@@ -58,10 +58,13 @@ Chef.telemetry do |telemetry|
 end
 ```
 
-In addition to capturing these metrics, telemetry system will also allow publishing
-them via statsd or saving them as node attribute.
+In addition to capturing these metrics, telemetry system will also provide publishing
+API for metrics. Telemetry system will provide two publishing mechanism out of the box.
+They are
+  - node attributes: metrics will be saved as node attribute itself
+  - statsd : To publish metrics via statsd endpoints
 
-Telemetry sysetm can be configured via the standard chef config file or using a dedicated
+Telemetry system can be configured via the standard chef config file or using a dedicated
 CLI flag for chef-client and chef-solo. It will be disabled by default.
 Following is an example of configuring the telemetry subsystem
 
@@ -75,9 +78,12 @@ config_context(:telemetry) do
   gc true # captures GC stats during main chef events
   process true  # captures process memroy stats from /proc during main chef events
   client_run true # captures time spent on major chef run milstones
-  statsd( host: '192.168.2.11', port: 7676) # emit data to statsd
-  attribute 'chef-metrics' # save all metrics under node['chef-metrics'] attribute
+  publish_using(
+   Chef::Telemetry::Publisher::Statsd.new(host: '192.168.2.11', port: 7676), # emit data to statsd
+   Chef::Telemetry::Publisher::NodeAttribute.new('chef-metrics') # save all metrics under node['chef-metrics'] attribute
+  )
 end
+
 ```
 Eaxmple of enabling telemetry using the CLI flag
 
@@ -85,6 +91,10 @@ Eaxmple of enabling telemetry using the CLI flag
 chef-client --enable-telemetry
 chef-solo --enable-telemetry
 ```
+
+Telemetry publishing API will be a single method named #publish that accept a hash that
+represents the metrics. `publish_using` method is used to register a metrics publisher
+with the telemetry system.
 
 ## Copyright
 
