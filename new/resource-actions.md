@@ -93,13 +93,17 @@ end
 
 We add the following public API to `Resource`:
 
-- `self.action(action, class: nil, &block)`: creates a Provider with the given
-  action
+- `self.action(action, class: nil, &block)`: creates a handler for the given action
 
 And modify the following:
 
-- `allowed_actions`: defaults to all actions in the resource's provider class(es).
-- `default_action`: defaults to `allowed_actions.first`.
+- `allowed_actions`: defaults to all actions defined by `action`, including any
+  actions from superclasses.
+- `default_action`: defaults to the first defined `action` in the class or
+  superclasses, with the exception of `:nothing`.
+
+Being defined by the `action` keyword, this is backwards compatible: neither of
+these definitions change anything about resources that have providers.
 
 ## Copyright
 
