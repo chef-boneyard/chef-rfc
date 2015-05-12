@@ -93,11 +93,6 @@ syntax without dots and without repetitive ceremony.
 The block will also be passed the original resource as a parameter, in case it
 is needed.
 
-#### Existence Test
-
-The `load` block may return `:nonexistent` to signal that the resource does not
-exist.
-
 #### Inheritance
 
 The `current_resource` method does not call the superclass's `current_resource`
@@ -151,33 +146,86 @@ class File < Chef::Resource
 end
 ```
 
-### Attribute Current Value
+### Unspecified Attributes
 
-To enable the read API, the following rule is introduced:
+The value of an attribute in a Chef resource represents a *desired value* for
+the attribute. When an attribute is unspecified, the user is simply not stating
+their desire. It's therefore our job to do something reasonable and sane.
 
-> By default, resources make no change to the actual value: the desired value of
-> an attribute is its *current value*, if any.
+To accomodate this, we add a second step to the attribute getter:
 
-In practical terms, this means that if you don't set an attribute to a value,
-then when you ask for the attribute's value, you get the *current* value, not
-`nil`.
+1. If `attribute` has been set to a desired value, that is returned.
+2. If `current_resource.attribute` is loaded with a current value, that is returned.
+3. Otherwise, the attribute's default value is returned.
 
-#### Default Value
+This means that an unspecified attribute's desired value is its current value,
+if one exists. The current attribute system (with no load method) says that an
+unspecified attribute's desired value is its *default* value.
 
-The `default` value is reserved for cases where there is no current value for a
-resource. It is the value that will be placed on the attribute if the resource
-is *created*. It does not come into play if the resource already has a value.
+This system is biased towards these outcomes:
 
-#### Use Case: Safer Resources
+- When *updating* a resource with an unspecified attribute, we make no change.
+- When *creating* a resource with an unspecified attribute, we choose a reasonable
+  default (specified by the resource's default value).
 
-This means it's a bit harder to make an unsafe resource--if a property is
-not set, its value will be the current value, so even if you ham-fistedly set
-the value of the real resource, it'll just replace the current value.
+#### Backcompat
+
+This is 100% backwards compatible with the current system, because it depends on
+`load` filling in attributes, and existing resources do not implement `load`.
+
+## Use Cases
+
+The below is not prescriptive, but is a discussion of some of the supported
+use cases:
+
+### Updating a resource
+
+When you update a resource and leave an attribute unspecified, the converge
+method is easy to mess up, and harder to get right.
+
+```ruby
+class File < Chef::Resource
+  attribute :path, name_attribute: true
+  attribute :content
+
+  load do
+    if File.exist?(path)
+      content IO.read(path)
+    end
+  end
+
+  action :create do
+    if content != current_resource.content
+      IO.write(path, content)
+    end
+  end
+end
+
+file '/x.txt' do
+  # Note: content was not specified!
+end
+```
+
+Given this (perfectly reasonable looking) code, the current system would
+*truncate the file* if you didn't specify `content`.  You need to check if
+`content.nil?` before you compare.  This means that the most obvious,
+least-ceremony thing to do is the wrong thing. This is also not an error you are
+likely to catch early: *not* specifying attributes is not among the first things
+people test.
+
+In the proposed system, When an attribute defaults to the *current* value, the
+code above will not overwrite the file at all.
+
+#### Use Case: creating a resource
+
+When creating a resource, the above code will do the same thing in both cases:
+use the default value and create an empty file. This seems like the right thing
+in either case.
 
 #### Use Case: Patchy Resources
 
-This rule allows for "patchy resources," which are common but hard to write
-currently:
+This rule allows for "patchy resources," which are commonly desired and
+intuitive but hard to write currently:
 
 ```ruby
 # Must leave content alone!
