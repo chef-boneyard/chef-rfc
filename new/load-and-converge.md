@@ -8,9 +8,10 @@ Type: Standards Track
 # Easy Resource Load And Converge
 
 With the introduction of `action` on resources, it becomes useful to have a
-blessed way to get the actual value of the resource. This proposal makes it
-work with a "lazy read," making two benefits possible at once:
+blessed way to get the actual value of the resource. This proposal adds a
+`load` DSL enabling:
 
+- Low-ceremony load methods (as easy to write as we can make it)
 - A super easy converge model that automatically compares current vs. desired
   values and prints green text
 - A familiar read API for users (who currently either use raw API code or give up)
