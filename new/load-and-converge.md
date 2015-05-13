@@ -168,6 +168,17 @@ This system is biased towards these outcomes:
 - When *creating* a resource with an unspecified attribute, we choose a reasonable
   default (specified by the resource's default value).
 
+#### is_set?(:attribute)
+
+While you will end up wanting the desired value most of the time, there are times
+where you need to know whether the value of the attribute was explicitly set by
+the user. For these times, `is_set?(:attribute)` will tell you whether an attribute
+was explicitly set or not.
+
+This also handles the existing case where the attribute returns the *default
+value*, allowing you to distinguish between the default value and a user setting
+the value explicitly to its default.
+
 #### Backcompat
 
 This is 100% backwards compatible with the current system, because it depends on
@@ -213,7 +224,7 @@ least-ceremony thing to do is the wrong thing. This is also not an error you are
 likely to catch early: *not* specifying attributes is not among the first things
 people test.
 
-In the proposed system, When an attribute defaults to the *current* value, the
+In the proposed system, when an attribute defaults to the *current* value, the
 code above will not overwrite the file at all.
 
 #### Use Case: creating a resource
@@ -224,8 +235,8 @@ in either case.
 
 #### Use Case: Patchy Resources
 
-This rule allows for "patchy resources," which are commonly desired and
-intuitive but hard to write currently:
+This rule works very well for "patchy resources," which are commonly desired and
+intuitive to use, but hard to write currently:
 
 ```ruby
 # Must leave content alone!
