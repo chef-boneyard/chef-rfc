@@ -1,8 +1,10 @@
 ---
 RFC: unassigned
 Author: John Keiser <john@johnkeiser.com>
-Status: Draft
+Status: Final
 Type: Standards Track
+Tracking:
+  - https://github.com/chef/chef/pull/3270
 ---
 
 # Remove magic and method_missing from Chef::Resource lookup
