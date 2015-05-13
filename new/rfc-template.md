@@ -4,6 +4,8 @@ Author: Alan Smithee <asmithee@example.com>
 Status: Draft
 Type: <Standards Track, Informational, Process>
 <Replaces: RFCxxx>
+<Tracking:>
+<  - https://github.com/chef/chef/issues/X>
 ---
 
 # Title
