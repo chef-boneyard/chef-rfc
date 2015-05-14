@@ -9,6 +9,8 @@ Type: Standards Track
 
 We rename `attribute` to `property` on resource, with a few differences.
 
+There are no backwards compatibility issues with this proposal, as all modified functionality hangs off of a new keyword.
+
 ## Motivation
 
     As a Chef user,
