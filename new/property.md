@@ -102,32 +102,14 @@ end
 
 #### default
 
-This works similarly to `attribute`, except that:
+This works similarly to `attribute`, except that `lazy` values are automatically run in the context of the *instance*:
 
-1. Default values are *sticky*: they are dup'd and stored in the resource the first time they are retrieved. The reason: if a resource has a property and the user wants to start with the default value and change it, we support that. This does *not* apply to lazy defaults, which do not generally have the same problem.
-   TODO still need to decide if this is a good solution to the problem. The idea that every class has its own thing is good; but there may well be situations where users want to default to a particular instance of a thing.
-   ```ruby
-   class MyResource < Chef::Resource
-     property :children, Array, default: []
-   end
-
-   my_resource 'foo' do
-     children << 'x'
-   end
-   my_resource 'bar' do
-     children << 'y'
-     puts children #=> [ 'y' ]
-   end
-   ```
-2. `lazy` values are automatically run in the context of the *instance*:
-   ```ruby
-   class MysqlInstall < Chef::Resource
-     property :root_path, String, default: '/'
-     property :config_path, String, default: lazy { File.join(root_path, 'config') }
-   end
-   ```
-
-Additionally, non-lazy default values are automatically dup'd before assigning to the instance.
+```ruby
+class MysqlInstall < Chef::Resource
+  property :root_path, String, default: '/'
+  property :config_path, String, default: lazy { File.join(root_path, 'config') }
+end
+```
 
 #### name_attribute
 
@@ -212,7 +194,7 @@ type is not extended or mixed in any way.
 class A < Chef::Resource
   property :a, String, default: 'Hello'
 end
-class B < Chef::Resource
+class B < A
   property :a
 end
 A.properties[:a].default #=> 'Hello'
