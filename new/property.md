@@ -7,9 +7,9 @@ Type: Standards Track
 
 # Resource Properties
 
-We rename `attribute` to `property` on resource, with a few differences.
+We add `property` DSL to resources, similar to (and interoperable with) LWRP `attribute`.
 
-There are no backwards compatibility issues with this proposal, as all modified functionality hangs off of a new keyword.
+It works very similarly to attribute syntax.  There are no backwards compatibility issues with this proposal, as all `attribute` functionality remains the same.
 
 ## Motivation
 
@@ -127,7 +127,43 @@ Additionally, non-lazy default values are automatically dup'd before assigning t
 
 #### name_attribute
 
-Same as before. This is exactly equivalent to default: lazy { name }.
+Same as before. Causes the attribute to be explicitly set to the name passed to the constructor. To wit:
+
+```ruby
+class MyResource < Chef::Resource
+  property :path, name_attribute: true
+end
+
+my_resource 'foo' do
+  name 'bar'
+  puts path #=> foo
+end
+```
+
+#### patchy
+
+Properties declare whether they are patchy (meaning resource actions will not change the on-disk value) or not patchy by specifying `patchy: true|false`. The primary effect of this is to prevent the property from being cloned during Chef's clone process (which happens when you declare a resource twice with different properties):
+
+
+```ruby
+file '/mystuff/x.txt' do
+  mode 0666
+end
+
+<long series of actions ...>
+
+execute 'chmod /mystuff 0777'
+
+<long series of actions ...>
+
+# If mode is declared `patchy: false`, we will change mode back to 0666 here.
+# If mode is declared `patchy: true`, we leave mode at 0777.
+file '/mystuff/x.txt' do
+  content 'Hello World'
+end
+```
+
+The reason being, a patchy property is one that *leaves the value alone* unless the user actually says they want to change it.  Cloning values from other resources violates that.
 
 ### Property type
 
