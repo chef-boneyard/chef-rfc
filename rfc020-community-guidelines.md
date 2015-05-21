@@ -1,6 +1,6 @@
 ---
 RFC: 20
-Author: Nathen Harvey <nharvey@getchef.com>
+Author: Nathen Harvey <nharvey@chef.io>
 Status: Accepted
 Type: Informational
 ---
@@ -71,14 +71,14 @@ Any physical violence or intimidation, threatened or acted on, is a serious offe
 
 #### Roles
 
-* The **Decider** has final say on community guidelines and final authority on punitive actions and appeals. As per the [Chef RFC process](https://github.com/opscode/chef-rfc/blob/master/rfc000-rfc-process.md), the top-level decider is [Adam Jacob](mailto:adam@getchef.com).
-* The **Community Ombudsperson** guides and meets regularly with community advocates, helps enforce punitive actions, hears appeals, is responsible for maintaining a list of incidents, and ensures pertinent information is shared with necessary parties.  The Community Ombudsperson is appointed by the decider.
-* **Community Advocates** may be assigned for each area where the community convenes online (IRC, email list, GitHub, etc.).  Advocates are responsible for helping enforce the community guidelines.
+* The **Decider** has final say on community guidelines and final authority on corrective actions and appeals. As per the [Chef RFC process](https://github.com/opscode/chef-rfc/blob/master/rfc000-rfc-process.md), the top-level decider is [Adam Jacob](mailto:adam@chef.io).
+* The **Community Ombudsperson** guides and meets regularly with community advocates, helps enforce corrective actions, hears appeals, is responsible for maintaining a list of incidents, and ensures pertinent information is shared with necessary parties.  The Community Ombudsperson is appointed by the decider.
+* **Community Advocates** may be assigned for each area where the community convenes online (IRC, email list, GitHub, etc.).  Community Advocates are volunteers who have the best interests of our community in mind.  They act in good faith to help enforce our community guidelines and respond to incidents when they occur.
 * A **Community Member** is anyone who participates with the community whether in-person or via online channels.  Community members are responsible for following the community guidelines, suggesting updates to the guidelines when warranted, and helping enforce community guidelines.
 
 Community Advocates must be agreed on by the community:  a simple majority of other advocates must approve.  The Decider retains veto power.  Create a pull request against this document to volunteer or nominate someone as a community advocate for a particular area.  Create a pull request against this document to propose an area that needs coverage.
 
-#### Procedure for Incident Handling
+#### Procedure for Handling Disagreements and Incidents
 
 **When we disagree, we consult others**
 
@@ -87,20 +87,52 @@ Disagreements, both social and technical, happen all the time. When they occur, 
 The Chef Community advocates are well informed on how to deal with incidents. Report the incident (preferably in writing) to one of the community advocates listed below.  See the "Roles" section above for a description of each role.
 
 * Decider
-  * Adam Jacob - &lt;[adam@getchef.com](mailto:adam@getchef.com)&gt; - IRC: holoway
+  * Adam Jacob - &lt;[adam@chef.io](mailto:adam@chef.io)&gt; - IRC: holoway
 * Ombudsperson
-  * Nathen Harvey - &lt;[nharvey@getchef.com](mailto:nharvey@getchef.com)&gt; - +1 202-368-7264 - IRC: nathenharvey
+  * Nathen Harvey - &lt;[nharvey@chef.io](mailto:nharvey@chef.io)&gt; - +1 202-368-7264 - IRC: nathenharvey
 * Advocates -
-  * IRC - generally, individuals with operator in a channel are designated as community advocates.
+  * IRC
     * \#chef - jonlives, zts
     * \#chef-hacking - jonlives, zts
   * chef@ mailing list -
   * chef-dev@ mailing list -
   * GitHub -
   * Stackoverflow -
-  * Serverfault - Mike Fiedler @miketheman (http://serverfault.com/users/7309/mike-fiedler)
+  * Serverfault - [Mike Fiedler](http://serverfault.com/users/7309/mike-fiedler),  [GitHub:  miketheman](https://github.com/miketheman)
   * LinkedIn Chef Users' Group -
   * [chef_opscode reddit](https://www.reddit.com/r/chef_opscode/)
+
+  #### Guidelines for handling conflict
+
+  Here are some guidelines to consider when conflicts or disagreements occur:
+
+  * Steer conflict in the direction of respectful discussion.
+  * Be respectful and follow our community guidelines.
+  * Consider the other person's experience and view point.
+  * Consider the other person's perception of your experience and view point.
+  * Listen to what the other person has to say.
+  * Ask open-ended, clarifying questions.
+  * Step away from the disagreement or conflict - walking away from a situation is often a great way to prevent escalation.
+  * Bring the conflict to some resolution or escalate to a community advocate.
+
+#### Guidelines for handling incidents
+
+When an advocate notices someone behaving in a way that is outside of our guidelines (a violator) the advocate should make every reasonable attempt to help curtail that behavior.  The advocate may:
+
+* Remind the violator about our Community Guidelines and provide a link to this document.
+* Ask the violator to stop the unacceptable behavior.
+* Raise the issue with a fellow community advocate, the ombudsperson, or the decider.
+* Allow time for the violator to correct the behavior.
+
+The advocate should take the following steps if the behavior is not brought inline with our guidelines or the incident is not resolved.
+
+* Consult with another community advocate to make a judgement call about what reasonable corrective actions are warranted.
+* Apply the corrective action.
+* Document the incident.
+
+#### Documenting Incidents
+
+All incident reports will be kept in a private repository that is shared with the Community Advocates, Community Ombudsperson, and the Decider.
 
 The important information to report consists of:
 
@@ -114,17 +146,13 @@ If you feel your safety is in jeopardy please do not hesitate to contact local l
 
 **Note**: Incidents that violate the Community Guidelines are extremely damaging to the community, and they will not be tolerated. The silver lining is that, in many cases, these incidents present a chance for the community as a whole to grow, learn, and become better. The community advocate team requests that they be your first resource when reporting a Chef Community-related incident, so that they may enforce the Community Guidelines and take quick action toward a resolution.
 
-#### Documenting Incidents
+### Corrective Actions
 
-All incident reports will be kept in a private repository that is shared with the Community Advocates, Community Ombudsperson, and the Decider.
+Crafting a list of quid pro quo corrective actions in our community guidelines would be inadequate and incomplete.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested corrective actions.
 
-### Punitive Actions
+Our first response should always be to ensure the immediate safety and well being of all parties involved.  In the ideal case, an attempt to stop and prevent the violation behavior would be made before any corrective action is decided.
 
-Crafting a list of quid pro quo punitive actions in our community guidelines would be inadequate and incomplete.  Each incident will be dealt with on a case-by-case basis.  The Community Advocates and Community Ombudsperson will maintain a list of incidents and actions taken.  If patterns emerge this section may be updated to include some suggested punitive actions.
-
-Our first response should always be to ensure the immediate safety and well being of all parties involved.  In the ideal case, an attempt to stop and prevent the violation behavior would be made before any punitive action is decided.
-
-When punitive action is warranted, a Community Advocate may use one or more of the following remedies:
+When corrective action is warranted, a Community Advocate may use one or more of the following remedies:
 
 * Removal from the space where the incident occurred for a period of time.
 * Banned from the space where the incident occurred indefinitely.
@@ -133,7 +161,7 @@ When punitive action is warranted, a Community Advocate may use one or more of t
 
 #### Appeals
 
-People subjected to punitive action may appeal the action by contacting a community advocate, ombudsperson, or the decider.  An appeal will be acknoweldged within 48 hours and processed within seven days.
+People subjected to corrective action may appeal the action by contacting a community advocate, ombudsperson, or the decider.  An appeal will be acknowledged within 48 hours and processed within seven days.
 
 ### Influences
 
