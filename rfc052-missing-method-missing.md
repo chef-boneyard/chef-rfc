@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 52
 Author: John Keiser <john@johnkeiser.com>
-Status: Final
+Status: Accepted
 Type: Standards Track
 Tracking:
   - https://github.com/chef/chef/pull/3270
