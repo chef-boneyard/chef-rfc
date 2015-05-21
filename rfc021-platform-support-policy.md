@@ -39,7 +39,7 @@ Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Solaris | 10, 11 | sparc, x86 | shar | Solaris 10
 Windows | 7, 8, 8.1, 2003R2, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi | Windows 2008R2
-Ubuntu Linux | 10.04, 12.04, 14.04 | x86, x86_64 | deb | Ubuntu 10.04
+Ubuntu Linux | 12.04, 14.04 | x86, x86_64 | deb | Ubuntu 12.04
 
 ### Tier 2 Support
 
@@ -48,6 +48,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * SUSE Linux Enterprise Server 10, 11
 * Scientific Linux 5.x, 6.x and 7.x (i386 and x86-64)
 * Debian Linux 6.x and 7.x
+* Ubuntu 10.04 (x86, x86_64)
 * Gentoo Linux (rolling release)
 * Arch Linux (rolling release)
 * Fedora (current non-EOL revisions)
@@ -75,7 +76,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 
 ### Supported
 
-* Ubuntu 10.04LTS, 12.04LTS, 14.04LTS
+* Ubuntu 12.04LTS, 14.04LTS
 * RHEL 5.x, 6.x, 7.x
 * CentOS 5.x, 6.x, 7.x
 * Oracle Enterprise Linux 5.x, 6.x, 7.x
@@ -122,6 +123,7 @@ As platforms are added and removed, the timeline of the changes needs to be reco
 Platform | Change | References
 --- | --- | ---
 Solaris 9 | Removed October 2014 | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
+Ubuntu 10.04LTS | Moved to Tier 2 May 2015 | https://wiki.ubuntu.com/LTS
 
 ## Copyright
 
