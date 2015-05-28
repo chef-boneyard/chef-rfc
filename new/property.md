@@ -72,7 +72,7 @@ class MysqlInstall < Chef::Resource
 end
 ```
 
-This is a breaking change, and in Chef 12 will only affect properties (not attributes).
+This is a breaking change since `attribute` is the same as `property`, but it is considered a bugfix and not a backcompat feature, so backwards compatibility will not be maintained.
 
 #### `attribute`
 
