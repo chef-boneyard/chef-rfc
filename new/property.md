@@ -32,25 +32,6 @@ We add a number of enhancements to `attribute`:
 
 ## Specification
 
-### Make nil a valid value
-
-It will now be possible to set a property to `nil` by saying `my_property nil`.  (Currently, this will not change the value of `my_property`.)
-
-In Chef 12, we will keep behavior the same, and *deprecate* setting a property to `nil`.  We will allow properties to explicitly allow `nil`, however, by specifying it explicitly as a valid value: `property :path, [ String, nil ]`.
-
-### Make defaults lazy
-
-`lazy` defaults are automatically run in the context of the *instance*:
-
-```ruby
-class MysqlInstall < Chef::Resource
-  property :root_path, String, default: '/'
-  property :config_path, String, default: lazy { File.join(root_path, 'config') }
-end
-```
-
-This is a breaking change, and in Chef 12 will only affect properties (not attributes).
-
 ### `property`
 
 `property` will be added to `Chef::Resource` as the primary way to write properties. This is to alleviate confusion around resource and node attributes.
@@ -73,6 +54,25 @@ When a property is defined this way:
 - The setter and getter manipulate the class variable `@<name>`.
 
 (This is the same as before, except the addition of the `properties` hash.)
+
+### Make nil a valid value
+
+It will now be possible to set a property to `nil` by saying `my_property nil`.  (Currently, this will not change the value of `my_property`.)
+
+In Chef 12, we will keep behavior the same, and *deprecate* the current behavior of silently doing nothing when you set a property to nil.  We will allow properties to explicitly allow `nil`, however, by specifying it explicitly as a valid value: `property :path, [ String, nil ]`.
+
+### Make defaults lazy
+
+`lazy` defaults are automatically run in the context of the *instance*:
+
+```ruby
+class MysqlInstall < Chef::Resource
+  property :root_path, String, default: '/'
+  property :config_path, String, default: lazy { File.join(root_path, 'config') }
+end
+```
+
+This is a breaking change, and in Chef 12 will only affect properties (not attributes).
 
 #### `attribute`
 
@@ -148,19 +148,13 @@ property :x, is: [ :a, :b, :c ]
 
 It is worth noting that many existing validations can be expressed directly in terms of `is`:
 
-```ruby
-# These:
-attribute :path, kind_of: String
-attribute :path, equal_to: [ :a, :b, :c ]
-attribute :path, regex: /^\//
-attribute :path, respond_to: :merge
-attribute :path, cannot_be: :empty
-property :path, is: String
-property :path, is: [ :a, :b, :c ]
-property :path, is: /^\//
-property :path, is: proc { |v| v.respond_to?(:merge) }
-property :path, is: proc { |v| !v.empty? }
-```
+Old Qualifier          | `is`
+-----------------------|---------------
+`kind_of: String`      | `is: String`
+`equal_to: [ :a, :b ]` | `is: [ :a, :b ]`
+`regex: /@chef.io/`    | `is: /@chef.io/`
+`respond_to: :merge`   | `is: proc { |v| v.respond_to?(:merge) }`
+`cannot_be: :empty`    | `is: proc { |v| !v.empty? }`
 
 As well as some things that were hard to express before:
 
@@ -175,9 +169,10 @@ If both `is` and a type are specified, the values in the type are prepended to `
 `is` allows for rspec 3 matchers to be passed, and will validate them and print failures.
 
 ```ruby
-include RSpec::Matchers
 property :path, a_string_starting_with('/')
 ```
+
+There are no current plans to actually include the matcher syntax in `Resource` by default; users will do this if they want it by doing `include RSpec::Matchers`.
 
 ### Coercion
 
