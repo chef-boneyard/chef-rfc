@@ -27,7 +27,7 @@ Chef Client support policies also apply to Ohai, since that is a dependency.
 
 ### Tier 1 Support
 
-Tier 1 supported platforms are those for which Chef builds native binary "Omnitruck" (full-stack installer) packages. For each platform, Chef performs some post-build verification on them or their equivalents. For example, we may elect to do post-build verification for Oracle Enterprise Linux using the same test results as Red Hat Enterprise Linux, since they are so similar).
+Tier 1 supported platforms are those for which Chef builds native binary "Omnitruck" (full-stack installer) packages. For each platform, Chef performs some post-build verification on them or their equivalents. For example, we may elect to do post-build verification for Oracle Enterprise Linux using the same test results as Red Hat Enterprise Linux, since they are so similar). A platform must have a Lieutenant before being added to this tier.
 
 Platform | Versions | Architectures | Package Format | Built on
 --- | --- | --- | --- | ---
@@ -43,7 +43,7 @@ Ubuntu Linux | 10.04, 12.04, 14.04 | x86, x86_64 | deb | Ubuntu 10.04
 
 ### Tier 2 Support
 
-Tier 2 supported platforms are those on which Omnitruck will serve packages, but those packages may not have been built on that OS variant. Additionally, we may or may not do post-build verification on these platforms.
+Tier 2 supported platforms are those on which Omnitruck will serve packages, but those packages may not have been built on that OS variant. Additionally, we may or may not do post-build verification on these platforms. A platform must have at least one Maintainer before being added to this tier.
 
 * SUSE Linux Enterprise Server 10, 11
 * Scientific Linux 5.x, 6.x and 7.x (i386 and x86-64)
