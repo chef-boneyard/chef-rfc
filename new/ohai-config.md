@@ -21,10 +21,19 @@ Provides a standard for passing configuration settings to Ohai to configure its 
 
 ## Current State
 
-Previously Ohai has not had a configuration file. A small number of Ohai configuration settings do exist that can be specified in the Chef client 'client.rb' file, which are then passed to Ohai during a client run. For example, additional locations on the file system can be searched for plugins by adding paths to the `Ohai::Config[:plugin_path]` array. This file is only loaded by Chef and does not affect Ohai when being run on the command line nor any other programs loading Ohai as a library, causing inconsistent Ohai results.
+The lack of a configuration file has been a major impediment to many improvements in Ohai and plugin behavior.
+
+Previously Ohai has not had a configuration file. A small number of Ohai configuration settings do exist that can be specified in the Chef client 'client.rb' file which is parsed by `Mixlib::Config`. These settings are then passed to Ohai during a client run. For example, additional locations on the file system can be searched for plugins by adding paths to the `Ohai::Config[:plugin_path]` array. However, the 'client.rb' file is only loaded by the Chef client and does not affect Ohai when being run on the command line nor any other programs loading Ohai as a library, causing inconsistent Ohai results.
+
+### Hints
+
+The existing hints system was designed to provide facts about a system that Ohai would be unable to or have difficulty to determine on its own. The most common use case is informing a knife plugin that the system is in a particular cloud environment, enabling the plugin to collect appropriate metadata. Sometimes the plugin also passes metadata to Ohai to become attributes that Ohai would otherwise be unable to collect. For this purpose it was decided to use JSON as a data interchange format.
+
+When a 'hint_name.json' file exists in the directory specified by `Ohai::Config[:hints_path]`, `Ohai::Hints.hint?(hint_name)` will return non-nil. If the file contains JSON data, it will be returned as a hash. If the file is empty, an empty hash will be returned.
+
+The hints system should only be used by other tools to assist Ohai in collecting data. It should not otherwise be used to configure the behavior or Ohai or its plugins. That is the purpose of the new configuration system. The hints system may be combined with the configuration system in the future and deprecated for general ease of use of Ohai. 
 
 ## Specification
-
 
 The `Ohai::Config` Ruby class will use the new ChefConfig library that is bundled with the Chef client. Configuration will be set in a configuration file using a `Mixlib::Config` config_context named 'ohai'. Here is an example 'client.rb' file that would configure both the client and Ohai.
 
