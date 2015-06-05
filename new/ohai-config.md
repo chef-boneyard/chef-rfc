@@ -26,7 +26,7 @@ Previously Ohai has not had a configuration file. A small number of Ohai configu
 ## Specification
 
 
-`Ohai::Config` will use the new ChefConfig library that is bundled with the Chef client. Configuration will be set using a `Mixlib::Config` config_context named 'ohai'. Here is an example 'client.rb' file that would configure both the client and Ohai.
+The `Ohai::Config` Ruby class will use the new ChefConfig library that is bundled with the Chef client. Configuration will be set in a configuration file using a `Mixlib::Config` config_context named 'ohai'. Here is an example 'client.rb' file that would configure both the client and Ohai.
 
 ```
 log_level        :info
@@ -36,21 +36,20 @@ ohai.plugin_path = "/etc/chef/ohai/plugins.local"
 ohai.plugin[:hostname][:fqdn_using] = [ :hostname, :nis, :dns ]
 ```
 
-Because at the top level (outside of a config_context) `Ohai::Config` will be the same as `ChefConfig` and `Chef::Config`, existing top level configuration options like `Ohai::Config[:disabled_plugins]` will be deprecated in favor of new settings within the config_context, i.e. `Ohai::Config.ohai.disabled_plugins`. Until support for those top-level settings is removed, their values will be copied as appropriate for backward compatibility.
-
-For example:
-
-```
-# Old Syntax
-Ohai::Config[:disabled_plugins] = [ :BigPlugin ]
-
-# New Syntax
-Ohai::Config.ohai.disabled_plugins = [ :BigPlugin]
-```
+Because at the top level (outside of a config_context) the `Ohai::Config` class will be the same as `ChefConfig` and `Chef::Config`, existing top level configuration options like `Ohai::Config[:disabled_plugins]` will be deprecated in favor of new settings within the config_context, i.e. `Ohai::Config.ohai.disabled_plugins`. Until support for those top-level settings is removed, their values will be copied as appropriate for backward compatibility.
 
 For convenience, a config method will be added to the `Ohai` class to access `Ohai::Config.ohai`, allowing the use of `Ohai.config[:plugin_path]` instead of `Ohai::Config.ohai[:plugin_path]` throughout the code. All existing uses of `Ohai::Config` in Ohai will need to be updated accordingly.
 
-### Configuration File
+
+Example accessing the disabled_plugins configuration setting:
+
+```
+Ohai::Config[:disabled_plugins] # Current pattern
+Ohai::Config.ohai[:disabled_plugins] # Proposed pattern
+Ohai.config[:disabled_plugins] # Proposed shortcut
+```
+
+### Configuration Files
 
 When run from the command line, Ohai should load the workstation 'config.rb' and then the 'client.rb' files from the appropriate platform specific path, unless an alternate configuration file is provided as a command line argument. This provides similar behavior to knife which loads 'config.rb' and then 'knife.rb'. This facilitates reducing the number of separate configuration files to maintain for command line behavior.
 
