@@ -35,7 +35,7 @@ The hints system should only be used by other tools to assist Ohai in collecting
 
 ## Specification
 
-The `Ohai::Config` Ruby class will use the new ChefConfig library that is bundled with the Chef client. Configuration will be set in a configuration file using a `Mixlib::Config` config_context named 'ohai'. Here is an example 'client.rb' file that would configure both the client and Ohai.
+The `Ohai::Config` Ruby class will use the new ChefConfig library that is currently bundled with the Chef client source but shipped separately. Configuration will be set in a configuration file using a `Mixlib::Config` config_context named 'ohai'. Here is an example 'client.rb' file that would configure both the client and Ohai.
 
 ```
 log_level        :info
