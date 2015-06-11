@@ -64,7 +64,7 @@ When run from the command line, Ohai should load the workstation 'config.rb' and
 
 When loaded as a library, Ohai must not load a configuration file and will expect to be provided any necessary configuration options. For example, when loaded by the Chef client, configuration values will be located in the 'client.rb' file, or the file passed to the Chef client as the configuration file. Using the same file for configuration simplifies configuration file creation during bootstrap for the client.
 
-### Namespacing
+### Plugin Namespacing
 
 To reduce the risk of built-in and custom plugins using the same configuration setting for conflicting purposes, it is recommended that all plugins prefix their configuration settings with `[:plugin]` and the snake-case name of the plugin consuming the setting, as set in the plugin itself. The exposed overlap is intended, to facilitate passing a configuration option to the same plugin for multiple platforms but only specifying it once.
 
@@ -87,6 +87,28 @@ Ohai.config[:plugin][:platform][:amazon_is_amazon]
 ```
 
 Note that the filename on disk does not always match the plugin name. In the case of the 'darwin/system_profiler.rb' file, the plugin name is 'SystemProfile', and the correct plugin namespace would be `Ohai::Config.ohai[:plugin][:system_profile]`.
+
+### Configuration Hash Nesting
+
+Rather than auto-vivify nested hashes, each plugin's configuration is limited to a single level.
+
+`ohai[:plugin][:dmi][:all_ids] = true` is allowed
+`ohai[:plugin][:dmi][:ids][:cpu] = true` is not allowed
+
+Plugin authors are recommended to use underscores in variable names to manage multiple levels of configuration values. For example:
+
+```
+ohai[:plugin][:dmi][:id_cpu] = true
+ohai[:plugin][:dmi][:id_memory] = true
+ohai[:plugin][:dmi][:id_disk] = false
+```
+
+Configuration values may be hashes, but a hash must be explicitly set.
+
+```
+ohai[:plugin][:dmi][:id] = { :cpu => true, :memory => true, :disk => false }
+Ohai.config[:plugin][:dmi][:id][:disk] => false
+```
 
 ## Copyright
 
