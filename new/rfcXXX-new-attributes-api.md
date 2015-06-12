@@ -165,7 +165,58 @@ orchestration support, and/or improved authorization behaviors.
 
 ## Rationale
 
-This section will be updated once the specification is more complete.
+### About Trainwreck Errors
+
+Trainwreck errors are a common problem in Chef, and the appeal of making the
+error more descriptive is evident. It would be advantageous to simply improve
+the error message without requiring users to migrate to a new attributes API,
+but there are several limitatations of Ruby that make this impossible to do
+correctly.
+
+In Ruby, `nil` and `false` are the only "falsey" values. Both of these objects
+are "immediate," meaning that there is only one instance of them in the Ruby
+VM. If one creates a subclass of `NilClass` or `FalseClass`, instances of that
+subclass will _not_ be "falsey."  Therefore the return value for fetching a
+nonexistent key must be either `nil` or `false` or else code like
+`do_something if node["key_that_may_exist"]` will not function correctly.
+
+Ruby does allow setting instance variables on immediate objects, e.g.:
+
+```ruby
+nil.instance_variable_set(:@foo, "hello")
+nil.instance_variable_get(:@foo)
+# => "hello"
+```
+
+Taking advantage of this, combined with monkeypatching NilClass, it's possible
+to fix the simplest case of trainwreck error. For example, if `node["a"]` is
+`nil`, we could set an instance variable on `nil` to note that the last
+attribute we attempted to access was "a", and handle method missing such that
+`node["a"]["b"]` would explain which attribute was missing in the error
+message. This approach has some unfortunate drawbacks, however. Consider the
+following cases:
+
+```ruby
+Hash.new["foo"]["bar"]
+```
+
+Since there is only one `nil`, this code would trigger the `method_missing`
+hack. This could be mitigated by disabling the hack if the special instance
+variable is not set; however, there are still cases where this approach would
+produce an incorrect error. For example:
+
+```ruby
+unless node["no_value_for_this_key"]
+  Hash.new["foo"]["bar"]
+end
+```
+
+In this case, the first line would necessarily set the instance variable on
+nil, but `nil[]` isn't called until the second line, where the custom error
+handling would produce a completely incorrect error message stating that the
+code failed because `node["no_value_for_this_key"]` was `nil`. Since many ruby
+types implement `[]`, bizarre error messages could be produced in a wide
+variety of cases, depending on what type the user expected to have.
 
 ## Copyright
 
