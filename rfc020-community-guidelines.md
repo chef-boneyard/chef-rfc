@@ -17,7 +17,7 @@ As a member of the Chef community I want a set of ground rules that encourage re
 
 ## Specification
 
-The following shall become our Community Guidelines
+The following shall become our Community Guidelines.
 
 ### Community Guidelines
 
@@ -102,18 +102,18 @@ The Chef Community advocates are well informed on how to deal with incidents. Re
   * LinkedIn Chef Users' Group -
   * [chef_opscode reddit](https://www.reddit.com/r/chef_opscode/)
 
-  #### Guidelines for handling conflict
+#### Guidelines for handling conflict
 
-  Here are some guidelines to consider when conflicts or disagreements occur:
+Here are some guidelines to consider when conflicts or disagreements occur:
 
-  * Steer conflict in the direction of respectful discussion.
-  * Be respectful and follow our community guidelines.
-  * Consider the other person's experience and view point.
-  * Consider the other person's perception of your experience and view point.
-  * Listen to what the other person has to say.
-  * Ask open-ended, clarifying questions.
-  * Step away from the disagreement or conflict - walking away from a situation is often a great way to prevent escalation.
-  * Bring the conflict to some resolution or escalate to a community advocate.
+* Steer conflict in the direction of respectful discussion.
+* Be respectful and follow our community guidelines.
+* Consider the other person's experience and view point.
+* Consider the other person's perception of your experience and view point.
+* Listen to what the other person has to say.
+* Ask open-ended, clarifying questions.
+* Step away from the disagreement or conflict - walking away from a situation is often a great way to prevent escalation.
+* Bring the conflict to some resolution or escalate to a community advocate.
 
 #### Guidelines for handling incidents
 
