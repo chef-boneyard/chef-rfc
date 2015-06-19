@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 53
 Author: Bryan McLellan <btm@loftninjas.org>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
