@@ -53,6 +53,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * Fedora (current non-EOL revisions)
 * OpenSUSE 12.3 (until EOL on 15 September 2014), 13.1
 * OmniOS stable and LTS releases
+* OpenBSD 5.7 (i386 and amd64)
 
 ### Not Supported
 
@@ -61,7 +62,6 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * Solaris < 10
 * AIX 5.1L
 * FreeBSD 8
-* OpenBSD
 * NetBSD
 * Windows 2003, Windows 2000
 * RHEL/CentOS/Oracle/Scientific 4.x or older
