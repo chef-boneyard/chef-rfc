@@ -33,6 +33,7 @@ Platform | Versions | Architectures | Package Format | Built on
 --- | --- | --- | --- | ---
 AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
+Debian Linux | 6, 7, 8 | i386, x86_64 | deb | Debian 6
 FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
 Mac OS X | 10.8, 10.9, 10.10 | x86_64 | dmg | Mac OS 10.8
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
@@ -47,7 +48,6 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 
 * SUSE Linux Enterprise Server 10, 11
 * Scientific Linux 5.x, 6.x and 7.x (i386 and x86-64)
-* Debian Linux 6.x and 7.x
 * Ubuntu 10.04 (x86, x86_64)
 * Gentoo Linux (rolling release)
 * Arch Linux (rolling release)
