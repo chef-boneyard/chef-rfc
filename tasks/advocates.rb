@@ -37,7 +37,7 @@ namespace :advocates do
     out << person(advocates["people"], advocates["Org"]["Lead"]["person"]) + "\n\n"
     out << "## " + advocates["Org"]["Ombudsperson"]["title"] + "\n\n"
     out << person(advocates["people"], advocates["Org"]["Ombudsperson"]["person"]) + "\n\n"
-    out << "## Advocates \n\n"
+    out << "## Advocates\n\n"
     out << components(advocates["people"], advocates["Org"]["Advocates"])
     File.open(TARGET, "w") { |fn|
       fn.write out
