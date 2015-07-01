@@ -29,12 +29,16 @@ namespace :advocates do
   desc "Generate MarkDown version of ADVOCATES file"
   task :generate do
     advocates = Tomlrb.load_file SOURCE
-    out = "<!-- This is a generated file. Please do not edit directly -->\n\n"
+    out = "<!-- This is a generated file. Please do not edit directly -->\n"
+    out << "<!-- Modify ADVOCATES.toml file and run `rake advocates:generate` to regenerate -->\n\n"
     out << "# " + advocates["Preamble"]["title"] + "\n\n"
     out <<  advocates["Preamble"]["text"] + "\n"
     out << "# " + advocates["Org"]["Lead"]["title"] + "\n\n"
     out << person(advocates["people"], advocates["Org"]["Lead"]["person"]) + "\n\n"
-    out << components(advocates["people"], advocates["Org"]["Components"])
+    out << "## " + advocates["Org"]["Ombudsperson"]["title"] + "\n\n"
+    out << person(advocates["people"], advocates["Org"]["Ombudsperson"]["person"]) + "\n\n"
+    out << "## Advocates \n\n"
+    out << components(advocates["people"], advocates["Org"]["Advocates"])
     File.open(TARGET, "w") { |fn|
       fn.write out
     }
@@ -42,20 +46,21 @@ namespace :advocates do
 end
 
 def components(list, cmp)
-  out = "## " + cmp.delete("title") + "\n\n"
-  out << cmp.delete("text") + "\n" if cmp.has_key?("text")
-  if cmp.has_key?("lieutenant")
-    out << "### Lieutenant\n\n"
-    out << person(list, cmp.delete("lieutenant")) + "\n\n"
+  out = ""
+  cmp.each do |k,v|
+    out << "\n#### #{v['title'].gsub('#','\\#')}\n"
+    out << advocates(list, v['advocates'])
+    # if v['advocates'].size > 0
+    #   v['advocates'].each do |p|
+    #     out << "#{person(list, p)}\n"
+    #   end
+    # end
   end
-  out << advocates(list, cmp.delete("advocates")) + "\n" if cmp.has_key?("advocates")
-  cmp.delete("paths")
-  cmp.each {|k,v| out << components(list, v) }
   out
 end
 
 def advocates(list, people)
-  o = "### Advocates\n\n"
+  o = ""
   people.each do |p|
     o << person(list, p) + "\n"
   end
@@ -63,5 +68,15 @@ def advocates(list, people)
 end
 
 def person(list, person)
-  "* [#{list[person]["Name"]}](https://github.com/#{list[person]["GitHub"]})"
+  if list[person].has_key?("GitHub")
+    out = "* [#{list[person]["Name"]}](https://github.com/#{list[person]["GitHub"]})"
+  else
+    out =  "* #{list[person]["Name"]}"
+  end
+  out << "\n  * IRC - #{list[person]["IRC"]}" if list[person].has_key?("IRC")
+  out << "\n  * [@#{list[person]["Twitter"]}](https://twitter.com/#{list[person]["Twitter"]})" if list[person].has_key?("Twitter")
+  out << "\n  * [#{list[person]["email"]}](mailto:#{list[person]["email"]})" if list[person].has_key?("email")
+  out << "\n  * #{list[person]["phone"]}" if list[person].has_key?("phone")
+  out << "\n  * [ServerFault](#{list[person]["ServerFault"]})" if list[person].has_key?("ServerFault")
+  out
 end
