@@ -50,11 +50,6 @@ def components(list, cmp)
   cmp.each do |k,v|
     out << "\n#### #{v['title'].gsub('#','\\#')}\n"
     out << advocates(list, v['advocates'])
-    # if v['advocates'].size > 0
-    #   v['advocates'].each do |p|
-    #     out << "#{person(list, p)}\n"
-    #   end
-    # end
   end
   out
 end
