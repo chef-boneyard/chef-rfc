@@ -5,10 +5,10 @@
 [Preamble]
   title = "Community Advocates"
   text = """
-This file lists the Community Advocates for the Chef project.  Community 
-Advocates may be assigned for each area where the community convenes online 
-(IRC, email list, GitHub, etc.).  Community Advocates are volunteers who have 
-the best interests of our community in mind.  They act in good faith to help 
+This file lists the Community Advocates for the Chef project.  Community
+Advocates may be assigned for each area where the community convenes online
+(IRC, email list, GitHub, etc.).  Community Advocates are volunteers who have
+the best interests of our community in mind.  They act in good faith to help
 enforce our community guidelines and respond to incidents when they occur.
 
 More information can be found in the [Chef Community Guidelines](https://github.com/chef/chef-rfc/blob/master/rfc020-community-guidelines.md).
@@ -22,60 +22,58 @@ More information can be found in the [Chef Community Guidelines](https://github.
   [Org.Ombudsperson]
     title = "Ombudsperson"
     person = "nathenharvey"
-  
+
 
   [Org.Advocates]
-      [Org.Advocates.IRC]
-        [Org.Advocates.IRC.chef]
-          title = "#chef IRC"
-          advocates = [
-            "jonlives",
-            "zts"
-          ]
-        [Org.Advocates.IRC.chef-hacking]
-          title = "#chef-hacking IRC"
-          advocates = [
-            "jonlives",
-            "zts"
-          ]
-      [Org.Advocates."mailing list"]
-        [Org.Advocates."mailing list".chef]
-          title = "chef@ mailing list"
-          advocates = [
-            
-          ]
-        [Org.Advocates."mailing list".chef-dev]
-          title = "chef-dev@ mailing list"
-          advocates = [
-            
-          ]
-      [Org.Advocates.GitHub]
-        title = "GitHub"
-        advocates = [
-          
-        ]
-      [Org.Advocates.Stackoverflow]
-        title = "Stack Overflow"
-        advocates = [
-          
-        ]
-      [Org.Advocates.Serverfault]
-        title = "Server Fault"
-        advocates = [
-          "miketheman"
-        ]
-      [Org.Advocates.LinkedIn]
-        title = "Chef LinkedIn Group"
-        advocates = [
-          
-        ]
-      [Org.Advocates.Reddit]
-        title = "Chef_Opscode Reddit <https://www.reddit.com/r/chef_opscode/>"
-        advocates = [
-          
-        ]
-        
-        
+    [Org.Advocates.ChefIRC]
+      title = "#chef IRC"
+      advocates = [
+        "jonlives",
+        "zts"
+      ]
+    [Org.Advocates.ChefHackingIRC]
+      title = "#chef-hacking IRC"
+      advocates = [
+        "jonlives",
+        "zts"
+      ]
+    [Org.Advocates.Serverfault]
+      title = "Server Fault"
+      advocates = [
+        "miketheman"
+      ]
+    [Org.Advocates.ChefMailingList]
+      title = "chef@ mailing list"
+      advocates = [
+        "vacant"
+      ]
+    [Org.Advocates.ChefDevMailingList]
+      title = "chef-dev@ mailing list"
+      advocates = [
+        "vacant"
+      ]
+    [Org.Advocates.GitHub]
+      title = "GitHub"
+      advocates = [
+        "vacant"
+      ]
+    [Org.Advocates.Stackoverflow]
+      title = "Stack Overflow"
+      advocates = [
+        "vacant"
+      ]
+    [Org.Advocates.LinkedIn]
+      title = "Chef LinkedIn Group"
+      advocates = [
+        "vacant"
+      ]
+    [Org.Advocates.Reddit]
+      title = "Chef_Opscode Reddit ([https://www.reddit.com/r/chef_opscode/](https://www.reddit.com/r/chef_opscode/))"
+      advocates = [
+        "vacant"
+      ]
+
+
 [people]
   [people.adamhjk]
     Name = "Adam Jacob"
@@ -94,14 +92,16 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Jon Cowie"
     GitHub = "jonlives"
     IRC = "jonlives"
-  
+
   [people.zts]
     Name = "Zac Stevens"
     GitHub = "zts"
     IRC = "zts"
-    
+
   [people.miketheman]
     Name = "Mike Fiedler"
     GitHub = "miketheman"
     ServerFault = "http://serverfault.com/users/7309/mike-fiedler"
-    
+
+  [people.vacant]
+    Name = "Vacant - Submit a PR to become a Chef Community Advocate"
