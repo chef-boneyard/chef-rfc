@@ -26,7 +26,8 @@ This RFC addresses some longstanding issues with `default` values on properties 
 Defaults are presently *sticky*, in that the first time a property is accessed, it is stored in the instance variable:
 
 ```ruby
-class X < Chef::Resource
+class X < Chef::Resource::LWRPBase
+  resource_name :x
   attribute :foo, default: lazy { Random.rand }
 end
 
@@ -45,7 +46,8 @@ Once a default is assigned, it is not re-evaluated.
 Sticky defaults create a serious issue for literals (non-lazy default values): *every instance* of a resource gets the same value.
 
 ```ruby
-class X < Chef::Resource
+class X < Chef::Resource::LWRPBase
+  resource_name :x
   attribute :foo, default: []
 end
 x 'a' do
@@ -67,7 +69,8 @@ An alternative would have been to `dup` the default value before assigning it to
 Users may rely on this behavior to *write* to `myprop`, like this:
 
 ```ruby
-class Foo < Chef::Resource
+class Foo < Chef::Resource::LWRPBase
+  resource_name :foo
   attribute :myhash, default: lazy { {} }
   attribute :mylist, default: lazy { [] }
 end
