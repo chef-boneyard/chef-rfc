@@ -38,26 +38,11 @@ x 'blah' do
 end
 ```
 
-Since this has some utility, we add a new keyword for computed defaults.
-
-#### Computed defaults
-
-```ruby
-class X < Chef::Resource
-  attribute :foo, computed: lazy { Random.rand }
-end
-
-x 'blah' do
-  puts @foo #=> nil
-  puts foo  #=> 1
-  puts foo  #=> 325
-  puts @foo #=> nil
-end
-```
+Once a default is assigned, it is not re-evaluated.
 
 #### Frozen constants
 
-Sticky defaults create a serious issue for constants: *every instance* of a resource gets the same value.
+Sticky defaults create a serious issue for literals (non-lazy default values): *every instance* of a resource gets the same value.
 
 ```ruby
 class X < Chef::Resource
@@ -73,9 +58,9 @@ x 'b' do
 end
 ```
 
-To fix this, we propose freezing constant default values, and not assigning them to the instance.
+To fix this, we propose freezing non-lazy default values, and not assigning them to the instance.
 
-TODO an alternative is to dup them when assigning to an instance the way Chef::Config does.
+An alternative would have been to `dup` the default value before assigning it to the instance. We didn't go this direction because it's more error-prone: dup doesn't do a deep duplication; not all objects can be dup'd, and it's a little surprising to boot.
 
 #### Backcompat break: writing to constant defaults
 
@@ -91,6 +76,8 @@ foo 'x' do
   mylist << 'hi'
 end
 ```
+
+This would cause `mylist << 'hi'` to fail with a message "RuntimeError: can't modify frozen Array", letting the user know that *writes* will not work. To create a mutable default value, you must use a lazy value.
 
 This will fail to work in the new world, because we are freezing the constants. This is deliberate and a bugfix; the purpose is to avoid users setting values that affect all instances.
 
@@ -113,8 +100,6 @@ For backcompat purposes, if validation of a default value fails, we will emit a 
 
 ### Move Core resources to `default` [compatbreak w/deprecation]
 
-`default` is generally a better thing for memory pressure, and is useful for detecting whether a user has set a value or not.  Currently, core Resources tend to assign property default values to the proper instance variable during `initialize`, and it is possible that subclasses may rely on this behavior. For Chef 12, we will grab the default values of any lazy arrays or hashes on initialize, and we will issue a deprecation warning for subclasses that directly use the initialized instance variable.
+`default` is generally a better thing for memory pressure, and is useful for detecting whether a user has set a value or not.  Currently, core Resources tend to assign property default values to the proper instance variable during `initialize`, and it is possible that subclasses may rely on this behavior.
 
-### `reset_property`
-
-There is already a `property_is_set?`, but no way to reset a property to its default.  We suggest using `reset_property :name` to do this.
+Resources *should* instead be using the property getter method, and in the future the instance variable may not even always be there. For Chef 12, we will grab the default values of any lazy arrays or hashes on initialize, and we will issue a deprecation warning for subclasses that directly use the initialized instance variable.
