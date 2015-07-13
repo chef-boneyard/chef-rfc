@@ -23,7 +23,7 @@ At a given time:
 
 * `Latest` and `Latest - 1` major versions of Chef Client is supported by Chef community.
 * `Latest` version includes all the enhancements and bug fixes.
-* Security fixes only are backported to `Latest - 1`.
+* Security fixes are backported to `Latest - 1`.
 * Contributions to `Latest - 1` version are always welcome.
 * As Chef Community, we use and strongly recommend using omnibus packages for Chef Client. We still help out to folks who are doing custom installations of Chef Client but on a 'best effort' basis.
 
