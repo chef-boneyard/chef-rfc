@@ -39,7 +39,7 @@ Mac OS X | 10.8, 10.9, 10.10 | x86_64 | dmg | Mac OS 10.8
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Solaris | 10, 11 | sparc, x86 | shar | Solaris 10
-Windows | 7, 8, 8.1, 2003R2, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi | Windows 2008R2
+Windows | 7, 8, 8.1, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi | Windows 2008R2
 Ubuntu Linux | 12.04, 14.04 | x86, x86_64 | deb | Ubuntu 12.04
 
 ### Tier 2 Support
@@ -64,7 +64,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * AIX 5.1L
 * FreeBSD 8
 * NetBSD
-* Windows 2003, Windows 2000
+* Windows 2003R2, Windows 2003, Windows 2000
 * RHEL/CentOS/Oracle/Scientific 4.x or older
 * RHEL or SLES on POWER (ppc64) or System/z
 * HP-UX
@@ -125,6 +125,7 @@ Platform | Change | References
 --- | --- | ---
 Solaris 9 | Removed October 2014 | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
 Ubuntu 10.04LTS | Moved to Tier 2 May 2015 | https://wiki.ubuntu.com/LTS
+Windows 2003R2 | Removed July 2015 | https://support.microsoft.com/en-us/lifecycle/search/default.aspx?alpha=Windows%20Server%202003%20R2
 
 ## Copyright
 
