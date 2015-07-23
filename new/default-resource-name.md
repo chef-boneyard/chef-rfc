@@ -58,6 +58,17 @@ end
 
 This will *not* apply to classes manufactured using Class.new and assigned to constants or given names later.
 
+#### Alternate: MyThing::Resource -> my_thing
+
+When a class is declared as SomeName::Resource, we assume it's using the pattern SomeName::Resource and SomeName::Provider, and give it the automatic resource_name `some_name`.
+
+```ruby
+class SuperAwesome::Resource < Chef::Resource
+end
+super_awesome 'foo' do
+end
+```
+
 #### resource_name nil unsets resource name
 
 class.resource_name nil unsets a resource name (and prevents that name from appearing in DSL).
