@@ -8,7 +8,8 @@ Type: Standards Track
 # Easy Resource Load And Converge
 
 With the introduction of `action` on resources, it becomes useful to have a
-blessed way to get the actual value of the resource. This proposal adds `load` and `converge` to help with this purpose, enabling:
+blessed way to get the actual value of the resource. This proposal adds
+`load_current_value` and `converge_if_changed` to help with this purpose, enabling:
 
 - Low-ceremony load methods (as easy to write as we can make it)
 - A super easy converge model that automatically compares current vs. desired
@@ -26,15 +27,15 @@ blessed way to get the actual value of the resource. This proposal adds `load` a
 
 ## Specification
 
-### `load_actual_value`: in-place resource load
+### `load_current_value`: in-place resource load
 
 When using `action`, one needs a way to load the *actual* system value of the resource, so that it can be compared to the desired value and a decision made as to whether to change anything.
 
-When the resource writer defines `load_actual_value` on the resource class, it can be called to load the real system value into the resource. Before any action runs, this will be used by `load_current_resource` to load the resource. `action` will do some important work before calling the new method:
+When the resource writer defines `load_current_value` on the resource class, it can be called to load the real system value into the resource. Before any action runs, this will be used by `load_current_resource` to load the resource. `action` will do some important work before calling the new method:
 
 1. Create a new instance of the resource with the same name.
 2. Copy all non-desired-state values from the desired resource into the new instance.
-3. Call `load_actual_value` on the new instance.
+3. Call `load_current_value` on the new instance.
 
 
 ```ruby
@@ -43,14 +44,14 @@ class File < Chef::Resource
   property :mode, default: 0666
   property :content
 
-  load_actual_value do
-    actual_value_does_not_exist! unless File.exist?(path)
+  load_current_value do
+    current_value_does_not_exist! unless File.exist?(path)
     mode File.stat(path).mode
     content IO.read(path)
   end
 
   action :create do
-    converge do
+    converge_if_changed do
       File.chmod(mode, path)
       IO.write(path, content)
     end
@@ -66,14 +67,14 @@ end
 
 #### Non-existence
 
-To appropriately handle actual value loading, the user needs a way to specify that the actual value legitimately does not exist (rather than simply not filling in the object and getting `nil`s in it). If `load_actual_value` raises `Chef::Exceptions::ActualValueDoesNotExist`, the new resource will be discarded and `current_resource` becomes `nil`. The `actual_value_does_not_exist!` method can be called to raise this.
+To appropriately handle actual value loading, the user needs a way to specify that the actual value legitimately does not exist (rather than simply not filling in the object and getting `nil`s in it). If `load_current_value` raises `Chef::Exceptions::ActualValueDoesNotExist`, the new resource will be discarded and `current_resource` becomes `nil`. The `current_value_does_not_exist!` method can be called to raise this.
 
 NOTE: The alternative was to have users return `false` if the resource does not exist; but I didn't want users to be forced into the ceremony of a trailing `true` line.
 
 ```ruby
-  load_actual_value do
+  load_current_value do
     # Check for existence before doing anything else.
-    actual_value_does_not_exist! if !File.exist?(path)
+    current_value_does_not_exist! if !File.exist?(path)
 
     # Set "mode" on the resource.
     mode File.stat(path).mode
@@ -84,7 +85,7 @@ The block will also be passed the original (desired) resource as a parameter, in
 
 #### Inheritance
 
-`super` in `load_actual_value!` will call the superclass's `load_actual_value!` method.
+`super` in `load_current_value!` will call the superclass's `load_current_value!` method.
 
 #### Handling Multi-Key Resources
 
@@ -98,33 +99,33 @@ class DataBagItem < Chef::Resource
   attribute :recursively_delete, desired_state: false
   # Not copied:
   attribute :data
-  def load_actual_value!
+  def load_current_value!
     data Chef::DataBagItem.new(data_bag_name, item_name).data
   end
 end
 ```
 
-### `converge`: automatic test-and-set
+### `converge_if_changed`: automatic test-and-set
 
-The new `converge do ... end` syntax is added to actions, which enables a *lot* of help for resource writers to make safe, effective resources.  It performs several key tasks common to nearly every resource (which are often not done correctly):
+The new `converge_if_changed do ... end` syntax is added to actions, which enables a *lot* of help for resource writers to make safe, effective resources.  It performs several key tasks common to nearly every resource (which are often not done correctly):
 
 - Goes through all attributes on the resource and checks whether the desired
   value is different from the current value.
 - If any attributes are different, prints appropriate green text.
-- Honors why-run (and does not call the `converge` block if why-run is enabled).
+- Honors why-run (and does not call the `converge_if_changed` block if why-run is enabled).
 
 ```ruby
 class File < Chef::Resource
   property :path, name_attribute: true
   property :content
 
-  load_actual_value do
-    actual_value_does_not_exist! unless File.exist?(path)
+  load_current_value do
+    current_value_does_not_exist! unless File.exist?(path)
     content IO.read(path)
   end
 
   action :create do
-    converge do
+    converge_if_changed do
       IO.write(path, content)
     end
   end
@@ -133,10 +134,10 @@ end
 
 #### Side-by-side: new and old
 
-Here is a sample `converge` statement from a hypothetical FooBarBaz resource with properties `foo`, `bar` and `baz`:
+Here is a sample `converge_if_changed` statement from a hypothetical FooBarBaz resource with properties `foo`, `bar` and `baz`:
 
 ```ruby
-converge do
+converge_if_changed do
   if current_resource
     FooBarBaz.update(new_resource.id, new_resource.foo, new_resource.bar, new_resource.baz)
   else
@@ -181,7 +182,7 @@ end
 
 There is a subtle pitfall when updating a resource, where the user has set *some* values, but not all. One can easily end up writing a resource which will overwrite perfectly good system properties with their defaults, which can cause instability. If the user does not specify a property, it is generally preferable to preserve its existing value rather than overwrite it.
 
-To prevent this, referencing the bare property in an `action` will now yield the *actual* value if load_actual_value succeeded, and the *default* value if we are creating a new resource (if `load_actual_value` raised `ActualValueDoesNotExist`).
+To prevent this, referencing the bare property in an `action` will now yield the *actual* value if load_current_value succeeded, and the *default* value if we are creating a new resource (if `load_current_value` raised `ActualValueDoesNotExist`).
 
 ```ruby
 class File < Chef::Resource
@@ -189,14 +190,14 @@ class File < Chef::Resource
   property :mode, default: 0666
   property :content
 
-  load_actual_value do
-    actual_value_does_not_exist! unless File.exist?(path)
+  load_current_value do
+    current_value_does_not_exist! unless File.exist?(path)
     mode File.stat(path).mode
     content IO.read(path)
   end
 
   action :create do
-    converge do
+    converge_if_changed do
       File.chmod(mode, path)
       IO.write(path, content)
     end
@@ -216,7 +217,7 @@ There are no backwards-compatibility issues with this because it only applies to
 
 #### Compound Resource Convergence
 
-Some resources perform several different (possibly expensive) operations depending on what is set. `converge :attribute1, :attribute2, ... do` allows the user to target different groups of changes based on exactly which attributes have changed:
+Some resources perform several different (possibly expensive) operations depending on what is set. `converge_if_changed :attribute1, :attribute2, ... do` allows the user to target different groups of changes based on exactly which attributes have changed:
 
 ```ruby
 class File < Chef::Resource
@@ -224,17 +225,17 @@ class File < Chef::Resource
   property :mode
   property :content
 
-  load_actual_value do
-    actual_value_does_not_exist! unless File.exist?(path)
+  load_current_value do
+    current_value_does_not_exist! unless File.exist?(path)
     mode File.stat(path).mode
     content IO.read(path)
   end
 
   action :create do
-    converge :mode do
+    converge_if_changed :mode do
       File.chmod(mode, path)
     end
-    converge :content do
+    converge_if_changed :content do
       IO.write(path, content)
     end
   end
