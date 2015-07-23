@@ -36,6 +36,34 @@ When the resource writer defines `load_actual_value` on the resource class, it c
 2. Copy all non-desired-state values from the desired resource into the new instance.
 3. Call `load_actual_value` on the new instance.
 
+
+```ruby
+class File < Chef::Resource
+  property :path, name_attribute: true
+  property :mode, default: 0666
+  property :content
+
+  load_actual_value do
+    actual_value_does_not_exist! unless File.exist?(path)
+    mode File.stat(path).mode
+    content IO.read(path)
+  end
+
+  action :create do
+    converge do
+      File.chmod(mode, path)
+      IO.write(path, content)
+    end
+  end
+end
+
+file '/x.txt' do
+  # Before the change, the above code would have modified `mode` to be `0666`.
+  # After, it leaves `mode` alone.
+  content 'Hello World'
+end
+```
+
 #### Non-existence
 
 To appropriately handle actual value loading, the user needs a way to specify that the actual value legitimately does not exist (rather than simply not filling in the object and getting `nil`s in it). If `load_actual_value` raises `Chef::Exceptions::ActualValueDoesNotExist`, the new resource will be discarded and `current_resource` becomes `nil`. The `actual_value_does_not_exist!` method can be called to raise this.
@@ -99,6 +127,50 @@ class File < Chef::Resource
     converge do
       IO.write(path, content)
     end
+  end
+end
+```
+
+#### Side-by-side: new and old
+
+Here is a sample `converge` statement from a hypothetical FooBarBaz resource with properties `foo`, `bar` and `baz`:
+
+```ruby
+converge do
+  if current_resource
+    FooBarBaz.update(new_resource.id, new_resource.foo, new_resource.bar, new_resource.baz)
+  else
+    FooBarBaz.create(new_resource.id, new_resource.foo, new_resource.bar, new_resource.baz)
+  end
+end
+```
+
+This is what you would have to write to do the equivalent:
+
+```ruby
+if current_resource
+  # We're updating; look for properties that the user wants to change (do the "test" part of test-and-set)
+  differences = []
+  if (new_resource.property_is_set?(:foo) && new_resource.foo != current_resource.foo)
+    differences << "foo = #{new_resource.foo}"
+  end
+  if (new_resource.property_is_set?(:bar) && new_resource.bar != current_resource.bar)
+    differences << "bar = #{new_resource.bar}"
+  end
+  if (new_resource.property_is_set?(:baz) && new_resource.baz != current_resource.baz)
+    differences << "baz = #{new_resource.baz}"
+  end
+
+  if !differences.empty?
+    converge_by "updating FooBarBaz #{new_resource.id}, setting #{differences.join(", ")}" do
+      FooBarBaz.create(new_resource.id, new_resource.foo, new_resource.bar, new_resource.baz)
+    end
+  end
+
+else
+  # If the current resource doesn't exist, we're definitely creating it
+  converge_by "creating FooBarBaz #{new_resource.id} with foo = #{new_resource.foo}, bar = #{new_resource.bar}, baz = #{new_resource.baz}" do
+    FooBarBaz.update(new_resource.id, new_resource.foo, new_resource.bar, new_resource.baz)
   end
 end
 ```
