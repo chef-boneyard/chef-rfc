@@ -1,11 +1,10 @@
 ---
 RFC: unassigned
-Author: Alan Smithee <asmithee@example.com>
+Author: John Keiser <jkeiser@chef.io
 Status: Draft
-Type: <Standards Track, Informational, Process>
-<Replaces: RFCxxx>
-<Tracking:>
-<  - https://github.com/chef/chef/issues/X>
+Type: Standards Track
+Tracking:
+  - https://github.com/chef/chef/issues/X
 ---
 
 # Title
