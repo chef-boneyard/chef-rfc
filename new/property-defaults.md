@@ -71,8 +71,8 @@ Users may rely on this behavior to *write* to `myprop`, like this:
 ```ruby
 class Foo < Chef::Resource::LWRPBase
   resource_name :foo
-  attribute :myhash, default: lazy { {} }
-  attribute :mylist, default: lazy { [] }
+  attribute :myhash, default: {}
+  attribute :mylist, default: []
 end
 foo 'x' do
   myhash[:a] = 10
