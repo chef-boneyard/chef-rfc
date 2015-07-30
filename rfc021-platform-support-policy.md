@@ -92,7 +92,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 
 * Windows 7, 8, 8.1
 * Fedora (current non-EOL releases)
-* RHEL 6.x
+* RHEL 6.x, 7.x
 * Mac OS X 10.8, 10.9, 10.10
 * Ubuntu 12.04, 14.04
 
