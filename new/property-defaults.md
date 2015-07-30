@@ -7,7 +7,7 @@ Type: Standards Track
 
 # Property Default Value Improvements
 
-This RFC addresses some longstanding issues with `default` values on properties (attributes), adds `reset_property` to Resource, and addresses how we will move core Chef resources over to use defaults and properties.
+This RFC addresses some longstanding issues with `default` values on properties (attributes), and addresses how we will move core Chef resources over to use defaults and properties.
 
 ## Motivation
 
