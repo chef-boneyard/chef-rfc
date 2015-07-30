@@ -75,8 +75,8 @@ class Foo < Chef::Resource::LWRPBase
   attribute :mylist, default: []
 end
 foo 'x' do
-  myhash[:a] = 10
   mylist << 'hi'
+  myhash[:a] = 10
 end
 ```
 
