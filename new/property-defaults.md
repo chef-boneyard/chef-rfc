@@ -106,3 +106,10 @@ For backcompat purposes, if validation of a default value fails, we will emit a 
 `default` is generally a better thing for memory pressure, and is useful for detecting whether a user has set a value or not.  Currently, core Resources tend to assign property default values to the proper instance variable during `initialize`, and it is possible that subclasses may rely on this behavior.
 
 Resources *should* instead be using the property getter method, and in the future the instance variable may not even always be there. For Chef 12, we will grab the default values of any lazy arrays or hashes on initialize, and we will issue a deprecation warning for subclasses that directly use the initialized instance variable.
+
+## Copyright
+
+This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.
