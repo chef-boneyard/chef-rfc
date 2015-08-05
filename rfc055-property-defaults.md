@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 55
 Author: John Keiser <jkeiser@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
