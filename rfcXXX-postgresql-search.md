@@ -31,7 +31,7 @@ There are two tables for this search: search_collections and search_items. The s
 
 Table indices are up to the implementers, except for the mandatory ltree index on search_items.path. A trigram index on the value column is strongly recommended.
 
-An implementing server that has organizations MAY use a separate schema for each organizations search tables.
+An implementing server that has organizations MAY use a separate schema for each organization's search tables.
 
 See Appendix 1 for the goiardi search tables and indices implementations.
 
@@ -41,6 +41,17 @@ The implementing server MUST have a Solr query parser that can parse out Solr qu
 
 An implementing server MAY short circuit certain kinds of queries. For instance, when using "*:*" as a query term, it is acceptable and recommended to directly hit that object's database table rather than using the search_items table.
 
+In the usual case, the search query first builds a CTE clause to narrow down the number of rows in the search items table to search through. For example, to search for all nodes which have a name starting with "foobar*" in the "development" environment, it would start with a clause like:
+
+```
+WITH found_items AS (SELECT item_name, path, value FROM goiardi.search_items si WHERE si.organization_id = $1 AND si.search_collection_id = (SELECT id FROM goiardi.search_collections WHERE name = $2) AND path OPERATOR(goiardi.?) ARRAY[ $3, $4 ]::goiardi.lquery[]), items AS (SELECT name AS item_name FROM goiardi.nodes WHERE organization_id = $1)
+```
+
+Here, $1 is of course the organization id number, $2 is the type of object being searched for (in this example "node"), and $3 and $4 are the fields being searched ("name" and "chef_environment"). The `found_items` clause describes all rows that belong to nodes that have `name` and `chef_environment` as their paths, while `items` is a list of all node names. It's drawn directly from the nodes table instead of from `found_items` because it turned out to be far more performant that way.
+
+The SELECT statement that follows varies depending on how many search terms are used. If only one term, like "name:foo*" is used, then the SELECT statement will be like `SELECT COALESCE(ARRAY_AGG(DISTINCT item_name), '{}'::text[]) FROM found_items f0 WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value LIKE $5)`. When searching for a distinct name, the WHERE clause would be like `WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value = $5)`, while "name:*" will be like "WHERE (f0.path ~ $4)".
+
+With more than one term it becomes a little more complicated.
 
 ## Appendix 1: The Goiardi Search Tables and Indices
 
