@@ -31,7 +31,7 @@ The existing hints system was designed to provide facts about a system that Ohai
 
 When a 'hint_name.json' file exists in the directory specified by `Ohai::Config[:hints_path]`, `Ohai::Hints.hint?(hint_name)` will return non-nil. If the file contains JSON data, it will be returned as a hash. If the file is empty, an empty hash will be returned.
 
-The hints system should only be used by other tools to assist Ohai in collecting data. It should not otherwise be used to configure the behavior or Ohai or its plugins. That is the purpose of the new configuration system. The hints system may be combined with the configuration system in the future and deprecated for general ease of use of Ohai. 
+The hints system should only be used by other tools to assist Ohai in collecting data. It should not otherwise be used to configure the behavior or Ohai or its plugins. That is the purpose of the new configuration system. The hints system may be combined with the configuration system in the future and deprecated for general ease of use of Ohai.
 
 ## Specification
 
@@ -110,10 +110,41 @@ ohai[:plugin][:dmi][:id] = { :cpu => true, :memory => true, :disk => false }
 Ohai.config[:plugin][:dmi][:id][:disk] => false
 ```
 
+### Plugin configuration lookup DSL method
+
+To facilitate lookup of plugin configuration options, a new method will be
+added to the plugin DSL: `configuration`. The `configuration` method
+accepts as parameter the configuration option to fetch (as a Symbol).
+
+For example, a plugin author may write
+
+```ruby
+Ohai.plugin(:Foo) do
+  provides 'foo'
+
+  collect_data do
+    if configuration(:foo_option)
+      # ...
+    end
+  end
+end
+```
+
+A user would configure
+
+```ruby
+ohai.plugin[:foo][:foo_option] = true
+```
+
+The `configuration` method is intended only to be used to access top-level
+configuration options. If the plugin author chooses to require plugin configuration
+to be a Hash, the author must access those configuration options as Hash elements.
+That is, `configuration(:one_two_three)` cannot be used to look up
+`plugin[:foo][:one][:two][:three]`.
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
 this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.
-
