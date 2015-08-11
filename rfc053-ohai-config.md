@@ -31,7 +31,7 @@ The existing hints system was designed to provide facts about a system that Ohai
 
 When a 'hint_name.json' file exists in the directory specified by `Ohai::Config[:hints_path]`, `Ohai::Hints.hint?(hint_name)` will return non-nil. If the file contains JSON data, it will be returned as a hash. If the file is empty, an empty hash will be returned.
 
-The hints system should only be used by other tools to assist Ohai in collecting data. It should not otherwise be used to configure the behavior or Ohai or its plugins. That is the purpose of the new configuration system. The hints system may be combined with the configuration system in the future and deprecated for general ease of use of Ohai. 
+The hints system should only be used by other tools to assist Ohai in collecting data. It should not otherwise be used to configure the behavior or Ohai or its plugins. That is the purpose of the new configuration system. The hints system may be combined with the configuration system in the future and deprecated for general ease of use of Ohai.
 
 ## Specification
 
@@ -90,24 +90,29 @@ Note that the filename on disk does not always match the plugin name. In the cas
 
 ### Configuration Hash Nesting
 
-Rather than auto-vivify nested hashes, each plugin's configuration is limited to a single level.
+Plugin configuration hashes are auto-vivified. Auto-vivification can be
+implemented safely, without `method_missing`:
 
-`ohai[:plugin][:dmi][:all_ids] = true` is allowed
-`ohai[:plugin][:dmi][:ids][:cpu] = true` is not allowed
-
-Plugin authors are recommended to use underscores in variable names to manage multiple levels of configuration values. For example:
-
+```ruby
+Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
 ```
-ohai[:plugin][:dmi][:id_cpu] = true
-ohai[:plugin][:dmi][:id_memory] = true
-ohai[:plugin][:dmi][:id_disk] = false
+[Source](http://stackoverflow.com/questions/5878529/how-to-assign-hashab-c-if-hasha-doesnt-exist#comment6760520_5878626)
+
+Sub-keys of `Ohai.config[:plugin]` and `ohai.plugin` must be of type `Symbol`.
+Values can be of any type. If the value is a `Hash`, it will be forced to
+conform to the keys-are-Symbols rule. The following are disallowed:
+
+```ruby
+ohai.plugin[:plugin_name] = { "option" => true }
 ```
 
-Configuration values may be hashes, but a hash must be explicitly set.
-
+```ruby
+ohai.plugin[:plugin_name] = { :option => { "sub_option" => true } }
 ```
-ohai[:plugin][:dmi][:id] = { :cpu => true, :memory => true, :disk => false }
-Ohai.config[:plugin][:dmi][:id][:disk] => false
+
+```ruby
+ohai.plugin[:plugin_name][:option] = {}
+ohai.plugin[:plugin_name][:option]["sub_option"] = true
 ```
 
 ## Copyright
@@ -116,4 +121,3 @@ This work is in the public domain. In jurisdictions that do not allow for this,
 this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.
-
