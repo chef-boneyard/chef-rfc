@@ -68,6 +68,7 @@ The metrics that determine the relative quality of a cookbook are listed below.
 * It includes a `version` in the metadata.
 * It includes a `Berksfile` that lists all dependencies.
 * It includes a CHANGELOG.md that is updated with each release.
+* It is published to the [Supermarket](https://supermarket.chef.io).
 
 ## Copyright
 
