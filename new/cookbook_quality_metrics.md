@@ -36,6 +36,8 @@ The metrics that determine the relative quality of a cookbook are listed below.
     end
     ```
 
+* It converges without error using Fauxhai data for each supported platform.
+
 * It links to the source.
 
     ```
@@ -64,6 +66,9 @@ The metrics that determine the relative quality of a cookbook are listed below.
 * It includes rspec-based unit tests that pass.
 * It passes Foodcritic and Rubocop, with allowances for custom rule specifications.
   * Should the Foodcritic and Rubocop standards be agreed?
+* The README includes a badge indicating status of Code Climate and TravisCI tests.
+  * Code Climate for Foodcritic and Rubocop
+  * TravisCI for ChefSpec
 * It includes a `name` in the metadata.
 * It includes a `version` in the metadata.
 * It includes a `Berksfile` that lists all dependencies.
