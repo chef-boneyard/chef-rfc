@@ -59,13 +59,15 @@ The metrics that determine the relative quality of a cookbook are listed below.
   * number of commits not released
 * It includes a README.md with more than the boilerplate copy.
 * It includes a MAINTAINERS.md with contact information for each authorized MAINTAINER and Supermarket Collaborator.
+  * There is more than one maintainer.
+  * What is the optimal range?  5-7 maintainers?
+  * We should not call it the 'bus factor'
 * It includes a version number the conforms to the [SemVer specification](http://semver.org/), e.g., X.Y.Z
 * It includes a .kitchen.yml which includes a platform declaration for each of the platforms listed as a `supports` in the cookbook's metadata.
 * `kitchen test` completes successfully.
 * It includes an open-source license (LICENSE.md).
 * It includes rspec-based unit tests that pass.
-* It passes Foodcritic and Rubocop, with allowances for custom rule specifications.
-  * Should the Foodcritic and Rubocop standards be agreed?
+* It passes Foodcritic (`foodcritic --tags correctness,metadata`) and Rubocop (`rubocop --lint`), with allowances for custom rule specifications.
 * The README includes a badge indicating status of Code Climate and TravisCI tests.
   * Code Climate for Foodcritic and Rubocop
   * TravisCI for ChefSpec
