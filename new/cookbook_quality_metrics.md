@@ -26,25 +26,28 @@ The Supermarket should make it easy for anyone to find quality cookbooks.  In or
 
 ## Specification
 
-A [Cookbook Quality Metrics](https://github.com/chef-cookbooks/cookbook-quality-metrics) system will be implemented to provide a quality score for each cookbook.  This score will be visible on the Supermarket.
+A [Cookbook Quality Metrics](https://github.com/chef-cookbooks/cookbook-quality-metrics) system will be implemented to provide indicators of certain qualities for each cookbook.  These indicators will be visible on the Supermarket.
 
 * The community will be able to collaborate on the metrics.
-* Each quality metric will add or remove points from a cookbook's score.
+* The community has expressed a desire for an aggregate metric to make the quality ranking easy to consume without needing to fully understand what makes up the metric.
+* Metrics should not be visible on the Supermarket by default until the community has had time to review the data associated with the implemented metrics.
+* A Supermarket user should be able to easily assess a cookbook's compliance with any given metric.
 
 We will collaborate on quality metrics in the [Cookbook Quality Metrics](https://github.com/chef-cookbooks/cookbook-quality-metrics) repository.
 
 The lifecycle of a metric will be:
 
 * *Draft* - this is a proposed metric, ready for community discussion and approval.
-* *Accepted* - this metric has been accepted and merged into the master branch.
-* *Implemented* - this metric has been implemented and is contributing to the scores shown on the Supermarket.
+* *Accepted* - this metric has been accepted and merged into the master branch of the [Cookbook Quality Metrics repository](https://github.com/chef-cookbooks/cookbook-quality-metrics).
+  * *In Progress* - data for this metric is being gathered and is visible by some mechanism but not displayed on the Supermarket by default.
+* *Implemented* - this metric has been implemented and is visible on the Supermarket.
 * *Closed* - this metric has not been accepted or has been removed from the system.
 
-### Viewing Cookbook Scores
+### Viewing Cookbook Metrics
 
-The [Supermarket](https://supermarket.chef.io) will show a total score for each cookbook.
+The [Supermarket](https://supermarket.chef.io) may show some sort of aggregate score for each cookbook.
 
-Each cookbook listed on the Supermarket will have a tab or other view showing how it's score was generated.
+Each cookbook listed on the Supermarket will have a tab or other view showing how it adheres to each quality metric.
 
 ## Copyright
 
