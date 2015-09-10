@@ -40,6 +40,12 @@ The lifecycle of a metric will be:
 * *Implemented* - this metric has been implemented and is contributing to the scores shown on the Supermarket.
 * *Closed* - this metric has not been accepted or has been removed from the system.
 
+### Viewing Cookbook Scores
+
+The [Supermarket](https://supermarket.chef.io) will show a total score for each cookbook.
+
+Each cookbook listed on the Supermarket will have a tab or other view showing how it's score was generated.
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
