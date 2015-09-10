@@ -10,9 +10,9 @@ Type: Informational
 
 # Cookbook Quality Metrics
 
-The question of what makes a good cookbook has been asked since the dawn of Chef.  As a community we've struggled with answering this in part because each recipe is unique to the specific requirements it is trying to meet.  Allowing Supermarket users to rate cookbooks is one thing that we've tried in the past.  This did not work because you simply do not have enough knowledge about the quality of a cookbook when you discover and download it from the Supermarket.  Similarly, download counts cannot be trusted because of [the way some older versions of the berkshelf-api server work].
+The question of what makes a good cookbook has been asked since the dawn of Chef.  As a community we've struggled with answering this in part because each recipe is unique to the specific requirements it is trying to meet.  Allowing Supermarket users to rate cookbooks is one thing that we've tried in the past.  This did not work because you simply do not have enough knowledge about the quality of a cookbook when you discover and download it from the Supermarket.  Similarly, download counts cannot be trusted because of [the way some older versions of the berkshelf-api server work](https://www.chef.io/blog/2015/01/21/those-pesky-supermarket-download-counts/).
 
-The Supermarket should make it easy for anyone to find quality cookbooks.  In order to do so, we must agree on some qualities that indicate whether or not a cookbook is considered to have high quality.  Ideally, these qualities are objective and able to be determined automatically.
+The Supermarket should make it easy for anyone to find quality cookbooks.  In order to do so, we must agree on some qualities that indicate whether or not a cookbook is considered to have high quality.  Ideally, these qualities are objective and able to be determined automatically.  These qualities should be defined and agreed on by the community.
 
 ## Motivation
 
@@ -26,56 +26,19 @@ The Supermarket should make it easy for anyone to find quality cookbooks.  In or
 
 ## Specification
 
-The metrics that determine the relative quality of a cookbook are listed below.
+A [Cookbook Quality Metrics](https://github.com/chef-cookbooks/cookbook-quality-metrics) system will be implemented to provide a quality score for each cookbook.  This score will be visible on the Supermarket.
 
-* It converges without error.
+* The community will be able to collaborate on the metrics.
+* Each quality metric will add or remove points from a cookbook's score.
 
-    ```
-    it 'converges successfully' do
-      expect { chef_run }.to_not raise_error
-    end
-    ```
+We will collaborate on quality metrics in the [Cookbook Quality Metrics](https://github.com/chef-cookbooks/cookbook-quality-metrics) repository.
 
-* It converges without error using Fauxhai data for each supported platform.
+The lifecycle of a metric will be:
 
-* It links to the source.
-
-    ```
-    # metadata.rb
-    source_url 'http://github.com/chef-cookbooks/mysql'
-    ```
-
-* It links to the issue tracker.
-
-    ```
-    # metadata.rb
-    issues_url 'https://github.com/chef-cookbooks/mysql/issues'
-    ```
-
-
-* It is updated and released on a regular basis
-  * time since last release
-  * time since last change in source code repository
-  * number of commits not released
-* It includes a README.md with more than the boilerplate copy.
-* It includes a MAINTAINERS.md with contact information for each authorized MAINTAINER and Supermarket Collaborator.
-  * There is more than one maintainer.
-  * What is the optimal range?  5-7 maintainers?
-  * We should not call it the 'bus factor'
-* It includes a version number the conforms to the [SemVer specification](http://semver.org/), e.g., X.Y.Z
-* It includes a .kitchen.yml which includes a platform declaration for each of the platforms listed as a `supports` in the cookbook's metadata.
-* `kitchen test` completes successfully.
-* It includes an open-source license (LICENSE.md).
-* It includes rspec-based unit tests that pass.
-* It passes Foodcritic (`foodcritic --tags correctness,metadata`) and Rubocop (`rubocop --lint`), with allowances for custom rule specifications.
-* The README includes a badge indicating status of Code Climate and TravisCI tests.
-  * Code Climate for Foodcritic and Rubocop
-  * TravisCI for ChefSpec
-* It includes a `name` in the metadata.
-* It includes a `version` in the metadata.
-* It includes a `Berksfile` that lists all dependencies.
-* It includes a CHANGELOG.md that is updated with each release.
-* It is published to the [Supermarket](https://supermarket.chef.io).
+* *Draft* - this is a proposed metric, ready for community discussion and approval.
+* *Accepted* - this metric has been accepted and merged into the master branch.
+* *Implemented* - this metric has been implemented and is contributing to the scores shown on the Supermarket.
+* *Closed* - this metric has not been accepted or has been removed from the system.
 
 ## Copyright
 
