@@ -54,8 +54,8 @@ The major conceptual models are:
     
 In this model, we draw parallels with programming languages. In most
 language communities, there is a system for contributing  and sharing
-libraries. Ruby has Rubygems.org, Python has PyPI. Node has NPM, and
-Java has Maven. Haskell has Hackage. Erlang has Hex.
+libraries. Perl has CPAN. Ruby has Rubygems.org, Python has PyPI. Node 
+has NPM, and Java has Maven. Haskell has Hackage. Erlang has Hex.
     
 There is a ton of momentum behind this mental model. Tooling such as
 Berkshelf was built with this in mind. Cookbooks are packages and the
