@@ -6,12 +6,13 @@ This RFC declares what community meetings we hold and how we hold them.
 
 ## Chef Developers Meeting
 
+Upcoming agendas, past agendas, transcripts, and minutes can be found in the
+[Chef Community Meetings](https://github.com/chef/chef-community-irc-meetings)
+repository on GitHub.
+
 ### Time
 
 Every Thursday, at 9am Pacific. 1 hour.  Each meeting's agenda will include the date and time and be announced in advance on the chef-dev mailing list.
-
-[invite.ics](https://github.com/opscode/chef-rfc/blob/master/invite.ics)
-
 
 ### Location
 
