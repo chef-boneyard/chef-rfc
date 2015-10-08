@@ -1,11 +1,8 @@
 ---
-RFC: unassigned
+RFC: 57
 Author: Nathen Harvey <nharvey@chef.io>
-Status: Draft
+Status: Accepted
 Type: Informational
-<Replaces: RFCxxx>
-<Tracking:>
-<  - https://github.com/chef/chef/issues/X>
 ---
 
 # Cookbook Quality Metrics
