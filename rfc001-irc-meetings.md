@@ -6,12 +6,13 @@ This RFC declares what community meetings we hold and how we hold them.
 
 ## Chef Developers Meeting
 
+Upcoming agendas, past agendas, transcripts, and minutes can be found in the
+[Chef Community Meetings](https://github.com/chef/chef-community-irc-meetings)
+repository on GitHub.
+
 ### Time
 
-Every two weeks on Thursday, at 9am Pacific. 1 hour.  Each meeting's agenda will include the date and time and be announced in advance on the chef-dev mailing list.
-
-[invite.ics](https://github.com/opscode/chef-rfc/blob/master/invite.ics)
-
+Every Thursday, at 9am Pacific. 1 hour.  Each meeting's agenda will include the date and time and be announced in advance on the chef-dev mailing list.
 
 ### Location
 
@@ -19,21 +20,20 @@ The #chef-hacking irc channel on irc.freenode.net.
 
 ### Roles
 
-* Moderator: [Adam Jacob](mailto:adam@getchef.com)
-* Secretary: [Nathen Harvey](mailto:nathen@getchef.com)
+* Moderator: [Adam Jacob](mailto:adam@chef.io)
+* Secretary: [Nathen Harvey](mailto:nathen@chef.io)
 
 ### Standing Agenda
 
-(I expect this meeting will very rarely utilize the standing agenda, and that
-it will change as we distribute more responsibility.)
-
-* Agenda Review, speaker Adam Jacob (holoway): 5 minutes
-* Previous Business, speaker Adam Jacob (holoway): 10 minutes
-* Community Update, speaker Nathen Harvey (nathenharvey): 5 minutes
-* Chef Software Update, speaker Adam Jacob (holoway): 5 minutes
-* Chef Client Update, speaker Serdar Sutay (serdar): 5 minutes
-* Chef Server Update, speaker Stephen Delano (stephen): 5 minutes
-* Roundtable, speaker Adam Jacob (holoway): 20 minutes
+* Agenda Review, speaker Adam Jacob (holoway): 2 minutes
+* Updates: 15 minutes max.
+  * Community Update, speaker Nathen Harvey (nathenharvey): 5 minutes
+  * Chef Software Update, speaker Adam Jacob (holoway): 5 minutes
+  * Chef Client and Server Update, speaker Adam Edwards (adamedx): 5 minutes
+* Review action items from last meeting (holoway): 5 minutes
+* Review PRs:  35 minutes
+  * Review new PRs and/or PRs deferred during last meeting
+  * Review PRs previously discussed
 
 # How
 
@@ -87,9 +87,9 @@ requests participants hold questions to the end, please be respectful.
 
 ## Meeting Conduct
 
-Please be aware of the [Community Guidelines](http://docs.opscode.com/community_guidelines.html).
+Please be aware of the [Community Guidelines](https://docs.chef.io/community_guidelines.html).
 
-We will follow the same [code of conduct as ChefConf and the Community summit](http://www.getchef.com/blog/chefconfcodeofconduct/#long_code_of_conduct).
+We will follow the same [code of conduct as ChefConf and the Community summit](https://www.chef.io/blog/chefconfcodeofconduct/#long_code_of_conduct).
 
 ## Moderator can de-voice or ban
 
