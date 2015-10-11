@@ -29,7 +29,7 @@ A server implementing this Postgres search MUST also implement Chef RFC 018 - At
 
 There are two tables for this search: search_collections and search_items. The search_collections table has entries for each indexed type: node, role, environment, client as defaults, and any data bags. The search_items table has a row for each value in the indexed object. Each row will have keys for the parent search_collection and the organization that the object belongs to, along with a text column for the item's name, a text column for the item's value, and an ltree path column describing the full path to the item, e.g. for `node[:foo][:bar][:baz]`, the path in the search_items table would be `foo.bar.baz`.
 
-Table indices are up to the implementers, except for the mandatory ltree index on search_items.path. A trigram index on the value column is strongly recommended.
+Table indices are up to the implementers, except for the mandatory ltree index on search_items.path. A trigram index on the value column, or at least a GiST index on (path, value) using trigrams for the value, speeds up many of these queries considerably. However, these indexes do take up a lot of space on disk and require maintenance (see below).
 
 An implementing server that has organizations MAY use a separate schema for each organization's search tables.
 
@@ -51,7 +51,19 @@ Here, $1 is of course the organization id number, $2 is the type of object being
 
 The SELECT statement that follows varies depending on how many search terms are used. If only one term, like "name:foo*" is used, then the SELECT statement will be like `SELECT COALESCE(ARRAY_AGG(DISTINCT item_name), '{}'::text[]) FROM found_items f0 WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value LIKE $5)`. When searching for a distinct name, the WHERE clause would be like `WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value = $5)`, while "name:*" will be like "WHERE (f0.path ~ $4)".
 
-With more than one term it becomes a little more complicated.
+With more than one term it becomes a little more complicated. TODO: FIND AN EXAMPLE OF A MULTI-TERM QUERY AND EXPLAIN IT.
+
+### Processing Results
+
+These search queries do, of course, just return the names of the objects, not the objects themselves. An implementation will need to get the requested objects from the database and return them.
+
+These tables also do not, in themselves, provide a good way to order and limit returned results. That needs to be taken care of when the objects are fetched from the database and returned.
+
+### Populating
+
+### Maintenance
+
+An active `search_items` table will start eating up disk space surprisingly quickly; therefore, regular table maintenance is essential to keeping disk usage reasonable. All that needs to be done is run `REINDEX TABLE goiardi.search_items; VACUUM;` as a Postgres user that has access to the goiardi database.
 
 ## Appendix 1: The Goiardi Search Tables and Indices
 
@@ -95,7 +107,21 @@ CREATE INDEX search_val ON goiardi.search_items(value);
 COMMIT;
 ```
 
+The indexes, particularly, are subject to change.
+
 ## Appendix 2: Sample Search Queries
+
+```
+WITH found_items AS (SELECT item_name, path, value FROM goiardi.search_items si WHERE si.organization_id = 1 AND si.search_collection_id = (SELECT id FROM goiardi.search_collections WHERE name = 'environment') AND path OPERATOR(goiardi.?) ARRAY[ 'name' ]::goiardi.lquery[]), items AS (SELECT name AS item_name FROM goiardi.environments WHERE organization_id = 1) SELECT COALESCE(ARRAY_AGG(DISTINCT item_name), '{}'::text[]) FROM found_items f0 WHERE (f0.path OPERATOR(goiardi.~) 'name' AND f0.value = 'pedant_testing_environment');
+```
+
+```
+WITH found_items AS (SELECT item_name, path, value FROM goiardi.search_items si WHERE si.organization_id = 1 AND si.search_collection_id = (SELECT id FROM goiardi.search_collections WHERE name = 'node') AND path OPERATOR(goiardi.?) ARRAY[ 'name' ]::goiardi.lquery[]), items AS (SELECT name AS item_name FROM goiardi.nodes WHERE organization_id = $1) SELECT COALESCE(ARRAY_AGG(DISTINCT item_name), '{}'::text[]) FROM found_items f0 WHERE (f0.path OPERATOR(goiardi.~) 'name' AND f0.value = 'pedant_node_test');
+```
+
+```
+WITH found_items AS (SELECT item_name, path, value FROM goiardi.search_items si WHERE si.organization_id = 1 AND si.search_collection_id = (SELECT id FROM goiardi.search_collections WHERE name = 'node') AND path OPERATOR(goiardi.?) ARRAY[ 'name', 'name' ]::goiardi.lquery[]), items AS (SELECT name AS item_name FROM goiardi.nodes WHERE organization_id = 1) SELECT COALESCE(ARRAY_AGG(i.item_name), '{}'::text[]) FROM items i INNER JOIN found_items AS f0 ON i.item_name = f0.item_name INNER JOIN found_items AS f1 ON i.item_name = f1.item_name WHERE (f0.path OPERATOR(goiardi.~) 'name' AND f0.value = 'pedant_node_test')  OR (f1.path OPERATOR(goiardi.~) 'name' AND f1.value LIKE 'pedant\_multiple\_node\_1444142041-409998000-28025%');
+```
 
 ## Copyright
 
