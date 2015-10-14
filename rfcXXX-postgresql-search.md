@@ -51,7 +51,15 @@ Here, $1 is of course the organization id number, $2 is the type of object being
 
 The SELECT statement that follows varies depending on how many search terms are used. If only one term, like "name:foo*" is used, then the SELECT statement will be like `SELECT COALESCE(ARRAY_AGG(DISTINCT item_name), '{}'::text[]) FROM found_items f0 WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value LIKE $5)`. When searching for a distinct name, the WHERE clause would be like `WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value = $5)`, while "name:*" will be like "WHERE (f0.path ~ $4)".
 
-With more than one term it becomes a little more complicated. TODO: FIND AN EXAMPLE OF A MULTI-TERM QUERY AND EXPLAIN IT.
+With more than one term it becomes a little more complicated. Each term gets an INNER JOIN on found_items added to the select query and a statement added to the WHERE clause, like so:
+
+```
+SELECT COALESCE(ARRAY_AGG(i.item_name), '{}'::text[]) FROM items i INNER JOIN found_items AS f0 ON i.item_name = f0.item_name INNER JOIN found_items AS f1 ON i.item_name = f1.item_name WHERE (f0.path OPERATOR(goiardi.~) 'name' AND f0.value = 'pedant_node_test')  OR (f1.path OPERATOR(goiardi.~) 'name' AND f1.value LIKE 'pedant\_multiple\_node\_1444142041-409998000-28025%')
+```
+
+Range and grouped queries work as well. They're converted into SQL statements in a straightforward fashion, but aside from being ranged or grouped queries they're just like the basic queries above.
+
+Finally, `%` and `_` in the query terms must be escaped, and `*` and `?` must be converted to `%` and `_` respectively.
 
 ### Processing Results
 
@@ -61,9 +69,17 @@ These tables also do not, in themselves, provide a good way to order and limit r
 
 ### Populating
 
+After an object has been expanded in the usual Chef fashion, each item is added to the search items table. If a data bag is being added, and it's not already in, it will also be added to the search collections table. Otherwise it will be assigned to an existing search collection. For example, if you had a node named "foobar" with a value inside it somewhere at `['baz']['buz']['glop'] = 'beep'`, that would go into the search_items table with the node search_collection_id (whatever that happens to be), an item_name of "foobar", a path of "baz.buz.glop", and a value of "beep". This would be repeated for all of the different values in the object.
+
+One limitation of ltree is that it only accepts alphanumeric characters and underscores in the paths. It will accept *some*, but not all, Unicode characters. Cyrillic letters are fine, but Ethiopic, cuneiform, and Linear B have all been tested and found not to work. The side effect of this is that when the paths are set up on indexing, and when querying, any non-alphanumeric characters need to be removed and replaced with underscores (and then duplicate underscores need to be removed as well). This should not generally be a problem, but if for some strange reason you had keys named both "/dev/xvda1" and "dev_xvda1" in something being indexed you might get unexpected results.
+
 ### Maintenance
 
 An active `search_items` table will start eating up disk space surprisingly quickly; therefore, regular table maintenance is essential to keeping disk usage reasonable. All that needs to be done is run `REINDEX TABLE goiardi.search_items; VACUUM;` as a Postgres user that has access to the goiardi database.
+
+### Other possibilities
+
+There's absolutely no reason that this couldn't be used to build a search that isn't backwards compatible with Solr that could take full advantage of the ltree syntax and operators. Allowing raw SQL in the queries is probably not a great idea, but some minimal processing of the query into a full SQL query opens up some interesting possibilities.
 
 ## Appendix 1: The Goiardi Search Tables and Indices
 
