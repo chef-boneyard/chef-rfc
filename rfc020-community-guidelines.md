@@ -94,8 +94,13 @@ The Chef Community advocates are well informed on how to deal with incidents. Re
   * IRC
     * \#chef - jonlives, zts
     * \#chef-hacking - jonlives, zts
-  * chef@ mailing list -
-  * chef-dev@ mailing list -
+  * [Chef Mailing List](http://discourse.chef.io)
+    * Nathen Harvey ([@nathenharvey](https://discourse.chef.io/users/nathenharvey/))
+    * Noah Kantrowitz ([@coderanger](https://discourse.chef.io/users/coderanger/))
+    * JJ Asghar ([@jjasghar](https://discourse.chef.io/users/jjasghar/))
+    * Robb Kidd ([@robbkidd](https://discourse.chef.io/users/robbkidd))
+    * Nell Shamrell ([@Nell_Shamrell](https://discourse.chef.io/users/Nell_Shamrell))
+    * Mike Fiedler ([@Mike](https://discourse.chef.io/users/mike/)) 
   * GitHub -
   * Stackoverflow -
   * Serverfault - [Mike Fiedler](http://serverfault.com/users/7309/mike-fiedler),  [GitHub:  miketheman](https://github.com/miketheman)
