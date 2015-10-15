@@ -45,12 +45,11 @@ More information can be found in the [Chef Community Guidelines](https://github.
     [Org.Advocates.ChefMailingList]
       title = "chef@ mailing list"
       advocates = [
-        "vacant"
-      ]
-    [Org.Advocates.ChefDevMailingList]
-      title = "chef-dev@ mailing list"
-      advocates = [
-        "vacant"
+        "coderanger",
+        "jjasghar",
+        "miketheman",
+        "nshamrell",
+        "robbkidd"
       ]
     [Org.Advocates.GitHub]
       title = "GitHub"

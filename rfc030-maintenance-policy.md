@@ -64,11 +64,11 @@ Releases should not block on features on the roadmap, rather they should happen 
 # 2015 Q2
 * Component - Roadmap Item
   Description
-  
+
 # 2015 Q4
 * Core - Support for Drone Automation
   Significant time could be saved in enterprise datacenters by using drones to stack and rack servers
- 
+
 # 2016 Q1
 * Core - Support Internet of Things
   As a Chef user, I look forward to the singularity
@@ -158,8 +158,9 @@ You can find a large set of community members in IRC, within the #chef channel o
 
 ## Mailing Lists
 
-* [Chef Users](http://lists.opscode.com/sympa/info/chef) - is the primary async communications channel for all users of Chef, regardless of how they participate.
-* [Chef Developers](http://lists.opscode.com/sympa/info/chef-dev) - is the primary async communications channel for those concerned with developing Chef.
+* [Chef Mailing List](http://discourse.chef.io)
+  * The `chef` category is the primary async communications channel for all users of Chef, regardless of how they participate.
+  * The `chef-dev` is the primary async communications channel for those concerned with developing Chef.
 
 # Where can I find Chef Software Inc?
 
