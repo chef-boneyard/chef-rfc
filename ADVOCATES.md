@@ -53,7 +53,11 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * Vacant - Submit a PR to become a Chef Community Advocate
 
 #### Stack Overflow
-* Vacant - Submit a PR to become a Chef Community Advocate
+* [Martin Smith](https://github.com/martinb3)
+  * IRC - martinb3
+  * [Stack Overflow](http://stackoverflow.com/users/70665/martin)
+  * [@martinb3](https://twitter.com/martinb3)
+  * [martin@mbs3.org](mailto:martin@mbs3.org)
 
 #### Chef LinkedIn Group
 * Vacant - Submit a PR to become a Chef Community Advocate
