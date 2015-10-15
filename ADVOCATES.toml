@@ -60,7 +60,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
     [Org.Advocates.Stackoverflow]
       title = "Stack Overflow"
       advocates = [
-        "vacant"
+        "martinb3"
       ]
     [Org.Advocates.LinkedIn]
       title = "Chef LinkedIn Group"
@@ -102,6 +102,14 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Mike Fiedler"
     GitHub = "miketheman"
     ServerFault = "http://serverfault.com/users/7309/mike-fiedler"
+
+  [people.martinb3]
+    Name = "Martin Smith"
+    GitHub = "martinb3"
+    StackOverflow = "http://stackoverflow.com/users/70665/martin"
+    Twitter = "martinb3"
+    IRC = "martinb3"
+    email = "martin@mbs3.org"
 
   [people.vacant]
     Name = "Vacant - Submit a PR to become a Chef Community Advocate"
