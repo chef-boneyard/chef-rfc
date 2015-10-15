@@ -45,7 +45,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
 #### Chef Mailing List
 * [Noah Kantrowitz](https://github.com/coderanger)
 * [JJ Asghar](https://github.com/jjasghar)
-* [Mike Fieder](https://github.com/miketheman)
+* [Mike Fiedler](https://github.com/miketheman)
 * [Nell Shamrell-Harrington](https://github.com/nshamrell)
 * [Robb Kidd](https://github.com/robbkidd)
 
