@@ -42,11 +42,12 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [Mike Fiedler](https://github.com/miketheman)
   * [ServerFault](http://serverfault.com/users/7309/mike-fiedler)
 
-#### chef@ mailing list
-* Vacant - Submit a PR to become a Chef Community Advocate
-
-#### chef-dev@ mailing list
-* Vacant - Submit a PR to become a Chef Community Advocate
+#### Chef Mailing List
+* [Noah Kantrowitz](https://github.com/coderanger)
+* [JJ Asghar](https://github.com/jjasghar)
+* [Mike Fieder](https://github.com/miketheman)
+* [Nell Shamrell-Harrington](https://github.com/nshamrell)
+* [Robb Kidd](https://github.com/robbkidd)
 
 #### GitHub
 * Vacant - Submit a PR to become a Chef Community Advocate
