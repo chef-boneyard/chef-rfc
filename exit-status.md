@@ -7,7 +7,7 @@ Type: Standards Track
 
 # Title
 
-Signal outside tools of specific Chef-Client run status.  Ability to determine different results of a Chef-Client run.
+Signal outside tools of specific Chef-Client exit status. 
 
 ## Motivation
 
@@ -25,7 +25,7 @@ Signal outside tools of specific Chef-Client run status.  Ability to determine d
 
 ## Specification
 
-Chef-apply, Chef-client, Chef-Solo should honor the below exit codes
+Chef-apply, Chef-client, Chef-Solo should honor the below exit codes.  
 ### Use Exit codes
 Enumeration      | Exit Code    |Description
 -------------    | -------------| -----
