@@ -33,7 +33,8 @@ Success          | 0            | When Chef executes with a successful convergen
 Generic Failure  | 1            | When Chef executes and fails at convergence
 Compile Failure  | 50           | When Chef executes and Compile time phase fails
 Reboot           | 51           | When Chef executes and reboot is scheduled
-Audit Failure    | 52           | When Chef executes and chef succeeds but Audit fails
+Reboot (Pending) | 52           | When Chef executes and reboot is pending. 
+Audit Failure    | 53           | When Chef executes and chef succeeds but Audit fails
 
 This list should be able to be expanded.  We should be conscious of typical exit codes that are used.  Example, Windows exit code 5 is commonly used for access denied.
 
