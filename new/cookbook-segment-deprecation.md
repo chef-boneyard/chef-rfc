@@ -41,6 +41,8 @@ This will achieve backwards compatibility and the ability for knife, chef-client
 to be upgraded independently of each other and run in a "dual-stack" mode.  At some point in the
 future, backwards compatibility will be dropped in a major version bump.
 
+The implementation of this RFC must still fully support both settings of the `no_lazy_load` config parameter.
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
