@@ -28,7 +28,7 @@ so I can react accordingly.
 
 ### Versioning
 
-We aim to adhere to the Semantic Version scheme published [here](http://semver.org/). However, there are existing exceptions. Most notably, we do not consistently and clearly delineate which public methods are also part of the public API and guaranteed to only change with major version releases.
+We generally adhere to the Semantic Version scheme published [here](http://semver.org/), with noted exceptions.
 
 From Semantic Versioning:
 
@@ -44,40 +44,51 @@ Additional labels for pre-release and build metadata are available as extensions
 Chef Client specific clarifications:
 
 ```
-Given a version number MAJOR.MINOR.PATCH, increment the:
+Given a version number MAJOR.MINOR.BUILD:
 
-MAJOR version when the release will break existing functionality
-MINOR version when you add any new features
-PATCH version when you are only fixing bugs, typically regressions
+Increment the MAJOR version when the release will break existing functionality
+Increment the MINOR version when you add any new features
+The BUILD version is increased automatically by the build system
 ```
 
-##### Prerelease versions
+#### Continuous Integration / Continuous Delivery (build system)
 
-Any prerelease must be versioned in the format MAJOR.MINOR.PATCH.PRETYPE.PREVER, where:
+The BUILD version is numeric and must be increased for each build.
 
-PRETYPE is the description of the prerelease that the Releaser chooses based on the state of the prerelease, e.g. alpha, beta, rc, dev.
-PREVER is an incremented number starting at zero.
+The build system may consume unreleased BUILD versions. For example, a build which is successful but does not pass integration testing may not have its version reused.
 
-For example: 12.0.0.dev.0, 12.2.0.alpha.2, 12.3.0.rc.3
+It is left to the build system as to when to reset the BUILD version to zero, provided that newer versions will always compare greater than older versions.
+
+##### Channels
+
+The build system provides at least these repositories of builds, designated as channels:
+
+stable: Official releases
+current: Builds that has passed all automated testing
+
+#### Caveats
+
+We do not consistently and clearly delineate which public methods are also part of the public API and guaranteed to only change with major version releases. Public methods may change in minor releases based on the likelihood of that method being used by other projects or cookbooks.
 
 #### Examples
 
-Major: When changing the load order of any cookbook segments (e.g. attributes, templates), the major version number shall be incremented.
+MAJOR: When changing the load order of any cookbook segments (e.g. attributes, templates), the major version number shall be incremented.
 
-Minor: When adding support to the mount provider for special filesystem types that were previously unsupported, the minor version number shall be incremented.
+MINOR: When adding support to the mount provider for special filesystem types that were previously unsupported, the minor version number shall be incremented.
 
-Patch: When a minor release is made that contains a new feature to a service provider that causes the service provider to no longer work for users on an older but still supported version of the platform, the patch version number shall be implemented.
+BUILD: Automatically when a build is started in the build system. 
 
-Changes that require the minor or patch version number to be implemented may be included in a release that increments a higher version number without incrementing a lower version number. That is, new features that don not exist in version 1.1.0 may be released in 2.0.0 without any intermediary releases.
+Changes that require the MINOR version number to be increased may be included in a release that increases the MAJOR and allow the MINOR to be reset to zero. That is, new features that do not exist in version 1.1.0 may be released in 2.0.0 without any intermediary releases.
 
 ### Releasing
 
 #### Release Candidates
 
-Each major and minor release should have at least one week where a public RC is available
-for Chef users to test and report feedback.
+Official releases are made by promoting builds from the current channel to the stable channel. We no longer use the addition of a two-part alphanumeric suffix to describe prereleases. The stability of a build is now indicated by the release channel, e.g. current or stable, that the build is available from.
 
-Patch releases are expected to have only small changes which are extensively tested, and thus may be safe to release without a release candidate.
+An announcement should be made to the Chef mailing list at least three business days prior to the release of a build with an increase of either the MAJOR or MINOR versions over the last release. 
+
+Releases which do not increase MAJOR or MINOR versions are expected to have only bug/regression fixes which have been extensively tested, and thus may be released without prior notification.
 
 #### Chef Client Release Process
 
