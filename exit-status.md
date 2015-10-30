@@ -67,12 +67,16 @@ Exit Code           | Phase                             |Details
 Exit Code           | Phase                 |Details
 -------------       | -------------|        -----
 24001               | Reboot Scheduled      | Reboot has been scheduled in the run state
-20002               | Reboot Pending        | Reboot needs to be completed 
-20003               | Reboot Now            | Reboot being scheduled means it might run eventually.  Forced means its rebooting now
-20004               | Reboot Failed         | Initiated Reboot failed - due to permissions or any other reason
+24002               | Reboot Pending        | Reboot needs to be completed 
+24003               | Reboot Now            | Reboot being scheduled means it might run eventually.  Forced means its rebooting now
+24004               | Reboot Failed         | Initiated Reboot failed - due to permissions or any other reason
 
-
-
+#### Bootstrap Failures
+Exit Code           | Phase                         |Details
+-------------       | -------------|                -----
+25001               | chef-client download failure  | 
+25002               | Authentication failure        | 
+25003               | Environment doesn't exist     | 
 
 ## Copyright
 
