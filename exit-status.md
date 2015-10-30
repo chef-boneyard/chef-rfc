@@ -39,7 +39,7 @@ Multiple exit code ranges should be supported.  This allows reasoning of which c
 ### Ranges
 Exit Code Range      | Enumeration Meaning                  |Details
 -------------       | -------------|                        -----
-20000-20999          | Chef Phase Failures                  | Any Chef specific Phase failure. Compile, Converge, Audit, etc  Further subdivide into smaller subsets.
+20000-20999          | Chef Phase Failures                  | Any Chef specific Phase failure. Compile, Converge, Audit, etc 
 24000-24999         | Reboot, or other user requirement    | Any exit code for rebooting, reboot pending, etc.
 25000-25999         | Bootstrap Failures                    | Specific reasons why bootstrap failed.  i.e. Download of chef-client installer failed, Install failed, Authentication, 
 
