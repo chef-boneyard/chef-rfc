@@ -22,21 +22,23 @@ existing Chef Community Guidelines and Code of Conduct at various community even
 other community member by either verbally or physically indicating that you wish to hug them.
 
 An example, but not limited to, of a verbal indication for permission to hug is to ask "Can I give you a hug?" or "Can we hug?"
-The other party will then respond with verbal consent; for example "Yes, we can" or "Yes, you may"
+The other party will then respond with verbal consent; for example "Yes, we can" or "Yes, you may."
 
 An example, but not limited to, of a physical indication for permission to hug is spread your arms apart from your body. The other
 party can indicate permission by repeating the same physical expression to provide consent.
 
 If Community member would like to express a hug, but has a limitation via a sickness or unable to use the typical hug process
-they may also express via other means, examples but not limited to:
+they may also express via other means, examples are but not limited to:
 - fist bumps
+- high fives
 - backward head nods by moving the chin upwards
 - elbows to elbows
 
-If a Community member would like to signal a rejection of a hug one of the possible physical signs one can do, but not limited to:
+If a Community member would like to signal a rejection of a hug one of the possible physical signs one can do, some examples are, but not limited to:
 - walking away
 - shaking ones head in a sign of "No"
-- crossing your arms over your chest placing your right hand on your left shoulder and left hand on your right shoulder could be a suggested way of indicating that you're not open to being hugged.
+- verbally expressing "No"
+- crossing your arms over your chest placing your right hand on your left shoulder and left hand on your right shoulder
 
 ## Copyright
 
