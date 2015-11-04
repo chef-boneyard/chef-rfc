@@ -27,6 +27,17 @@ The other party will then respond with verbal consent; for example "Yes, we can"
 An example, but not limited to, of a physical indication for permission to hug is spread your arms apart from your body. The other
 party can indicate permission by repeating the same physical expression to provide consent.
 
+If Community member would like to express a hug, but has a limitation via a sickness or unable to use the typical hug process
+they may also express via other means, examples but not limited to:
+- fist bumps
+- backward head nods by moving the chin upwards
+- elbows to elbows
+
+If a Community member would like to signal a rejection of a hug one of the possible physical signs one can do, but not limited to:
+- walking away
+- shaking ones head in a sign of "No"
+- crossing your arms over your chest placing your right hand on your left shoulder and left hand on your right shoulder could be a suggested way of indicating that you're not open to being hugged.
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
