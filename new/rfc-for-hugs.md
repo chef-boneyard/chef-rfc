@@ -32,12 +32,12 @@ they may also express via other means, examples are but not limited to:
 - fist bumps
 - high fives
 - backward head nods by moving the chin upwards
-- elbows to elbows
+- elbow to elbow
 
-If a Community member would like to signal a rejection of a hug one of the possible physical signs one can do, some examples are, but not limited to:
+A Community member may signal their desire not to participate in the hug. Such signals may include, but are not limited to:
 - walking away
 - shaking ones head in a sign of "No"
-- verbally expressing "No"
+- verbally expressing "No, Thank you."
 - crossing your arms over your chest placing your right hand on your left shoulder and left hand on your right shoulder
 
 ## Copyright
