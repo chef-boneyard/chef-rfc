@@ -28,13 +28,13 @@ Let users trigger another resource prior to an action happening.
 
 ## Specification
 
-We add a new :immediately_before timing which causes a notification to happen
+We add a new :before timing which causes a notification to happen
 *before* the resource actually updates. If the resource will not actually update,
 this event does not fire.
 
 The events you can specify would become:
 
-- :immediately_before - before the resource updates, but *only* if an update will occur.
+- :before - before the resource updates, but *only* if an update will occur.
 - :immediately - after the resource updates, but *only* if an update occurred.
 - :delayed - after the resource updates, at the end of the run.
 
@@ -42,7 +42,7 @@ The events you can specify would become:
 package "foo" do
   action :upgrade
   # The package upgrade will fail if we try to upgrade while it runs!!!
-  notifies :stop, "service[blah]", :immediately_before
+  notifies :stop, "service[blah]", :before
 end
 
 service "blah" do
@@ -53,7 +53,7 @@ This will work for both subscribes and notifies.
 
 ### Backwards Compatibility
 
-This will only affect resources which have :immediately_before on them, and will
+This will only affect resources which have :before on them, and will
 not modify any existing resources or recipes.
 
 ### Implementation
@@ -65,19 +65,19 @@ action to run at a time, and it seems ill-advised to change that without a lot
 of extra thinking.
 
 To get around this without breaking the model, we propose that resources with an
-`:immediately_before` action run a why-run test of the action and trigger off of
+`:before` action run a why-run test of the action and trigger off of
 that, before running the action for real. The flow of this resource:
 
 ```ruby
 package "foo" do
   action :upgrade
-  notifies :stop, "service[blah]", :immediately_before
+  notifies :stop, "service[blah]", :before
 end
 ```
 
 The execution of the package upgrade looks like this:
 
-1. If :immediately_before events are on the resource:
+1. If :before events are on the resource:
    a. raise an error if the resource does not support why-run.
    b. Turn on why-run temporarily.
    c. Run the action.
