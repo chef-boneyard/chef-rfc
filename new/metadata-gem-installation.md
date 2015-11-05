@@ -25,7 +25,7 @@ gem "poise"
 gem "chef-sugar"
 gem "chef-provisioning"
 
-In the `Chef::RunContext::CookbookCompiler#compile` method a phase will be added before `compile_libraires` which will install all of the gem declarations from all of the synchronized cookbooks before any other cookbook code is compiled.
+In the `Chef::RunContext::CookbookCompiler#compile` method a phase will be added before `compile_libraries` which will install all of the gem declarations from all of the synchronized cookbooks before any other cookbook code is compiled.
 
 The implementation will use an in-memory bundler Gemfile which is constructed against all gem statements in all cookbooks which are in the `run_list`, solved
 at the same time.  The syntax of the 'gem' statement will support the bundler gem syntax, with the qualification that since it is compiled into metadata.json
