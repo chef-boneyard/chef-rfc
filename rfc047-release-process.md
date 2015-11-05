@@ -51,20 +51,24 @@ Increment the MINOR version when you add any new features
 The BUILD version is increased automatically by the build system
 ```
 
+* When MINOR increases, BUILD must be reset to zero.
+* When MAJOR increases, MINOR and BUILD must be reset to zero.
+* Changes that require the MINOR version number to be increased may be included in a release that increases the MAJOR and allow the MINOR to be reset to zero. That is, new features that do not exist in version 1.1.0 may be released in 2.0.0 without any intermediary releases.
+
+##### Channels
+
+The build system moves builds through multiple repositories, designated as channels. The channels publicly exposed to Omnitruck are:
+
+* stable: Builds that have been manually promoted and are regarded as official releases.
+* current: Builds that has passed all automated testing (and may become official releases).
+
 #### Continuous Integration / Continuous Delivery (build system)
 
 The BUILD version is numeric and must be increased for each build.
 
-The build system may consume unreleased BUILD versions. For example, a build which is successful but does not pass integration testing may not have its version reused.
+The build system may consume unreleased BUILD versions. For example, a build which is successful but does not pass integration testing must not have its version reused.
 
-It is left to the build system as to when to reset the BUILD version to zero, provided that newer versions will always compare greater than older versions.
-
-##### Channels
-
-The build system provides at least these repositories of builds, designated as channels:
-
-stable: Official releases
-current: Builds that has passed all automated testing
+Therefore, a released build is unlikely to have BUILD be zero because these numbers are now consumed during pre-release testing.
 
 #### Caveats
 
@@ -78,13 +82,11 @@ MINOR: When adding support to the mount provider for special filesystem types th
 
 BUILD: Automatically when a build is started in the build system. 
 
-Changes that require the MINOR version number to be increased may be included in a release that increases the MAJOR and allow the MINOR to be reset to zero. That is, new features that do not exist in version 1.1.0 may be released in 2.0.0 without any intermediary releases.
-
 ### Releasing
 
 #### Release Candidates
 
-Official releases are made by promoting builds from the current channel to the stable channel. We no longer use the addition of a two-part alphanumeric suffix to describe prereleases. The stability of a build is now indicated by the release channel, e.g. current or stable, that the build is available from.
+Official releases are made by promoting builds from the current channel to the stable channel. We no longer use the addition of a two-part alphanumeric suffix (e.g. X.Y.Z.rc.0) to describe prereleases. The stability of a build is now indicated by the release channel, e.g. current or stable, that the build is available from.
 
 An announcement should be made to the Chef mailing list at least three business days prior to the release of a build with an increase of either the MAJOR or MINOR versions over the last release. 
 
