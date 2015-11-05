@@ -7,8 +7,8 @@ Type: Standards Track
 
 # Title
 
-Support ohai plugins under an `ohai` top level directory in cookbooks.  Load all
-ohai plugins in all synchronized cookbooks after cookbook synchronization.
+Support Ohai plugins under an `ohai` top level directory in cookbooks.  Load all
+Ohai plugins in all synchronized cookbooks after cookbook synchronization.
 
 ## Motivation
 
@@ -32,7 +32,7 @@ ohai plugins in all synchronized cookbooks after cookbook synchronization.
 
 The "segments" of a cookbook will be extended to include an "ohai" segment.  In this segment there will be plugins which are intended to be copied to the Ohai `plugin_path`.  All files in this segment will be copied, recursively, maintaining directory structure.
 
-In the `Chef::RunContext::CookbookCompiler#compile` method a phase will be added after `compile_libraries` and before `compile_attributes` which will copy the ohai plugins from the cookbook segment and will load all of the discovered plugins.
+In the `Chef::RunContext::CookbookCompiler#compile` method a phase will be added after `compile_libraries` and before `compile_attributes` which will copy the Ohai plugins from the cookbook segment and will load all of the discovered plugins.
 
 The plugins will be copied from `<cookbookname>/ohai` into `/etc/chef/ohai/<cookbookname>` as their top level directory (recursively).  The state of the entire
 subdirectory tree under `/etc/chef/ohai` will be managed fully by chef-client so that any files which are not synchronized by chef-client will be removed, so
