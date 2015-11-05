@@ -31,7 +31,7 @@ The implementation will use an in-memory bundler Gemfile which is constructed ag
 at the same time.  The syntax of the 'gem' statement will support the bundler gem syntax, with the qualification that since it is compiled into metadata.json
 that arbitrary ruby code will be expanded at cookbook upload time.
 
-The resulting gemset bundle will be installed into the ruby that chef-client is running out of (typically omnibus ruby).
+The resulting gemset bundle will be installed into the LIBPATH of the running chef-client.  This may either be directly into the base ruby libraries (per current `chef_gem` behavior) or into a custom location with the LIBPATH of the chef-client extended to use that location--as an open implementation question.
 
 The normal Gemfile `requires` tag may be used by users to autoload files out of gems.
 
