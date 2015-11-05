@@ -34,8 +34,8 @@ The "segments" of a cookbook will be extended to include an "ohai" segment.  In 
 
 In the `Chef::RunContext::CookbookCompiler#compile` method a phase will be added after `compile_libraries` and before `compile_attributes` which will copy the Ohai plugins from the cookbook segment and will load all of the discovered plugins.
 
-The plugins will be copied from `<cookbookname>/ohai` into `/etc/chef/ohai/<cookbookname>` as their top level directory (recursively).  The state of the entire
-subdirectory tree under `/etc/chef/ohai` will be managed fully by chef-client so that any files which are not synchronized by chef-client will be removed, so
+The plugins will be copied from `<cookbookname>/ohai` into `/etc/chef/ohai/cookbook-plugins/<cookbookname>` as their top level directory (recursively).  The state of the entire
+subdirectory tree under `/etc/chef/ohai/cookbook-plugins` will be managed fully by chef-client so that any files which are not synchronized by chef-client will be removed, so
 that removal of a plugin from a cookbook or removal of the cookbook from `run_list` will result in the plugin being removed on the target host.
 
 The plugins directory will work similarly to libraries and other directions in that there will be no control over the inclusion of plugins below the level of the inclusion of the cookbook itself in the `run_list`.
