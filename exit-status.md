@@ -7,76 +7,41 @@ Type: Standards Track
 
 # Title
 
-Signal outside tools of specific Chef-Client run status.  Ability to determine different results of a Chef-Client run.
+Signal outside tools of specific Chef-Client run status.  Ability to determine results of a Chef-Client run.
 
 ## Motivation
-
     As a Chef user,
     I want to be able to determine when a chef-client run is rebooting the node,
     so that Test-Kitchen/Vagrant/any outside tool can wait for node to reboot, and continue converging.
     
-    As a Chef user,
-    I want to be able to determine when a chef-client run succeeds but fails Audit mode,
-    so I can tell if converge failed and/or auditing failed.
-    
-    As a Chef user/support engineer,
-    I want to know which stage of a chef-client run failed (Compile, Converge, etc),
-    so that I can limit my debugging of failed chef-client runs
-    
-
 ## Specification
 * Chef-apply, Chef-client, Chef-Solo should honor the below exit chef run exit codes
-* Knife bootstrap and Knife windows bootstrap should honor bootstrap exit codes
 
-### Exit Code Ranges
-Multiple exit code ranges should be supported.  This allows reasoning of which components are trying to signal the external tools.  Also this will allow future expansion of this Spec to include additional codes.  
- * Example - additonal phases of Chef-client run.
-
-### Exit code ranges/codes to exclude
-* Windows - [1 - 16000](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681381(v=vs.85).aspx)
-* Linux 1 - 255 - [Sysexits](http://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+4.3-RELEASE&format=html), [Bash Scripting](http://tldp.org/LDP/abs/html/exitcodes.html), Linux generally supports this range
+### Exit codes in use across platforms
+* Windows- [Link](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681381(v=vs.85).aspx)
+* Linux - [Sysexits](http://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+4.3-RELEASE&format=html), [Bash Scripting](http://tldp.org/LDP/abs/html/exitcodes.html)
  
-### Ranges
-Exit Code Range      | Enumeration Meaning                  |Details
--------------       | -------------|                        -----
-20000-20999          | Chef Phase Failures                  | Any Chef specific Phase failure. Compile, Converge, Audit, etc 
-24000-24999         | Reboot, or other user requirement    | Any exit code for rebooting, reboot pending, etc.
-25000-25999         | Bootstrap Failures                    | Specific reasons why bootstrap failed.  i.e. Download of chef-client installer failed, Install failed, Authentication, 
 
-#### Precedence
-* Chef-Client order of precendence (highest on top):
-    1. Reboot, any other use interactions 
-    2. Chef Phase Failures
+### Exit Codes usable across platforms
+All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be idential across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are a total of 59 exit codes that overlap between the two platforms.
+ 
+ * Exit Codes Available for Chef use:
+     * ~~35,37,40,41~~,42,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97
+     * 98,99,115,116,168,169,172,175,176,177,178,179,181,184,185,204,211
+     * 213,219,227,228,235,236,237,238,239,241,242,243,244,245
 
-#### Chef Phase Failures
-Exit Code           | Phase                             |Details
--------------       | -------------|                    -----
-20001               | Get configuration data            | [See here](https://docs.chef.io/chef_client.html)
-20002               | Authenticate to the Chef Server   | [See here](https://docs.chef.io/chef_client.html)
-20003               | Get, rebuild the node object      | [See here](https://docs.chef.io/chef_client.html)
-20004               | Expand the run-list               | [See here](https://docs.chef.io/chef_client.html)
-20005               | Synchronize cookbooks             | [See here](https://docs.chef.io/chef_client.html)
-20006               | Reset node attributes             | [See here](https://docs.chef.io/chef_client.html)
-20007               | Compile the resource collection   | [See here](https://docs.chef.io/chef_client.html)
-20008               | Converge the node                 | [See here](https://docs.chef.io/chef_client.html)
-20009               | Update the node object            | [See here](https://docs.chef.io/chef_client.html)
-20010               | Process exception/report handlers | [See here](https://docs.chef.io/chef_client.html)
-20011               | Audit Mode                        | [See here](https://docs.chef.io/chef_client.html)
+## Exit Codes in Use
+#### Reboot Requirement
+Exit Code        | Phase             | Details
+-------------    | -------------     |-----
+35               | Reboot Scheduled  | Reboot has been scheduled in the run state
+37               | Reboot Pending    | Reboot needs to be completed 
+40               | Reboot Now        | Reboot being scheduled means it might run eventually.  Forced means its rebooting now
+41               | Reboot Failed     | Initiated Reboot failed - due to permissions or any other reason
 
-#### Reboot or other User Requirement
-Exit Code           | Phase                 |Details
--------------       | -------------|        -----
-24001               | Reboot Scheduled      | Reboot has been scheduled in the run state
-24002               | Reboot Pending        | Reboot needs to be completed 
-24003               | Reboot Now            | Reboot being scheduled means it might run eventually.  Forced means its rebooting now
-24004               | Reboot Failed         | Initiated Reboot failed - due to permissions or any other reason
 
-#### Bootstrap Failures
-Exit Code           | Phase                         |Details
--------------       | -------------|                -----
-25001               | chef-client download failure  | 
-25002               | Authentication failure        | 
-25003               | Environment doesn't exist     | 
+## Extend
+This RFC should be able to be ammended to include additional exit code functionality at a later date
 
 ## Copyright
 
