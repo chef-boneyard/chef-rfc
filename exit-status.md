@@ -31,8 +31,17 @@ All exit codes defined should be usable on all supported Chef Platforms.  Also t
      * 213,219,227,228,235,236,237,238,239,241,242,243,244,245
 
 ## Exit Codes in Use
+
+#### Chef Run Generic
+Exit Code        | Reason            | Details
+-------------    | -------------     |-----
+0                | Successful run    | Any successful execution of a Chef utility should return this exit code
+1                | Failed execution  | Generic error during Chef execution.  
+-1               | Failed execution  | Generic error during Chef execution.  
+
+
 #### Reboot Requirement
-Exit Code        | Phase             | Details
+Exit Code        | Reason            | Details
 -------------    | -------------     |-----
 35               | Reboot Scheduled  | Reboot has been scheduled in the run state
 37               | Reboot Pending    | Reboot needs to be completed 
