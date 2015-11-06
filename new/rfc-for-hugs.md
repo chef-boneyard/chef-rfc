@@ -31,8 +31,10 @@ If Community member would like to express a hug, but has a limitation via a sick
 they may also express via other means, examples are but not limited to:
 - fist bumps
 - high fives
-- backward head nods by moving the chin upwards
-- elbow to elbow
+- in the case of an illness
+  - [elbow to elbow](https://en.wikipedia.org/wiki/Elbow_bump)
+  - backward head nods by moving the chin upwards
+
 
 A Community member may signal their desire not to participate in the hug. Such signals may include, but are not limited to:
 - walking away
