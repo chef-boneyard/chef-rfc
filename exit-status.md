@@ -26,19 +26,16 @@ Signal outside tools of specific Chef-Client run status.  Ability to determine r
 All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be idential across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are a total of 59 exit codes that overlap between the two platforms.
  
  * Exit Codes Available for Chef use:
-     * ~~35,37,40,41~~,42,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97
+     * ~~35,37,40,41,42~~,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97
      * 98,99,115,116,168,169,172,175,176,177,178,179,181,184,185,204,211
      * 213,219,227,228,235,236,237,238,239,241,242,243,244,245
 
+### Precedence
+* Reboot exit codes should take precedence over Chef Execution State
+* Precedence within a table should be evaluated from the top down.
+    *  Example - Audit Mode Failure would only apply on a successful execution.  But if the chef-run failed for any other reason, no reason to exit with audit mode.
+
 ## Exit Codes in Use
-
-#### Chef Run Generic
-Exit Code        | Reason            | Details
--------------    | -------------     |-----
-0                | Successful run    | Any successful execution of a Chef utility should return this exit code
-1                | Failed execution  | Generic error during Chef execution.  
--1               | Failed execution  | Generic error during Chef execution.  
-
 
 #### Reboot Requirement
 Exit Code        | Reason            | Details
@@ -47,6 +44,16 @@ Exit Code        | Reason            | Details
 37               | Reboot Pending    | Reboot needs to be completed 
 40               | Reboot Now        | Reboot being scheduled means it might run eventually.  Forced means its rebooting now
 41               | Reboot Failed     | Initiated Reboot failed - due to permissions or any other reason
+
+
+#### Chef Run State
+Exit Code        | Reason             | Details
+-------------    | -------------      |-----
+0                | Successful run     | Any successful execution of a Chef utility should return this exit code
+42               | Audit Mode Failure |  Audit mode failed, but chef converged successfully.
+1                | Failed execution   | Generic error during Chef execution.  
+-1               | Failed execution   | Generic error during Chef execution.  
+
 
 
 ## Extend
