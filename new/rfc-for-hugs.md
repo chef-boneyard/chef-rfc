@@ -17,12 +17,13 @@ In order to bridge the cultural gap between the US and Worldwide community the c
 
 ## Specification
 
-When approaching another Chef Community Member that you wish to engage in a hug. In order to comply with the already
-existing Chef Community Guidelines and Code of Conduct at various community events. You must seek permission from the
+When approaching another Chef Community Member that you wish to engage in a hug. To comply with the already
+existing Chef Community Guidelines and Code of Conduct at various community events, you must seek permission from the
 other community member by either verbally or physically indicating that you wish to hug them.
 
 An example, but not limited to, of a verbal indication for permission to hug is to ask "Can I give you a hug?" or "Can we hug?"
-The other party will then respond with verbal consent; for example "Yes, we can" or "Yes, you may."
+The other party should then respond with verbal statement; for example "Yes, we can" or "Yes, you may." is a positive reaction, whereas
+"No, Thank you." or "No, thanks" are considered negative reactions.
 
 An example, but not limited to, of a physical indication for permission to hug is spread your arms apart from your body. The other
 party can indicate permission by repeating the same physical expression to provide consent.
