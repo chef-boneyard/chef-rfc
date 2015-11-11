@@ -32,6 +32,7 @@ If Community member would like to express a hug, but has a limitation via a sick
 they may also express via other means, examples are but not limited to:
 - fist bumps
 - high fives
+- a special 'open to hugs' sticker on a conference badge or nametag
 - in the case of an illness
   - [elbow to elbow](https://en.wikipedia.org/wiki/Elbow_bump)
   - backward head nods by moving the chin upwards
