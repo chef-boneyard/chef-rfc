@@ -15,15 +15,16 @@ Signal outside tools of specific Chef-Client run status.  Ability to determine r
     so that Test-Kitchen/Vagrant/any outside tool can wait for node to reboot, and continue converging.
     
 ## Specification
-* Chef-apply, Chef-client, Chef-Solo should honor the below exit chef run exit codes
+* Chef applications (e.g. chef-client) that interpret recipes should use the specified exit codes
+* Chef tools (e.g. knife) should behave appropriately for the exit code, or pass it to the user
 
-### Exit codes reserved across platforms
+### Exit codes Reserved by Operating System
 * Windows- [Link](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681381(v=vs.85).aspx)
 * Linux - [Sysexits](http://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+4.3-RELEASE&format=html), [Bash Scripting](http://tldp.org/LDP/abs/html/exitcodes.html)
  
 
-### Exit Codes usable across platforms
-All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be idential across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are a total of 59 exit codes that overlap between the two platforms.
+### Remaining Available Exit Codes
+All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be idential across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are 59 exit codes that are available on both platforms.
  
  * Exit Codes Available for Chef use:
      * ~~35,37,40,41,42~~,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97
@@ -41,7 +42,7 @@ All exit codes defined should be usable on all supported Chef Platforms.  Also t
 Exit Code        | Reason            | Details
 -------------    | -------------     |-----
 35               | Reboot Scheduled  | Reboot has been scheduled in the run state
-37               | Reboot Pending    | Reboot needs to be completed 
+37               | Reboot Needed     | Reboot needs to be completed 
 40               | Reboot Now        | Reboot being scheduled means it might run eventually.  Forced means its rebooting now
 41               | Reboot Failed     | Initiated Reboot failed - due to permissions or any other reason
 
@@ -52,12 +53,13 @@ Exit Code        | Reason             | Details
 0                | Successful run     | Any successful execution of a Chef utility should return this exit code
 42               | Audit Mode Failure |  Audit mode failed, but chef converged successfully.
 1                | Failed execution   | Generic error during Chef execution.  
--1               | Failed execution   | Generic error during Chef execution.  On Linux this will show up as 255, on Windows as -1  
+-1               | Failed execution*   | Generic error during Chef execution.  On Linux this will show up as 255, on Windows as -1  
 
+* \*Next release should deprecate any use of this exit code.
 
 
 ## Extend
-This RFC should be able to be ammended to include additional exit code functionality at a later date
+This RFC should be able to be amended to include additional exit code functionality at a later date.  Additional exit codes are assigned by pull request against this RFC as detailed in [RFC000](https://github.com/chef/chef-rfc/blob/master/rfc000-rfc-process.md#changing-an-accepted-rfc)
 
 ## Copyright
 
