@@ -1,7 +1,7 @@
 ---
 RFC: 28
 Author: Julian C. Dunn <jdunn@aquezada.com>
-Status: Accepted
+Status: Final
 Type: Informational
 ---
 
