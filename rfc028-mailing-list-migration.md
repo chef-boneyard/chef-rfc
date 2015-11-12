@@ -1,11 +1,13 @@
 ---
 RFC: 28
 Author: Julian C. Dunn <jdunn@aquezada.com>
-Status: Final
+Status: Accepted
 Type: Informational
 ---
 
 # Mailing List Migration
+
+The mailing list was cutover from http://lists.opscode.com to https://discourse.chef.io on 13 October 2015.
 
 This RFC proposes the migration of all existing Chef mailing lists
 (namely, `{chef,chef-dev}@lists.opscode.com`) to 
