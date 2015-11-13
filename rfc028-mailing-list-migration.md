@@ -5,6 +5,12 @@ Status: Accepted
 Type: Informational
 ---
 
+# Migration Status - Complete
+
+This RFC was accepted and the work proposed herein has been completed.  The mailing list was cutover from http://lists.opscode.com to https://discourse.chef.io on 13 October 2015.
+
+The details below are being maintained to provide insight on motivation for the switch and for other historical purposes.
+
 # Mailing List Migration
 
 This RFC proposes the migration of all existing Chef mailing lists
