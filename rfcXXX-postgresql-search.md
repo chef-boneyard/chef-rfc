@@ -49,7 +49,7 @@ WITH found_items AS (SELECT item_name, path, value FROM goiardi.search_items si 
 
 Here, $1 is of course the organization id number, $2 is the type of object being searched for (in this example "node"), and $3 and $4 are the fields being searched ("name" and "chef_environment"). The `found_items` clause describes all rows that belong to nodes that have `name` and `chef_environment` as their paths, while `items` is a list of all node names. It's drawn directly from the nodes table instead of from `found_items` because it turned out to be far more performant that way.
 
-The SELECT statement that follows varies depending on how many search terms are used. If only one term, like "name:foo*" is used, then the SELECT statement will be like `SELECT COALESCE(ARRAY_AGG(DISTINCT item_name), '{}'::text[]) FROM found_items f0 WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value LIKE $5)`. When searching for a distinct name, the WHERE clause would be like `WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value = $5)`, while "name:*" will be like "WHERE (f0.path ~ $4)".
+The SELECT statement that follows varies depending on how many search terms are used. If only one term, like "name:foo\*" is used, then the SELECT statement will be like `SELECT COALESCE(ARRAY_AGG(DISTINCT item_name), '{}'::text[]) FROM found_items f0 WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value LIKE $5)`. When searching for a distinct name, the WHERE clause would be like `WHERE (f0.path OPERATOR(goiardi.~) $4 AND f0.value = $5)`, while "name:\*" will be like "WHERE (f0.path ~ $4)".
 
 With more than one term it becomes a little more complicated. Each term gets an INNER JOIN on found_items added to the select query and a statement added to the WHERE clause, like so:
 
