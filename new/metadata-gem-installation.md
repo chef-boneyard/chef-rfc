@@ -15,7 +15,7 @@ other cookbook loading is done.
 
     As a Chef User,
     I want to be able to use additional gems in libraries, attributes and resources,
-    So I don't pull my hair/beard out in frustration.
+    to avoid complex workarounds and double-run converges.
 
 ## Specification
 
