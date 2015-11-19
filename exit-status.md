@@ -25,8 +25,8 @@ Signal outside tools of specific Chef-Client run status.  Ability to determine r
 
 ### Remaining Available Exit Codes
 All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be idential across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are 59 exit codes that are available on both platforms.
- 
- * Exit Codes Available for Chef use:
+ * Any numbers below that have a strike-through are used below in the **Exit Codes in Use** section
+ * Exit Codes Available for Chef use :
      * ~~35,37,40,41,42~~,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97
      * 98,99,115,116,168,169,172,175,176,177,178,179,181,184,185,204,211
      * 213,219,227,228,235,236,237,238,239,241,242,243,244,245
@@ -43,7 +43,7 @@ Exit Code        | Reason            | Details
 -------------    | -------------     |-----
 35               | Reboot Scheduled  | Reboot has been scheduled in the run state
 37               | Reboot Needed     | Reboot needs to be completed 
-40               | Reboot Now        | Reboot being scheduled means it might run eventually.  Forced means its rebooting now
+40               | Reboot Now        | The system is rebooting
 41               | Reboot Failed     | Initiated Reboot failed - due to permissions or any other reason
 
 
