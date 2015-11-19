@@ -17,11 +17,10 @@ Omnibus Chef Native Gem Additions
 
     As a Chef User,
     I want to have omnibus-chef ship with popular Open Source databases,
-    Because that will speed up my initial converaes, and again ease my pain.
+    Because that will speed up my initial converges, and again ease my pain.
 
     As a Postgres Cookbook Author,
-    I want to obliterate what we had to do to install Postgres client into omnibus from a cookbook,
-    Because, seriously, have you look at that code?
+    I need a better way to install native gems, as the required workarounds use unstable Ruby APIs and links to the omnibus packaged OpenSSL library, which makes the cookbook very complex and brittle.
 
 
 ## Specification
