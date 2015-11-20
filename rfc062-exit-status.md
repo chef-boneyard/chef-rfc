@@ -1,29 +1,33 @@
 ---
-RFC: unassigned
+RFC: 62
 Author: Nicholas Carpenter <ncarpenter@ebsco.com>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
-# Title
+# Chef-Client Exit Codes
 
 Signal outside tools of specific Chef-Client run status.  Ability to determine results of a Chef-Client run.
 
 ## Motivation
+
     As a Chef user,
     I want to be able to determine when a chef-client run is rebooting the node,
     so that Test-Kitchen/Vagrant/any outside tool can wait for node to reboot, and continue converging.
     
 ## Specification
+
 * Chef applications (e.g. chef-client) that interpret recipes should use the specified exit codes
 * Chef tools (e.g. knife) should behave appropriately for the exit code, or pass it to the user
 
 ### Exit codes Reserved by Operating System
+
 * Windows- [Link](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681381(v=vs.85).aspx)
 * Linux - [Sysexits](http://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+4.3-RELEASE&format=html), [Bash Scripting](http://tldp.org/LDP/abs/html/exitcodes.html)
  
 
 ### Remaining Available Exit Codes
+
 All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be idential across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are 59 exit codes that are available on both platforms.
  * Any numbers below that have a strike-through are used below in the **Exit Codes in Use** section
  * Exit Codes Available for Chef use :
@@ -32,6 +36,7 @@ All exit codes defined should be usable on all supported Chef Platforms.  Also t
      * 213,219,227,228,235,236,237,238,239,241,242,243,244,245
 
 ### Precedence
+
 * Reboot exit codes should take precedence over Chef Execution State
 * Precedence within a table should be evaluated from the top down.
     *  Example - Audit Mode Failure would only apply on a successful execution.  But if the chef-run failed for any other reason, no reason to exit with audit mode.
@@ -39,6 +44,7 @@ All exit codes defined should be usable on all supported Chef Platforms.  Also t
 ## Exit Codes in Use
 
 #### Reboot Requirement
+
 Exit Code        | Reason            | Details
 -------------    | -------------     |-----
 35               | Reboot Scheduled  | Reboot has been scheduled in the run state
@@ -48,6 +54,7 @@ Exit Code        | Reason            | Details
 
 
 #### Chef Run State
+
 Exit Code        | Reason             | Details
 -------------    | -------------      |-----
 0                | Successful run     | Any successful execution of a Chef utility should return this exit code
@@ -59,6 +66,7 @@ Exit Code        | Reason             | Details
 
 
 ## Extend
+
 This RFC should be able to be amended to include additional exit code functionality at a later date.  Additional exit codes are assigned by pull request against this RFC as detailed in [RFC000](https://github.com/chef/chef-rfc/blob/master/rfc000-rfc-process.md#changing-an-accepted-rfc)
 
 ## Copyright
@@ -67,3 +75,4 @@ This work is in the public domain. In jurisdictions that do not allow for this,
 this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.
+
