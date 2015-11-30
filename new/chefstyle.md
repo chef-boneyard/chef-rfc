@@ -23,11 +23,15 @@ for its open source ruby code and apply it.
 ## Specification
 
 https://github.com/chef/chefstyle provides a rubocop configuration that
-can be applied to any ruby projects. The community should arrive, via
+is intended to be applied to chef/chef and related projects, such as
+chef/ohai, and chef/mixlib-*. The community should arrive, via
 pull requests to `chefstyle`, at a set of style checks that can be
-enforced (via travis, etc) on any community maintained ruby projects.
+enforced (via travis, etc) on chef community maintained ruby projects.
+
 Chefstyle, by default, disables all rubocop cops, providing a clean
-sheet for us to build upon.
+sheet for us to build upon. PRs to enable rules should be accompanied
+with a PR to chef/chef demonstrating the feasibility of enabling the
+rule and to allow discussion of actual changes.
 
 This style checker is not intended for use with cookbooks, which have
 different requirements.
