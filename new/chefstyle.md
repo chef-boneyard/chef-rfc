@@ -24,7 +24,7 @@ for its open source ruby code and apply it.
 
 https://github.com/chef/chefstyle provides a rubocop configuration that
 is intended to be applied to chef/chef and related projects, such as
-chef/ohai, and chef/mixlib-*. The community should arrive, via
+chef/ohai, and chef/mixlib-\*. The community should arrive, via
 pull requests to `chefstyle`, at a set of style checks that can be
 enforced (via travis, etc) on chef community maintained ruby projects.
 
