@@ -3,6 +3,8 @@ RFC: 14
 Author: Daniel DeLeo <dan@getchef.com>
 Status: Accepted
 Type: Standards Track
+Tracking:
+  - https://github.com/chef/chef-server/pulls/645
 ---
 
 # Universe Endpoint for Chef Server
