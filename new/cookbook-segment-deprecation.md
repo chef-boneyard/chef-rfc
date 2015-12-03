@@ -17,35 +17,29 @@ Cookbook Segment Deprecation
 
 ## Specification
 
-This RFC will add a special `all_files` segment to cookbooks which will duplicate (initially)
-all of the existing cookbook manifest along with arbitrary files outside of the current scope of
-any of the cookbook segments.  The Chef Server will need to be patched in order to support this
-new 'segment' and accept it since the Chef Server currently does strict enforcement of file
-segments server-side.  This will also generate a version bump of the Chef Server protocol which
-will be used by servers to determine if the Chef Client supports this field or not.  Clients MAY
-implement code which determines the acceptable API version of the Server and then only send
-the new API requests to the server.  Clients MAY instead send requests which include both the
-old segment and new segment data.  The Server MUST detect the Client's desired API version and
-only send responses formatted for that version.  The Server MUST be able to receive both old
-API requests and 'mixed' API requests with both the old segments and the new segment.
+This RFC specifies a new format for the GET and PUT requests to the cookbooks/NAME/VERSION
+endpoint.  This is a breaking change which will mandate a bumping of the API version to
+the protocol.  The existing 'segments' will be removed out of the cookbook version and a
+new 'all_files' segment will be introduced which will simply be a list of all the files in
+the cookbook.
 
-New knife clients that support this segment MAY use the Chef Server protocol version to determine
-if they MUST upload cookbooks using the old segment format, or if they CAN upload using only
-the `all_files` format.
+The Chef Server MUST respond to all GET requests that do not contain an appropriate API version
+with the old protocol with segments.  Cookbooks that have been uploaded in the new format
+MUST have their manifest information filtered so that an old style response can be constructed.
+When the Chef Server sees an API version in the GET request that accepts the new style it
+MUST respond only with the 'all_files' segment in the body of the response.
 
-For backwards compatibility, the Chef Server MUST serve cookbooks with both standard segments and the
-new `all_files` segment unless it can determine that the client prefers one or other.  If it can
-be determined then the server MUST serve cookbooks to old clients with the old format, and SHOULD
-serve cookbooks to new clients with only the `all_files` segment.
+All new Clients MUST set their API version correctly in order to get the new behavior on
+PUT or GET.  Since old Servers will not accept the new 'all_files' segment Clients MUST determine
+the server version they are talking to and send their PUT requests correctly.  Clients MAY
+use prior communication with the Chef Server (i.e. during the uploading of sandbox files they
+MAY determine the API version of the Chef Server off of the replies and use that information) to
+determine the correct API version to use and format their PUT request accordingly.  Clients
+MAY also PUT with the new format and after receiving a 4xx code from the Server retry the
+request in the old format and downgrade.
 
-New Chef Clients MUST accept either old style segments, cookbooks with the new `all_files` segment
-or cookbook metadata with both styles (and SHOULD favor the `all_files` segment).
-
-This will achieve backwards compatibility and the ability for knife, chef-client and the chef-server
-to be upgraded independently of each other and run in a "dual-stack" mode.  At some point in the
-future, backwards compatibility will be dropped in a major version bump.
-
-The implementation of this RFC must still fully support both settings of the `no_lazy_load` config parameter.
+The implementation of this RFC must still fully support both settings of the `no_lazy_load`
+config parameter.
 
 ## Copyright
 
