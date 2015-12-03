@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 64
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 Tracking:
  - https://github.com/chef/chefstyle
