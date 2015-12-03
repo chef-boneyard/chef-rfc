@@ -11,10 +11,9 @@ Cookbook Segment Deprecation
 
 ## Motivation
 
-    As a Chef User/Developer,
-    I want to be able to extend the structure of cookbooks without fighting with a wire protocol
-    written 6 years ago,
-    Because nobody wants that.
+    As a Chef User/Developer
+    I want to be able to extend the structure of cookbooks easily,
+    in order to quickly adapt to new automation needs.
 
 ## Specification
 
