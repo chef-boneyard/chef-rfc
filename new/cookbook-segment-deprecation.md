@@ -22,10 +22,15 @@ all of the existing cookbook manifest along with arbitrary files outside of the 
 any of the cookbook segments.  The Chef Server will need to be patched in order to support this
 new 'segment' and accept it since the Chef Server currently does strict enforcement of file
 segments server-side.  This will also generate a version bump of the Chef Server protocol which
-will be used by clients to determine if the Chef Server supports this field or not.
+will be used by servers to determine if the Chef Client supports this field or not.  Clients MAY
+implement code which determines the acceptable API version of the Server and then only send
+the new API requests to the server.  Clients MAY instead send requests which include both the
+old segment and new segment data.  The Server MUST detect the Client's desired API version and
+only send responses formatted for that version.  The Server MUST be able to receive both old
+API requests and 'mixed' API requests with both the old segments and the new segment.
 
-New knife clients that support this segment will use the Chef Server protocol version to determine
-if they MUST upload cookbooks using the old segment format, or if they SHOULD upload using only
+New knife clients that support this segment MAY use the Chef Server protocol version to determine
+if they MUST upload cookbooks using the old segment format, or if they CAN upload using only
 the `all_files` format.
 
 For backwards compatibility, the Chef Server MUST serve cookbooks with both standard segments and the
