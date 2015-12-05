@@ -11,7 +11,7 @@ The current Chef signing protocols force users to use SHA1 based algorithms. Thi
 
 ## Background
 
-The Chef Server currently supports 3 different signing protocols: v1.0, v1.1,and v1.2. All of these protocols use a RSA private key to sign a message, which is verified by the server using the public key. Once a signature is created and Base64 encoded, it is broken up into lines of no more than 60 characters and placed into the `X-Ops-Authorization-1`, `X-Ops-Authorization-2`, ..., `X-Ops-Authorization-N` headers.
+The Chef Server currently supports 3 different signing protocols: v1.0, v1.1, and v1.2. All of these protocols use a RSA private key to sign a message, which is verified by the server using the public key. Once a signature is created and Base64 encoded, it is broken up into lines of no more than 60 characters and placed into the `X-Ops-Authorization-1`, `X-Ops-Authorization-2`, ..., `X-Ops-Authorization-N` headers.
 
 ### Signing Protocol v1.0
 Signing protocol v1.0 signs the following message:
@@ -54,28 +54,27 @@ Following is the message to be signed by the v1.3 protocol.
 
 ```
 Method:HTTP_METHOD
-Hashed Path:HASHED_PATH
+Path:PATH
 X-Ops-Content-Hash:HASHED_BODY
-X-Ops-Sign:algorithm=HASH_ALGORITHM;version=PROTOCOL_VERSION
+X-Ops-Sign:version=1.3
 X-Ops-Timestamp:TIME
-X-Ops-UserId:HASHED_USERID
+X-Ops-UserId:USERID
 X-Ops-Server-API-Version:HEADER_X_OPS_SERVER_API_VERSION
 ```
 
 where:
-  - `HASH_ALGORITHM` is one of the supported hashing algorithms for signing protocols supporting the v1.3 message format
   - `PROTOCOL_VERSION` is the signing protocol that will be used.
-  - `HTTP_METHOD` is the method used in the HTTP request
-  - `HASHED_PATH` is the Base64 encoded value of `Hash(HASH_ALGORITHM, CanonicalPath)`. A `CanonicalPath` must not have repeated forward slashes (`/`), must not end in a forward slash (unless the path is `/`), and must not include a query string.
-  - `HASHED_BODY` is the Base64 encoded value of `Hash(HASH_ALGORITHM, Body)`
+  - `HTTP_METHOD` is the method used in the HTTP request. It should be all upper case (`POST`, `GET`, `PUT`, etc)
+  - `PATH` us a canonicalized representation of the path. This path must not have repeated forward slashes (`/`), must not end in a forward slash (unless the path is `/`), and must not include a query string.
+  - `HASHED_BODY` is the Base64 encoded value of `Hash(SHA256, Body)`
   - `TIME` is the timestamp in ISO-8601 format and with UTC indicated by a trailing `Z` and separated by the character `T`. For example: `2013-03-10T14:14:44Z`.
-  - `HASHED_USERID` is the Base64 encoded value of `Hash(HASH_ALGORITHM, UserId)`
+  - `USERID` is the user id, for example the client name
   - `HEADER_X_OPS_SERVER_API_VERSION` is the value of `X-Ops-Server-API-Version` passed to the Chef server.
 
+There is a new line character(`\n`\) after each line in this message **except the last line**.
+
 ### v1.3 Signing Protocol
-Signing protocol v1.3 signs message format v1.3 messages using the `RSASSA-PKCS1-v1_5` signature scheme as described in [PKCS#1 v2.2 RSA Cryptography Standard](https://www.emc.com/collateral/white-papers/h11300-pkcs-1v2-2-rsa-cryptography-standard-wp.pdf). The following hashing algorithms will be supported:
-  - sha1
-  - sha256
+Signing protocol v1.3 signs message format v1.3 messages using the `RSASSA-PKCS1-v1_5` signature scheme as described in [PKCS#1 v2.2 RSA Cryptography Standard](https://www.emc.com/collateral/white-papers/h11300-pkcs-1v2-2-rsa-cryptography-standard-wp.pdf). v1.3 will use SHA256 as the hashing algorithm.
 
 This protocol is very similar to v1.2. The signing scheme is the same (RSASSA-PKCS1-v1_5). The message format signs a few additional pieces of information: The signing protocol version, the hashing algorithm to be used, and the `X-Ops-Server-API-Version` header.
 
@@ -112,7 +111,7 @@ YlkUQYXhy9JixmUUKtH+NXkKX7Lyc8XYw5ETr7JBT3ifs+G7HruDjVG78EJVojbd
 -----END RSA PRIVATE KEY-----
 ```
 
-For this example, assume that the following intent:
+For this example, assume the following intent:
 
 |key                 |value                   |
 |--------------------|------------------------|
@@ -122,48 +121,46 @@ For this example, assume that the following intent:
 | Timestamp          | 2009-01-01T12:00:00Z   |
 | User               | spec-user              |
 | Server Api Version | 1                      |
-| Sign Protocol      | v1.3 SHA256            |
+| Sign Protocol      | v1.3                   |
 
 Using this information, we can generate the following message:
 
 ```
 Method:POST
-Hashed Path:Z3EsTMw/UBNY9n+q+WBWTJmeVg8hQFbdFzVWRxW4dOA=
+Path:/organizations/clownco
 X-Ops-Content-Hash:hDlKNZhIhgso3Fs0S0pZwJ0xyBWtR1RBaeHs1DrzOho=
-X-Ops-Sign:algorithm=sha256;version=1.3
+X-Ops-Sign:version=1.3
 X-Ops-Timestamp:2009-01-01T12:00:00Z
-X-Ops-UserId:/pNOhczwdkQGXD4YAOBVm38wgq2WI7vKRk9d8WBhyKA=
+X-Ops-UserId:spec-user
 X-Ops-Server-API-Version:1
 ```
 
-Note the line endings are `\n`, and there is no newline after `X-Ops-Server-API-Version:1`.
+Note the line endings are `\n`, and there is no newline character after `X-Ops-Server-API-Version:1`.
 
 This message can now be signed, with the expected Base64 representation being:
 
 ```
-BjR+iTK2eOgwmT2yGqLvE7Fp+VlpRGyL1dVoF2DmhUPO7EVsnxx2s32AmlOw
-EpaACpav8SoB7K4rpOo3gfBm0XAYLnLLWzcec2OQG2O0wxxHiKVn4qWEe7Cs
-RZ903DGM54t4uK75vx6wwoEdZqZe21npsLK+F3oAqnkgp+YXmlYv9Se5tFKB
-0GWM1ibGJMjUIFAm7vxzjcuEvkkKN49MnXeMAAykfymcs74RU6xEKYzzSAyC
-ygkV6xQSapDMp/aY29cVA/1FgZeVMhnFSTjtqBehchZYwXswr0A72A86gID9
-h2QsUpmQJwbOK3bb1GptAnd5IiLzIxtu+vFeY6h4eA==
+FZOmXAyOBAZQV/uw188iBljBJXOm+m8xQ/8KTGLkgGwZNcRFxk1m953XjE3W
+VGy1dFT76KeaNWmPCNtDmprfH2na5UZFtfLIKrPv7xm80V+lzEzTd9WBwsfP
+42dZ9N+V9I5SVfcL/lWrrlpdybfceJC5jOcP5tzfJXWUITwb6Z3Erg3DU3Uh
+H9h9E0qWlYGqmiNCVrBnpe6Si1gU/Jl+rXlRSNbLJ4GlArAPuL976iTYJTzE
+MmbLUIm3JRYi00Yb01IUCCKdI90vUq1HHNtlTEu93YZfQaJwRxXlGkCNwIJe
+fy49QzaCIEu1XiOx5Jn+4GmkrZch/RrK9VzQWXgs+w==
 ```
 
 The Chef server should expect the following headers to be passed along:
 
 | name                  | value                                                        |
 |-----------------------|--------------------------------------------------------------|
-| X-Ops-Authorization-1 | BjR+iTK2eOgwmT2yGqLvE7Fp+VlpRGyL1dVoF2DmhUPO7EVsnxx2s32AmlOw |
-| X-Ops-Authorization-2 | EpaACpav8SoB7K4rpOo3gfBm0XAYLnLLWzcec2OQG2O0wxxHiKVn4qWEe7Cs |
-| X-Ops-Authorization-3 | RZ903DGM54t4uK75vx6wwoEdZqZe21npsLK+F3oAqnkgp+YXmlYv9Se5tFKB |
-| X-Ops-Authorization-4 | 0GWM1ibGJMjUIFAm7vxzjcuEvkkKN49MnXeMAAykfymcs74RU6xEKYzzSAyC |
-| X-Ops-Authorization-5 | ygkV6xQSapDMp/aY29cVA/1FgZeVMhnFSTjtqBehchZYwXswr0A72A86gID9 |
-| X-Ops-Authorization-6 | h2QsUpmQJwbOK3bb1GptAnd5IiLzIxtu+vFeY6h4eA==                 |
+| X-Ops-Authorization-1 | FZOmXAyOBAZQV/uw188iBljBJXOm+m8xQ/8KTGLkgGwZNcRFxk1m953XjE3W |
+| X-Ops-Authorization-2 | VGy1dFT76KeaNWmPCNtDmprfH2na5UZFtfLIKrPv7xm80V+lzEzTd9WBwsfP |
+| X-Ops-Authorization-3 | 42dZ9N+V9I5SVfcL/lWrrlpdybfceJC5jOcP5tzfJXWUITwb6Z3Erg3DU3Uh |
+| X-Ops-Authorization-4 | H9h9E0qWlYGqmiNCVrBnpe6Si1gU/Jl+rXlRSNbLJ4GlArAPuL976iTYJTzE |
+| X-Ops-Authorization-5 | MmbLUIm3JRYi00Yb01IUCCKdI90vUq1HHNtlTEu93YZfQaJwRxXlGkCNwIJe |
+| X-Ops-Authorization-6 | fy49QzaCIEu1XiOx5Jn+4GmkrZch/RrK9VzQWXgs+w==                 |
 
 ## Compatibility
 The Chef server currently returns the supported protocol versions when failing to authenticate. This information is returned in the `WWW-Authenticate` header of the response along with a response code of `401`. An example of a value that is returned that header is `X-Ops-Sign version="1.0" version="1.1"`, with a  response body of `{"error":["Invalid signature for user or client 'foo'"]}`. The response provides no information as to why the authentication failed.
-
-With servers supporting signing protocol v1.3, `WWW-Authenticate` can signal which hashing algorithms are supported for the 1.3 signing protocol. For example, a server supporting v1.3 could respond with `X-Ops-Sign version="1.0" version="1.1" version="1.3:sha1" version="1.3:sha256"`. This could be the basis of a negotiation protocol that determines which signing algorithm to use. Until such time, Chef client will continue to default to `v1.0`, and using `v1.3` will require setting `:authenticate_protocol_version` in the Chef client configuration to `"1.3"`.
 
 ## Copyright
 
