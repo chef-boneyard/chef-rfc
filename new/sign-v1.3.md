@@ -3,6 +3,9 @@ RFC: unassigned
 Author: Jay Mundrawala <jdm@chef.io>
 Status: Draft
 Type: Standards Track
+Tracking:
+ - https://github.com/chef/chef_authn/pull/23
+ - https://github.com/chef/mixlib-authentication/pull/10
 ---
 
 # Chef Authentication Signing Protocol v1.3
