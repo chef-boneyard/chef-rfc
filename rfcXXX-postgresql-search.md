@@ -31,15 +31,15 @@ There are two tables for this search: search_collections and search_items. The s
 
 Table indices are up to the implementers, except for the mandatory ltree index on search_items.path. A trigram index on the value column, or at least a GiST index on (path, value) using trigrams for the value, speeds up many of these queries considerably. However, these indexes do take up a lot of space on disk and require maintenance (see below).
 
-An implementing server that has organizations MAY use a separate schema for each organization's search tables.
+An implementing server that has organizations may use a separate schema for each organization's search tables.
 
 See Appendix 1 for the goiardi search tables and indices implementations.
 
 ### Querying
 
-The implementing server MUST have a Solr query parser that can parse out Solr queries and build Postgres queries. The parser MUST be able to handle all common search use cases, including basic, grouped, and range queries. It SHOULD at least accept more unusual Solr queries like fuzzy searches, even if it does not do anything particularly useful with them.
+The implementing server must have a Solr query parser that can parse out Solr queries and build Postgres queries. The parser must be able to handle all common search use cases, including basic, grouped, and range queries. It should at least accept more unusual Solr queries like fuzzy searches, even if it does not do anything particularly useful with them.
 
-An implementing server MAY short circuit certain kinds of queries. For instance, when using "*:*" as a query term, it is acceptable and recommended to directly hit that object's database table rather than using the search_items table.
+An implementing server may short circuit certain kinds of queries. For instance, when using "\*:\*" as a query term, it is acceptable and recommended to directly hit that object's database table rather than using the search_items table.
 
 In the usual case, the search query first builds a CTE clause to narrow down the number of rows in the search items table to search through. For example, to search for all nodes which have a name starting with "foobar*" in the "development" environment, it would start with a clause like:
 
