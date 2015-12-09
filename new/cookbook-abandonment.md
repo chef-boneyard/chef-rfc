@@ -7,7 +7,7 @@ Type: Process
 
 # Cookbook Abandonment On Supermarket
 
-The Chef community needs a process around handling when cookbooks on Supermarket are abandoned.  This occurs when a cookbook owner does not respond to requests to adopt the cookbook, and the cookbook has not been updated in some time.
+The Chef community needs a process for handling cookbooks on Supermarket that have become abandoned.  This occurs when a cookbook owner does not respond to requests to adopt the cookbook or the cookbook has not been updated in some time and has untriaged pull requests/issues/etc (other criteria to be decided by the Chef Community).
 
 ## Motivation
 
