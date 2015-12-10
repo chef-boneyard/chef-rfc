@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 67
 Author: Lamont Granquist <lamont@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
