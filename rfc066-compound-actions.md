@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 66
 Author: John Keiser <john@johnkeiser.com>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
