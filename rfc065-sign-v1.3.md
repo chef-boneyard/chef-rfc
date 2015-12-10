@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 65
 Author: Jay Mundrawala <jdm@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 Tracking:
  - https://github.com/chef/chef_authn/pull/23
