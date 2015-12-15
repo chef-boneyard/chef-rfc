@@ -70,6 +70,27 @@ The build system may consume unreleased BUILD versions. For example, a build whi
 
 Therefore, a released build is unlikely to have BUILD be zero because these numbers are now consumed during pre-release testing.
 
+#### Version Configuration
+
+A text file named VERSION exists at the top of chef git repository which contains the current MAJOR.MINOR version. If BUILD is included, it is ignored. Maintainers are responsible for increasing MAJOR and MINOR as necessary based on the above specification when merging code to the master branch.
+
+The VERSION constants, Chef::VERSION and ChefConfig::VERSION, must be set to "invalid-unset-version" in the repository and changes to the corresponding files must not be committed to the repository.
+
+The following steps will be automated by the build tools:
+
+The full version, i.e. MAJOR.MINOR.BUILD, is stored as light-weight git tags. Each build will:
+ 1. Examine the VERSION file to determine MAJOR.MINOR
+ 1. Use existing tags to determine the next incremental BUILD
+ 1. Create a light-weight tag in the format MAJOR.MINOR.BUILD, e.g. `1.2.3` against the commit that it intends to build.
+ 1. Push the tag
+ 1. Updates the VERSION constants for the build locally, but must not push a commit containing the updated files.
+
+To facilitate local development and testing, a modified process is used when built outside of CI/CD:
+ 1. Examine the VERSION file to determine MAJOR.MINOR
+ 1. Use the existing tags to determine the most recent BUILD and use it with a `+dev` suffix, e.g. `1.2.3+dev`
+ 1. Does not create or push tags
+ 1. Updates the VERSION constants for the build locally, but must not push a commit containing the updated files.
+
 #### Caveats
 
 We do not consistently and clearly delineate which public methods are also part of the public API and guaranteed to only change with major version releases. Public methods may change in minor releases based on the likelihood of that method being used by other projects or cookbooks.
@@ -80,7 +101,7 @@ MAJOR: When changing the load order of any cookbook segments (e.g. attributes, t
 
 MINOR: When adding support to the mount provider for special filesystem types that were previously unsupported, the minor version number shall be incremented.
 
-BUILD: Automatically when a build is started in the build system. 
+BUILD: Automatically when a build is started in the build system.
 
 ### Releasing
 
@@ -88,7 +109,7 @@ BUILD: Automatically when a build is started in the build system.
 
 Official releases are made by promoting builds from the current channel to the stable channel. We no longer use the addition of a two-part alphanumeric suffix (e.g. X.Y.Z.rc.0) to describe prereleases. The stability of a build is now indicated by the release channel, e.g. current or stable, that the build is available from.
 
-An announcement should be made to the Chef mailing list at least three business days prior to the release of a build with an increase of either the MAJOR or MINOR versions over the last release. 
+An announcement should be made to the Chef mailing list at least three business days prior to the release of a build with an increase of either the MAJOR or MINOR versions over the last release.
 
 Releases which do not increase MAJOR or MINOR versions are expected to have only bug/regression fixes which have been extensively tested, and thus may be released without prior notification.
 
