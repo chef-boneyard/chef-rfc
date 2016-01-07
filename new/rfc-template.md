@@ -8,8 +8,6 @@ Type: <Standards Track, Informational, Process>
 <  - https://github.com/chef/chef/issues/X>
 ---
 
-# Unless otherwise stated, the RFC author is also volunteering to implement the feature or process if accepted.
-
 # Title
 
 Description and rationale.
@@ -21,6 +19,8 @@ Description and rationale.
     so that <<benefit>>.
 
 ## Specification
+
+A detailed description of the planned implementation, which the RFC author agrees to execute.
 
 ## Copyright
 
