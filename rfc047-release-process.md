@@ -101,32 +101,36 @@ Currently the omnibus packaging configuration is shared between multiple project
 
 A text file named VERSION exists at the top of chef git repository which contains the current MAJOR.MINOR version. If BUILD is included, it is ignored. Maintainers are responsible for increasing MAJOR and MINOR as necessary based on the above specification when merging code to the master branch.
 
-The VERSION constants, Chef::VERSION and ChefConfig::VERSION, must be set to "invalid-see-rfc047" in the repository and changes to the corresponding files must not be committed to the repository.
+The VERSION constants, Chef::VERSION and ChefConfig::VERSION are automatically updated by the processes below. The full version, i.e. MAJOR.MINOR.BUILD, is stored as light-weight git tags.
 
-The following steps will be automated by the build tools:
+The following steps will be automated:
 
-The full version, i.e. MAJOR.MINOR.BUILD, is stored as light-weight git tags. Each build will:
- 1. Switch to the `build` branch
- 1. Merge the `master` branch into the `build` branch
- 1. Examine the VERSION file to determine MAJOR.MINOR
- 1. Use existing tags to determine the next incremental BUILD
- 1. Update the VERSION constants for the build locally, commit, and push the `build` branch
- 1. Create a light-weight tag in the format MAJOR.MINOR.BUILD, e.g. `1.2.3` against that version commit
- 1. Push the tag
+ * Github Bot
+ 1. Blocks merge on Github with a 'required status check'
+ 1. Waits for a comment indicating the PR is accepted, e.g. "@shipment approve"
+ 1. Examines the VERSION file on master to determine MAJOR.MINOR
+ 1. Uses existing tags to determine the next incremental BUILD
+ 1. Checks out the branch
+ 1. Update the VERSION constants for the build and commits locally
+ 1. Merges the branch with the version commit to master
+ 1. Pushes master to Github
 
-This process is automated by using the `rake does-not-exist` task and will fail if run outside of CI.
+ * Build Tool
+ 1. Monitors the repository for commits using Github web hooks or git polling
+ 1. Builds the project using Omnibus
+ 1. Places a successful build in the internal 'unstable' channel
+ 1. Runs the build through automated acceptance tests
+ 1. Places a successful build in the external 'current' channel
 
-The above process is intended to happen only after successful unit tests. This verification could be provided by Travis/Appveyor, or a verification phase built into the build pipeline. This will catch regressions before a build version is consumed.
-
-The `build` branch exists to provide bundler and other tools that access the git repository directly a branch to track master on that includes a valid and recent version.
+The above process is intended to happen only after successful unit tests. This verification is currently provided by Travis/Appveyor. This will help catch regressions before a build version and build resources are consumed.
 
 To facilitate local development and testing, a modified process is used when built outside of CI/CD:
  1. Examine the VERSION file to determine MAJOR.MINOR
- 1. Use the existing tags to determine the most recent BUILD and use it with a `+dev` suffix, e.g. `1.2.3+dev`
+ 1. Use the existing tags to determine the most recent BUILD and use it with a `.dev` suffix, e.g. `1.2.3.dev`
  1. Does not create or push tags
  1. Updates the VERSION constants for the build
 
-This process is automated by using the `rake does-not-exist` task.
+This process is automated by using the `rake FIXME-TBD` task.
 
 The development version may be committed and pushed to development branches as necessary for working with bundler and other tools, but must not be merged to the `master` branch, e.g. drop the commit with an interactive rebase.
 
@@ -134,6 +138,7 @@ The development version may be committed and pushed to development branches as n
 
 The build system moves builds through multiple repositories, designated as channels. The channels publicly exposed to Omnitruck are:
 
+* unstable: Builds that have completed successfully, pending testing. Internal to the build system.
 * stable: Builds that have been manually promoted from current and are considered a releases.
 * current: Builds that has passed all automated testing.
 
