@@ -1,3 +1,10 @@
+---
+RFC: 010
+Author: Bryan McLellan <btm@loftninjas.org>
+Status: Accepted
+Type: Standards Track
+---
+
 # Windows Package Resource and Providers
 
 Proposal for moving windows\_package LWRP from the windows cookbook into core Chef.

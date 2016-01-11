@@ -1,3 +1,10 @@
+---
+RFC: 011
+Author: Adam Edwards <adamed@chef.io>
+Status: Accepted
+Type: Standards Track
+---
+
 Resource-based Guard Interpreters for Chef
 ==========================================
 

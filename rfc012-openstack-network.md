@@ -1,3 +1,10 @@
+---
+RFC: 012
+Author: Matt Ray <mray@chef.io>
+Status: Accepted
+Type: Standards Track
+---
+
 # Named Network Support in knife-openstack
 
 Proposal for generically supporting networks not named `public` or `private` with knife-openstack.

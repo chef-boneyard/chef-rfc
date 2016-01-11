@@ -1,3 +1,10 @@
+---
+RFC: 001
+Author: Adam Jacob <adam@chef.io>
+Status: Accepted
+Type: Process
+---
+
 # Chef Community IRC Meetings
 
 This RFC declares what community meetings we hold and how we hold them.

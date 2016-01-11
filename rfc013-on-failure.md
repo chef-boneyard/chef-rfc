@@ -1,3 +1,10 @@
+---
+RFC: 013
+Author: Seth Vargo <sethvargo@gmail.com>
+Status: Accepted
+Type: Standards Track
+---
+
 Steven, Paul, and myself were having a discussion about adding
 an `on_failure` handler on a per-resource basis. I wrote up an RFC proposing
 an API for this functionality.
