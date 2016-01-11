@@ -1,3 +1,10 @@
+---
+RFC: 015
+Author: Serdar Sutay <serdar@chef.io>
+Status: Accepted
+Type: Informational
+---
+
 # Chef 12
 
 This document summarizes our current thinking for the next major version of Chef Client a.k.a. Chef 12 and aims to provide a starting point for discussions on the scope of Chef 12.
