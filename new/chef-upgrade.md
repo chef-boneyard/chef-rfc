@@ -32,12 +32,12 @@ If the administrator has specified a version of chef different to the one curren
 
 ### Determining the desired chef version
 
-The desired chef version should be provided to the node through a new first class environment or node attribute tree, named `__chef_version__`. Once RFC 45 is completed, that attribute tree will be marked as desired state, and not mutable by the node.
+The desired chef version should be provided to the node through a new first class environment or node attribute tree, named `__chef_upgrade__`. Once RFC 45 is completed, that attribute tree will be marked as desired state, and not mutable by the node.
 
 The attribute tree will contain one mandatory attribute, `version`, and
 some additional attributes. Currently, we intend to support `channel`
 to allow the administrator to specify that they would like to consume
-unreleased builds. Channels are documented in [RFC 47](https://github.com/chef/chef-rfc/blob/master/rfc047-release-process.md#channels)
+unreleased builds. Channels are documented in [RFC 47](https://github.com/chef/chef-rfc/blob/master/rfc047-release-process.md#channels).
 
 The `version` attribute shall contain either MAJOR, MAJOR.MINOR, or
 MAJOR.MINOR.BUILD as documented in [RFC 47](https://github.com/chef/chef-rfc/blob/master/rfc047-release-process.md#versioning).
@@ -64,7 +64,7 @@ Given the environment below:
 ```json
 {
   "name": "production",
-  "__chef_version__": {
+  "__chef_upgrade__": {
     "version": 12.5"
   }
 }
