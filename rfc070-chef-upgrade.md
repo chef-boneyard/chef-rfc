@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 70
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
