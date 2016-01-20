@@ -21,9 +21,11 @@ other cookbook loading is done.
 
 Allow users to specify additional gem dependencies like:
 
+```ruby
 gem "poise"
 gem "chef-sugar"
 gem "chef-provisioning"
+```
 
 In the `Chef::RunContext::CookbookCompiler#compile` method a phase will be added before `compile_libraries` which will install all of the gem declarations from all of the synchronized cookbooks before any other cookbook code is compiled.
 
