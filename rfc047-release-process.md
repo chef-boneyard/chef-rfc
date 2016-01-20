@@ -93,7 +93,7 @@ There is a large set of dependencies for Chef (rubygems) and the packaging (omni
 
 The matrix of platforms and platform versions that Chef supports (see RFC 21) is extensive. The build for each system is expected to be consistent across all platforms. This is achieved by building all platforms at roughly the same time.
 
-Thus, a later build of the same Chef commit is not garunteed to produce the same package.
+Thus, a later build of the same Chef commit is not guaranteed to produce the same package.
 
 Currently the omnibus packaging configuration is shared between multiple projects in the omnibus-chef repository, which causes subsequent builds to change due to updated omnibus dependencies. This will be mitigated in the future by moving the omnibus packaging configuration into each projects repository.
 
@@ -101,7 +101,7 @@ Currently the omnibus packaging configuration is shared between multiple project
 
 A text file named VERSION exists at the top of chef git repository which contains the current MAJOR.MINOR version. If BUILD is included, it is ignored. Maintainers are responsible for increasing MAJOR and MINOR as necessary based on the above specification when merging code to the master branch.
 
-The VERSION constants, Chef::VERSION and ChefConfig::VERSION are automatically updated by the processes below. The full version, i.e. MAJOR.MINOR.BUILD, is stored as light-weight git tags.
+The VERSION constants, Chef::VERSION and ChefConfig::VERSION are automatically updated by the processes below. The full version, i.e. MAJOR.MINOR.BUILD, is stored as annotated git tags.
 
 The following steps will be automated:
 
