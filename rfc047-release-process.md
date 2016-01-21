@@ -105,30 +105,31 @@ The VERSION constants, Chef::VERSION and ChefConfig::VERSION are automatically u
 
 The following steps will be automated:
 
- * Github Bot
- 1. Blocks merge on Github with a 'required status check'
- 1. Waits for a comment indicating the PR is accepted, e.g. "@shipment approve"
- 1. Examines the VERSION file on master to determine MAJOR.MINOR
- 1. Uses existing tags to determine the next incremental BUILD
- 1. Checks out the branch
- 1. Update the VERSION constants for the build and commits locally
- 1. Merges the branch with the version commit to master
- 1. Pushes master to Github
+##### Github Bot
+1. Blocks merge on Github with a 'required status check'
+1. Waits for a comment indicating the PR is accepted, e.g. "@shipment approve"
+1. Examines the VERSION file on master to determine MAJOR.MINOR
+1. Uses existing tags to determine the next incremental BUILD
+1. Checks out the branch
+1. Update the VERSION constants for the build and commits locally
+1. Merges the branch with the version commit to master
+1. Pushes master to Github
 
- * Build Tool
- 1. Monitors the repository for commits using Github web hooks or git polling
- 1. Builds the project using Omnibus
- 1. Places a successful build in the internal 'unstable' channel
- 1. Runs the build through automated acceptance tests
- 1. Places a successful build in the external 'current' channel
+##### Build Tool
+1. Monitors the repository for commits using Github web hooks or git polling
+1. Builds the project using Omnibus
+1. Places a successful build in the internal 'unstable' channel
+1. Runs the build through automated acceptance tests
+1. Places a successful build in the external 'current' channel
 
 The above process is intended to happen only after successful unit tests. This verification is currently provided by Travis/Appveyor. This will help catch regressions before a build version and build resources are consumed.
 
 To facilitate local development and testing, a modified process is used when built outside of CI/CD:
- 1. Examine the VERSION file to determine MAJOR.MINOR
- 1. Use the existing tags to determine the most recent BUILD and use it with a `.dev` suffix, e.g. `1.2.3.dev`
- 1. Does not create or push tags
- 1. Updates the VERSION constants for the build
+
+1. Examine the VERSION file to determine MAJOR.MINOR
+1. Use the existing tags to determine the most recent BUILD and use it with a `.dev` suffix, e.g. `1.2.3.dev`
+1. Does not create or push tags
+1. Updates the VERSION constants for the build
 
 This process is automated by using the `rake FIXME-TBD` task.
 
