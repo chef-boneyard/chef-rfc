@@ -1,6 +1,6 @@
 ---
 RFC: 21
-Author: Julian Dunn <jdunn@getchef.com>
+Author: Julian Dunn <jdunn@chef.io>
 Status: Accepted
 Type: Informational
 ---
@@ -35,7 +35,7 @@ AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Debian | 6, 7, 8 | i386, x86_64 | deb | Debian 6
 FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
-Mac OS X | 10.8, 10.9, 10.10 | x86_64 | dmg | Mac OS 10.8
+Mac OS X | 10.8, 10.9, 10.10, 10.11 | x86_64 | dmg | Mac OS 10.8
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Solaris | 10, 11 | sparc, x86 | shar | Solaris 10
@@ -93,7 +93,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 * Windows 7, 8, 8.1
 * Fedora (current non-EOL releases)
 * RHEL 6.x, 7.x
-* Mac OS X 10.8, 10.9, 10.10
+* Mac OS X 10.8, 10.9, 10.10, 10.11
 * Ubuntu 12.04, 14.04
 
 ChefDK bundles Chef Client. Therefore, Chef Client is supported, by extension, on the foregoing client platforms, if not already mentioned explicitly in the Chef Client support matrix.
@@ -126,6 +126,7 @@ Platform | Change | References
 Solaris 9 | Removed October 2014 | http://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf
 Ubuntu 10.04LTS | Moved to Tier 2 May 2015 | https://wiki.ubuntu.com/LTS
 Windows 2003R2 | Removed July 2015 | https://support.microsoft.com/en-us/lifecycle/search/default.aspx?alpha=Windows%20Server%202003%20R2
+Mac OS X 10.11 | Added January 2016 |
 
 ## Copyright
 
