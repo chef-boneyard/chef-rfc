@@ -3,6 +3,9 @@ RFC: 37
 Author: Jon Cowie (jcowie@etsy.com)
 Status: Accepted
 Type: Standards Track
+Tracking:
+  - https://github.com/chef/chef/pull/4081
+  - https://github.com/chef/supermarket/pull/1211
 ---
 
 
