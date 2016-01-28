@@ -3,6 +3,8 @@ RFC: 63
 Author: Lamont Granquist <lamont@chef.io>
 Status: Accepted
 Type: Standards Track
+Tracking:
+  - https://github.com/chef/chef/pull/4435
 ---
 
 # Title
