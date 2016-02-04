@@ -46,10 +46,10 @@ The `chef-client` cookbook adds a block to load all `.rb` files in
 the `client.d` folder. The proposal here is to do the same thing.
 Knife bootstrap will take a `client.d` folder, by default looking
 the chef repo under `bootstrap`, optionally overwritable with a
-switch `--client_d_dir`. The files will be loaded in alphabetical
-order. Knife will still sync all files under `client.d`, however
-only top-level files will the automatically loaded. The block to
-do this would look something like:
+`knife.rb` configuration parameter `client_d_path`. The files
+will be loaded in alphabetical order. Knife will still sync all files
+under `client.d`, however only top-level files will the automatically
+loaded. The block to do this would look something like:
 
 ```ruby
 Dir.glob("/etc/chef/client.d/*.rb").sort.each do |conf|
