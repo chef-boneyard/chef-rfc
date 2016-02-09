@@ -33,7 +33,7 @@ Platform | Versions | Architectures | Package Format | Built on
 --- | --- | --- | --- | ---
 AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
-Debian | 6, 7, 8 | i386, x86_64 | deb | Debian 6
+Debian | 7, 8 | i386, x86_64 | deb | Debian 6
 FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
 Mac OS X | 10.8, 10.9, 10.10, 10.11 | x86_64 | dmg | Mac OS 10.8
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
@@ -48,13 +48,12 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 
 * SUSE Linux Enterprise Server 10, 11
 * Scientific Linux 5.x, 6.x and 7.x (i386 and x86-64)
-* Ubuntu 10.04 (x86, x86_64)
 * Gentoo Linux (rolling release)
 * Arch Linux (rolling release)
 * Fedora (current non-EOL revisions)
-* OpenSUSE 12.3 (until EOL on 15 September 2014), 13.1
+* OpenSUSE 13.1/13.2
 * OmniOS stable and LTS releases
-* OpenBSD 5.7 (i386 and amd64)
+* OpenBSD 5.7/5.8 (i386 and amd64)
 
 ### Not Supported
 
@@ -69,6 +68,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * RHEL or SLES on POWER (ppc64) or System/z
 * HP-UX
 * Mac OS X < 10.8, anything ppc
+* Debian < 7.0, anything ppc or arm
 
 ## Chef Server
 
@@ -127,6 +127,11 @@ Solaris 9 | Removed October 2014 | http://www.oracle.com/us/support/library/life
 Ubuntu 10.04LTS | Moved to Tier 2 May 2015 | https://wiki.ubuntu.com/LTS
 Windows 2003R2 | Removed July 2015 | https://support.microsoft.com/en-us/lifecycle/search/default.aspx?alpha=Windows%20Server%202003%20R2
 Mac OS X 10.11 | Added January 2016 |
+Debian 6 | Removed February 2016 | https://www.debian.org/News/2014/20140424
+openSUSE 12.3 | Removed February 2016 | http://lists.opensuse.org/opensuse-security-announce/2015-02/msg00003.html
+OpenBSD 5.8 | Added February 2016
+openSuse 13.2 | Added February 2016
+Ubuntu 10.04LTS | Removed February 2016 | https://wiki.ubuntu.com/LTS
 
 ## Copyright
 
