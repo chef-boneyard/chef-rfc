@@ -35,7 +35,7 @@ AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Debian | 7, 8 | i386, x86_64 | deb | Debian 6
 FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
-Mac OS X | 10.8, 10.9, 10.10, 10.11 | x86_64 | dmg | Mac OS 10.8
+Mac OS X | 10.9, 10.10, 10.11 | x86_64 | dmg | Mac OS 10.9
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Solaris | 10, 11 | sparc, x86 | shar | Solaris 10
@@ -67,7 +67,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * RHEL/CentOS/Oracle/Scientific 4.x or older
 * RHEL or SLES on POWER (ppc64) or System/z
 * HP-UX
-* Mac OS X < 10.8, anything ppc
+* Mac OS X < 10.9, anything ppc
 * Debian < 7.0, anything ppc or arm
 
 ## Chef Server
@@ -93,7 +93,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 * Windows 7, 8, 8.1
 * Fedora (current non-EOL releases)
 * RHEL 6.x, 7.x
-* Mac OS X 10.8, 10.9, 10.10, 10.11
+* Mac OS X 10.9, 10.10, 10.11
 * Ubuntu 12.04, 14.04
 
 ChefDK bundles Chef Client. Therefore, Chef Client is supported, by extension, on the foregoing client platforms, if not already mentioned explicitly in the Chef Client support matrix.
@@ -101,7 +101,7 @@ ChefDK bundles Chef Client. Therefore, Chef Client is supported, by extension, o
 ### Unsupported
 
 * Windows Vista, XP, 2000
-* Mac OS X < 10.8, anything ppc
+* Mac OS X < 10.9, anything ppc
 
 ## Appendix 1: Guiding Principles for Operating System Version Support
 
@@ -132,6 +132,7 @@ openSUSE 12.3 | Removed February 2016 | http://lists.opensuse.org/opensuse-secur
 OpenBSD 5.8 | Added February 2016
 openSuse 13.2 | Added February 2016
 Ubuntu 10.04LTS | Removed February 2016 | https://wiki.ubuntu.com/LTS
+Mac OS X 10.8 | Removed February 2016 |
 
 ## Copyright
 
