@@ -1,10 +1,8 @@
 ---
-RFC: unassigned
-Author: Jay Mundrawala <jdm@chef.io>
-Author: Bryan McLellan <btm@chef.io>
-Status: Draft
+RFC: 71
+Authors: Jay Mundrawala <jdm@chef.io>, Bryan McLellan <btm@chef.io>
+Status: Accepted
 Type: Standards Track
-
 ---
 
 # Knife Bootstrap `client.rb` Configuration
