@@ -153,6 +153,10 @@ Description and rationale.
 
 ## Specification
 
+## Downstream Impact
+
+Which other tools will be impacted by this work?
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
