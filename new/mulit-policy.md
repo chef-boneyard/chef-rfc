@@ -8,7 +8,7 @@ Type: Standards Track
 # Multiple Policyfiles and Teams
 
 Policyfiles allow powerful new workflows around cookbook management, but one
-area they are currently lacking is in dealing with mutli-team organizations.
+area they are currently lacking is in dealing with multi-team organizations.
 
 Currently each node can be attached to exactly one policy and one policy group.
 The organizational manifestation of this is generally that there needs to be a
