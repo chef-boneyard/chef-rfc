@@ -14,7 +14,7 @@ Signal outside tools of specific Chef-Client run status.  Ability to determine r
     As a Chef user,
     I want to be able to determine when a chef-client run is rebooting the node,
     so that Test-Kitchen/Vagrant/any outside tool can wait for node to reboot, and continue converging.
-    
+
 ## Specification
 
 * Chef applications (e.g. chef-client) that interpret recipes should use the specified exit codes
@@ -24,7 +24,7 @@ Signal outside tools of specific Chef-Client run status.  Ability to determine r
 
 * Windows- [Link](https://msdn.microsoft.com/en-us/library/windows/desktop/ms681381(v=vs.85).aspx)
 * Linux - [Sysexits](http://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+4.3-RELEASE&format=html), [Bash Scripting](http://tldp.org/LDP/abs/html/exitcodes.html)
- 
+
 
 ### Remaining Available Exit Codes
 
@@ -48,8 +48,7 @@ All exit codes defined should be usable on all supported Chef Platforms.  Also t
 Exit Code        | Reason            | Details
 -------------    | -------------     |-----
 35               | Reboot Scheduled  | Reboot has been scheduled in the run state
-37               | Reboot Needed     | Reboot needs to be completed 
-40               | Reboot Now        | The system is rebooting
+37               | Reboot Needed     | Reboot needs to be completed
 41               | Reboot Failed     | Initiated Reboot failed - due to permissions or any other reason
 
 
@@ -58,9 +57,11 @@ Exit Code        | Reason            | Details
 Exit Code        | Reason             | Details
 -------------    | -------------      |-----
 0                | Successful run     | Any successful execution of a Chef utility should return this exit code
-42               | Audit Mode Failure |  Audit mode failed, but chef converged successfully.
-1                | Failed execution   | Generic error during Chef execution.  
--1               | Failed execution*   | Generic error during Chef execution.  On Linux this will show up as 255, on Windows as -1  
+42               | Audit Mode Failure | Audit mode failed, but chef converged successfully.
+1                | Failed execution   | Generic error during Chef execution.
+2                | SIGINT received*   | Received an interrupt signal
+3                | SIGTERM received*   | Received an terminate signal
+-1               | Failed execution*   | Generic error during Chef execution.  On Linux this will show up as 255, on Windows as -1
 
 * \*Next release should deprecate any use of this exit code.
 
