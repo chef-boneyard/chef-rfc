@@ -16,15 +16,15 @@ Cookbook and Cookbook Version Yanking Policy
 
 As a Supermarket User
 
-When I download an artifact (for now, a cookbook) from Supermarket
+When I download an artifact from Supermarket
 
 And I depend on that artifact
 
 I do NOT want that artifact to be removed from Supermarket
 
-As a Artifact author or collaborator
+As a artifact author or collaborator
 
-When I upload a bad version of a cookbook to Supermarket
+When I upload a bad version of an artifact to Supermarket
 
 I want a way to hide it from the Supermarket UI
 
@@ -32,7 +32,7 @@ And from the /universe endpoint
 
 ## Specification
 
-Currently a Supermarket artifact author cannot remove a cookbook version from Supermarket without contacting the Supermarket admins.
+Currently, a Supermarket artifact author cannot remove a cookbook version from Supermarket without contacting the Supermarket admins.
 
 A cookbook author CAN remove a cookbook completely from Supermarket.
 
