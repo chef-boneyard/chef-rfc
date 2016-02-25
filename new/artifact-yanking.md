@@ -24,7 +24,9 @@ I do NOT want that artifact to be removed from Supermarket
 
 As a artifact author or collaborator
 
-When I upload a bad version of an artifact to Supermarket
+When I upload an artifact to Supermarket
+
+And something is wrong with the artifact
 
 I want a way to hide it from the Supermarket UI
 
@@ -49,6 +51,8 @@ It will not, however, be completely deleted from the Supermarket artifact store.
 If someone depends on the cookbook version, they will still be able to download and access it
 
 But it will be harder for a new user of the cookbook version to find the unshared version.
+
+The user who unshares the cookbook will be notified of this, along with a message that if they REALLY need it deleted to contact the Supermarket admins
 
 ## Downstream Impact
 
