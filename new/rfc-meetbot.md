@@ -7,21 +7,21 @@ Type: Process
 
 # Enabling meetbot for Chef IRC Community meetings.
 
-I would like to enable [meetbot][meetbot] for the Chef IRC Community Meetings.
-The ability to automatically take notes and executive summaries can open up
-people to have conversations instead of the dogma of making sure the conversations
-stay on track.
+We will enable [meetbot][meetbot] for the Chef IRC Community Meetings.
+Shifting responsibility for taking meeting notes from the designated secretary
+to software allows the person acting as the secretary to instead participate
+fully in the discussion.
 
 ## Motivation
 
     As a community member of Chef,
-    I want to have a higher level of engagement from everyone,
-    so that we automate the human process away, and the bot does the note taking.
+    I want the meeting notes to be automated,
+    so that the secretary can participate fully in the discussion.
 
 ## Specification
 
 The OpenStack community has constant IRC meetings. They leverage something called
-[meetbot][meetbot] to help take notes for them. I believe that there would be not
+[meetbot][meetbot] to help take notes for them. There would be not
 only increased productivity and communication but a more natural flow to the
 conversations. There are built in commands that help track `#actions` or `#links`
 that output an executive summary so you can see in a quick fashion what was discussed.
