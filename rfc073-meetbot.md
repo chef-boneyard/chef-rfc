@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 73
 Author: JJ Asghar <jj@chef.io>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
