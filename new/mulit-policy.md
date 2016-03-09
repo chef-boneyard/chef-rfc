@@ -39,6 +39,25 @@ are wonderful options.
     I want to release cookbook updates,
     so that I can deploy changes quickly.
 
+With that said, a more specific case that isn't currently handled well:
+
+The Database team owns MySQL and uses Chef to deploy it along with related configs
+and tools. The Monitoring team owns Collectd, which is deployed to every server
+in the organization, and they are responsible for configuring collectd and deploying
+new versions of it as needed. The core team owns ntpd and is responsible for its
+configuration.
+
+All teams want to follow the snapshot-based approach where they have a mono-repo
+of their own cookbooks with a few shared cookbooks pulled in via dependencies.
+When a team wants to do a release they run `chef update` to recompile their
+policy, and then use `chef push` to roll it out to each environment in sequence
+(with time in-between for testing et al). The teams also do not want to have to
+ask permission from any other team when deploying new versions of a service they
+are responsible for.
+
+This combination of a snapshot-based workflow without explicit team coordination
+is not currently an easy thing to do with the policy systems.
+
 ## Specification
 
 A solution for this is to use multiple, decoupled policies on the same node.
