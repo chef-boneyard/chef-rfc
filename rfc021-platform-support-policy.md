@@ -33,6 +33,8 @@ Platform | Versions | Architectures | Package Format | Built on
 --- | --- | --- | --- | ---
 AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
+Cisco IOS XR | 6 | x86_64 | rpm | Cisco IOS XR 6 Developer Image
+Cisco NX-OS | 7 | x86_64 | rpm | Cisco NX-OX 7 Developer Image
 Debian | 7, 8 | i386, x86_64 | deb | Debian 6
 FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg | FreeBSD 9
 Mac OS X | 10.9, 10.10, 10.11 | x86_64 | dmg | Mac OS 10.9
