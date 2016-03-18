@@ -111,6 +111,7 @@ Once Chef Software, Inc. decides to support an operating system, we will also de
 
 Platform | Support Until | References
 --- | --- | ---
+AIX | End of Support Date | https://www-01.ibm.com/software/support/aix/lifecycle/
 Debian | Current Version, plus previous version whilst security supported (stable and oldstable) | https://wiki.debian.org/DebianReleases
 Mac OS X | Current version, plus two previous versions | Apple does not clearly announce EOLs, so we have made this choice
 RHEL and EL-variants | End of RedHat Production 3 Phase | https://access.redhat.com/support/policy/updates/errata/
