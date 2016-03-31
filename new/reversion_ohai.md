@@ -26,8 +26,8 @@ pin to Ohai of "= 12.x.y", and Ohai would have a similar equality
 pin to ChefConfig.
 
 The version bot currently used to automatically change version numbers
-for Chef would also be used for Ohai, and any changes to Ohai would
-similarly cause version bumps for Chef and Ohai.
+for Chef would also be used to update Ohai's version number when Chef is
+bumped.
 
 The change from 8 to 12 would not be considered a
 major version bump for API impact considerations, so no deprecated
