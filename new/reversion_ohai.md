@@ -20,13 +20,14 @@ numbers were aligned.
 
 ## Specification
 
-Ohai be renumbered to 12.x.0, where x is the same as the current
-development minor version of Chef. Chef would then have a pessimistic version
-pin to Ohai of "~> 12.x.0", and Ohai would have a similar pessimistic
+Ohai will be renumbered to 12.x.y, where x and y are the current development
+minor and patch versions of Chef. Chef would then have a equality version
+pin to Ohai of "= 12.x.y", and Ohai would have a similar equality
 pin to ChefConfig.
 
-When Chef or Ohai update their minor version, the other must do so in
-lockstep.
+The version bot currently used to automatically change version numbers
+for Chef would also be used for Ohai, and any changes to Ohai would
+similarly cause version bumps for Chef and Ohai.
 
 The change from 8 to 12 would not be considered a
 major version bump for API impact considerations, so no deprecated
