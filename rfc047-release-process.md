@@ -103,17 +103,21 @@ A text file named VERSION exists at the top of chef git repository which contain
 
 The VERSION constants, Chef::VERSION and ChefConfig::VERSION are automatically updated by the processes below. The full version, i.e. MAJOR.MINOR.BUILD, is stored as annotated git tags.
 
+Ohai's version shall be the same as Chef's, and updated by the same
+process at the same time.
+
 The following steps will be automated:
 
 ##### Github Bot
 1. Blocks merge on Github with a 'required status check'
 1. Waits for a comment indicating the PR is accepted, e.g. "@shipment approve"
-1. Examines the VERSION file on master to determine MAJOR.MINOR
+1. Examines the VERSION file on `chef/chef` master to determine MAJOR.MINOR
 1. Uses existing tags to determine the next incremental BUILD
-1. Checks out the branch
-1. Update the VERSION constants for the build and commits locally
-1. Merges the branch with the version commit to master
-1. Pushes master to Github
+1. For both `chef/chef` and `chef/ohai`
+  1. Checks out the branch
+  1. Update the VERSION constants for the build and commits locally
+  1. Merges the branch with the version commit to master
+  1. Pushes master to Github
 
 ##### Build Tool
 1. Monitors the repository for commits using Github web hooks or git polling
