@@ -133,8 +133,8 @@ Since some users may want to use "." in their key names the use of the
 "." syntax in ruby code is discouraged to avoid conflicts.  For example:
 
 ```
-node["key1.key2"] = "foo"
-node["key1"]["key2"] = "bar"
+node["128.95.73.67"] = "crashed"
+node["128"]["95"]["73"]["65"] = "i would never want to set this"
 ```
 
 Ruby APIs shall not be required to implement the dot syntax to avoid that ambiguity.
