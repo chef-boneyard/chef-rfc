@@ -21,8 +21,8 @@ only implement this pattern are acceptable.
 The method chaining syntax is also fully supported, although discouraged
 for new APIs.  APIs which only implement this pattern are acceptable.
 
-   - node["foo", "bar", "baz"]
-   - node["foo", "bar", "baz"] = value
+   - node["foo"]["bar"]["baz"]
+   - node["foo"]["bar"]["baz"] = value
 
 Both the functional syntax and the method chaining syntax may continue
 to use symbols in addition to strings (Mash objects), although strings
