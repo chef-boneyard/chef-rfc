@@ -24,6 +24,10 @@ for new APIs.  APIs which only implement this pattern are acceptable.
    - node["foo", "bar", "baz"]
    - node["foo", "bar", "baz"] = value
 
+Both the functional syntax and the method chaining syntax may continue
+to use symbols in addition to strings (Mash objects), although strings
+are preferred and symbols are discouraged.
+
 In order to support command line usage, it is acceptable to use dots
 as a field separator:
 
