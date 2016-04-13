@@ -21,8 +21,8 @@ only implement this pattern are acceptable.
 The method chaining syntax is also fully supported, although discouraged
 for new APIs.  APIs which only implement this pattern are acceptable.
 
-   - node['foo', 'bar', 'baz']
-   - node['foo', 'bar', 'baz'] = value
+   - node["foo", "bar", "baz"]
+   - node["foo", "bar", "baz"] = value
 
 In order to support command line usage, it is acceptable to use dots
 as a field separator:
@@ -94,7 +94,7 @@ knife search node "key1_key2:4"
 *Requires Change*
 
 ```
-normal_attribute_whitelist = [['network', 'interfaces'], 'fqdn']
+normal_attribute_whitelist = [["network", "interfaces"], "fqdn"]
 ```
 
 Currently, "/" is used as the attribute separator.
@@ -115,17 +115,17 @@ Currently, Ohai 7 "provides" and "requires" statements use "/" as the attribute 
 
 When using the array accessor method([]) on node, Chef should not
 interpret the "." as the record separator.  Namely,
-`node['key1.key2']` should not be interpreted as
-`node['key1']['key2']`.
+`node["key1.key2"]` should not be interpreted as
+`node["key1"]["key2"]`.
 
 #### Conflicts
 
-Since some users may want to use '.' in their key names the use of the
-'.' syntax in ruby code is discouraged to avoid conflicts.  For example:
+Since some users may want to use "." in their key names the use of the
+"." syntax in ruby code is discouraged to avoid conflicts.  For example:
 
 ```
-node['key1.key2'] = "foo"
-node['key1']['key2'] = "bar"
+node["key1.key2"] = "foo"
+node["key1"]["key2"] = "bar"
 ```
 
 Ruby APIs shall not be required to implement the dot syntax to avoid that ambiguity.
