@@ -28,6 +28,11 @@ Both the functional syntax and the method chaining syntax may continue
 to use symbols in addition to strings (Mash objects), although strings
 are preferred and symbols are discouraged.
 
+For static use array syntax is considered equvalent to the functional
+'splat' argument syntax:
+
+  - config_variable = [ [ "foo", "bar" ], [ "baz", "qux" ] ]
+
 In order to support command line usage, it is acceptable to use dots
 as a field separator:
 
