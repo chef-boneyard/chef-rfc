@@ -47,6 +47,14 @@ The use of command line syntax in ruby code which can use one of the
 prior two formats is discouraged.  The use of the field separator is
 only used when the ruby API versions of the call would be awkward.
 
+For the static array form APIs MAY support both dot notation and array
+notation, even though it may not be possible to override the path
+separator.  APIs are NOT required to implement dot notation:
+
+   - config_variable = [ "foo.bar", "baz.qux" ]
+
+The functional splat notation MUST NOT implement dot notation.
+
 ## Specification
 
 The following are the contexts in which users access nested
@@ -103,7 +111,8 @@ knife search node "key1_key2:4"
 *Requires Change*
 
 ```
-normal_attribute_whitelist = [["network", "interfaces"], "fqdn"]
+normal_attribute_whitelist = [ ["network", "interfaces"], "fqdn" ]
+normal_attribute_whitelist = [ ["network.interfaces"], "fqdn" ]
 ```
 
 Currently, "/" is used as the attribute separator.
