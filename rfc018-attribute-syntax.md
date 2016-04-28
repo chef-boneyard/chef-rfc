@@ -11,19 +11,49 @@ Chef-Version: 12
 This RFC defines the syntax for accessing deeply nested keys inside
 the node attribute structure.
 
-When attributes are referred to as strings inside Ruby code or on the
-command line, a dot(".") should be used as the key separator:
+The preferred shape of APIs that refer to attributes is functional
+notation where the arguments are expressed as strings.  APIs which
+only implement this pattern are acceptable.
 
-   - "key1.key2"
-   - knife node show foo -a key1.key2
+   - get("foo", "bar", "baz")
+   - set("foo", "bar", "baz", value)
+
+The method chaining syntax is also fully supported, although discouraged
+for new APIs.  APIs which only implement this pattern are acceptable.
+
+   - node["foo"]["bar"]["baz"]
+   - node["foo"]["bar"]["baz"] = value
+
+Both the functional syntax and the method chaining syntax may continue
+to use symbols in addition to strings (Mash objects), although strings
+are preferred and symbols are discouraged.
+
+For static use array syntax is considered equvalent to the functional
+'splat' argument syntax:
+
+  - config_variable = [ [ "foo", "bar" ], [ "baz", "qux" ] ]
+
+In order to support command line usage, it is acceptable to use dots
+as a field separator:
+
+   - knife node show mynode -a foo.bar
 
 Additionally, in order to avoid escaping for keys that might contain
-"." the following array syntax should also be supported:
+"." it should be possible to pass a user-defined field separator key:
 
-   - ['key1', 'key2']
-   - knife node show foo -a "['key1', 'key2']"
+   - knife node show mynode -F: -a foo:bar 
 
-When the array syntax is used "." has no special meaning.
+The use of command line syntax in ruby code which can use one of the
+prior two formats is discouraged.  The use of the field separator is
+only used when the ruby API versions of the call would be awkward.
+
+For the static array form APIs MAY support both dot notation and array
+notation, even though it may not be possible to override the path
+separator.  APIs are NOT required to implement dot notation:
+
+   - config_variable = [ "foo.bar", "baz.qux" ]
+
+The functional splat notation MUST NOT implement dot notation.
 
 ## Specification
 
@@ -34,12 +64,13 @@ been called out.
 ### Command-line access (knife)
 
 When specifying attributes on the command line, "." should be the
-key separator.  Alternatively, an array can be provided:
+default key separator.
 
 ```
 knife node show foo -a key1.key2
-knife node show foo -a "['key1', 'key2']"
+knife node show foo -F: key1:key2
 ```
+
 ### Command-line access (other)
 
 *Requires Change* All other Chef-maintained tools should also use
@@ -47,7 +78,7 @@ dot-separated strings and arrays to specify not attributes, including Ohai:
 
 ```
 ohai cpu.real
-ohai "['cpu', 'real']"
+ohai -F: cpu:real
 ```
 
 Documentation for 3rd-party tool writers should encourage the use of
@@ -55,33 +86,24 @@ these formats as well.
 
 ### Search Syntax
 
-*Requires Change* Chef search should support "." as the record separator:
+*Requires Change* Chef search should support using the functional `*args`
+notation:
 
 ```
-search(:node, "key1.key2:4")
+search(:node, "key1", "key2", "4")
 ```
 
+Knife search should suport the -F notation on the command line:
+
 ```
-knife search node "key1.key2:4"
+knife search node -F; "key1;key2:4"
 ```
 
-For backward compatibility, "_" should should be supported as
-well through Chef 12.
+For backward compatibility, `"_"` should should be supported as
+well through Chef 13.
 
 ```
 knife search node "key1_key2:4"
-```
-
-### Partial Search Syntax
-
-*Requires Change*
-
-Search filters currently only supports the array syntax.  Dot-separated strings
-```
-partial_search(:node, 'role:web', keys => { 'name' => [ 'name' ],
-                                            'kernel_version' => 'kernel.version' })
-
-search(:node, 'role:web', :filter_result { 'kernel_version' => 'kernel.version'})
 ```
 
 ### Attribute Whitelisting
@@ -89,8 +111,8 @@ search(:node, 'role:web', :filter_result { 'kernel_version' => 'kernel.version'}
 *Requires Change*
 
 ```
-normal_attribute_whitelist = ['network.interfaces', 'fqdn']
-normal_attribute_whitelist = [['network', 'interfaces'], 'fqdn']
+normal_attribute_whitelist = [ ["network", "interfaces"], "fqdn" ]
+normal_attribute_whitelist = [ ["network.interfaces"], "fqdn" ]
 ```
 
 Currently, "/" is used as the attribute separator.
@@ -100,7 +122,7 @@ Currently, "/" is used as the attribute separator.
 *Requires Change*
 
 ```
-provides "network.interfaces"
+provides("network", "interfaces")
 ```
 
 Currently, Ohai 7 "provides" and "requires" statements use "/" as the attribute separator.
@@ -111,25 +133,20 @@ Currently, Ohai 7 "provides" and "requires" statements use "/" as the attribute 
 
 When using the array accessor method([]) on node, Chef should not
 interpret the "." as the record separator.  Namely,
-`node['key1.key2']` should not be interpreted as
-`node['key1']['key2']`.
+`node["key1.key2"]` should not be interpreted as
+`node["key1"]["key2"]`.
 
 #### Conflicts
 
-Some users may want to use "." in their key names.  This poses a
-problem when a conflict exists.  For example:
+Since some users may want to use "." in their key names the use of the
+"." syntax in ruby code is discouraged to avoid conflicts.  For example:
 
 ```
-node['key1.key2'] = "foo"
-node['key1']['key2'] = "bar"
+node["128.95.73.67"] = "crashed"
+node["128"]["95"]["73"]["65"] = "i would never want to set this"
 ```
 
-When Chef tools encounter the attribute specification 'key1.key2' the
-deeply nested key will be preferred. Thus, given the above example
-'key1.key2' would refer to the attribute with the value "bar".
-
-The array syntax should be used in cases when the user needs to
-explicitly avoid the interpretation of ".".
+Ruby APIs shall not be required to implement the dot syntax to avoid that ambiguity.
 
 # Motivation
 
