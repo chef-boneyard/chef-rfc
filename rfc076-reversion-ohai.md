@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 76
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
