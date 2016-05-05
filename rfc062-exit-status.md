@@ -59,7 +59,7 @@ Exit Code        | Reason             | Details
 0                | Successful run     | Any successful execution of a Chef utility should return this exit code
 42               | Audit Mode Failure | Audit mode failed, but chef converged successfully.
 1                | Failed execution   | Generic error during Chef execution.
-2                | SIGINT received*   | Received an interrupt signal
+2                | SIGINT received    | Received an interrupt signal
 3                | SIGTERM received   | Received an terminate signal
 -1               | Failed execution*   | Generic error during Chef execution.  On Linux this will show up as 255, on Windows as -1
 
