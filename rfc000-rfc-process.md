@@ -12,6 +12,8 @@ community use RFCs to document, discuss, and plan improvements to Chef and
 other Chef ecosystem tools. You can always find the list of accepted RFCs at
 https://github.com/chef/chef-rfc.
 
+The specific projects covered by this process are detailed in RFC002 (Scope).
+
 ## RFC Types
 
 * A **Standards Track** RFC describes a new feature or improvement for Chef or
@@ -24,7 +26,7 @@ related projects.
 ## Roles
 
 * The **Decider** has final say to accept or reject an RFC. The top-level
-decider is [Adam Jacob](mailto:adam@getchef.com). The decider can delegate their
+decider is [Adam Jacob](mailto:adam@chef.io). The decider can delegate their
 authority on a per-subsystem or per-RFC basis.
 * The **Editors** manage the Chef RFC repository and assist with the RFC
 workflow. They are not responsible for managing the content of RFCs, only
@@ -45,15 +47,28 @@ also implement the feature or process once accepted.
 
 RFCs are managed in the [chef-rfc GitHub repository](#). When creating a new
 RFC, add it to the `new/` folder. A template is provided [below](#). Submit a
-pull-request with your new RFC. The Editors will review your submission and when
-it is formatted correctly, they will assign it an RFC number which should then
-be added to the filename and metadata.
+pull-request with your new RFC. The Editors will review your submission to
+ensure it is formatted correctly.
 
-The community will discuss the proposed changes and when the Decider feels
-consensus has been reached, they will accept or reject the RFC.
+The community will discuss the proposed changes on the pull-request and during
+regular community meetings (see RFC001). When the Decider feels consensus has
+been reached, they will accept or reject the RFC.
+
+The Editors will then assign it an RFC number which will be added to the
+filename and metadata.
 
 Unless otherwise stated, the RFC author is also volunteering to implement the
 feature or process if accepted.
+
+## When should I submit an RFC?
+
+There's no rule by which to determine the need for a RFC. Some examples to
+consider are:
+
+* Adding a new feature that would impact multiple parts of the project,
+  e.g. audit mode.
+* Establishing or changing a public API, e.g. mixlib-authentication.
+* A policy or process for the project, e.g. platform support policy.
 
 ## What belongs in a successful RFC?
 
