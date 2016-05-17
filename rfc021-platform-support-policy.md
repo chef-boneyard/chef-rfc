@@ -52,6 +52,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * Scientific Linux 5.x, 6.x and 7.x (i386 and x86-64)
 * Fedora (current non-EOL revisions)
 * OpenSUSE 13.1/13.2/42.1
+* OmniOS stable and LTS releases
 
 ### Not Supported
 
@@ -70,7 +71,6 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * Debian < 7.0, anything ppc or arm
 * Gentoo Linux (rolling release)
 * Arch Linux (rolling release)
-* OmniOS stable and LTS releases
 
 ## Chef Server
 
