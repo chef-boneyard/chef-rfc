@@ -61,7 +61,7 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * AIX 5.1L
 * FreeBSD 8
 * NetBSD
-* OpenBSD 5.7/5.8 (i386 and amd64)
+* OpenBSD (i386 and amd64)
 * Windows 2003R2, Windows 2003, Windows 2000
 * RHEL/CentOS/Oracle/Scientific 4.x or older
 * RHEL or SLES on POWER (ppc64) or System/z
