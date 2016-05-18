@@ -42,7 +42,7 @@ Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Solaris | 10, 11 | sparc, x86 | shar | Solaris 10
 Windows | 7, 8, 8.1, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi | Windows 2008R2
-Ubuntu Linux | 14.04, 16.04 | x86, x86_64 | deb | Ubuntu 14.04
+Ubuntu Linux | 12.04, 14.04, 16.04 | x86, x86_64 | deb | Ubuntu 12.04
 
 ### Tier 2 Support
 
@@ -78,7 +78,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 
 ### Supported
 
-* Ubuntu 14.04LTS, 16.04LTS
+* Ubuntu 12.04LTS, 14.04LTS, 16.04LTS
 * RHEL 5.x, 6.x, 7.x
 * CentOS 5.x, 6.x, 7.x
 * Oracle Enterprise Linux 5.x, 6.x, 7.x
@@ -96,7 +96,7 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 * Fedora (current non-EOL releases)
 * RHEL 6.x, 7.x
 * Mac OS X 10.9, 10.10, 10.11
-* Ubuntu 14.04, 16.04
+* Ubuntu 12.04, 14.04, 16.04
 
 ChefDK bundles Chef Client. Therefore, Chef Client is supported, by extension, on the foregoing client platforms, if not already mentioned explicitly in the Chef Client support matrix.
 
