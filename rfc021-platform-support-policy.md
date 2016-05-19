@@ -136,6 +136,11 @@ OpenBSD 5.8 | Added February 2016
 openSuse 13.2 | Added February 2016
 Ubuntu 10.04LTS | Removed February 2016 | https://wiki.ubuntu.com/LTS
 Mac OS X 10.8 | Removed February 2016 |
+SUSE Linux Enterprise Server 10 | Removed May 2016 |
+Gentoo Linux | Moved to Tier 3 May 2016 | This was never supported by the Tier 2 definition
+Arch Linux | Moved to Tier 3 May 2016 | This was never supported by the Tier 2 definition
+OpenSUSE 42.1 | Added to Tier 2 May 2016 |
+OpenBSD 5.7/5.8 | Moved to Tier 3 May 2016 | This was never supported by the Tier 2 definition
 
 ## Copyright
 
