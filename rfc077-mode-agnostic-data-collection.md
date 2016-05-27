@@ -1,7 +1,7 @@
 ---
-RFC: unassigned
+RFC: 77
 Author: Adam Leff <adamleff@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
