@@ -48,14 +48,11 @@ Ubuntu Linux | 12.04, 14.04 | x86, x86_64 | deb | Ubuntu 12.04
 
 Tier 2 supported platforms are those on which Omnitruck will serve packages, but those packages may not have been built on that OS variant. Additionally, we may or may not do post-build verification on these platforms. A platform must have at least one Maintainer before being added to this tier.
 
-* SUSE Linux Enterprise Server 10, 11
+* SUSE Linux Enterprise Server 11, 12
 * Scientific Linux 5.x, 6.x and 7.x (i386 and x86-64)
-* Gentoo Linux (rolling release)
-* Arch Linux (rolling release)
 * Fedora (current non-EOL revisions)
-* OpenSUSE 13.1/13.2
+* OpenSUSE 13.1/13.2/42.1
 * OmniOS stable and LTS releases
-* OpenBSD 5.7/5.8 (i386 and amd64)
 
 ### Not Supported
 
@@ -65,12 +62,15 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * AIX 5.1L
 * FreeBSD 8
 * NetBSD
+* OpenBSD (i386 and amd64)
 * Windows 2003R2, Windows 2003, Windows 2000
 * RHEL/CentOS/Oracle/Scientific 4.x or older
 * RHEL or SLES on POWER (ppc64) or System/z
 * HP-UX
 * Mac OS X < 10.9, anything ppc
 * Debian < 7.0, anything ppc or arm
+* Gentoo Linux (rolling release)
+* Arch Linux (rolling release)
 
 ## Chef Server
 
@@ -136,6 +136,11 @@ OpenBSD 5.8 | Added February 2016
 openSuse 13.2 | Added February 2016
 Ubuntu 10.04LTS | Removed February 2016 | https://wiki.ubuntu.com/LTS
 Mac OS X 10.8 | Removed February 2016 |
+SUSE Linux Enterprise Server 10 | Removed May 2016 |
+Gentoo Linux | Moved to Tier 3 May 2016 | This was never supported by the Tier 2 definition
+Arch Linux | Moved to Tier 3 May 2016 | This was never supported by the Tier 2 definition
+OpenSUSE 42.1 | Added to Tier 2 May 2016 |
+OpenBSD 5.7/5.8 | Moved to Tier 3 May 2016 | This was never supported by the Tier 2 definition
 
 ## Copyright
 
