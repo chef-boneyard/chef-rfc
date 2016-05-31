@@ -83,7 +83,7 @@ Releases should not block on features on the roadmap, rather they should happen 
 * Code reviewed by a Maintainer, Lieutenant, or Project Lead. Approval is indicated by :+1: on the pull request.
 * Merged after :+1: votes by at least two Maintainers for the component(s) affected by your patch.
 
-In the event that a compontent lacks two Maintainers, the vote of one or more Maintainers from Chef Core may be substituted.
+In the event that a component lacks two Maintainers, the vote of one or more Maintainers from Chef Core may be substituted.
 
 Any Maintainer may vote :-1: on a patch, which increases the requirement for a patch to be merged to an absolute majority of Maintainers for the affected component(s), unless that Maintainer later changes their vote.
 
@@ -127,7 +127,7 @@ Although Lieutenants and the Project Lead retain veto powers over certain compon
 If a Maintainer, Lieutenant or Project Lead consistently fails to maintain their responsibilities or becomes disruptive, they can be removed by:
 
 * Issue a pull request removing them from the MAINTAINERS file
-* Receive an absolute majority of existing Lieutentants :+1:
+* Receive an absolute majority of existing Lieutenants :+1:
 * No veto from the current Project Lead
 
 OR
@@ -166,7 +166,7 @@ You can find a large set of community members in IRC, within the #chef channel o
 
 [The history of the Chef Project](http://www.chef.io/blog/2014/07/03/chef-as-a-community/) is linked to the existence of a for-profit company, [Chef Software](http://www.chef.io). Many employees of the company are active members of the community. When they participate in the community, they do so as individuals subject to the guidelines in this file.
 
-If you would like to speak to, or understand the position of, someone at Chef Software - feel free to drop a line to [info@chef.io](mailto:info@chef.io) - and we’ll get back to you. Or simply ask for the companies official perspective in any of the community spaces, and a representative will get back to you in that space.
+If you would like to speak to, or understand the position of, someone at Chef Software - feel free to drop a line to [info@chef.io](mailto:info@chef.io) - and we’ll get back to you. Or simply ask for the company's official perspective in any of the community spaces, and a representative will get back to you in that space.
 
 # The MAINTAINERS file in Chef
 
