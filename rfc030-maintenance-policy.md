@@ -83,7 +83,7 @@ Releases should not block on features on the roadmap, rather they should happen 
 * Code reviewed by a Maintainer, Lieutenant, or Project Lead. Approval is indicated by :+1: on the pull request.
 * Merged after :+1: votes by at least two Maintainers for the component(s) affected by your patch.
 
-In the event that a compontent lacks two Maintainers, the vote of one or more Maintainers from Chef Core may be substituted.
+In the event that a component lacks two Maintainers, the vote of one or more Maintainers from Chef Core may be substituted.
 
 Any Maintainer may vote :-1: on a patch, which increases the requirement for a patch to be merged to an absolute majority of Maintainers for the affected component(s), unless that Maintainer later changes their vote.
 
