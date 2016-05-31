@@ -166,7 +166,7 @@ You can find a large set of community members in IRC, within the #chef channel o
 
 [The history of the Chef Project](http://www.chef.io/blog/2014/07/03/chef-as-a-community/) is linked to the existence of a for-profit company, [Chef Software](http://www.chef.io). Many employees of the company are active members of the community. When they participate in the community, they do so as individuals subject to the guidelines in this file.
 
-If you would like to speak to, or understand the position of, someone at Chef Software - feel free to drop a line to [info@chef.io](mailto:info@chef.io) - and we’ll get back to you. Or simply ask for the companies official perspective in any of the community spaces, and a representative will get back to you in that space.
+If you would like to speak to, or understand the position of, someone at Chef Software - feel free to drop a line to [info@chef.io](mailto:info@chef.io) - and we’ll get back to you. Or simply ask for the company's official perspective in any of the community spaces, and a representative will get back to you in that space.
 
 # The MAINTAINERS file in Chef
 
