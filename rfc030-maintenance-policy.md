@@ -127,7 +127,7 @@ Although Lieutenants and the Project Lead retain veto powers over certain compon
 If a Maintainer, Lieutenant or Project Lead consistently fails to maintain their responsibilities or becomes disruptive, they can be removed by:
 
 * Issue a pull request removing them from the MAINTAINERS file
-* Receive an absolute majority of existing Lieutentants :+1:
+* Receive an absolute majority of existing Lieutenants :+1:
 * No veto from the current Project Lead
 
 OR
