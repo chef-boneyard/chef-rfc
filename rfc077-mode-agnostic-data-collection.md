@@ -99,7 +99,7 @@ The Action Schema is used to notify when a Chef object changes. In our case, the
       "description": "Message Version",
       "type": "string",
       "enum": [
-        "1.0.0"
+        "1.1.0"
       ]
     },
     "message_type": {
@@ -128,6 +128,11 @@ The Action Schema is used to notify when a Chef object changes. In our case, the
       "description": "Was the requestor a client or user?",
       "type": "string",
       "enum": ["client", "user"]
+    },
+    "run_id": {
+      "description": "The run ID of the run in which this node object was updated",
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "type": "string"
     },
     "service_hostname": {
       "description": "The FQDN of the Chef server, if appropriate",
@@ -164,6 +169,7 @@ The Action Schema is used to notify when a Chef object changes. In our case, the
     "remote_hostname",
     "requestor_name",
     "requestor_type",
+    "run_id",
     "service_hostname",
     "source",
     "task",
