@@ -6,32 +6,30 @@ Type: Informational
 ---
 
 
-# Chef Platform Support Policy
+# Chef Platform Policy
 
 The purpose of this RFC is to clarify:
 
-* What specific operating system platforms and platform versions are supported by the software produced by Chef Software, Inc.
-* What is the meaning of "supported platform"
-
-This RFC does *not* address "What is the product lifecycle of Chef Software, Inc.'s software". That is covered in a separate RFC.
+* What specific operating system platforms and platform versions will work with the software produced by Chef Software, Inc.
+* What are the meanings of "foundational platform", "secondary platform", and "other platforms"
 
 ## Chef Client
 
-A Chef Client supported platform means:
+To be included as either a Foundational Platform or a Secondary Platform, the following must be true for that specific platform and version:
 
 * Omnitruck won't fail when confronted with the platform and version
 * The most important core resources (package, service, template) work out of the box
 * Ohai attributes for ```platform```, ```platform_family```, ```platform_version``` and ```kernel.machine``` are correct
 
-Chef Client support policies also apply to Ohai, since that is a dependency.
+These policies also apply to Ohai, since that is a dependency.
 
-### Tier 1 Support
+### Foundational Platforms
 
-Tier 1 supported platforms are those for which Chef builds native binary "Omnitruck" (full-stack installer) packages. For each platform, Chef performs some post-build verification on them or their equivalents. For example, we may elect to do post-build verification for Oracle Enterprise Linux using the same test results as Red Hat Enterprise Linux, since they are so similar). A platform must have a Lieutenant before being added to this tier.
+Foundational platforms are those for which native binary "Omnibus" (full-stack installer) packages are built and available via Omnitruck for every release. For each platform, Chef performs some post-build verification on them or their equivalents. For example, we may elect to do post-build verification for Oracle Enterprise Linux using the same test results as Red Hat Enterprise Linux, since they are so similar. Only platform versions that receive automated post-build verification are listed here, even when newer or intermediate versions may be known to work. A platform must have a Lieutenant as defined in RFC 030 before being added to this tier.
 
 Platform | Versions | Architectures | Package Format | Built on
 --- | --- | --- | --- | ---
-AIX | 6.1, 7.1, 7.2 | ppc64 | bff | AIX 6.1
+AIX | 6.1, 7.1 | ppc64 | bff | AIX 6.1
 CentOS | 5, 6, 7 | i386, x86_64 | rpm | RHEL 5
 Cisco IOS XR | 6 | x86_64 | rpm | Cisco IOS XR 6 Developer Image
 Cisco NX-OS | 7 | x86_64 | rpm | Cisco NX-OX 7 Developer Image
@@ -44,9 +42,9 @@ Solaris | 10, 11 | sparc, x86 | shar | Solaris 10
 Windows | 7, 8, 8.1, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi | Windows 2008R2
 Ubuntu Linux | 12.04, 14.04 | x86, x86_64 | deb | Ubuntu 12.04
 
-### Tier 2 Support
+### Secondary Platforms
 
-Tier 2 supported platforms are those on which Omnitruck will serve packages, but those packages may not have been built on that OS variant. Additionally, we may or may not do post-build verification on these platforms. A platform must have at least one Maintainer before being added to this tier.
+Secondary platforms are those on which native packages are available from Omnitruck, but those packages may not have been built on that OS variant. Additionally, we may or may not do post-build verification on these platforms. A platform must have at least one Maintainer before being added to this tier.
 
 * SUSE Linux Enterprise Server 11, 12
 * Scientific Linux 5.x, 6.x and 7.x (i386 and x86-64)
@@ -54,9 +52,9 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 * OpenSUSE 13.1/13.2/42.1
 * OmniOS stable and LTS releases
 
-### Not Supported
+### Other Platforms
 
-"Not supported" means there may be code in-tree, but we don't build for and test on those platforms. At our discretion, we may take patches that don't break any tier 1 or tier 2 platforms, but we have no way of testing these.
+"Other" means there may be code in-tree, but we don't build packages for or test on those platforms. At our discretion, we may take patches that don't break any tier 1 or tier 2 platforms, but we have no way of testing these.
 
 * Solaris < 10
 * AIX 5.1L
@@ -76,21 +74,21 @@ Tier 2 supported platforms are those on which Omnitruck will serve packages, but
 
 Includes any of the add-ons (webui2/manage, push, etc.)
 
-### Supported
+### Foundational
 
 * Ubuntu 12.04LTS, 14.04LTS
 * RHEL 5.x, 6.x, 7.x
 * CentOS 5.x, 6.x, 7.x
 * Oracle Enterprise Linux 5.x, 6.x, 7.x
 
-### Unsupported
+### Other or non-viable
 
 * Any other Linux or UNIX distributions
 * Windows
 
 ## ChefDK
 
-### Supported
+### Foundational
 
 * Windows 7, 8, 8.1
 * Fedora (current non-EOL releases)
@@ -98,16 +96,15 @@ Includes any of the add-ons (webui2/manage, push, etc.)
 * Mac OS X 10.9, 10.10, 10.11
 * Ubuntu 12.04, 14.04
 
-ChefDK bundles Chef Client. Therefore, Chef Client is supported, by extension, on the foregoing client platforms, if not already mentioned explicitly in the Chef Client support matrix.
 
-### Unsupported
+###  Other or non-viable
 
 * Windows Vista, XP, 2000
 * Mac OS X < 10.9, anything ppc
 
-## Appendix 1: Guiding Principles for Operating System Version Support
+## Appendix 1: Guiding Principles for Operating System Version Adoption
 
-Once Chef Software, Inc. decides to support an operating system, we will also develop rules to determine under what upstream vendor lifecycle we will continue to support products, and they will be documented in this section. Vendors have various terminology to describe support lifecycles ('standard support', 'extended support', etc.) and it is useful to clarify what those mean in the context of Chef's products.
+Once Chef Software, Inc. decides to adopt an operating system, we will also develop rules to determine under what upstream vendor lifecycle we will continue to build and/or test on our products on that platform, and they will be documented in this section. Vendors have various terminology to describe support lifecycles ('standard support', 'extended support', etc.) and it is useful to clarify what those mean in the context of Chef's products.
 
 Platform | Support Until | References
 --- | --- | ---
