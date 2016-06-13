@@ -49,7 +49,8 @@ More information can be found in the [Chef Community Guidelines](https://github.
         "jjasghar",
         "miketheman",
         "nshamrell",
-        "robbkidd"
+        "robbkidd",
+        "cwebberops"
       ]
     [Org.Advocates.GitHub]
       title = "GitHub"
@@ -133,6 +134,12 @@ More information can be found in the [Chef Community Guidelines](https://github.
     GitHub = "robbkidd"
     Twitter = "robbkidd"
     email = "rkidd@chef.io"
+
+  [people.cwebberops]
+    Name = "Chris Webber"
+    GitHub = "cwebberops"
+    Twitter = "cwebber"
+    email = "cwebber@chef.io"
 
   [people.vacant]
     Name = "Vacant - Submit a PR to become a Chef Community Advocate"

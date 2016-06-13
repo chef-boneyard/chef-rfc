@@ -57,6 +57,9 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [Robb Kidd](https://github.com/robbkidd)
   * [@robbkidd](https://twitter.com/robbkidd)
   * [rkidd@chef.io](mailto:rkidd@chef.io)
+* [Chris Webber](https://github.com/cwebberops)
+  * [@cwebber](https://twitter.com/cwebber)
+  * [cwebber@chef.io](mailto:cwebber@chef.io)
 
 #### GitHub
 * Vacant - Submit a PR to become a Chef Community Advocate
