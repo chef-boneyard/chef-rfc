@@ -44,10 +44,19 @@ More information can be found in the [Chef Community Guidelines](https://github.
 
 #### Chef Mailing List
 * [Noah Kantrowitz](https://github.com/coderanger)
+  * [@kantrn](https://twitter.com/kantrn)
+  * [noah@coderanger.net](mailto:noah@coderanger.net)
 * [JJ Asghar](https://github.com/jjasghar)
+  * [@jjasghar](https://twitter.com/jjasghar)
+  * [jjasghar@chef.io](mailto:jjasghar@chef.io)
 * [Mike Fiedler](https://github.com/miketheman)
-* [Nell Shamrell-Harrington](https://github.com/nshamrell)
+  * [ServerFault](http://serverfault.com/users/7309/mike-fiedler)
+* [Nell Shamrell](https://github.com/nshamrell)
+  * [@nshamrell](https://twitter.com/nshamrell)
+  * [nshamrell@chef.io](mailto:nshamrell@chef.io)
 * [Robb Kidd](https://github.com/robbkidd)
+  * [@robbkidd](https://twitter.com/robbkidd)
+  * [rkidd@chef.io](mailto:rkidd@chef.io)
 
 #### GitHub
 * Vacant - Submit a PR to become a Chef Community Advocate
@@ -55,9 +64,9 @@ More information can be found in the [Chef Community Guidelines](https://github.
 #### Stack Overflow
 * [Martin Smith](https://github.com/martinb3)
   * IRC - martinb3
-  * [Stack Overflow](http://stackoverflow.com/users/70665/martin)
   * [@martinb3](https://twitter.com/martinb3)
   * [martin@mbs3.org](mailto:martin@mbs3.org)
+  * [StackOverflow](http://stackoverflow.com/users/70665/martin)
 
 #### Chef LinkedIn Group
 * Vacant - Submit a PR to become a Chef Community Advocate
