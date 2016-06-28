@@ -303,8 +303,12 @@ The Run End Schema will be used by Chef Client to notify the data collection ser
             "description": "Message Version",
             "type": "string",
             "enum": [
-                "1.0.0"
+                "1.1.0"
             ]
+        },
+        "node": {
+            "description": "The node object after the converge completed",
+            "type": "object"
         },
         "node_name": {
             "description": "Node Name",
@@ -316,11 +320,19 @@ The Run End Schema will be used by Chef Client to notify the data collection ser
             "type": "string"
         },
         "resources": {
-            "description": "This is the list of run_resources for the run",
+            "description": "This is the list of all resources for the run",
             "type": "array",
             "items": {
                 "type": "object",
                 "properties": {
+                    "after": {
+                        "description": "Final State of the resource",
+                        "type": "object"
+                    },
+                    "before": {
+                        "description": "Initial State of the resource",
+                        "type": "object"
+                    },
                     "cookbook_name": {
                         "description": "Name of the cookbook that initiated the change",
                         "type": "string"
@@ -335,144 +347,52 @@ The Run End Schema will be used by Chef Client to notify the data collection ser
                         "type": "string"
                     },
                     "duration": {
-                        "description": "Duration of the run",
+                        "description": "Duration of the run consumed by processing of this resource, in milliseconds",
                         "type": "string"
                     },
-                    "final_state": {
-                        "description": "Final State of the resource",
-                        "type": "object"
-                    },
-                    "initial_state": {
-                        "description": "Initial State of the resource",
-                        "type": "object"
-                    },
-                    "resource_id": {
-                        "description": "Resource Id",
+                    "id": {
+                        "description": "Resource ID",
                         "type": "string"
                     },
-                    "resource_name": {
+                    "ignore_failure": {
+                        "description": "the ignore_failure setting on a resource, indicating if a failure on this resource should be ignored",
+                        "type": "boolean"
+                    },
+                    "name": {
                         "description": "Resource Name",
                         "type": "string"
                     },
-                    "resource_result": {
-                        "description": "Resource Result",
+                    "result": {
+                        "description": "The action taken on the resource",
                         "type": "string"
                     },
-                    "resource_type": {
+                    "status": {
+                        "description": "Status indicating how Chef processed the resource",
+                        "type": "string",
+                        "enum": [
+                          "failed",
+                          "skipped",
+                          "unprocessed",
+                          "up-to-date",
+                          "updated"
+                        ]
+                    },
+                    "type": {
                         "description": "Resource Type",
                         "type": "string"
-                    },
-                    "sequence_number": {
-                        "description": "Sequence in which the resource executed",
-                        "type": "integer",
-                        "minimum": 0
-                    },
-                    "run": {
-                        "type": "object",
-                        "properties": {
-                            "node_name": {
-                                "description": "It is the name of the node on which the run took place",
-                                "type": "string"
-                            },
-                            "run_id": {
-                                "description": "It is the runid for the run",
-                                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
-                                "type": "string"
-                            },
-                            "chef_server_fqdn": {
-                                "description": "It is the FQDN of the chef_server against whch current reporting instance runs",
-                                "type": "string"
-                            },
-                            "start_time": {
-                                "description": "It is the ISO timestamp of when the run started",
-                                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
-                                "type": "string"
-                            },
-                            "end_time": {
-                                "description": "It is the ISO timestamp of when the run ended",
-                                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "node_name",
-                            "run_id",
-                            "chef_server_fqdn",
-                            "start_time",
-                            "end_time"
-                        ]
-                    },
-                    "converge": {
-                        "type": "object",
-                        "properties": {
-                            "status": {
-                                "description": "It gives the status of the run",
-                                "type": "string",
-                                "enum": [
-                                    "success",
-                                    "failure"
-                                ]
-                            },
-                            "run_list": {
-                                "description": "It is the runlist for the run",
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            },
-                            "updated_resource_count": {
-                                "description": "It is the number of updated resources during the course of the run",
-                                "type": "integer",
-                                "minimum": 0
-                            },
-                            "id": {
-                                "description": "It is the internal message id for the run",
-                                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
-                                "type": "string"
-                            },
-                            "start_time": {
-                                "description": "It is the ISO timestamp of when the run started",
-                                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
-                                "type": "string"
-                            },
-                            "end_time": {
-                                "description": "It is the ISO timestamp of when the run ended",
-                                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
-                                "type": "string"
-                            },
-                            "total_resource_count": {
-                                "description": "It is the total number of resources for the run",
-                                "type": "integer",
-                                "minimum": 0
-                            },
-                            "organization_name": {
-                                "description": "Organization Name",
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "status",
-                            "run_list",
-                            "updated_resource_count",
-                            "id",
-                            "end_time",
-                            "start_time",
-                            "total_resource_count",
-                            "organization_name"
-                        ]
                     }
                 },
                 "required": [
-                    "cookbook_name",
-                    "cookbook_version",
+                    "after",
+                    "before",
                     "delta",
                     "duration",
-                    "final_state",
-                    "initial_state",
-                    "resource_id",
-                    "resource_name",
-                    "resource_result",
-                    "resource_type"
+                    "id",
+                    "ignore_failure",
+                    "name",
+                    "result",
+                    "status",
+                    "type"
                 ]
             }
         },
@@ -489,9 +409,9 @@ The Run End Schema will be used by Chef Client to notify the data collection ser
             }
         },
         "source": {
-      "description": "The tool / client mode that initiated the action. Note that 'chef_solo' includes Chef Solo Mode and Chef Solo Legacy Mode.",
-          "type": "string",
-          "enum": ["chef_solo", "chef_client"]
+            "description": "The tool / client mode that initiated the action. Note that 'chef_solo' includes Chef Solo Mode and Chef Solo Legacy Mode.",
+            "type": "string",
+            "enum": ["chef_solo", "chef_client"]
         },
         "start_time": {
             "description": "It is the ISO timestamp of when the run started",
@@ -525,6 +445,7 @@ The Run End Schema will be used by Chef Client to notify the data collection ser
         "expanded_run_list",
         "message_type",
         "message_version",
+        "node",
         "node_name",
         "organization_name",
         "resources",
