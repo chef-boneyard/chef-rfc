@@ -43,13 +43,14 @@ More information can be found in the [Chef Community Guidelines](https://github.
         "miketheman"
       ]
     [Org.Advocates.ChefMailingList]
-      title = "chef@ mailing list"
+      title = "Chef Mailing List"
       advocates = [
         "coderanger",
         "jjasghar",
         "miketheman",
         "nshamrell",
-        "robbkidd"
+        "robbkidd",
+        "cwebberops"
       ]
     [Org.Advocates.GitHub]
       title = "GitHub"
@@ -109,6 +110,36 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Twitter = "martinb3"
     IRC = "martinb3"
     email = "martin@mbs3.org"
+
+  [people.jjasghar]
+    Name = "JJ Asghar"
+    GitHub = "jjasghar"
+    Twitter = "jjasghar"
+    email = "jjasghar@chef.io"
+
+  [people.nshamrell]
+    Name = "Nell Shamrell"
+    GitHub = "nshamrell"
+    Twitter = "nshamrell"
+    email = "nshamrell@chef.io"
+
+  [people.coderanger]
+    Name = "Noah Kantrowitz"
+    GitHub = "coderanger"
+    Twitter = "kantrn"
+    email = "noah@coderanger.net"
+
+  [people.robbkidd]
+    Name = "Robb Kidd"
+    GitHub = "robbkidd"
+    Twitter = "robbkidd"
+    email = "rkidd@chef.io"
+
+  [people.cwebberops]
+    Name = "Chris Webber"
+    GitHub = "cwebberops"
+    Twitter = "cwebber"
+    email = "cwebber@chef.io"
 
   [people.vacant]
     Name = "Vacant - Submit a PR to become a Chef Community Advocate"

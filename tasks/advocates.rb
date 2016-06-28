@@ -73,5 +73,6 @@ def person(list, person)
   out << "\n  * [#{list[person]["email"]}](mailto:#{list[person]["email"]})" if list[person].has_key?("email")
   out << "\n  * #{list[person]["phone"]}" if list[person].has_key?("phone")
   out << "\n  * [ServerFault](#{list[person]["ServerFault"]})" if list[person].has_key?("ServerFault")
+  out << "\n  * [StackOverflow](#{list[person]["StackOverflow"]})" if list[person].has_key?("StackOverflow")
   out
 end
