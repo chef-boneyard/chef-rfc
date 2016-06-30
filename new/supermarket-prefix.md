@@ -33,6 +33,16 @@ to if a cookbook is officially associated with the prefix name or not.
 
 ## Specification
 
+A group or company will have exclusive control to prefixes registered to them.
+These prefixes are subject to approval by Chef Software as part of their operation
+of the public Supermarket application. Private deployments of Supermarket can
+define their own governance structure for allocating prefixes.
+
+If a prefix is registered, the user or users that are responsible for it will
+be the only ones allowed to register new cookbooks or tool with that prefix.
+The responsible user or users can authorize other users to create cookbooks in
+their prefix, but this requires explicit permission from the prefix holder.
+
 In the short term, prefix management can be handled ad hoc via existing cookbook
 rename/removal tooling in Supermarket. Established prefixes can be added to this
 RFC by pull request.
