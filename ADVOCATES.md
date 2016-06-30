@@ -75,4 +75,5 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * Vacant - Submit a PR to become a Chef Community Advocate
 
 #### Chef_Opscode Reddit ([https://www.reddit.com/r/chef_opscode/](https://www.reddit.com/r/chef_opscode/))
-* Vacant - Submit a PR to become a Chef Community Advocate
+* [JJ Asghar](https://github.com/jjasghar)
+  * [jjasghar](https://www.reddit.com/user/jjasghar/)
