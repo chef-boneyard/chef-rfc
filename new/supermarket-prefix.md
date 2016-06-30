@@ -45,13 +45,19 @@ their prefix, but this requires explicit permission from the prefix holder.
 
 In the short term, prefix management can be handled ad hoc via existing cookbook
 rename/removal tooling in Supermarket. Established prefixes can be added to this
-RFC by pull request.
+RFC by pull request. As a reactive strategy for the time being, you will have
+to notify the Supermarket team of an inappropriately named cookbook by
+[opening a ticket](https://github.com/chef/supermarket/issues/new).
 
 In the long term, it would be good to see native functionality added to
 Supermarket to enable this, though care will have to be taken at that point to
-ensure abuse is not a problem.
+ensure abuse is not a problem. This could allow automatic enforcement of
+prefixes in the future.
 
 ## Prefixes
+
+To register a prefix, fork this repository and create a Pull Request adding
+your prefix and the person or organization that will be responsible for it.
 
 * `poise` - [coderanger](https://github.com/coderanger)
 
