@@ -5,9 +5,10 @@ Status: Accepted
 Type: Standards Track
 ---
 
-# Ruby 1.9.3 EOL
+# Ruby Version Deprecation Policy
 
-Chef 12.0 will require Ruby 2.0 or greater.
+Establishes a rolling version policy for Chef and ChefDK and the
+assocated ecosystem (berkhelf, test-kitchen, etC).
 
 ## Motivation
 
@@ -17,49 +18,38 @@ Chef 12.0 will require Ruby 2.0 or greater.
 
 ## Specification
 
-Chef's gemspec will be modified to set the minimum Ruby version to
-`>= 2.0.0`.
+Minor version bumps of the ruby version shipping with Chef and ChefDK
+will only require a minor version bump of the Chef and ChefDK package.
+
+Raising the `required_ruby_version` floor of any associated gem by
+a minor version will only require a minor version bump of the gems
+and assocated omnibus packages.
+
+Ruby versions MUST be supported until they are no longer releasing
+bugfixes and have entered the security maintenance phase.
+
+Ruby versions MAY be supported after they have entered the security
+maintenance phase.
 
 ## Rationale
 
-Preemptively dropping support for Ruby 1.9.3 will prevent anyone from
-using a Ruby VM version that will become unsupported during the Chef
-12.0 lifecycle, avoiding a potential major disruption to users'
-installation procedure.
+As ruby versions enter their security release phase, many gems in the
+ruby ecosystem drop support for them which creates a support burden.
 
-When a Ruby VM version reaches EOL during a major release cycle, the
-Chef development team must choose one of two options:
+To reduce that support burden, Chef and ChefDK must be flexible enough
+to drop support for those old ruby versions without releasing a
+new major version.
 
-1. Continue to support an EOL'd version of Ruby, so users are not
-   disrupted.
-2. Drop support for that version. Any users relying on that Ruby version
-   are forced to modify their installation procedures in order to get
-   updates.
+Historically, the 12.9.38 release of the chef gem dropped support for
+ruby 2.0.x and this was found to not cause any customer facing issues.
 
-Dropping support for the EOL'd Ruby VM version has the following
-benefits:
+## Scope
 
-* The test matrix decreases in size, so testing is easier.
-* The dev team is free to upgrade dependencies that may have dropped
-  support for the EOL'd Ruby version.
-* As a special-case of the above, EOL'd versions of dependencies may not
-  receive security updates, so the dev team can be forced to manually
-  backport security patches in order to maintain support for EOL'd Ruby
-  VMs. Dropping support for that Ruby VM version eliminates this
-  problem.
-
-RFC 015 describes the support lifecycle for Ruby VM versions as follows:
-
-> Chef Client omnibus packages ship with the Latest version of Ruby at the time of a major version bump.
-> Latest & Latest - 1 versions of Ruby are supported.
-> Ruby version bumps only happen at the time of Chef major version bumps.
-
-At the time of writing, Ruby 2.1 is the latest Ruby version and 2.0 is
-the "N-1" version. However, the Chef 12.0 package for Windows is likely
-to ship with Ruby 2.0 because some Windows-specific dependencies have
-not yet been updated with Ruby 2.1 support. In any case, dropping
-support for Ruby 1.9.3 matches the letter of the RFC 015 specification.
-
+This RFC only covers how long a ruby version will be supported for, it
+does not cover which supported ruby version will be shipped in Chef
+and ChefDK (which is often driven by bugs and test failures that need
+to be addressed before those versions are considered stable enough to
+be shipped on all platforms).
 
 ## Copyright
 
