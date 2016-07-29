@@ -8,7 +8,7 @@ Type: Standards Track
 # Ruby Version Deprecation Policy
 
 Establishes a rolling version policy for Chef and ChefDK and the
-assocated ecosystem (berkhelf, test-kitchen, etC).
+associated ecosystem (berkshelf, test-kitchen, etc).
 
 ## Motivation
 
@@ -23,7 +23,7 @@ will only require a minor version bump of the Chef and ChefDK package.
 
 Raising the `required_ruby_version` floor of any associated gem by
 a minor version will only require a minor version bump of the gems
-and assocated omnibus packages.
+and associated omnibus packages.
 
 Ruby versions MUST be supported until they are no longer releasing
 bugfixes and have entered the security maintenance phase.
