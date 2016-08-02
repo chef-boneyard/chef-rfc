@@ -33,16 +33,16 @@ platform that the manufacturer supports.
 
 Platform | Versions | Architectures | Package Format
  ---- | --- | --- | --- | ---		
-AIX | 6.1, 7.1, 7.2 | ppc64 | bff 
-CentOS | 5, 6, 7 | i386, x86_64 | rpm 
-Cisco IOS XR | 6 | x86_64 | rpm 
-Cisco NX-OS | 7 | x86_64 | rpm 
-Debian | 7, 8 | i386, x86_64 | deb 
-FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg 
+AIX | 6.1, 7.1, 7.2 | ppc64 | bff
+CentOS | 5, 6, 7 | i386, x86_64 | rpm
+Cisco IOS XR | 6 | x86_64 | rpm
+Cisco NX-OS | 7 | x86_64 | rpm
+Debian | 7, 8 | i386, x86_64 | deb
+FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg
 Mac OS X | 10.9, 10.10, 10.11 | x86_64 | dmg
 Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm
 Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm
-Solaris | 10, 11 | sparc, x86 | shar
+Solaris | 10u11, 11 | sparc, x86 | shar
 Windows | 7, 8, 8.1, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi
 Ubuntu Linux | | x86, x86_64 | deb
 SUSE Linux Enterprise Server  | 11, 12 | x86_64
