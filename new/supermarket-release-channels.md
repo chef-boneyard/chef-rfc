@@ -72,10 +72,10 @@ remain available after a newer version is promoted to that channel.
 There are some use cases where it is desirable to only allow one version of an
 artifact in a channel. Users of Chef Automate, for example, are encouraged to
 only use one version of an artifact in a given environment. Thefore, the
-user may specify that an artifact (TODO: is this config on the channel, or an
-option passed in to the promotion API call?) is _exclusive._ When this option
+user may specify that an artifact is _exclusive._ When this option
 is active, promoting a version of an artifact to a channel removes all other
-versions from that channel.
+versions from that channel. The exact mechanism by which this happens, e.g.,
+configuration or API call, will be determined when implemented.
 
 #### Filtering Artifacts by Channel
 
