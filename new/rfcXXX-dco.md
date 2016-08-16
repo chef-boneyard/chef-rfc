@@ -25,7 +25,7 @@ Chef's open source projects will no longer require a contributor license agreeme
 
 ## Specification
 
-Effective October 1, 2016, Chef will no longer require CLAs or CCLAs for contributions to its open source projects.  Rather, Chef is adopting the developer certificate of origin ("DCO") used by several other projects and overall smart people.
+Effective October 1, 2016 ("the cutover date"), Chef will no longer require CLAs or CCLAs for contributions to its open source projects.  Rather, Chef is adopting the developer certificate of origin ("DCO") used by several other projects and overall smart people.  All commits prior to the cutover date shall fall under the CLA process and will require a signed contributor license agreement.
 
 The DCO is an attestation attached to every contribution made by every developer. In the commit message of the contribution, the developer simply adds a Signed-off-by statement and thereby agrees to the DCO, which you can find below or at [http://developercertificate.org/](http://developercertificate.org/).
 
