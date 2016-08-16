@@ -61,7 +61,7 @@ The DCO is an attestation attached to every contribution made by every developer
 * Currybot, part of the Supermarket, will no longer be necessary.
 * A small DCO bot will need to be added to each of Chef's open-source repositories.
 * A blog post and mailing list announcement will be made before the cutover.
-* This will have *no* impact on [the "obvious fix" rule](https://docs.chef.io/community_contributions.html#the-obvious-fix-rule).  Contributions that meet these criteria will not need a DCO but must include "obvious fix" in the commit message as outlined in [the "obvious fix" policy](https://docs.chef.io/community_contributions.html#the-obvious-fix-rule).
+* This will have *no* impact on [the "obvious fix" rule](https://docs.chef.io/community_contributions.html#the-obvious-fix-rule).  Contributions that meet these criteria will not need a DCO but should include "obvious fix" in the commit message as outlined in [the "obvious fix" policy](https://docs.chef.io/community_contributions.html#the-obvious-fix-rule).
 
 ## Copyright
 
