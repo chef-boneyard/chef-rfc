@@ -59,7 +59,9 @@ The DCO is an attestation attached to every contribution made by every developer
 ## Downstream Impact
 
 * Currybot, part of the Supermarket, will no longer be necessary.
+* The DCO sign-off process must be clearly documented in the contributing documents.
 * A small DCO bot will need to be added to each of Chef's open-source repositories.
+  * The bot must include instructions for how to edit commits adding a `Signed-off-by` line.
 * A blog post and mailing list announcement will be made before the cutover.
 * This will have *no* impact on [the "obvious fix" rule](https://docs.chef.io/community_contributions.html#the-obvious-fix-rule).  Contributions that meet these criteria will not need a DCO but should include "obvious fix" in the commit message as outlined in [the "obvious fix" policy](https://docs.chef.io/community_contributions.html#the-obvious-fix-rule).
 
