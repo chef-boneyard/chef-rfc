@@ -5,25 +5,25 @@ Status: Accepted
 Type: Process
 ---
 
-# Chef Community IRC Meetings
+# Chef Community Slack Meetings
 
 This RFC declares what community meetings we hold and how we hold them.
 
 # List of Meetings
 
-## Chef Developers Meeting
+## Chef Developers' Meeting
 
 Upcoming agendas, past agendas, transcripts, and minutes can be found in the
-[Chef Community Meetings](https://github.com/chef/chef-community-irc-meetings)
+[Chef Community Meetings](https://github.com/chef/chef-community-slack-meetings)
 repository on GitHub.
 
 ### Time
 
-Every Thursday, at 9am Pacific. 1 hour.  Each meeting's agenda will include the date and time and be announced in advance on the chef-dev mailing list.
+Every Thursday, at 9am Pacific. 50 minutes.  Each meeting's agenda will include the date and time and be announced in advance on the chef-dev mailing list.
 
 ### Location
 
-The #chef-hacking irc channel on irc.freenode.net.
+The #developer-meetings channel of [chef-community.slack.com](http://chef-community.slack.com) - sign-up at [http://community-slack.chef.io](http://community-slack.chef.io)
 
 ### Roles
 
@@ -32,12 +32,12 @@ The #chef-hacking irc channel on irc.freenode.net.
 
 ### Standing Agenda
 
-* Agenda Review, speaker Adam Jacob (holoway): 2 minutes
+* Agenda Review, speaker Nathen Harvey (nathenharvey): 2 minutes
 * Updates: 15 minutes max.
-  * Community Update, speaker Nathen Harvey (nathenharvey): 5 minutes
-  * Chef Software Update, speaker Adam Jacob (holoway): 5 minutes
-  * Chef Client and Server Update, speaker Adam Edwards (adamedx): 5 minutes
-* Review action items from last meeting (holoway): 5 minutes
+  * Community update, speaker Nathen Harvey (nathenharvey): 5 minutes
+  * Chef company update, speaker Adam Jacob (holoway): 5 minutes
+  * Software update, speaker - various people: 5 minutes
+* Review action items from last meeting (nathenharvey): 5 minutes
 * Review PRs:  35 minutes
   * Review new PRs and/or PRs deferred during last meeting
   * Review PRs previously discussed
@@ -78,7 +78,7 @@ meetings agenda.
 ### Start
 
 1. The meeting begins by the moderator declaring the meeting open.
-2. The moderator will link to this RFC for new-comers to review what it means to be in a meeting
+2. The moderator will link to this RFC for new-comers to review what it means to be in a meeting.
 3. The moderator will review the agenda, and give the floor to the first speaker.
 
 ### Timing
