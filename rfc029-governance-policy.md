@@ -119,7 +119,7 @@ The selection process is intended to be open, transparent, and guided by objecti
 
 The CBGB is authorized to seek advice and counsel from other interested parties and invited experts as appropriate
 
-Any outside party wishing to bring an issue before the CBGB may do so by emailing the CBGB mailing list
+Any outside party wishing to bring an issue before the CBGB may do so by emailing the CBGB mailing list, [cbgb@chef.io](mailto:cbgb@chef.io).
 
 The CBGB shall provide transparent and timely reporting (through any mechanism it deems appropriate) to the Community at large on all of its activities, subject to the right of any individual to designate their comments and the ensuing discussion as "in confidence," in which case the public report shall contain only a note of the request and an agreed summary (if any) of the substance.
 
@@ -149,7 +149,7 @@ Open Licensing: code should be licensed using approved, standard, open-source li
 
 When a member has a concern about the Chef Project, the member may raise that concern with the CBGB.  If the member is not satisfied with the result, the member can raise the concern directly with the Project Lead.   All appeals and discussions will be open, transparent and public.
 
-Please help us improve this draft by sending your comments and feedback to [governance@getchef.com](mailto:governance@getchef.com).
+Please help us improve this draft by sending your comments and feedback to [governance@chef.io](mailto:governance@chef.io).
 
 ## Copyright
 
