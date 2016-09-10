@@ -91,7 +91,7 @@ The selection process is intended to be open, transparent, and guided by objecti
 
 * The CBGB shall elect a Chair and Vice Chair from amongst their members to serve a renewable 6 month term.
 
-* The Chair or Vice-Chair shall prepare an agenda for and preside over regular meetings of the CBGB. These meetings shall occur as frequently as the CBGB determines is in the project’s best interest, but no less than quarterly
+* The Chair or Vice-Chair shall prepare an agenda for and preside over regular meetings of the CBGB. These meetings shall occur as frequently as the CBGB determines is in the project’s best interest, but no less than twice per calendar year.
 
 * The Project Lead will appoint a temporary chair to set the agenda for the first meeting and preside until the election shall occur.
 
@@ -99,7 +99,7 @@ The selection process is intended to be open, transparent, and guided by objecti
 
 * The rules of election and membership outlined in this section may be varied by a resolution of the CBGB supported by more than two thirds of its voting membership.
 
-* All Project contributors are welcome as participants and observers at CBGB meetings
+* All Project contributors are welcome as participants and observers at CBGB meetings.
 
 #### Selection and Succession
 
