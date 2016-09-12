@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Remove HTTP Config Files</h1>
+
+<p>Remove the ability to specify HTTP config files with <code>chef-client -c http://blah.com/client.rb</code>.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">directly</span><span class="w"> </span><span class="vg">find</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">fix</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">unknown</span><span class="w"> </span><span class="vg">number</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">bugs</span><span class="w"> </span><span class="vg">where</span><span class="w"> </span><span class="vg">we</span><span class="w"> </span><span class="vg">assume</span><span class="w"> </span><span class="vg">config_file</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">path</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">features</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">instead</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">am</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">using</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">ability</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">download</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">config</span><span class="w"> </span><span class="vg">file</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">URL</span><span class="p">,</span>
+<span class="vg">And</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">am</span><span class="w"> </span><span class="vg">much</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">interested</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developers</span><span class="w"> </span><span class="vg">writing</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">features</span><span class="w"> </span><span class="vg">instead</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">fixing</span><span class="w"> </span><span class="vg">bugs</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">it</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<ol>
+<li>Get rid of all code that lets you treat Chef::Config.config_file as an HTTP or HTTPS URL (in ConfigFetcher primarily).</li>
+<li>Make it an error when you specify a config file that does not exist.</li>
+</ol>
+
+<h2>Rationale</h2>
+
+<p>There are already bugs in the chef-client because we assume client is a path (<code>config_dir</code> is <a href="https://github.com/opscode/chef/blob/master/lib/chef/config.rb#L84">File.dirname(<code>config_file</code>)</a>, and some <a href="https://github.com/opscode/chef/blob/master/lib/chef/config.rb#L365">rather crucial values</a> are inferred from <code>config_dir</code>).  While we could find and fix them all, we could also just make the code simpler by removing this capability.</p>
+
+<h2>Impact and Workaround</h2>
+
+<p>Anyone running <code>chef-client -c http://blah.com/client.rb</code> will get an error saying the config file does not exist.</p>
+
+<p>I suspect the number of people this will affect is somewhere between 0 and 0.  No Chef-written servers export config directly and there are very real security concerns around it.  If those people exist, there are real bugs in the client that those people are hitting because of it, as well (see the <code>config_dir</code> issue in Rationale).  Hence this RFC, so we can discuss it.</p>
+
+<p>Users who <em>are</em> doing this can restore the original effect by doing the following in <code>/etc/chef/client.rb</code>:</p>
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
+<span class="nb">instance_eval</span><span class="p">(</span><span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;blah.com&#39;</span><span class="p">,</span> <span class="s1">&#39;/client.rb&#39;</span><span class="p">))</span>
+</pre></div>
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Multiple Policyfiles and Teams</h1>
+
+<p>Policyfiles allow powerful new workflows around cookbook management, but one
+area they are currently lacking is in dealing with multi-team organizations.</p>
+
+<p>Currently each node can be attached to exactly one policy and one policy group.
+The organizational manifestation of this is generally that there needs to be a
+single &quot;owner&quot; for the policy of that node. This might be a CI tool like Jenkins
+or Chef Delivery, but in a lot of cases in the current workflow this will be the
+team within the company that uses the machine most.</p>
+
+<p>This works great for the &quot;owner&quot; team, they can use all the power and
+flexibility of the Policyfile workflow to its fullest. For other groups
+managing software on the node, the picture is less clear. As an example, take a
+database server owned by an application team. On this server we have a mix of
+software, the MySQL install and configuration is manage by the DBA team while
+ntpd and rsyslog are managed by a core infrastructure team. These live in
+different cookbooks so for the most part things are copacetic. When the DBA
+team wants to roll out a new MySQL configuration entry they update the cookbook,
+recompile the policyfile, <code>chef push</code> that compiled policy to the QA policy
+group, and then follow the usual Policyfile roll-out procedure. For the core
+team, things are more complex. They could follow the same process, but this
+would require careful coordination with the DBA team to ensure they don&#39;t have
+a roll-out in progress (see https://yolover.poise.io/#21). They could also
+release their cookbook changes either to a git branch or Supermarket server,
+and then notify the DBA team that they should run a roll-out. Neither of these
+are wonderful options.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">maintainer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">core</span><span class="p">,</span><span class="w"> </span><span class="vg">company</span><span class="o">-</span><span class="vg">level</span><span class="w"> </span><span class="vg">cookbooks</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">updates</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">deploy</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">quickly</span><span class="o">.</span>
+</pre></div>
+<p>With that said, a more specific case that isn&#39;t currently handled well:</p>
+
+<p>The Database team owns MySQL and uses Chef to deploy it along with related configs
+and tools. The Monitoring team owns Collectd, which is deployed to every server
+in the organization, and they are responsible for configuring collectd and deploying
+new versions of it as needed. The core team owns ntpd and is responsible for its
+configuration.</p>
+
+<p>All teams want to follow the snapshot-based approach where they have a mono-repo
+of their own cookbooks with a few shared cookbooks pulled in via dependencies.
+When a team wants to do a release they run <code>chef update</code> to recompile their
+policy, and then use <code>chef push</code> to roll it out to each environment in sequence
+(with time in-between for testing et al). The teams also do not want to have to
+ask permission from any other team when deploying new versions of a service they
+are responsible for.</p>
+
+<p>This combination of a snapshot-based workflow without explicit team coordination
+is not currently an easy thing to do with the policy systems.</p>
+
+<h2>Specification</h2>
+
+<p>A solution for this is to use multiple, decoupled policies on the same node.
+This can be done today by using two different node names on the same machine,
+each with their own policy. While workable, this solution is inelegant and
+frustrating to manage.</p>
+
+<p>This could be done more directly by allowing the <code>policy_name</code> on a node to be
+set to an array, running each policy in isolation in order:</p>
+<div class="highlight"><pre><span class="nv">$ </span>chef-client --policy-name one,two
+Converge policy one
+<span class="c"># ...</span>
+Converge policy two
+<span class="c"># ...</span>
+</pre></div>
+<p>Any data that is server-resident could be shared between runs (eg. node
+attributes), but everything else (resource collection, cookbook collection)
+would be reset between policies. An error in one policy would abort the run,
+meaning later policies would never get run.</p>
+
+<h2>Implementation</h2>
+
+<p>The major implementation change would be altering <code>Chef::Client#build_node</code> to
+yield a node object to a block rather than setting it as a singleton. This
+will allow running the block (containing all the same logic as we have now for
+running the converge) multiple times.</p>
+
+<p>Given a Chef run like <code>chef-client --policy-name one,two</code> we would do the
+following:</p>
+
+<ol>
+<li>Initialize the client up until <code>load_node</code> in <code>Chef::Client#run</code> as per normal.</li>
+<li>When the policy builder checks which implementation to use it would see that
+multi-policy run has been requested.</li>
+<li>It would build the first node object as per normal except that the cookbook
+synchronizer would sync to <code>Chef::Config[:file_cache_path]/cookbooks_one</code> or
+similar. This may require some work on the <code>Chef::FileCache</code> code.</li>
+<li>Before yielding the node out to the run block to policy builder code calls
+fork. The original process blocks, while the subprocess yields the node object
+and runs the first converge.</li>
+<li>The first converge finishes, control returns from the run block. The policy
+builder would save node attributes to a file and exit.</li>
+<li>Control resumes from where the original process blocked in step 4. It checks
+that the child exited with 0, reads in the saved node attributes and updates
+the node object, and then GOTO 3 to sync the next cookbooks and run the next
+converge.</li>
+<li>When the last policy has finished, control flows back to the <code>#run</code> method.
+It would pick back up at <code>run_status.stop_clock</code> to do the end-of-run stuff.</li>
+</ol>
+
+<p>If a multi-policy run has an exception we would serialize it to JSON, return
+an error exit code from the sub-process, and have the main process bubble the
+(fake) exception back up the chain.</p>
+
+<h2>Problems</h2>
+
+<p>The biggest issue is that this makes no attempt to prevent teams from stepping
+on each others. If one policy has <code>package &#39;foo&#39; { version &#39;1.0&#39; }</code> and another
+has <code>package &#39;foo&#39; { version &#39;2.0&#39; }</code> it will oscillate between versions without
+warning. This is probably not a big issue as today Chef will do the same thing
+in similar situations (i.e. if the names don&#39;t match but <code>package_name</code> does).
+Weird stomping could also occur if two policies are trying to &quot;own&quot; a service
+like Nginx and using two different versions of the same cookbook. These are all
+deemed problems out of scope for a technical solution. When using mutli-policy
+workflows, external synchronization (i.e. talking to each other) will be needed
+to establish some idea of who is responsible for what.</p>
+
+<p>Because each converge will happen with its own (forked) copy of the run context,
+resources from one policy with not be able to see those from any other. This
+means cookbooks like Zap will likely be non-functional. It also doesn&#39;t help
+with situations where the interface from one team to another is a resource or
+helper library, those situations will still require a single policy with all
+the snags that implies today.</p>
+
+<p>Overall the added fork involved in multi-policy converges may produce additional
+unforeseen complications, such as cookbooks that register event handlers or other
+callbacks that need to &quot;live&quot; past the converge phase. We could ameliorate this
+by saying the first (or last?) policy will be run without that extra fork and
+so can interact with those pieces of the run. This still leaves that &quot;slot&quot; as
+special though, and may just kick the can down the road as far as contention.</p>
+
+<h2>Other Possibilities</h2>
+
+<p>The main suggestion for an alternate way to handle this would be to combine
+multiple Policyfiles into a single compiled policy somehow. These solutions all
+suffer from a shared flaw though, that individual teams would be unable to use
+the &quot;compile, push staging, push prod&quot; workflow that Policyfiles support today.
+This &quot;loose-coupling&quot; approach may be workable in some places where there are
+strong release controls and tooling, but will not support the full Policyfile
+workflow without extensive team coordination.</p>
+
+<h2>Downstream Impact</h2>
+
+<p>Any tooling that consumes node data and expects <code>policy_name</code> to be a single
+string would need to be updated.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Chef-Client Exit Codes</h1>
+
+<p>Signal outside tools of specific Chef-Client run status.  Ability to determine results of a Chef-Client run.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">determine</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">run</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">rebooting</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">node</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">Test</span><span class="o">-</span><span class="vg">Kitchen</span><span class="o">/</span><span class="vg">Vagrant</span><span class="o">/</span><span class="vg">any</span><span class="w"> </span><span class="vg">outside</span><span class="w"> </span><span class="vg">tool</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">wait</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">reboot</span><span class="p">,</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">continue</span><span class="w"> </span><span class="vg">converging</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<ul>
+<li>Chef applications (e.g. chef-client) that interpret recipes should use the specified exit codes</li>
+<li>Chef tools (e.g. knife) should behave appropriately for the exit code, or pass it to the user</li>
+</ul>
+
+<h3>Exit codes Reserved by Operating System</h3>
+
+<ul>
+<li>Windows- <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681381(v=vs.85).aspx">Link</a></li>
+<li>Linux - <a href="http://www.freebsd.org/cgi/man.cgi?query=sysexits&amp;apropos=0&amp;sektion=0&amp;manpath=FreeBSD+4.3-RELEASE&amp;format=html">Sysexits</a>, <a href="http://tldp.org/LDP/abs/html/exitcodes.html">Bash Scripting</a></li>
+</ul>
+
+<h3>Remaining Available Exit Codes</h3>
+
+<p>All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be idential across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are 59 exit codes that are available on both platforms.
+ * Any numbers below that have a strike-through are used below in the <strong>Exit Codes in Use</strong> section
+ * Exit Codes Available for Chef use :
+     * ~~35,37,40,41,42~~,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97
+     * 98,99,115,116,168,169,172,175,176,177,178,179,181,184,185,204,211
+     * 213,219,227,228,235,236,237,238,239,241,242,243,244,245</p>
+
+<h3>Precedence</h3>
+
+<ul>
+<li>Reboot exit codes should take precedence over Chef Execution State</li>
+<li>Precedence within a table should be evaluated from the top down.
+
+<ul>
+<li> Example - Audit Mode Failure would only apply on a successful execution.  But if the chef-run failed for any other reason, no reason to exit with audit mode.</li>
+</ul></li>
+</ul>
+
+<h2>Exit Codes in Use</h2>
+
+<h4>Reboot Requirement</h4>
+
+<p>Exit Code        | Reason            | Details
+-------------    | -------------     |-----
+35               | Reboot Scheduled  | Reboot has been scheduled in the run state
+37               | Reboot Needed     | Reboot needs to be completed
+41               | Reboot Failed     | Initiated Reboot failed - due to permissions or any other reason</p>
+
+<h4>Chef Run State</h4>
+
+<p>Exit Code        | Reason             | Details
+-------------    | -------------      |-----
+0                | Successful run     | Any successful execution of a Chef utility should return this exit code
+42               | Audit Mode Failure | Audit mode failed, but chef converged successfully.
+1                | Failed execution   | Generic error during Chef execution.
+2                | SIGINT received    | Received an interrupt signal
+3                | SIGTERM received   | Received an terminate signal
+-1               | Failed execution*   | Generic error during Chef execution.  On Linux this will show up as 255, on Windows as -1</p>
+
+<ul>
+<li>*Next release should deprecate any use of this exit code.</li>
+</ul>
+
+<h2>Extend</h2>
+
+<p>This RFC should be able to be amended to include additional exit code functionality at a later date.  Additional exit codes are assigned by pull request against this RFC as detailed in <a href="https://github.com/chef/chef-rfc/blob/master/rfc000-rfc-process.md#changing-an-accepted-rfc">RFC000</a></p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

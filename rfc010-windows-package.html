@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Windows Package Resource and Providers</h1>
+
+<p>Proposal for moving windows_package LWRP from the windows cookbook into core Chef.</p>
+
+<p>Chef internal PBI: <a href="https://tickets.corp.opscode.com/browse/OC-5114">OC-5114</a></p>
+
+<p>There are a number of package installer frameworks that are common on Windows, which can specified by the user or detected. Installing packages usually means passing a flag to the installer to indicate it is an unattended installation.</p>
+
+<p>Support for roles features will be handled by a separate resource.</p>
+
+<h2>New Core Package Resource and Provider</h2>
+
+<h3>Chef::Resource::WindowsPackage</h3>
+
+<p>Shortcut Resource Name: <code>windows_package</code></p>
+
+<p>This would be the default package provider on windows, so you would use the &#39;package&#39; resource and wouldn&#39;t necessarily need a shortcut resource.</p>
+
+<h3>Attributes</h3>
+
+<ul>
+<li>package_name - defaults to the resource name</li>
+<li>source - the location of package to install</li>
+<li>installer_type - for future use to manually differentiate between installers</li>
+<li>options - flags passed to the installer</li>
+<li>version - version of the package to install, if applicable</li>
+<li>returns - possible exit codes that indicate success</li>
+</ul>
+
+<p>Deprecated attributes:  </p>
+
+<ul>
+<li>checksum<br>
+The existing cookbook allows source to be a URL, we&#39;d rather use remote_file to download packages unless we&#39;re passing the URL directly to the installer to avoid code duplication and maintain &#39;primatives.&#39;</li>
+<li>success_codes<br>
+This will be renamed to returns to match other existing core providers</li>
+</ul>
+
+<h3>Platform specific resources</h3>
+
+<p>Utilizing the platform-specific resource functionality introduced in <a href="https://tickets.opscode.com/browse/CHEF-2698">CHEF-2698</a>, add a new package resource with windows specific attributes </p>
+<div class="highlight"><pre><span class="vg">class</span><span class="w"> </span><span class="vg">Chef</span>
+<span class="w">  </span><span class="vg">class</span><span class="w"> </span><span class="vg">Resource</span>
+<span class="w">    </span><span class="vg">class</span><span class="w"> </span><span class="vg">WindowsPackage</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nl">Chef:</span><span class="o">:</span><span class="nl">Resource:</span><span class="o">:</span><span class="vg">Package</span>
+
+<span class="w">      </span><span class="vg">provides</span><span class="w"> </span><span class="o">:</span><span class="vg">package</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="vg">on_platforms</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;windows&quot;</span><span class="p">]</span>
+
+<span class="w">      </span><span class="vg">def</span><span class="w"> </span><span class="vg">initialize</span><span class="p">(</span><span class="vg">name</span><span class="p">,</span><span class="w"> </span><span class="vg">run_context</span><span class="o">=</span><span class="vg">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="vg">super</span>
+<span class="w">        </span><span class="err">@</span><span class="vg">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">:</span><span class="vg">install</span>
+<span class="w">        </span><span class="err">@</span><span class="vg">allowed_actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="o">:</span><span class="vg">install</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="vg">remove</span><span class="w"> </span><span class="p">]</span>
+<span class="w">        </span><span class="err">@</span><span class="vg">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nl">Chef:</span><span class="o">:</span><span class="nl">Provider:</span><span class="o">:</span><span class="nl">Package:</span><span class="o">:</span><span class="vg">Windows</span>
+<span class="w">        </span><span class="err">@</span><span class="vg">resource_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">:</span><span class="vg">windows_package</span>
+<span class="w">        </span><span class="err">@</span><span class="vg">installer_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">nil</span>
+<span class="w">        </span><span class="err">@</span><span class="vg">checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">nil</span>
+<span class="w">        </span><span class="err">@</span><span class="vg">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="il">600</span>
+<span class="w">        </span><span class="err">@</span><span class="vg">success_codes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="il">0</span><span class="p">,</span><span class="w"> </span><span class="il">42</span><span class="p">,</span><span class="w"> </span><span class="il">127</span><span class="p">]</span>
+</pre></div>
+<h3>Chef::Provider::Package::Windows</h3>
+
+<p>Initial support for the Microsoft Installer (MSI) only, incrementally adding support for additional installers.</p>
+
+<p>All installer support in core must use a unique identifier when available (e.g. Product Code, AppID) to:<br>
+* Support upgrade/removal<br>
+* Idempotently verify installation state</p>
+
+<p>We must determine the installer type for the user to match the same experience of running the executable on windows itself. Some methods require reading the installer file, so we cannot make this determination in the resource and will do so in this provider, which will call another class specific to the determined installer</p>
+
+<p><a href="https://gist.github.com/btm/92a40020c3eea6cb8b28">Example framework</a></p>
+
+<h3>Chef::Provider::Package::Windows::MSI</h3>
+
+<p>We will determine package installation status using <code>MsiGetProductPropertyA</code> and <code>MsiGetProductInfoA</code> using FFI. See the <a href="https://gist.github.com/btm/8673443#file-check_installed-rb">proof of concept code</a>.</p>
+
+<h4>Actions</h4>
+
+<ul>
+<li>Install - Will execute the package if it is not already installed</li>
+<li>Remove - Will remove the package by corresponding product code if installed</li>
+</ul>
+
+<h4>Example</h4>
+<div class="highlight"><pre><span class="vg">windows_package</span><span class="w"> </span><span class="c1">&#39;7-Zip 9.20 (x64 edition)&#39; do</span>
+<span class="w">  </span><span class="vg">source</span><span class="w"> </span><span class="c1">&#39;http://downloads.sourceforge.net/sevenzip/7z920-x64.msi&#39;</span>
+<span class="w">  </span><span class="vg">action</span><span class="w"> </span><span class="o">:</span><span class="vg">install</span>
+<span class="vg">end</span>
+</pre></div>
+<h4>Future work</h4>
+
+<ul>
+<li>MSU (update) (<a href="http://blogs.technet.com/b/askcore/archive/2011/02/15/how-to-use-dism-to-install-a-hotfix-from-within-windows.aspx">hotfixes + dism</a>)</li>
+<li>MSP (patch)</li>
+<li>MST (transform)</li>
+<li>Idempotent upgrade based on ProductCode/ProductVersion/UpgradeCode/Revision Number Summary <a href="http://msdn.microsoft.com/en-us/library/aa370579(v=vs.85).aspx">Reference</a></li>
+</ul>
+
+<h2>Existing Windows Cookbook</h2>
+
+<p>The existing windows cookbook contains a package LWRP</p>
+
+<h3>Resources</h3>
+
+<ul>
+<li><p>package<br>
+types: msi, inno, nsis, wise, installshield, custom<br>
+examples: putty-0.60-installer.exe, 7z920-x64.msi, &#39;Google Chrome&#39;</p>
+
+<p>The type is either specified as an attribute or determined from the file extension, and is used to pass the correct arguments for a silent/automated installation to the underlying installer. The <code>custom</code> type requires the user to specify the correct arguments in the <code>options</code> attribute.</p></li>
+</ul>
+
+<h3>Providers</h3>
+
+<ul>
+<li>package: handles different installers with a set of default flags for the options attribute</li>
+</ul>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

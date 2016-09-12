@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Multitenant Chef Client Support</h1>
+
+<p>Add better support for multi-tenant Chef servers in Chef, and Hosted Chef in particular.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">multi</span><span class="o">-</span><span class="vg">tenant</span><span class="w"> </span><span class="vg">server</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="p">(</span><span class="vg">Hosted</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">Enterprise</span><span class="p">),</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">run</span><span class="w"> </span><span class="vg">tools</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">multi</span><span class="o">-</span><span class="vg">tenant</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">servers</span><span class="o">.</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">administrate</span><span class="w"> </span><span class="vg">Chef</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">multi</span><span class="o">-</span><span class="vg">tenant</span><span class="w"> </span><span class="vg">server</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="p">(</span><span class="vg">Hosted</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">Enterprise</span><span class="p">),</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">vary</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">client</span><span class="c1">&#39;s organization without retyping the Chef server host,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t screw up when I retype.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">develop</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">test</span><span class="w"> </span><span class="vg">tools</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">multi</span><span class="o">-</span><span class="vg">tenant</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">servers</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">support</span><span class="w"> </span><span class="vg">said</span><span class="w"> </span><span class="vg">users</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Metal</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">would</span><span class="w"> </span><span class="vg">like</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">manage</span><span class="w"> </span><span class="vg">users</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">organizations</span><span class="w"> </span><span class="vg">within</span><span class="w"> </span><span class="vg">Chef</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">describe</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">entire</span><span class="w"> </span><span class="vg">infrastructure</span><span class="w"> </span><span class="vg">using</span><span class="w"> </span><span class="vg">Chef</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">would</span><span class="w"> </span><span class="vg">like</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">development</span><span class="w"> </span><span class="vg">cycle</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">server</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">similar</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">one</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">typically</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">production</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t start seeing errors as soon as I drop cookbooks onto the production servers.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Hosted</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">would</span><span class="w"> </span><span class="vg">like</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">Hosted</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">knowing</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">exact</span><span class="w"> </span><span class="vg">URL</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">api</span><span class="o">.</span><span class="vg">opscode</span><span class="o">.</span><span class="vg">com</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">quickly</span><span class="w"> </span><span class="vg">get</span><span class="w"> </span><span class="vg">up</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">running</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>Specifying organization:
+1. A new configuration parameter, <code>Chef::Config.organization</code>, be added to describe the organization the client is pointed at.
+2. A new command line parameter, <code>-O organization</code>, be introduced.</p>
+
+<p>Hosted Chef by default:
+1. When <code>Chef::Config.organization</code> is set, <code>Chef::Config.chef_server_url</code> default to <code>https://api.opscode.com/organizations/#{organization}</code></p>
+
+<p>Multitenant root URL support:
+1. A new configuration parameter, <code>Chef::Config.chef_server_root</code>, be added that points to the top of the server (above /organizations) where users and organization lists can be found.
+2. When this is set, <code>chef_server_url</code> defaults to <code>&lt;chef_server_root&gt;/organizations/&lt;organization&gt;</code>.
+3. Conversely, when <code>chef_server_url</code> is set to <code>https://blah.com/organizations/foo&#39;</code>, <code>chef_server_root</code> defaults to <code>https://blah.com</code> and <code>organization</code> defaults to <code>foo</code>.</p>
+
+<p>Local multitenancy support by default:
+1. Local mode use chef-zero 3.x by default, with Enterprise mode on and the default organization <code>chef</code>.
+2. A new configuration parameter, <code>Chef::Config.chef_11_osc_compatibility</code>, be introduced to put chef-zero into OSC compatibility mode with no multitenancy or ACLs.</p>
+
+<p>Root repo<em>mode:
+1. `repo</em>mode<code>have a new possible value,</code>:root<code>, which assumes</code>chef<em>repo</em>path` is at the root of the repository and allows multiple organizations to be stored on disk.  This will affect knife list, knife download, knife upload, and other tools that use ChefFS.</p>
+
+<h2>Rationale and Impact</h2>
+
+<p><em>Specifying organization</em>: the organization is a part of the chef<em>server</em>url already and could have been left that way.  However, organization is a primary concept already in multitenant users&#39; minds, even more than Chef API URL, so it is more natural to specify.  Setting <code>organization</code> as a separate parameter also allows for configurations where the user sets <code>chef_server_root</code> once in a global config file and sets <code>organization</code> in different profiles or Chef repository directories.</p>
+
+<p><em>Hosted Chef by default</em>: There&#39;s absolutely no harm doing this since it only triggers with the organization is specified without a URL, and so many users use it that it&#39;s worth saving them the trouble.</p>
+
+<p><em>Multitenant root URL support</em>: The <code>chef_server_root</code> is a new concept.  There are already resources (in Cheffish) that modify /organizations and /users, and <code>knife upload</code> and <code>knife download</code> can be modified to do it as well (allowing <code>knife ec backup</code> to become a central concept).  The addition of root url as a top level concept is worth it because of the scenarios it enables (just varying <code>organization</code>) as well as the fact that tools which manipulate the root won&#39;t have to guess that the top level is <code>&lt;chef_server_url&gt;/../..</code>.</p>
+
+<p>We <em>could</em> just repurpose <code>chef_server_url</code> for this, but chef<em>server</em>url is so universally used that we would have no end of support calls if we changed its meaning.</p>
+
+<p><em>Local multitenant support by default</em>: chef-zero already supports this, and turning it on will have the effect of adding ACLs, groups, containers, members, invites and organization data.</p>
+
+<p>Adding this capability will cause <code>knife download /</code> to download more data, possibly confusing users.  However, it will also lead to more discovery of the new features and should not cause issues.</p>
+
+<p>This feature will also cause the /users endpoint to be moved to the top level instead of being under an organization, which could affect some applications that manipulate or read user data.  Since local mode is for a local development scenario, this can be rectified by the developer setting the compatibility flag when they discover it; and since it mirrors the server, it&#39;s important for the user to know.  The benefit of having development mirror the actual server outweighs the problems caused by the incompatibility of the users endpoint.</p>
+
+<p><em>Root repo_mode</em>: this has no effect on any existing configurations; it is for advanced uses where the user sets repo_mode directly.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

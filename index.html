@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<section class="rfcs">
+<table>
+<th>
+  <td>Title</td>
+  <td>Author</td>
+  <td>Type</td>
+  <td>Status</td>
+  <td>Tracking</td>
+</th>
+<tr>
+  <td><a href="rfc000-rfc-process.html">Chef RFC Process and Guidelines</td>
+  <td>Noah Kantrowitz <noah@coderanger.net></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc001-slack-meetings.html">Chef Community Slack Meetings</td>
+  <td>Adam Jacob <adam@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc010-windows-package.html">Windows Package Resource and Providers</td>
+  <td>Bryan McLellan <btm@loftninjas.org></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc011-resource-guard.html">Resource-based Guard Interpreters for Chef</td>
+  <td>Adam Edwards <adamed@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc012-openstack-network.html">Named Network Support in knife-openstack</td>
+  <td>Matt Ray <mray@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc013-on-failure.html">On Failure</td>
+  <td>Seth Vargo <sethvargo@gmail.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc014-universe-endpoint.html">Universe Endpoint for Chef Server</td>
+  <td>Daniel DeLeo <dan@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td>["https://github.com/chef/chef-server/pulls/645"]</td>
+</tr>
+<tr>
+  <td><a href="rfc015-chef-12.html">Chef 12</td>
+  <td>Serdar Sutay <serdar@chef.io></td>
+  <td>Informational</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc016-homebrew-osx-package-provider.html">Make Homebrew OS X's Default Package Provider</td>
+  <td>Joshua Timberman <joshua@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc017-file-specificity.html">File Specificity Overhaul</td>
+  <td>Noah Kantrowitz <noah@coderanger.net></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc018-attribute-syntax.html">Attribute Subkey Syntax</td>
+  <td>Steven Danna <steve@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc019-chef-workflows.html">The Great Workflow RFC</td>
+  <td>Adam Jacob <adam@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc020-community-guidelines.html">Chef Community Guidelines</td>
+  <td>Nathen Harvey <nharvey@chef.io></td>
+  <td>Informational</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc021-platform-support-policy.html">Chef Platform Support Policy</td>
+  <td>Julian Dunn <jdunn@chef.io></td>
+  <td>Informational</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc022-arbitrary-cookbook-identifiers.html">Arbitrary Cookbook Identifiers</td>
+  <td>Daniel DeLeo <ddeleo@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc023-chef-12-attributes-changes.html">Chef 12 Attributes Changes</td>
+  <td>Phil Dibowitz <phil@ipom.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc024-local-mode-default.html">Local Mode Default</td>
+  <td>John Keiser <jkeiser@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc025-multitenant-chef-client-support.html">Multitenant Chef Client Support</td>
+  <td>John Keiser <jkeiser@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc026-remove-http-config-files.html">Remove HTTP Config Files</td>
+  <td>John Keiser <jkeiser@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc027-file-content-verification.html">File Content Verification</td>
+  <td>Steven Danna <steve@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc028-mailing-list-migration.html">Mailing List Migration</td>
+  <td>Julian C. Dunn <jdunn@aquezada.com></td>
+  <td>Informational</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc029-governance-policy.html">Chef Board of Governance</td>
+  <td>Adam Jacob <adam@getchef.com></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc030-maintenance-policy.html">Maintenance Policy</td>
+  <td>Adam Jacob <adam@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc031-replace-solo-with-local-mode.html">Replace chef-solo with chef-client local mode</td>
+  <td>Joshua Timberman <joshua@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc032-dsc-resource-modules.html">Powershell DSC Resource Modules</td>
+  <td>["Mukta Aphale <mukta.aphale@clogney.com>", "Siddheshwar More <siddheshwar.more@clogeny.com>"]</td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc033-root-aliases.html">Root Aliases in Cookbooks</td>
+  <td>Noah Kantrowitz <noah@coderanger.net></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc034-ruby-193-eol.html">Ruby Version Deprecation Policy</td>
+  <td>Daniel DeLeo <dan@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc035-audit-mode.html">Audit-Mode for Chef Client</td>
+  <td>Claire McQuin <claire@getchef.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc036-dialects.html">Dialects in Chef</td>
+  <td>Noah Kantrowitz <noah@coderanger.net></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc037-chef-ohai-version-metadata.html">Add chef and ohai versions to Cookbook metadata</td>
+  <td>Jon Cowie (jcowie@etsy.com)</td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td>["https://github.com/chef/chef/pull/4081", "https://github.com/chef/supermarket/pull/1211"]</td>
+</tr>
+<tr>
+  <td><a href="rfc038-token-authentication.html">Token Authentication for Chef Server</td>
+  <td>Noah Kantrowitz <noah@coderanger.net></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc039-event-handler-dsl.html">Recipe DSL method for event handler hooks</td>
+  <td>Ranjib Dey (ranjib@linux.com)</td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc040-on-demand-cookbook-libraries.html">On-Demand Cookbook Libraries</td>
+  <td>John Keiser <jkeiser@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc041-server-api-versioning.html">Chef Server API Versioning</td>
+  <td>Marc Paradise <marc@chef.io></td>
+  <td>Standards Track</td>
+  <td>Final</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc042-policyfile-endpoint.html">Policyfile HTTP Resource API</td>
+  <td>Daniel DeLeo <dan@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc043-automatic-pr-assignment.html">Automatically manage Pull Requests</td>
+  <td>Thom May <tmay@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc044-in_parallel.html">Parallelization in Chef Recipes</td>
+  <td>John Keiser <jkeiser@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc045-node_state_separation.html">Node State Separation</td>
+  <td>Lamont Granquist <lamont@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc046-ohai-cloud-network.html">Enhanced Ohai Network Support</td>
+  <td>Matt Ray <matt@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc047-release-process.html">Chef Client Release Process</td>
+  <td>Bryan McLellan <btm@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc048-github-issues-workflow.html">Chef GitHub Issues Workflow</td>
+  <td>Thom May <thom@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc049-track-rfcs.html">Tracking for Standards Track RFCs</td>
+  <td>John Keiser <jkeiser@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc050-resource-actions.html">Resource Actions</td>
+  <td>John Keiser <john@johnkeiser.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc051-telemetry.html">Chef Telemetry</td>
+  <td>Ranjib Dey <ranjib@linux.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc052-missing-method-missing.html">Remove magic from Chef::Resource lookup</td>
+  <td>John Keiser <john@johnkeiser.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td>["https://github.com/chef/chef/pull/3270"]</td>
+</tr>
+<tr>
+  <td><a href="rfc053-ohai-config.html">Ohai User Configuration</td>
+  <td>Bryan McLellan <btm@loftninjas.org></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc054-resource-attribute-improvements.html">Resource Attribute Improvements</td>
+  <td>John Keiser <jkeiser@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc055-property-defaults.html">Property Default Value Improvements</td>
+  <td>John Keiser <jkeiser@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc056-load-and-converge.html">Easy Resource Load And Converge</td>
+  <td>John Keiser <john@johnkeiser.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc057-cookbook-quality-metrics.html">Cookbook Quality Metrics</td>
+  <td>Nathen Harvey <nharvey@chef.io></td>
+  <td>Informational</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc058-before.html">Trigger resources prior to an action occurring</td>
+  <td>["John Keiser <jkeiser@chef.io>", "Joe Nuspl <nuspl@nvwls.com>", "Wade Peacock <wade.peacock@visioncritical.com>"]</td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc059-ohai-cookbook-segment.html">Add Ohai cookbook segment</td>
+  <td>Lamont Granquist <lamont@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc060-metadata-gem-installation.html">Enable gem dependencies in cookbook metadata</td>
+  <td>Lamont Granquist <lamont@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc061-hugs.html">Hugging in the Chef Community</td>
+  <td>Aaron Kalin and JJ Asghar</td>
+  <td>Informational, Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc062-exit-status.html">Chef-Client Exit Codes</td>
+  <td>Nicholas Carpenter <ncarpenter@ebsco.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc063-omnibus-chef-native-gems.html">Omnibus Chef Native Gem Additions</td>
+  <td>Lamont Granquist <lamont@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td>["https://github.com/chef/chef/pull/4435"]</td>
+</tr>
+<tr>
+  <td><a href="rfc064-chefstyle.html">Chef code should have a consistent style</td>
+  <td>Thom May <thom@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td>["https://github.com/chef/chefstyle"]</td>
+</tr>
+<tr>
+  <td><a href="rfc065-sign-v1.3.html">Chef Authentication Signing Protocol v1.3</td>
+  <td>Jay Mundrawala <jdm@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td>["https://github.com/chef/chef_authn/pull/23", "https://github.com/chef/mixlib-authentication/pull/10"]</td>
+</tr>
+<tr>
+  <td><a href="rfc066-compound-actions.html">Actions With Inline Resources</td>
+  <td>John Keiser <john@johnkeiser.com></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc067-cookbook-segment-deprecation.html">Cookbook Segment Deprecation</td>
+  <td>Lamont Granquist <lamont@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc068-postgresql-search.html">PostgreSQL Search for Chef</td>
+  <td>Jeremy Bingham <jeremy@goiardi.gl></td>
+  <td>Informational</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc069-cookbook-adoption.html">Cookbook Adoption On Supermarket</td>
+  <td>Nell Shamrell-Harrington <nshamrell@chef.com></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc070-chef-upgrade.html">Chef should be able to upgrade itself</td>
+  <td>Thom May <thom@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc071-knife-bootstrap-client-config.html">Knife Bootstrap client Configuration</td>
+  <td></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc072-artifact-yanking.html">Cookbook and Cookbook Version Yanking Policy</td>
+  <td>Nell Shamrell-Harrington <nshamrell@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc073-meetbot.html">Enabling meetbot for Chef IRC Community meetings.</td>
+  <td>JJ Asghar <jj@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc074-community-slack.html">Chef Community Slack</td>
+  <td>Noah Kantrowitz <noah@coderanger.net></td>
+  <td>Informational</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc075-multi-policy.html">Multiple Policyfiles and Teams</td>
+  <td>Noah Kantrowitz <noah@coderanger.net></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc076-reversion-ohai.html">Change Ohai version numbers to match Chef</td>
+  <td>Thom May <thom@chef.io></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc077-mode-agnostic-data-collection.html">Mode-Agnostic Run Data Collection</td>
+  <td>Adam Leff <adamleff@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc078-supermarket-prefix.html">Supermarket Prefix Reservation</td>
+  <td>Noah Kantrowitz <noah@coderanger.net></td>
+  <td>Process</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="rfc079-supermarket-release-channels.html">Supermarket Release Channels</td>
+  <td>Daniel DeLeo <dan@chef.io></td>
+  <td>Standards Track</td>
+  <td>Accepted</td>
+  <td></td>
+</tr>
+</table>
+</section>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

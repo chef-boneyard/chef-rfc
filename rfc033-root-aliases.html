@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Root Aliases in Cookbooks</h1>
+
+<p>There are several common cases when writing Chef cookbooks that result in a
+folder containing a single file, usually called <code>default.rb</code>. Root aliases
+allow using a single file instead of a folder.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">author</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">less</span><span class="w"> </span><span class="vg">complex</span><span class="w"> </span><span class="vg">directory</span><span class="w"> </span><span class="vg">layouts</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">learning</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">maintenance</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">easier</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>There are two common cases where a single-file-in-folder comes up:</p>
+
+<ol>
+<li><code>attributes/default.rb</code></li>
+<li><code>recipes/default.rb</code></li>
+</ol>
+
+<p>With <code>attributes</code> this is common to the point of almost complete irrelevance of
+other layouts given that all attribute files are always loaded. Recipes aren&#39;t
+exclusively singletons, but it is common enough to warrant a special case.</p>
+
+<p>With this in mind, aliases are available for each:</p>
+
+<ol>
+<li><code>attributes.rb</code></li>
+<li><code>recipe.rb</code></li>
+</ol>
+
+<p>It is an error for a cookbook to contain both an alias and its target or two
+aliases for the same target.</p>
+
+<p>No aliases are provided for other types as they are generally a more advanced
+use case where the worry about learning curve is reduced.</p>
+
+<p>Aliases are equivalent to their target file for purposes of loading either via
+standard cookbook loading or methods like <code>include_recipe</code>.</p>
+
+<h2>Rationale</h2>
+
+<p>This meshes well with RFC017 towards a goal of reducing the file layout
+complexity of simple cookbooks. There can be compatibility issues with tools
+that parse the cookbook manifest data and presume that all files from a given
+segment reside under the previously required folder, however the author knows
+of no such tools and given that the manifest format is mostly an internal
+representation this is not considered a blocker. Overall the goal of these RFCs
+is to remove the frequent use of single-child folders.</p>
+
+<p>The choice of which aliases to provide and what to name them is mostly driven
+by the common cases, but is not exhaustive. <code>attributes.rb</code> and <code>recipe.rb</code> are
+chosen to match their usage grammatically. An additional alias of <code>recipes.rb</code>
+could be provided to match the folder name, but this is left for a future
+improvement based on usage feedback.</p>
+
+<p>This was <a href="https://github.com/coderanger/chef/commit/754803597898ebd8dfc71aabde88c2f7c882aa25">previously implemented in the unmerged dialects branch</a>.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

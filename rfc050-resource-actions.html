@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Resource Actions</h1>
+
+<p>In this proposal, we allow actions to be specified as recipes, directly in resources.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">actions</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">resources</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to learn and reason about `Provider`s (less friction).</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">actions</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">resources</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to switch contexts to understand what resources do.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">actions</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">specified</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">recipes</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">default</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">concepts</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">already</span><span class="w"> </span><span class="vg">know</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="vg">good</span><span class="w"> </span><span class="vg">test</span><span class="o">-</span><span class="vg">and</span><span class="o">-</span><span class="vg">set</span><span class="w"> </span><span class="vg">resources</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>To create an action on a resource, users specify <code>action &lt;action&gt; do ... end</code>.
+The recipe in between the do ... end block will be run when the action is
+performed.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
+  <span class="n">attribute</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
+  <span class="n">attribute</span> <span class="ss">:content</span>
+  <span class="n">attribute</span> <span class="ss">:mode</span>
+
+  <span class="n">action</span> <span class="ss">:create</span> <span class="k">do</span>
+    <span class="n">ruby_block</span> <span class="s2">&quot;Update content of </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">do</span>
+      <span class="n">only_if</span> <span class="p">{</span> <span class="n">content</span> <span class="o">!=</span> <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">block</span> <span class="p">{</span> <span class="no">IO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+
+    <span class="n">execute</span> <span class="s2">&quot;Update mode of </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">do</span>
+      <span class="n">not_if</span> <span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">mode</span> <span class="p">}</span>
+      <span class="n">command</span> <span class="s2">&quot;chmod </span><span class="si">#{</span><span class="n">mode</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>There is no change to providers or the way we run actions.  This is just a way
+of defining a provider without having to type or think about the word.  Providers
+do not go away, so much as become a secondary concept, a sort of house for the
+primary concept of actions.</p>
+
+<p><code>action</code> will work for any resource extending from <code>Chef::Resource</code>.</p>
+
+<h3>Action details</h3>
+
+<h4>Action recipe execution</h4>
+
+<p>The action recipe works like a Chef run, in that it is an isolated resource
+collection and runs actions and notifications the same way as a top level Chef
+run.</p>
+
+<ul>
+<li>The entire action recipe is compiled (just like a normal recipe) before
+converging.</li>
+<li>This compile happens when the action is <em>run</em>, not when the parent resource
+is declared.</li>
+<li>Delayed and immediate notifications are local to the action.</li>
+</ul>
+
+<p>This is equivalent to what <code>use_inline_resources</code> in an LWRP does, and we will
+keep them orthogonal as much as possible.</p>
+
+<h4>Action composition and inheritance</h4>
+
+<p>If the parent class&#39;s action is defined using <code>action</code>, you may call <code>super()</code>
+to call the parent class&#39;s version of the current action.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyFile</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">File</span>
+  <span class="n">action</span> <span class="ss">:create</span> <span class="k">do</span>
+    <span class="nb">puts</span> <span class="s2">&quot;I am a file yo&quot;</span>
+    <span class="k">super</span><span class="p">()</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Changes to existing things</h2>
+
+<h3>Resource</h3>
+
+<p>We add the following public API to <code>Resource</code>:</p>
+
+<ul>
+<li><code>self.action(action, class: nil, &amp;block)</code>: creates a handler for the given action</li>
+</ul>
+
+<p>And modify the following:</p>
+
+<ul>
+<li><code>allowed_actions</code>: defaults to all actions defined by <code>action</code>, including any
+actions from superclasses.</li>
+<li><code>default_action</code>: defaults to the first defined <code>action</code> in the class or
+superclasses, with the exception of <code>:nothing</code>.</li>
+</ul>
+
+<p>Being defined by the <code>action</code> keyword, this is backwards compatible: neither of
+these definitions change anything about resources that have providers.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

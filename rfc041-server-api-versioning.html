@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Chef Server API Versioning</h1>
+
+<p>The purpose of this RFC is to specify the means by which Chef Server will support a range of
+API versions in a given release.</p>
+
+<p>Each server API version indicates the behavior of the server API as a whole,
+at the given version level. For comparison, consider the way a git commit SHA
+is representative of the state of the entire repository as of that commit.</p>
+
+<p>Supporting a range of API versions (minimum and maximum) in any given release will allow
+API behavior to change, while providing reasonable deprecation expectations for the older behaviors.
+This also allows the Server to remain focused on supporting a finite range of behaviors, rather than
+needing to support old behaviors indefinitely.</p>
+
+<p>Any given release of the Chef Server will include documentation of the current minimum
+and maximum supported API versions, as well as behavior changes between any newly
+introduced version and the one prior to it. It will also include, if appropriate,
+which version has been deprecated, and which version has been retired.</p>
+
+<p>An important note: API Versioning is determined independently of product versioning.
+Product support lifecycle will determine which range of API versions are supported in
+a given product release.</p>
+
+<p>Arbitrary examples with no significance:</p>
+
+<ul>
+<li>Chef Server 12.0 - API Versions 0-3</li>
+<li>Chef Server 12.1 - API Versions 0-4</li>
+<li>Chef Server 13.0 - API Versions 3-15.</li>
+</ul>
+
+<p>This means that if you are using Chef Server 12.1, any supported client will behave
+as it did with Chef Server 12.0, though API v4 will be available to those clients who can use it.<br>
+However when you upgrade Chef Server 13.0 you will need to upgrade the client to one that supports
+the behaviors introduced or changes in API Version 1 and 2 at minimum.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">consumer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Server</span><span class="w"> </span><span class="vg">API</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">consume</span><span class="w"> </span><span class="vg">significant</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">own</span><span class="w"> </span><span class="vg">pace</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">they</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t break my usage of the API.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">supported</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">level</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">ensure</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">server</span><span class="w"> </span><span class="vg">API</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t affect me until I&#39;m ready to upgrade</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">all</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">nodes</span><span class="w"> </span><span class="vg">continue</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">converge</span><span class="w"> </span><span class="vg">even</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Server</span><span class="w"> </span><span class="vg">API</span><span class="w"> </span><span class="vg">continues</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">mature</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">developer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Server</span><span class="w"> </span><span class="vg">API</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">add</span><span class="w"> </span><span class="vg">potentially</span><span class="w"> </span><span class="vg">breaking</span><span class="w"> </span><span class="vg">features</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">breaking</span><span class="w"> </span><span class="vg">customers</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">supported</span><span class="w"> </span><span class="vg">versions</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">state</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Server</span><span class="w"> </span><span class="vg">API</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">continue</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">advance</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>The Chef Server API Version (Version from this point forward) is indicated as a whole number,
+starting at zero. Zero indicates the behavior of the API at the time of this RFC&#39;s acceptance.</p>
+
+<p>If a client does not indicate a version preference, it will be assumed to request API version zero.
+Once zero is not supported, clients must request a specific API version, or the server will not process
+the request and return a 406.</p>
+
+<p>If a particular endpoint does not implement versioning due to remaining unchanged, it MUST
+behave in a forward-compatible way through the range of currently supported version. In
+documentation these will be specified as having compatibility with versions X+ where X is the first
+version in which the API was introduced (or zero if existing).</p>
+
+<p>If a particular endpoint does implement versioning and remains unchanged, it MUST behave in a
+forward-compatible way through the range of currently supported versions. In documentation
+these will be specified as N+, where N is the version at which it was last modified.</p>
+
+<p>For this section, &quot;API&quot; refers to any combination of a method and endpoint, eg <code>GET /users</code>,
+<code>POST /organizations/$org/clients</code>, et al.</p>
+
+<h3>Versioning is Global</h3>
+
+<p>No restrictions or requirements are placed on the number of APIs that can be changed in a given API Version.
+There is no guarantee of a 1:1 relationship between API changes and server versions. For example,
+Server API Version 1 may change the <code>GET /nodes</code> endpoint behavior, while Version 2 may change the behaviors of <code>GET /roles</code>,
+<code>PUT /users/:name/keys</code> and <code>DELETE /users/:name</code></p>
+
+<p>Changes grouped into a single version are not guaranteed to be related, except that the
+changes were created near the same points in time.</p>
+
+<h3>Example Usage</h3>
+
+<p>As an example scenario, we&#39;ll assume a case where the field <code>username</code> is being replaced with <code>name</code> in the body
+response in the <code>users</code> endpoint. For this case, we&#39;ll state that:</p>
+
+<ul>
+<li>Minimum Server API Version is 10</li>
+<li>Maximum Server API Version if 14</li>
+<li>This change in behavior to the users endpoint is introducing Server API Version 15.</li>
+</ul>
+
+<p>For demonstration, the example request is <code>GET /users/bob</code> with...</p>
+
+<ul>
+<li>... X-Ops-Server-API-Version not specified by client
+
+<ul>
+<li><code>{ &quot;username&quot;: &quot;bob&quot;, ... }</code></li>
+</ul></li>
+<li>... <code>X-Ops-Server-API-Version: 10</code>
+
+<ul>
+<li><code>{ &quot;username&quot;: &quot;bob&quot;, ... }</code></li>
+</ul></li>
+<li>... <code>X-Ops-Server-API-Version: 14</code>
+
+<ul>
+<li><code>{ &quot;username&quot;: &quot;bob&quot;, ... }</code></li>
+</ul></li>
+<li>... <code>X-Ops-Server-API-Version: 15</code>
+
+<ul>
+<li><code>{ &quot;name&quot;: &quot;bob&quot;, ... }</code></li>
+</ul></li>
+</ul>
+
+<p>To continue the example, let&#39;s say we&#39;ve moved forward a year and are now shipping Chef Server 13. At that time we
+announce that our new supported API Range is 12-20, and the API Versions 12-14 are considered deprecated.</p>
+
+<p>See <code>Response</code> below for full understanding of the <code>X-Ops-Server-API-Version</code> response header content.
+For now, just note that <code>request_version</code> is <code>&quot;-1&quot;</code> when an invalid API version was sent (non-integer) and
+and response<em>version is <code>&quot;-1&quot;</code> when the `request</em>version` is not supported, indicating that the request was not
+responded to.</p>
+
+<p>The GET request from the examples above would generate the following responses:</p>
+
+<ul>
+<li>... X-Ops-Server-API-Version not specified by client
+<code>
+HTTP 406
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;12&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;0&quot;, &quot;response_version&quot;:&quot;-1&quot;},
+{ &quot;username&quot;: &quot;bob&quot;, ... }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: Not-An-Integer</code>
+<code>
+HTTP 406
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;12&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;-1&quot;, &quot;response_version&quot;:&quot;-1&quot;},
+{ &quot;username&quot;: &quot;bob&quot;, ... }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: 10</code>
+<code>
+HTTP 406
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;12&quot;,&quot;max_version&quot;:&quot;20&quot;,&quot;request_version&quot;:&quot;10&quot;, &quot;response_version&quot;:&quot;-1&quot;},
+{ &quot;error&quot; : &quot;invalid-x-ops-server-api-version&quot;,
+ &quot;message&quot; : &quot;Specified version 10 not supported&quot;,
+ &quot;min_api_version&quot; : 12,
+ &quot;max_api_version&quot;: 20 }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: 14</code>
+<code>
+HTTP EXPECTED CODE
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;12&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;14&quot;, &quot;response_version&quot;:&quot;14&quot;},
+{ &quot;username&quot;: &quot;bob&quot;, ... }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: 15</code>
+<code>
+HTTP EXPECTED CODE
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;12&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;15&quot;, &quot;response_version&quot;:&quot;15&quot;},
+{ &quot;username&quot;: &quot;bob&quot;, ... }
+</code></li>
+</ul>
+
+<p>Moving forward another year and we have released Chef Server 14.  We announce that API Versions 12-14 are retired
+and that our new supported API Version Range is 15-22.</p>
+
+<ul>
+<li>... X-Ops-Server-API-Version not specified by client
+<code>
+HTTP 406
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;15&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;0&quot;, &quot;response_version&quot;:&quot;-1&quot;},
+{ &quot;username&quot;: &quot;bob&quot;, ... }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: 10</code>
+<code>
+HTTP 406
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;15&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;10&quot;, &quot;response_version&quot;:&quot;-1&quot;},
+{ &quot;error&quot; : &quot;invalid-x-ops-server-api-version&quot;,
+ &quot;message&quot; : &quot;Specified version 10 not supported&quot;,
+ &quot;min_api_version&quot; : 15,
+ &quot;max_api_version&quot;: 22 }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: 14</code>
+<code>
+HTTP 406
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;15&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;14&quot;, &quot;response_version&quot;:&quot;-1&quot;},
+{ &quot;error&quot; : &quot;invalid-x-ops-server-api-version&quot;,
+ &quot;message&quot; : &quot;Specified version 14 not supported&quot;,
+ &quot;min_api_version&quot; : 15,
+ &quot;max_api_version&quot;: 22 }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: 15</code>
+<code>
+HTTP EXPECTED CODE
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;15&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;15&quot;, &quot;response_version&quot;:&quot;15&quot;},
+{ &quot;name&quot;: &quot;bob&quot;, ... }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: 22</code>
+<code>
+HTTP EXPECTED CODE
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;15&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;22&quot;, &quot;response_version&quot;:&quot;15&quot;},
+{ &quot;name&quot;: &quot;bob&quot;, ... }
+</code></li>
+<li>... <code>X-Ops-Server-API-Version: 30</code>
+<code>
+HTTP 406
+X-Ops-Server-API-Version: {&quot;min_version&quot;:&quot;15&quot;,&quot;max_version&quot;:&quot;22&quot;,&quot;request_version&quot;:&quot;30&quot;, &quot;response_version&quot;:&quot;-1&quot;},
+{ &quot;error&quot; : &quot;invalid-x-ops-server-api-version&quot;,
+&quot;message&quot; : &quot;Specified version 30 not supported&quot;,
+&quot;min_api_version&quot; : 15,
+&quot;max_api_version&quot;: 22 }
+</code></li>
+</ul>
+
+<h3>Request</h3>
+
+<p>A client MAY request version compatibility via custom header as follows:</p>
+
+<p><code>X-Ops-Server-API-Version: $version</code></p>
+
+<p><code>$version</code> MUST be one of the desired version number, indicated by a whole integer.</p>
+
+<h3>Response</h3>
+
+<p>If a client does include this header and <code>$version</code> is...</p>
+
+<ul>
+<li>... less than the minimum Version supported by the server product, the
+server MUST respond with an HTTP 406 with <code>application/json</code> body specified below.</li>
+<li>... greater than the current maximum Version supported,
+the server MUST respond with an HTTP 406 and an <code>application/json</code> body specified below.
+
+<ul>
+<li>... of a value other than a valid version, the server MUST respond with an HTTP 406
+and the body specified below.</li>
+</ul></li>
+</ul>
+
+<h4>Response Header</h4>
+
+<p>In the response header, <code>X-Ops-Server-API-Version</code> will return json of the format:</p>
+<div class="highlight"><pre><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;min_version&quot;</span><span class="o">:</span><span class="s2">&quot;&lt;non-negative integer&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;max_version&quot;</span><span class="o">:</span><span class="s2">&quot;&lt;non-negative integer&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;request_version&quot;</span><span class="o">:</span><span class="s2">&quot;&lt;integer&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;response_version&quot;</span><span class="o">:</span><span class="s2">&quot;&lt;integer&gt;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+<p>Where:
++ <code>min_version</code> is the minimum API version the server supports.
++ <code>max_version</code> is the maximum API version the server supports.
++ <code>request_version</code> is an integer representing the desired API version from the client passed via X-Ops-Server-API-Version
+defaulting to 0 if X-Ops-Server-API-Version was not sent by the client. If X-Ops-Server-API-Version sent by the client contained
+an invalid value (not an integer), then -1 is returned in <code>request_version</code>.
++ <code>response_version</code> is an integer representing the API version used by the server to process the request.
+It either matches what the client requested in X-Ops-Server-API-Version or is -1 if a 406 occurred (which happens
+when X-Ops-Server-API-Version sent by the client was invalid or not in the supported range of the server).</p>
+
+<p><code>X-Ops-Server-API-Version</code> is needed to implement client-side support for the multiple versioned API
+and to distinguish between servers that have implemented this RFC and servers that do not support multiple versioning.</p>
+
+<p>The <code>Vary</code> header is included in the event it becomes desirable to support caching of specific responses.</p>
+
+<h4>406 Response Body</h4>
+
+<p>When the server provides a 406 response due to unsupported API version, the response body
+will be of type <code>application/json</code> and MUST look as follows:</p>
+<div class="highlight"><pre><span class="p">{</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="w">           </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;invalid-x-ops-server-api-version&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;message&quot;</span><span class="w">         </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Specified version $version not supported&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;min_api_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">x</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;max_api_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">y</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+<p><code>$version</code> indicates the requested version. <code>$x</code> and <code>$y</code> are the current minimum and
+maximum supported versions, respectively.</p>
+
+<h3>Server Implementation</h3>
+
+<p>Minimum and maximum version are set in code, and MUST NOT be configurable.</p>
+
+<p>Minimum and maximum values in effect MUST be logged at server startup.  Further, current API support levels
+MUST be exposed through a new endpoint, <code>GET /server_api_version</code> as specified below.</p>
+
+<p>The server MUST resolve and validate the version at the start of each request, and retain it in request state
+for resources to make use of.</p>
+
+<p>The implementation MAY require addition of version support callbacks in erchef webmachine resources.</p>
+
+<p>Given no <code>X-Ops-Server-API-Version</code> header or a <code>null</code> value of version, it MUST resolve to the
+minimum supported version.</p>
+
+<p>Given a value of version, it MUST be resolved as follows:</p>
+
+<ul>
+<li>A numeric version MUST be validated against current minimum and maximum versions as
+specified under section &quot;Response&quot;.</li>
+<li>Any other value is invalid and the server MUST respond to the client with a 406
+and the associated response body specified above.</li>
+</ul>
+
+<h3>Effects on Unmodified APIs:</h3>
+
+<p>APIs that are not modified are not required to support Version.  They are assumed to be
+compatible and unchanged through the current range of min/max supported versions.</p>
+
+<h3>Effects on Modified APIs:</h3>
+
+<p>Any API modified as follows MUST use <code>api_version</code> to determine which behavior to
+present to the client:</p>
+
+<ul>
+<li>new required field on input</li>
+<li>change in type of an output field</li>
+<li>change in client-facing behavior of the API</li>
+</ul>
+
+<p>Any API modified as follows MAY use <code>api_version</code> to determine which behavior to
+present to the client:</p>
+
+<ul>
+<li>removal of a required input field</li>
+<li>addition of an output field</li>
+<li>change in internal behavior of the API</li>
+</ul>
+
+<h4>New API Implementations</h4>
+
+<p>Any new API MAY implement checking of <code>api_version</code> to determine its availability.</p>
+
+<h4>Deprecated API Behaviors</h4>
+
+<p>Any API behavior that is to be deprecated MUST have the version for both its deprecation and
+its removal documented in release notes and in API documentation.</p>
+
+<p>After deprecated behavior has been removed, last supported API version MUST be updated in
+accordance with the published documentation.</p>
+
+<h3>Documentation</h3>
+
+<p>When an API is modified in a way that requires support of Version, release notes and API
+documentation MUST reflect this.  API documentation MUST further specify minimum/maximum
+versions for each endpoint that implements support of versioning.</p>
+
+<h3>New Endpoint: /server_api_versions</h3>
+
+<p>This is a new server endpoint that MUST be implemented, and  which supports only the <code>GET</code> method.
+Any other method MUST respond with a 405.</p>
+
+<p>The <code>GET</code> response body MUST look as follows:</p>
+<div class="highlight"><pre><span class="p">{</span><span class="w"> </span><span class="s2">&quot;min_api_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">x</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;max_api_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">y</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+<p><code>$x</code> and <code>$y</code> refer to the current minimum and maximum supported versions, respectively.</p>
+
+<h3>New Endpoint: /server_api_versions/extended</h3>
+
+<p>This is a new server endpoint that MAY be implemented, and which supports only the <code>GET</code> method.
+Any other method MUST respond with a 405.</p>
+
+<p>If this endpoint is implemented, the <code>GET</code> response body contains supported API version data
+for each endpoint that has implemented versioning, and MUST look as follows:</p>
+<div class="highlight"><pre><span class="p">{</span><span class="w"> </span><span class="s2">&quot;endpoints&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$relative_url&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="o">:</span>
+<span class="w">                      </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">method</span><span class="p">,</span>
+<span class="w">                          </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">version</span>
+<span class="w">                          </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">status</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+<ul>
+<li><code>$relative_url</code> is a URL relative to the server root and will not include server name
+or protocol, as this value is not intended for direct use by a client in a request.</li>
+<li>components in the <code>$relative_url</code> prefixed with <code>:</code> indicate that this is a named value that must be</li>
+<li>Multiple version elements for the same method can be returned, made unique by the <code>version</code> field.
+provided by the client.</li>
+<li><code>$method</code> indicates the http method associated with the endpoint</li>
+<li><code>$version</code> indicates the API version to which this information applies, or <code>&quot;next&quot;</code> if this is an
+experimental feature or feature under active development.</li>
+<li><code>$status</code> indicates current status of this endpoint as either:
+
+<ul>
+<li><code>deprecated</code> - this version of the endpoint is deprecated and will be removed in a future revision</li>
+<li><code>active</code> - this version of the endpoint is currently active and available for use</li>
+<li><code>unstable</code> - this is under active development and the behaviors defined for it are subject to change.
+used with <code>version</code> : <code>next</code>, but it is possible to have <code>version</code> : <code>next</code> in conjunction with
+<code>status</code> : <code>active</code></li>
+</ul></li>
+</ul>
+
+<p>Sample output:</p>
+<div class="highlight"><pre><span class="p">{</span><span class="w"> </span><span class="s2">&quot;endpoints&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/organizations/:orgname/clients/:client&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="o">:</span>
+<span class="w">                      </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deprecated&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                        </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">},</span>
+<span class="w">                        </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;next&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unstable&quot;</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/users/:user&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="o">:</span>
+<span class="w">                      </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deprecated&quot;</span><span class="p">},</span>
+<span class="w">                        </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                 </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+<p>This endpoint MAY be extended to include information about endpoints that do not
+explicitly implement versioning.  The response MUST be in the same form.</p>
+
+<p>The server MAY rate-limit this endpoint due to the potential cost associated with it.</p>
+
+<p>Finally, the server MAY further extend this API to allow clients to query version information for
+a specific method + endpoint, in which case version information for that specific endpoint is returned,
+or 404 if there is no such endpoint.</p>
+
+<p>To continue the example above, the request:</p>
+
+<p><code>GET /server_api_versions/extended/GET/organizations/:orgname/clients/:client</code></p>
+
+<p>Would receive the response:</p>
+<div class="highlight"><pre><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/organizations/:orgname/clients/:client&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deprecated&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;next&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unstable&quot;</span><span class="p">}]</span><span class="w"> </span><span class="p">},</span>
+</pre></div>
+<h2>Rationale</h2>
+
+<p>As the capabilities of the Chef Server API expand, it becomes necessary
+to deprecate and de-support old API behaviors.  However, consumers of the
+API such as chef-client may not yet be able to support changed API behaviors.
+The version indicator is used by a client to indicate which level of
+API behavior it can support.</p>
+
+<p>We have decided on the use of a single custom header to indicate version (instead of url-based or
+<code>Accept</code> header-based) for several reasons:</p>
+
+<ul>
+<li>Our REST model requires a specific URL to refer to a specific resource.  This resource is not
+versioned, though the semantics of what the resource includes or how to create it may be
+versioned.</li>
+<li>The URIs currently used by Chef Server are not typically shareable for access via a simple http request
+outside of a given context due to authentication and authorization requirements, and so this is not
+a consideration in any of the above cases.</li>
+<li>Our internal tooling will not always be compatible with URL-based versioning,
+as it is not uncommon for a component to assemble its own URIs instead of
+relying on the &quot;uri&quot; field returned from the server.</li>
+<li>There exists precedent in that we already require specific headers to be
+sent from the client in order to service a request. For example, <code>X-Ops-User-Id</code>.</li>
+<li>A custom <code>Accept</code> header was also considered, we chose the custom <code>X-Ops-Server-API-Version</code> header
+to keep our API usage patterns consistent and relatively simple.  As mentioned above
+we already require custom headers, and combining those with specific <code>Accept</code> header strings
+would mean introducing a new and slightly varied means of obtaining the desired behavior out of the API.</li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

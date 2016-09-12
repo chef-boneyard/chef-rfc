@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Maintenance Policy</h1>
+
+<p>The Maintenance Policy defines how we make decisions about what happens with Chef, and associated software projects. It provides the process by which:</p>
+
+<ul>
+<li>Roadmaps are decided</li>
+<li>Patches are merged</li>
+<li>Disputes are resolved</li>
+</ul>
+
+<p>It is intended to be short, flexible, and clear.</p>
+
+<p>This file is related to the MAINTAINERS and ROADMAP files in Chef.</p>
+
+<h1>How the project is maintained</h1>
+
+<p>This file is the canonical source for how the Chef project is maintained.</p>
+
+<h1>Roles</h1>
+
+<h2>Project Lead</h2>
+
+<ul>
+<li>Resolves disputes</li>
+<li>Provides vision and roadmap</li>
+<li>Has universal veto power</li>
+<li>There can be only one</li>
+</ul>
+
+<h2>Lieutenant</h2>
+
+<ul>
+<li>Each component in the project may have at most one Lieutenant</li>
+<li>Provides guidance on future direction for their component</li>
+<li>Provides a release calendar for code outside of chef client/chef server</li>
+<li>Resolves disputes within their component</li>
+<li>Has localized veto power</li>
+<li>Plus all the responsibilities of a Maintainer</li>
+</ul>
+
+<h2>Maintainer</h2>
+
+<ul>
+<li>Each component may have multiple Maintainers</li>
+<li>Handles contributions on GitHub - first response to a PR within 48 hours</li>
+<li>Is available on IRC</li>
+<li>Attends the developers meeting (do not miss more than 3 in a row - special dispensation can be made for difficult time zones)</li>
+<li>Is available to answer mailing list questions within 48 hours</li>
+<li>Weekends and local holidays in the Maintainer’s jurisdiction are not counted for timeliness requirements. Absences for reasonable causes such as vacations, illness, etc. are also acceptable; Maintainers should notice of absences via the development mailing list whenever possible.</li>
+<li>Committed to 100% tests passing for your component</li>
+<li>Has full commit/merge access to the relevant repositories</li>
+<li>Has ops on IRC</li>
+</ul>
+
+<h1>Roadmap</h1>
+
+<p>All project roles should work together to determine the best opportunities for the improvement of the project. This should produce direction for the project, which should be highlighted in the ROADMAP.</p>
+
+<p>As a project role does not necessarily control resources other than their own labor, they should encourage contributors to participate in furthering development of the project toward the goals of the ROADMAP.</p>
+
+<p>Releases should not block on features on the roadmap, rather they should happen as features are completed. The ROADMAP should be organized by general time periods, not by versions</p>
+
+<h2>Example Roadmap entries</h2>
+<div class="highlight"><pre><span class="err">#</span><span class="w"> </span><span class="il">2015</span><span class="w"> </span><span class="vg">Q2</span>
+<span class="o">*</span><span class="w"> </span><span class="vg">Component</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="vg">Roadmap</span><span class="w"> </span><span class="vg">Item</span>
+<span class="w">  </span><span class="vg">Description</span>
+
+<span class="err">#</span><span class="w"> </span><span class="il">2015</span><span class="w"> </span><span class="vg">Q4</span>
+<span class="o">*</span><span class="w"> </span><span class="vg">Core</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="vg">Support</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">Drone</span><span class="w"> </span><span class="vg">Automation</span>
+<span class="w">  </span><span class="vg">Significant</span><span class="w"> </span><span class="vg">time</span><span class="w"> </span><span class="vg">could</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">saved</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">enterprise</span><span class="w"> </span><span class="vg">datacenters</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">using</span><span class="w"> </span><span class="vg">drones</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">stack</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">rack</span><span class="w"> </span><span class="vg">servers</span>
+
+<span class="err">#</span><span class="w"> </span><span class="il">2016</span><span class="w"> </span><span class="vg">Q1</span>
+<span class="o">*</span><span class="w"> </span><span class="vg">Core</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="vg">Support</span><span class="w"> </span><span class="vg">Internet</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">Things</span>
+<span class="w">  </span><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">look</span><span class="w"> </span><span class="vg">forward</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">singularity</span>
+</pre></div>
+<h1>Contributing Patches</h1>
+
+<h2>How a patch gets merged</h2>
+
+<ul>
+<li>Open Pull Request (anyone)</li>
+<li>Sign a CLA on Supermarket, tied to your github account.</li>
+<li>Code reviewed by a Maintainer, Lieutenant, or Project Lead. Approval is indicated by :+1: on the pull request.</li>
+<li>Merged after :+1: votes by at least two Maintainers for the component(s) affected by your patch.</li>
+</ul>
+
+<p>In the event that a component lacks two Maintainers, the vote of one or more Maintainers from Chef Core may be substituted.</p>
+
+<p>Any Maintainer may vote :-1: on a patch, which increases the requirement for a patch to be merged to an absolute majority of Maintainers for the affected component(s), unless that Maintainer later changes their vote.</p>
+
+<h2>Patch Appeals Process</h2>
+
+<p>There may be cases where someone wishes to appeal a Maintainer decision. In this event, the &quot;chain of command&quot; for the appeals process is as follows.</p>
+
+<ul>
+<li><p>In the event that the actions of a Maintainer are to be appealed, the appeal should be directed to the Lieutenant for that component. As stated above, a Lt retains veto power for the component(s) for which they are responsible.</p></li>
+<li><p>In the event that the actions of a Lieutenant are to be appealed, the appeal should be directed to the Project Lead. As stated above, the Project Lead retains universal veto power over all components.</p></li>
+</ul>
+
+<p>Although Lieutenants and the Project Lead retain veto powers over certain components, use of this veto power is not guaranteed by the submission of an appeal to that person. It is expected that the majority decisions of component Maintainers and Lieutenants will be respected in all but the most exceptional circumstances.</p>
+
+<h1>How to become a...</h1>
+
+<h2>Maintainer</h2>
+
+<ul>
+<li>Have patches merged into the relevant component</li>
+<li>Be willing to perform the duties of a Maintainer</li>
+<li>Issue a pull request adding yourself to the MAINTAINERS file for your component</li>
+<li>Receive an absolute majority of existing Maintainers and Lieutenants for your component :+1:</li>
+<li>No veto from the component Lieutenant</li>
+<li>No veto from the current Project Lead</li>
+</ul>
+
+<h2>Lieutenant</h2>
+
+<ul>
+<li>Issue a pull request to the MAINTAINERS file making yourself the Lieutenant</li>
+<li>Be willing to perform the duties of a Lieutenant</li>
+<li>Receive an absolute majority of existing Lieutenants :+1:</li>
+<li>No veto from the current Project Lead</li>
+</ul>
+
+<h2>Project Lead</h2>
+
+<ul>
+<li>Issue a pull request to the MAINTAINERS file making yourself the Project Lead</li>
+<li>Be willing to perform the duties of the Project Lead</li>
+<li>Receive an absolute majority of existing Lieutenants :+1:</li>
+<li>No veto from Chef Software, Inc, as held by their current Chief Executive Officer.</li>
+</ul>
+
+<h1>Removing a Maintainer, Lieutenant or Project Lead</h1>
+
+<p>If a Maintainer, Lieutenant or Project Lead consistently fails to maintain their responsibilities or becomes disruptive, they can be removed by:</p>
+
+<ul>
+<li>Issue a pull request removing them from the MAINTAINERS file</li>
+<li>Receive an absolute majority of existing Lieutenants :+1:</li>
+<li>No veto from the current Project Lead</li>
+</ul>
+
+<p>OR</p>
+
+<ul>
+<li>Issue a pull request removing them from the MAINTAINERS file</li>
+<li>The current Project Lead unilaterally decides to merge pull request</li>
+</ul>
+
+<h1>How to add a component</h1>
+
+<ul>
+<li>Issue a pull request to the MAINTAINERS file describing the component, and making yourself Lieutenant</li>
+<li>Be willing to perform the duties of a Lieutenant</li>
+<li>Receive an absolute majority of existing Lieutenants :+1:</li>
+<li>No veto from the current Project Lead</li>
+</ul>
+
+<h1>How to change the rules by which the project is maintained</h1>
+
+<ul>
+<li>Issue a pull request to this file.</li>
+<li>Receive an absolute majority of existing Lieutenants from the Chef repository MAINTAINERS file :+1:</li>
+<li>No veto from the current Project Lead</li>
+</ul>
+
+<h1>Where can I find the community?</h1>
+
+<p>The broader Chef community gathers in a small number of designated places. Participants in these places should be considered as operating on their own opinion, and representing nothing further than their own point of view. While some members of the community may be participating via their employment at Chef Software, when in these spaces, their authority and voice is equal to any other participant based on the guidelines in this file.</p>
+
+<h2>IRC</h2>
+
+<p>You can find a large set of community members in IRC, within the #chef channel on irc.freenode.net. Development updates and conversations also happen on #chef-hacking. In both channels, those with “ops” are the Maintainers, Lieutenants, the Project Lead, and Community Advocates. Those with “voice” are MVPs for Chef releases.</p>
+
+<h2>Mailing Lists</h2>
+
+<ul>
+<li><a href="http://discourse.chef.io">Chef Mailing List</a>
+
+<ul>
+<li>The <code>chef</code> category is the primary async communications channel for all users of Chef, regardless of how they participate.</li>
+<li>The <code>chef-dev</code> is the primary async communications channel for those concerned with developing Chef.</li>
+</ul></li>
+</ul>
+
+<h1>Where can I find Chef Software Inc?</h1>
+
+<p><a href="http://www.chef.io/blog/2014/07/03/chef-as-a-community/">The history of the Chef Project</a> is linked to the existence of a for-profit company, <a href="http://www.chef.io">Chef Software</a>. Many employees of the company are active members of the community. When they participate in the community, they do so as individuals subject to the guidelines in this file.</p>
+
+<p>If you would like to speak to, or understand the position of, someone at Chef Software - feel free to drop a line to <a href="mailto:info@chef.io">info@chef.io</a> - and we’ll get back to you. Or simply ask for the company&#39;s official perspective in any of the community spaces, and a representative will get back to you in that space.</p>
+
+<h1>The MAINTAINERS file in Chef</h1>
+
+<p>The current <a href="https://github.com/chef/chef/blob/master/MAINTAINERS.md">MAINTAINERS</a> file resides in the <a href="https://github.com/chef/chef">Chef</a> repository on GitHub.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

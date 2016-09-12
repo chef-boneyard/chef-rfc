@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Attribute Subkey Syntax</h1>
+
+<p>This RFC defines the syntax for accessing deeply nested keys inside
+the node attribute structure.</p>
+
+<p>The preferred shape of APIs that refer to attributes is functional
+notation where the arguments are expressed as strings.  APIs which
+only implement this pattern are acceptable.</p>
+
+<ul>
+<li>get(&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;)</li>
+<li>set(&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;, value)</li>
+</ul>
+
+<p>The method chaining syntax is also fully supported, although discouraged
+for new APIs.  APIs which only implement this pattern are acceptable.</p>
+
+<ul>
+<li>node[&quot;foo&quot;][&quot;bar&quot;][&quot;baz&quot;]</li>
+<li>node[&quot;foo&quot;][&quot;bar&quot;][&quot;baz&quot;] = value</li>
+</ul>
+
+<p>Both the functional syntax and the method chaining syntax may continue
+to use symbols in addition to strings (Mash objects), although strings
+are preferred and symbols are discouraged.</p>
+
+<p>For static use array syntax is considered equvalent to the functional
+&#39;splat&#39; argument syntax:</p>
+
+<ul>
+<li>config_variable = [ [ &quot;foo&quot;, &quot;bar&quot; ], [ &quot;baz&quot;, &quot;qux&quot; ] ]</li>
+</ul>
+
+<p>In order to support command line usage, it is acceptable to use dots
+as a field separator:</p>
+
+<ul>
+<li>knife node show mynode -a foo.bar</li>
+</ul>
+
+<p>Additionally, in order to avoid escaping for keys that might contain
+&quot;.&quot; it should be possible to pass a user-defined field separator key:</p>
+
+<ul>
+<li>knife node show mynode -F: -a foo:bar </li>
+</ul>
+
+<p>The use of command line syntax in ruby code which can use one of the
+prior two formats is discouraged.  The use of the field separator is
+only used when the ruby API versions of the call would be awkward.</p>
+
+<p>For the static array form APIs MAY support both dot notation and array
+notation, even though it may not be possible to override the path
+separator.  APIs are NOT required to implement dot notation:</p>
+
+<ul>
+<li>config_variable = [ &quot;foo.bar&quot;, &quot;baz.qux&quot; ]</li>
+</ul>
+
+<p>The functional splat notation MUST NOT implement dot notation.</p>
+
+<h2>Specification</h2>
+
+<p>The following are the contexts in which users access nested
+attributes. Cases that require a change from the current behavior have
+been called out.</p>
+
+<h3>Command-line access (knife)</h3>
+
+<p>When specifying attributes on the command line, &quot;.&quot; should be the
+default key separator.</p>
+<div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">show</span><span class="w"> </span><span class="vg">foo</span><span class="w"> </span><span class="o">-</span><span class="vg">a</span><span class="w"> </span><span class="vg">key1</span><span class="o">.</span><span class="vg">key2</span>
+<span class="vg">knife</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">show</span><span class="w"> </span><span class="vg">foo</span><span class="w"> </span><span class="o">-</span><span class="nl">F:</span><span class="w"> </span><span class="nl">key1:</span><span class="vg">key2</span>
+</pre></div>
+<h3>Command-line access (other)</h3>
+
+<p><em>Requires Change</em> All other Chef-maintained tools should also use
+dot-separated strings and arrays to specify not attributes, including Ohai:</p>
+<div class="highlight"><pre><span class="vg">ohai</span><span class="w"> </span><span class="vg">cpu</span><span class="o">.</span><span class="vg">real</span>
+<span class="vg">ohai</span><span class="w"> </span><span class="o">-</span><span class="nl">F:</span><span class="w"> </span><span class="nl">cpu:</span><span class="vg">real</span>
+</pre></div>
+<p>Documentation for 3rd-party tool writers should encourage the use of
+these formats as well.</p>
+
+<h3>Search Syntax</h3>
+
+<p><em>Requires Change</em> Chef search should support using the functional <code>*args</code>
+notation:</p>
+<div class="highlight"><pre><span class="vg">search</span><span class="p">(</span><span class="o">:</span><span class="vg">node</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;key1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;key2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">)</span>
+</pre></div>
+<p>Knife search should suport the -F notation on the command line:</p>
+<div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">search</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="o">-</span><span class="vg">F</span><span class="p">;</span><span class="w"> </span><span class="s2">&quot;key1;key2:4&quot;</span>
+</pre></div>
+<p>For backward compatibility, <code>&quot;_&quot;</code> should should be supported as
+well through Chef 13.</p>
+<div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">search</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="s2">&quot;key1_key2:4&quot;</span>
+</pre></div>
+<h3>Attribute Whitelisting</h3>
+
+<p><em>Requires Change</em></p>
+<div class="highlight"><pre><span class="vg">normal_attribute_whitelist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;network&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;interfaces&quot;</span><span class="p">],</span><span class="w"> </span><span class="s2">&quot;fqdn&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="vg">normal_attribute_whitelist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;network.interfaces&quot;</span><span class="p">],</span><span class="w"> </span><span class="s2">&quot;fqdn&quot;</span><span class="w"> </span><span class="p">]</span>
+</pre></div>
+<p>Currently, &quot;/&quot; is used as the attribute separator.</p>
+
+<h3>Ohai provides/requires statements</h3>
+
+<p><em>Requires Change</em></p>
+<div class="highlight"><pre><span class="vg">provides</span><span class="p">(</span><span class="s2">&quot;network&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;interfaces&quot;</span><span class="p">)</span>
+</pre></div>
+<p>Currently, Ohai 7 &quot;provides&quot; and &quot;requires&quot; statements use &quot;/&quot; as the attribute separator.</p>
+
+<h3>Other Considerations</h3>
+
+<h4>[] accessor method on the node object</h4>
+
+<p>When using the array accessor method([]) on node, Chef should not
+interpret the &quot;.&quot; as the record separator.  Namely,
+<code>node[&quot;key1.key2&quot;]</code> should not be interpreted as
+<code>node[&quot;key1&quot;][&quot;key2&quot;]</code>.</p>
+
+<h4>Conflicts</h4>
+
+<p>Since some users may want to use &quot;.&quot; in their key names the use of the
+&quot;.&quot; syntax in ruby code is discouraged to avoid conflicts.  For example:</p>
+<div class="highlight"><pre><span class="vg">node</span><span class="p">[</span><span class="s2">&quot;128.95.73.67&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;crashed&quot;</span>
+<span class="vg">node</span><span class="p">[</span><span class="s2">&quot;128&quot;</span><span class="p">][</span><span class="s2">&quot;95&quot;</span><span class="p">][</span><span class="s2">&quot;73&quot;</span><span class="p">][</span><span class="s2">&quot;65&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;i would never want to set this&quot;</span>
+</pre></div>
+<p>Ruby APIs shall not be required to implement the dot syntax to avoid that ambiguity.</p>
+
+<h1>Motivation</h1>
+
+<p>Inconsistent syntax for accessing subkeys confuses new users.  This is
+particularly difficult when interaction with search:</p>
+<div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">search</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="c1">&#39;kernel_machine:x86_64&#39; -a kernel.machine</span>
+</pre></div>
+<p>Standardizing the syntax for accessing subkeys will help new users
+avoid this frustration while also making it easier on tool developers
+who no longer need to make this UI decision themselves.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow
+for this, this work is available under CC0. To the extent possible
+under law, the person who associated CC0 with this work has waived all
+copyright and related or neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

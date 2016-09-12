@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Ohai User Configuration</h1>
+
+<p>Provides a standard for passing configuration settings to Ohai to configure its behavior as well as that of plugins.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">configure</span><span class="w"> </span><span class="vg">Ohai</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">behaves</span><span class="w"> </span><span class="vg">optimally</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">infrastructure</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">Ohai</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">Ohai</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">load</span><span class="w"> </span><span class="vg">configuration</span><span class="w"> </span><span class="vg">settings</span><span class="w"> </span><span class="vg">from</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">client</span><span class="o">.</span><span class="vg">rb</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">behaves</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">same</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">does</span><span class="w"> </span><span class="vg">during</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">run</span><span class="o">.</span>
+</pre></div>
+<h2>Current State</h2>
+
+<p>The lack of a configuration file has been a major impediment to many improvements in Ohai and plugin behavior.</p>
+
+<p>Previously Ohai has not had a configuration file. A small number of Ohai configuration settings do exist that can be specified in the Chef client &#39;client.rb&#39; file which is parsed by <code>Mixlib::Config</code>. These settings are then passed to Ohai during a client run. For example, additional locations on the file system can be searched for plugins by adding paths to the <code>Ohai::Config[:plugin_path]</code> array. However, the &#39;client.rb&#39; file is only loaded by the Chef client and does not affect Ohai when being run on the command line nor any other programs loading Ohai as a library, causing inconsistent Ohai results.</p>
+
+<h3>Hints</h3>
+
+<p>The existing hints system was designed to provide facts about a system that Ohai would be unable to or have difficulty to determine on its own. The most common use case is informing a knife plugin that the system is in a particular cloud environment, enabling the plugin to collect appropriate metadata. Sometimes the plugin also passes metadata to Ohai to become attributes that Ohai would otherwise be unable to collect. For this purpose it was decided to use JSON as a data interchange format.</p>
+
+<p>When a &#39;hint<em>name.json&#39; file exists in the directory specified by `Ohai::Config[:hints</em>path]<code>,</code>Ohai::Hints.hint?(hint_name)` will return non-nil. If the file contains JSON data, it will be returned as a hash. If the file is empty, an empty hash will be returned.</p>
+
+<p>The hints system should only be used by other tools to assist Ohai in collecting data. It should not otherwise be used to configure the behavior or Ohai or its plugins. That is the purpose of the new configuration system. The hints system may be combined with the configuration system in the future and deprecated for general ease of use of Ohai.</p>
+
+<h2>Specification</h2>
+
+<p>The <code>Ohai::Config</code> Ruby class will use the new ChefConfig library that is currently bundled with the Chef client source but shipped separately. Configuration will be set in a configuration file using a <code>Mixlib::Config</code> config_context named &#39;ohai&#39;. Here is an example &#39;client.rb&#39; file that would configure both the client and Ohai.</p>
+<div class="highlight"><pre><span class="n">log_level</span>        <span class="o">:</span><span class="n">info</span>
+<span class="n">log_location</span>     <span class="n">STDOUT</span>
+<span class="n">chef_server_url</span>  <span class="s2">&quot;https://api.chef.io/organizations/oneofus&quot;</span>
+<span class="n">ohai</span><span class="o">.</span><span class="na">plugin_path</span> <span class="o">=</span> <span class="s2">&quot;/etc/chef/ohai/plugins.local&quot;</span>
+<span class="n">ohai</span><span class="o">.</span><span class="na">plugin</span><span class="o">[:</span><span class="n">hostname</span><span class="o">][:</span><span class="n">fqdn_using</span><span class="o">]</span> <span class="o">=</span> <span class="o">[</span> <span class="o">:</span><span class="n">hostname</span><span class="o">,</span> <span class="o">:</span><span class="n">nis</span><span class="o">,</span> <span class="o">:</span><span class="n">dns</span> <span class="o">]</span>
+</pre></div>
+<p>Because at the top level (outside of a config<em>context) the <code>Ohai::Config</code> class will be the same as <code>ChefConfig</code> and <code>Chef::Config</code>, existing top level configuration options like `Ohai::Config[:disabled</em>plugins]<code>will be deprecated in favor of new settings within the config_context, i.e.</code>Ohai::Config.ohai.disabled_plugins`. Until support for those top-level settings is removed, their values will be copied as appropriate for backward compatibility.</p>
+
+<p>For convenience, a config method will be added to the <code>Ohai</code> class to access <code>Ohai::Config.ohai</code>, allowing the use of <code>Ohai.config[:plugin_path]</code> instead of <code>Ohai::Config.ohai[:plugin_path]</code> throughout the code. All existing uses of <code>Ohai::Config</code> in Ohai will need to be updated accordingly.</p>
+
+<p>Example accessing the disabled_plugins configuration setting:</p>
+<div class="highlight"><pre><span class="nl">Ohai:</span><span class="o">:</span><span class="vg">Config</span><span class="p">[</span><span class="o">:</span><span class="vg">disabled_plugins</span><span class="p">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="vg">Current</span><span class="w"> </span><span class="vg">pattern</span>
+<span class="nl">Ohai:</span><span class="o">:</span><span class="vg">Config</span><span class="o">.</span><span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">disabled_plugins</span><span class="p">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="vg">Proposed</span><span class="w"> </span><span class="vg">pattern</span>
+<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">disabled_plugins</span><span class="p">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="vg">Proposed</span><span class="w"> </span><span class="vg">shortcut</span>
+</pre></div>
+<h3>Configuration Files</h3>
+
+<p>When run from the command line, Ohai should load the workstation &#39;config.rb&#39; and then the &#39;client.rb&#39; files from the appropriate platform specific path, unless an alternate configuration file is provided as a command line argument. This provides similar behavior to knife which loads &#39;config.rb&#39; and then &#39;knife.rb&#39;. This facilitates reducing the number of separate configuration files to maintain for command line behavior.</p>
+
+<p>When loaded as a library, Ohai must not load a configuration file and will expect to be provided any necessary configuration options. For example, when loaded by the Chef client, configuration values will be located in the &#39;client.rb&#39; file, or the file passed to the Chef client as the configuration file. Using the same file for configuration simplifies configuration file creation during bootstrap for the client.</p>
+
+<h3>Plugin Namespacing</h3>
+
+<p>To reduce the risk of built-in and custom plugins using the same configuration setting for conflicting purposes, it is recommended that all plugins prefix their configuration settings with <code>[:plugin]</code> and the snake-case name of the plugin consuming the setting, as set in the plugin itself. The exposed overlap is intended, to facilitate passing a configuration option to the same plugin for multiple platforms but only specifying it once.</p>
+
+<p>For example, configuration file settings would look like:</p>
+<div class="highlight"><pre><span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">memory</span><span class="p">][</span><span class="o">:</span><span class="vg">unit</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mb&quot;</span>
+<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">all_ids</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">true</span>
+<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">ec2</span><span class="p">][</span><span class="o">:</span><span class="vg">silly_magic_arp</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;de:ad:de:ad:de:ad&quot;</span>
+<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">platform</span><span class="p">][</span><span class="o">:</span><span class="vg">amazon_is_amazon</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">true</span>
+</pre></div>
+<p>Settings would be read in code as:</p>
+<div class="highlight"><pre><span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">memory</span><span class="p">][</span><span class="o">:</span><span class="vg">unit</span><span class="p">]</span>
+<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">all_ids</span><span class="p">]</span>
+<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">ec2</span><span class="p">][</span><span class="o">:</span><span class="vg">silly_magic_arp</span><span class="p">]</span>
+<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">platform</span><span class="p">][</span><span class="o">:</span><span class="vg">amazon_is_amazon</span><span class="p">]</span>
+</pre></div>
+<p>Note that the filename on disk does not always match the plugin name. In the case of the &#39;darwin/system_profiler.rb&#39; file, the plugin name is &#39;SystemProfile&#39;, and the correct plugin namespace would be <code>Ohai::Config.ohai[:plugin][:system_profile]</code>.</p>
+
+<h3>Configuration Hash Nesting</h3>
+
+<p>Rather than auto-vivify nested hashes, each plugin&#39;s configuration is limited to a single level.</p>
+
+<p><code>ohai[:plugin][:dmi][:all_ids] = true</code> is allowed
+<code>ohai[:plugin][:dmi][:ids][:cpu] = true</code> is not allowed</p>
+
+<p>Plugin authors are recommended to use underscores in variable names to manage multiple levels of configuration values. For example:</p>
+<div class="highlight"><pre><span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id_cpu</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">true</span>
+<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id_memory</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">true</span>
+<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id_disk</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">false</span>
+</pre></div>
+<p>Configuration values may be hashes, but a hash must be explicitly set.</p>
+<div class="highlight"><pre><span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">:</span><span class="vg">cpu</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="vg">true</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="vg">memory</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="vg">true</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="vg">disk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="vg">false</span><span class="w"> </span><span class="p">}</span>
+<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id</span><span class="p">][</span><span class="o">:</span><span class="vg">disk</span><span class="p">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="vg">false</span>
+</pre></div>
+<h3>Plugin configuration lookup DSL method</h3>
+
+<p>To facilitate lookup of plugin configuration options, a new method will be
+added to the plugin DSL: <code>configuration</code>. The <code>configuration</code> method
+accepts as parameter the configuration option to fetch (as a Symbol).</p>
+
+<p>For example, a plugin author may write</p>
+<div class="highlight"><pre><span class="no">Ohai</span><span class="o">.</span><span class="n">plugin</span><span class="p">(</span><span class="ss">:Foo</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">provides</span> <span class="s1">&#39;foo&#39;</span>
+
+  <span class="n">collect_data</span> <span class="k">do</span>
+    <span class="k">if</span> <span class="n">configuration</span><span class="p">(</span><span class="ss">:foo_option</span><span class="p">)</span>
+      <span class="c1"># ...</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>A user would configure</p>
+<div class="highlight"><pre><span class="n">ohai</span><span class="o">.</span><span class="n">plugin</span><span class="o">[</span><span class="ss">:foo</span><span class="o">][</span><span class="ss">:foo_option</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
+</pre></div>
+<p>The <code>configuration</code> method is intended only to be used to access top-level
+configuration options. If the plugin author chooses to require plugin configuration
+to be a Hash, the author must access those configuration options as Hash elements.
+That is, <code>configuration(:one_two_three)</code> cannot be used to look up
+<code>plugin[:foo][:one][:two][:three]</code>.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

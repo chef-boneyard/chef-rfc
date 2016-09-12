@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Dialects in Chef</h1>
+
+<p>Currently Chef supports a mix of Ruby DSLs and JSON for it&#39;s data. This RFC
+proposes to add hooks in to Chef to allow cookbooks and knife plugins to support
+additional formats.</p>
+
+<p>In order to reduce the risk of community fragmentation, no new dialects will be
+implemented in Chef core.</p>
+
+<h2>Motivation</h2>
+
+<p>The overall motivation can be summed up as:</p>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">variety</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">formats</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">maintenance</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">easier</span><span class="o">.</span>
+</pre></div>
+<p>A specific version of that which deserves extra mention is:</p>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">variety</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">formats</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to learn Ruby.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>At heart, the dialects system is an additional layer of indirection around
+all forms of file loading in Chef. Currently most code either calls
+<code>FFI_Yajl::Parser.parse</code> or <code>ClassName.from_file</code>, sometimes with a simple
+dispatcher like in <code>Chef::Knife::Core::ObjectLoader</code>. The dialects registry
+provides a central location to register code to handle loading a given file
+suffix or MIME type and then utility functions to return an object of a given
+type and filename.</p>
+
+<h3>Dialect Types</h3>
+
+<p>Dialects are used in two distinct places: cookbooks and knife plugins.
+Dialect cookbooks are used to provide dialects for things like attribute
+and recipe files, while dialect knife plugins provide support for files like
+roles and data bags.</p>
+
+<p>While both types of dialects use the same implementation, the ways they are used
+require different packaging and support code (cookbook vs gem).</p>
+
+<h3>Dialect Classes</h3>
+
+<p>The heart of any dialect implementation is a dialect class. This inherits from
+<code>Chef::Dialect</code> and declares which file extensions and MIME types this dialect
+will handle. For each object type the dialect will support, it defines a
+method taking a blank object and a filesystem path which will process any
+needed data and insert it in to the provided object.</p>
+
+<h3>Dialect Selection</h3>
+
+<p><code>Chef::Dialect</code> provides two class methods to load a dialect from either a
+file extension or MIME type. These both return an instance of the dialect
+class.</p>
+
+<h3>Dialect Plugins</h3>
+
+<p>A dialect plugin for knife is simply a gem that defines one or more dialect
+classes and ensures they are loaded by knife&#39;s plugin framework. The easiest
+way to accomplish this is to place the dialect class in
+<code>lib/chef/knife/dialect_&lt;name&gt;.rb</code>.</p>
+
+<p>An example dialect which creates a role from a text file:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Chef</span><span class="o">::</span><span class="no">Dialect</span><span class="o">::</span><span class="no">Example</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Dialect</span>
+  <span class="n">register_dialect</span> <span class="s1">&#39;.txt&#39;</span>
+
+  <span class="k">def</span> <span class="nf">compile_role</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">role</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;.rb&#39;</span><span class="p">))</span>
+    <span class="n">role</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h3>Dialect Cookbooks</h3>
+
+<p>Dialect cookbooks work similarly to the gem variety, except packaged as a Chef
+cookbook. Dialect code should be placed under <code>libraries/</code> so it is loaded
+before other cookbook files. This also means dialect cookbooks can be listed as
+a dependency if you want to use one in your own cookbook.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Chef</span><span class="o">::</span><span class="no">Dialect</span><span class="o">::</span><span class="no">Example</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Dialect</span>
+  <span class="n">register_dialect</span> <span class="s1">&#39;.txt&#39;</span>
+
+  <span class="k">def</span> <span class="nf">compile_recipe</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>At this time there isn&#39;t a good way to install gems during the library loading
+phase, so there is no good way to share code between a gem and cookbook form of
+the same dialect. This will likely result in duplicated code in some places.</p>
+
+<h2>Rationale</h2>
+
+<p>The dialects system exists to allow easier experimentation with file formats
+outside of Chef core. In some cases these might be subtle DSL changes or
+extensions, in others it could be whole new languages. My main drive is to
+provide a simpler experience, especially for new Chef users that don&#39;t know
+Ruby. Even for experienced users, simpler file formats can boost productivity
+and reduce the maintenance burden.</p>
+
+<p>This will also help unify file loading logic between things like chef_fs and
+knife. This could allow moving forward with <a href="https://github.com/opscode/chef-rfc/blob/master/rfc31-replace-solo-with-local-mode.md">RFC 31</a>.</p>
+
+<h2>Acceptance</h2>
+
+<p>In order to reduce the risk of community fragmentation, no new dialects will be
+implemented in Chef core. The following dialects will be supported as they reflect
+the current state of Chef:</p>
+
+<ul>
+<li>Attributes: <code>.rb</code></li>
+<li>Recipes: <code>.rb</code></li>
+<li>Templates: <code>.erb</code></li>
+<li>Metadata: <code>.rb</code> and <code>.json</code></li>
+<li>Roles: <code>.rb</code> and <code>.json</code></li>
+<li>Data bags: <code>.json</code></li>
+<li>Environments: <code>.rb</code> and <code>.json</code></li>
+<li>Nodes: <code>.rb</code> and <code>.json</code></li>
+</ul>
+
+<p>The only allow externally visible changes are in unifiying the loading behavior
+between Chef and chef_fs.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

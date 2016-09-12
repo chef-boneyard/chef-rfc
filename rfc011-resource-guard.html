@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Resource-based Guard Interpreters for Chef</h1>
+
+<p>The <em>guard interpreter</em> is a feature of Chef resources that
+allows authors to specify their choice of Chef resource classes to evaluate a guard expression (i.e. <code>only_if</code> or
+<code>not_if</code> block). The goal of this capability is to reduce the complexity in both number of languages
+and boilerplate code found within a Chef recipe.</p>
+
+<p>Guard interpreter customization makes the Chef DSL <em>Delightful(tm)</em>.</p>
+
+<h2>Document status</h2>
+
+<p>This Request for Comments (RFC) document&#39;s proposals are accepted as an
+active implementation in Chef Client 11.12.0 and subsequent releases of Chef
+Client.</p>
+
+<p>Specifically, the document specifies the behavior and records the reasoning for the
+<code>guard_interpreter</code> and <code>convert_boolean_return</code> attributes of Chef resources
+as implemented in
+<a href="http://www.getchef.com/blog/2014/04/08/release-chef-client-11-12-0-10-32-2/">Chef 11.12.0</a>
+and later versions of the Chef Client. See  <a href="https://docs.opscode.com">https://docs.opscode.com</a> for
+authoritative, updated documentation on these features.</p>
+
+<h2>Motivation</h2>
+
+<p>The original impetus for guard interpreters involved a common user expectation
+that when guard expressions were present in a <code>script</code> resource, the same
+interpreter used to evaluate the <code>script</code> resource (e.g. <code>bash</code>, <code>csh</code>,
+<code>powershell</code>) would be used to evaluate the guard expression. It turns out
+this is not the case (more on this later) and thus user expectations were not
+being met.</p>
+
+<p>An open source ticket for the Chef project describes a typical instance of
+this problem at <a href="https://tickets.opscode.com/browse/CHEF-4553">CHEF-4553</a>. In particular, that
+ticket posits that Windows users of the <code>powershell_script</code> resource expect
+that guards (i.e. the <code>only_if</code> and <code>not_if</code> conditionals) evaluated in the context of a <code>powershell_script</code>
+block use the <code>powershell_script</code> interpreter, not the cmd.exe (batch file)
+interpreter. This is a change from the current state of affairs, since in general there is no link between the interpreter used by a
+script resource. This is an issue that affects both Windows and *nix users.</p>
+
+<p>Further detail and motivation for adding these features are given in sections at the
+end of the document.</p>
+
+<h2>Problems addressed through guard interpreters</h2>
+
+<p>The guard interpreter and related improvements discussed in the document address
+the following use cases:</p>
+
+<ul>
+<li>CHEF-4553: Users of the <code>powershell_script</code> resource are forced to execute
+script guards with <code>CMD</code>&#39;s batch language instead of the PowerShell
+language already in use in the <code>powershell_script</code> resource.</li>
+<li>Users of the bash resource who want to use bash in script guards must explicitly invoke bash with properly quoted
+command arguments in the guard</li>
+<li>Windows users of the <code>powershell_script</code> resource do not have a way to use
+PowerShell in script guards in a concise, intuitive, quasi-Boolean fashion,
+while users of the <code>script</code>, <code>csh</code>, <code>bash</code>, and other resources have this</li>
+<li>On Windows, script guards are always executed with the 32-bit process architecture and
+will be affected by the absence of system state exposed only to 64-bit
+processes</li>
+</ul>
+
+<h2>Definitions</h2>
+
+<p>This document assumes familiarity with the Chef resource DSL, which is
+documented at <a href="http://docs.opscode.com/chef/resources.html">http://docs.opscode.com/chef/resources.html</a>.</p>
+
+<p>These definitions are used throughout the discussion:</p>
+
+<ul>
+<li><strong>Chef resource or resource:</strong> an element of the Chef DSL that represents configuration, system components, or any other aspect of system state to be managed by Chef.
+The resource contains attributes that define the desired state, and an
+action that can be taken by a provider evaluating the resource such as one
+that changes the actual state of the system the desired state. State such as
+files, scripts, and software packages are examples of system that that can
+be modeled as a Chef resource.</li>
+<li><strong>guard:</strong> An expression given as an attribute of a Chef resource in the
+form of a string to be executed by a shell or a Ruby block. Such an
+expression is evaluated before running the resource&#39;s action, and
+depending on whether it results in a true or false value, will control
+whether or not the resource&#39;s action is executed or skipped.</li>
+<li><strong>script guard:</strong> A guard expression that is given as a string to be
+evaluated by a shell command interpreter. When the interpreter&#39;s execution
+of the script results in a successful (i.e. non-zero) process exit code, the guard&#39;s value
+is <code>true</code>. Otherwise, it is <code>false</code>.</li>
+<li><strong>block guard:</strong> A guard to which a Ruby block is passed rather than a string.</li>
+<li><strong>guard parameter:</strong> Any Ruby expression passed as additional information to
+the shell interpreter used to modify execution context such as the current
+working directory, environment variables, user identity, etc.</li>
+<li><strong>guard interpreter resource:</strong> A Chef resource that is not part of a Chef run
+context and is expressed within a block guard&#39;s block. The guard interpreter
+resource is simply used to assess a true or false value (e.g. whether a
+script that tests system state in a relevant way returns a success or
+failure process status) inside of a block guard. </li>
+</ul>
+
+<h2>Overview</h2>
+
+<p>Guard expressions for all resources have been extended to include an attribute 
+named <code>guard_interpreter</code> that takes the short name symbol of a Chef resource to be
+used to evaluate script guards. This is
+useful for testing conditions to ensure idempotence for non-idempotent resources such as script
+resources. The goals in doing this are:</p>
+
+<ul>
+<li>To address <a href="https://tickets.opscode.com/browse/CHEF-4553">CHEF-4553</a> -- simplify convoluted expressions such as that below for
+Windows users
+<code>
+not_if &#39;powershell -noninteractive -noprofile -command &quot;exit [int32]((Get-ExecutionPolicy -scope localmachine) -eq &#39;RemoteSigned&#39;)&quot;&#39;
+</code></li>
+<li>For guard expressions, to allow Unix and Windows users to make use of familiar modern shells such as
+bash and PowerShell rather than ancient interpreters like <code>sh</code> or <code>cmd.exe</code> with
+limited or obscure syntax</li>
+<li>To make Chef interactions with OS interfaces such as shells as natural for
+users of the OS as possible</li>
+</ul>
+
+<h2>Behavioral impact on Chef resources</h2>
+
+<p>At a high level, here are the changes proposed and now accepted to simplify conditional
+execution of resource actions:</p>
+
+<ul>
+<li>Add a <code>guard_interpreter</code> attribute to the <code>Chef::Resource</code> class that can
+take a symbol that corresponds to the name of a Chef resource derived from
+<code>Chef::Resource::Script</code>. This guard interpreter resource will be used to evaluate the script
+command passed to the guard.</li>
+<li>Truth or falsehood of such a guard is determined by whether the resource
+evaluating the script guard is updated, i.e. runs the script without raising
+an exception and without the script returning a non-success code (0 is the
+default expected success exit code of the script interpreter).</li>
+<li>Parameters passed in hash format after the guard command string are
+interpreted as attributes to be set for the guard interpreter resource instance.</li>
+<li>The guard interpreter resource is executed outside of the containing resource&#39;s
+run context.</li>
+<li>Enable inheritance of attributes from a given resource A for any resource B
+executed as part of a block passed to a guard attribute of resource</li>
+<li>Add a <code>convert_boolean_return</code> attribute to the <code>powershell_script</code> resource
+so that Chef interprets PowerShell <code>boolean</code> expressions for PowerShell code
+executed by the <code>powershell_script</code> resource such that it returns <code>boolean</code>
+values the same way that Unix shells like bash do when they evaluate
+&quot;Boolean-like&quot; statements through commands such as the <code>test</code> command</li>
+<li>Make <code>convert_boolean_return</code> default to <code>false</code> to provide for behavior
+identical to versions of Chef that did not have this feature, but make it
+default to <code>true</code> when used to evaluate a guard via the <code>guard_interpreter</code>
+attribute to make guard expressions more concise and natural.</li>
+</ul>
+
+<h2>Guard interpreter code examples</h2>
+
+<p>The following examples demonstrate the intended use cases around guard
+interpreters.
+Concepts such as inheritance are introduced in the examples which are explained in subsequent sections.</p>
+
+<h3>Custom interpreter for script resources</h3>
+<div class="highlight"><pre><span class="c1"># This resource will run without errors because the guard uses</span>
+<span class="c1"># the bash interpreter; if we had passed the same string</span>
+<span class="c1"># directly to the only_if, this would have failed the</span>
+<span class="c1"># Chef run since that string is not valid for /bin/sh</span>
+<span class="n">bash</span> <span class="s2">&quot;Use bash for only_if&quot;</span> <span class="k">do</span> 
+  <span class="n">guard_interpreter</span> <span class="ss">:bash</span>
+  <span class="n">code</span> <span class="s2">&quot;echo I am $SHELL&quot;</span>
+  <span class="n">only_if</span> <span class="s1">&#39;[[ 1 == 1 ]]&#39;</span> <span class="c1"># won&#39;t work outside of bash</span>
+<span class="k">end</span>
+</pre></div>
+<h3>Inheritance is your friend</h3>
+<div class="highlight"><pre><span class="c1"># This resource will run because the cwd of the guard</span>
+<span class="c1"># is the same as that of the parent resource</span>
+<span class="n">bash</span> <span class="s2">&quot;My cwd gets inherited&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:bash</span>
+  <span class="n">code</span> <span class="s1">&#39;echo inherit me&#39;</span>
+  <span class="n">cwd</span> <span class="s1">&#39;/opt&#39;</span>
+  <span class="n">only_if</span> <span class="s1">&#39;[[ $PWD == &quot;/opt&quot; ]]&#39;</span> <span class="c1"># Glad I didn&#39;t have to add cwd</span>
+<span class="k">end</span>
+</pre></div>
+<h3>Setting guard parameters</h3>
+<div class="highlight"><pre><span class="c1"># The normal command string syntax for guards lets you</span>
+<span class="c1"># specify parameters like cwd, etc. -- you can do the same</span>
+<span class="c1"># here by specifying those parameters in the guard expression</span>
+<span class="n">bash</span> <span class="s2">&quot;Override my guard attributes&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:bash</span>
+  <span class="n">code</span> <span class="s1">&#39;echo override me&#39;</span>
+  <span class="n">cwd</span> <span class="s1">&#39;/var&#39;</span>
+  <span class="n">only_if</span> <span class="s1">&#39;[[ $PWD == &quot;/opt&quot; ]]&#39;</span><span class="p">,</span> <span class="ss">:cwd</span> <span class="o">=&gt;</span> <span class="s1">&#39;/opt&#39;</span> <span class="c1"># Don&#39;t try to put me in my place</span>
+<span class="k">end</span>
+</pre></div>
+<h3><code>powershell_script</code> default behavior examples</h3>
+
+<p>The examples below are changes to the <code>powershell_script</code> resource that take
+advantage of guard interpreter resource support.</p>
+
+<h4><code>powershell_script</code> guard interpeter default example</h4>
+<div class="highlight"><pre><span class="c1"># Here is the fix for CHEF-4553 -- use guard_interpreter to</span>
+<span class="c1"># execute the script with powershell, not cmd</span>
+<span class="n">powershell_script</span> <span class="s2">&quot;defaultguard&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
+  <span class="n">code</span> <span class="s1">&#39;new-smbshare systemshare $env:systemdrive\&#39;</span>
+<span class="s1">  not_if &#39;</span><span class="n">get</span><span class="o">-</span><span class="n">smbshare</span> <span class="n">systemshare</span><span class="err">&#39;</span> <span class="c1"># This uses powershell, not cmd</span>
+<span class="k">end</span>
+</pre></div>
+<h4><code>powershell_script</code> Boolean behavior</h4>
+<div class="highlight"><pre><span class="c1"># What if guards evaluated powershell script code that powershell</span>
+<span class="c1"># evaluates as a boolean type as the actual boolean value of the guard</span>
+<span class="c1"># itself? You can avoid extra script code to translate the boolean into</span>
+<span class="c1"># a process exit code that results in the right true / false behavior </span>
+<span class="c1"># for the guard. Guards already work this way on Linux systems...</span>
+<span class="n">powershell_script</span> <span class="s2">&quot;set execution policy&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
+  <span class="n">code</span> <span class="s2">&quot;set-executionpolicy remotesigned&quot;</span>
+  <span class="n">not_if</span> <span class="s2">&quot;(get-executionpolicy -scope localmachine) -eq &#39;remotesigned&#39;&quot;</span> <span class="c1"># Like I barely left Ruby -- wow!</span>
+<span class="k">end</span>
+</pre></div>
+<h4><code>powershell_script</code> architecture inheritance</h4>
+<div class="highlight"><pre><span class="k">do</span>
+<span class="c1"># And look, the not_if will run as an :i386 process because of the</span>
+<span class="c1"># architecture attribute for the parent resource which powershell_script</span>
+<span class="c1"># guard interpreter resources will inherit from the enclosing resource</span>
+<span class="n">powershell_script</span> <span class="s2">&quot;set i386 execution policy&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpteter</span> <span class="ss">:powershell_script</span>
+  <span class="n">architecture</span> <span class="ss">:i386</span>
+  <span class="n">code</span> <span class="s2">&quot;set-executionpolicy remotesigned&quot;</span>
+  <span class="n">not_if</span> <span class="s2">&quot;(get-executionpolicy -scope localmachine) -eq &#39;remotesigned&#39;&quot;</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Guard interpreter formal specification</h2>
+
+<p>The documented behavior for guards can be found at
+<a href="http://docs.opscode.com/resource_common.html">http://docs.opscode.com/resource_common.html</a>. Guards are expressed via the optional
+<code>not_if</code> and <code>only_if</code> attributes -- the expression following the attribute
+may be either a block or a string.</p>
+
+<h3>Guard conditional semantics overview</h3>
+
+<p>Guards allow for conditional execution of a resource. Before executing the action for the
+resource, Chef will evaluate the expression to produce a Ruby <code>true</code> or
+<code>false</code> value that is utilized in determining whether to execute the resource&#39;s
+action or to skip it:</p>
+
+<ol>
+<li>If the <strong>guard_interpreter resource</strong> is <strong>not</strong> specified for the resource, when a string is passed to a guard, the existing implementation executes the <code>/bin/sh</code> interpreter on Unix or
+<code>cmd.exe</code> on Windows with that string to be evaluated as a script by the
+interpreter. Chef will execute the interpreter with the code supplied to the
+string; if the interpreter exits with a 0 (success) code, this is
+interpreted as a Ruby <code>true</code> value, otherwise it is <code>false</code>.</li>
+<li>When a block is passed to a guard, the code in the block will be executed,
+and the value of the last line of code executed by the block will be the
+Boolean value of the block, converted to a Boolean value in a manner
+consistent with the Ruby <code>!!</code> operator, resulting in either the value <code>true</code>
+or <code>false</code>.</li>
+<li>If the aforementioned string or block expression was supplied to an
+<code>only_if</code> attribute, the action of the resource containing the attribute will be skipped if
+the expression evaluated to <code>false</code> and executed if it evaluated to <code>true</code>.</li>
+<li>If the expression was supplied to a <code>not_if</code> attribute, the behavior of the
+resource is the inverse of that for <code>only_if</code>; the resource action is executed
+if the expression evaluated to <code>false</code> and skipped if it evaluated to <code>true</code>.</li>
+</ol>
+
+<p>This specification of guard behavior is accurate without the inclusion of
+<code>guard_interpreter</code> features described in this document. The
+<code>guard_interpreter</code> attribute allows for the interpreter to be something other
+than <code>/bin/sh</code> or <code>cmd.exe</code> and is described below.</p>
+
+<h3>Conditional semantics with the guard_interpreter attribute</h3>
+
+<p>In Chef Client versions 11.12.0 and later, the <code>guard_interpreter</code> attribute
+was introduced which provides the following behavior:</p>
+
+<ol>
+<li>When the <code>guard_interpreter</code> attribute is specified in the resource as a value
+other than <code>:default</code>, a <strong>guard interpreter resource</strong> of the type specified in the
+<code>guard_interpreter</code> attribute is created with its <code>code</code> attribute set to the
+value of the string passed to the guard attribute. The guard interpreter resource&#39;s action
+will be executed to produce a truth value.</li>
+<li>If the resource action updates the resource, the value is <code>true</code>.
+Resources can only be updated if the interpreter used by the resource
+specified in the <code>guard_interpreter</code> attribute returns a success code, <code>0</code>
+by default, though this can be overridden in attributes specified to the
+resource as guard arguments. Anything other than a success code results in
+the guard evaluating as <code>false</code>.</li>
+</ol>
+
+<h3>script resource conditional semantics</h3>
+
+<p>To enable the usage as guard resources of resources derived from <code>Chef::Resource::Script</code>,
+known colloquially as script resources, all such resources when executed as
+guard resources will handle the exception <code>Mixlib::Shellout::ShellCommandFailed</code>. </p>
+
+<p>By doing this, usage of script resources has the same conditional and
+exception behavior as the case described earlier when a string is passed to a
+<code>not_if</code> or <code>only_if</code> guard attribute since this exception is raised precisely
+in the case where a string passed as a guard would have been evaluated by
+/bin/sh or cmd.exe as exiting with a failure status code.</p>
+
+<p>This gives any script resource, for example bash, the ability to behave
+like the string argument usage for guards except that an alternative
+interpreter to <code>/bin/sh</code> is used to execute the command. This extends the range of shell
+script languages that may be used in guard expressions.</p>
+
+<h3><code>powershell_script</code> guard_interpreter example</h3>
+
+<p>Use of <code>guard_interpreter</code> for the <code>powershell_script</code> resource addresses
+<a href="https://tickets.opscode.com/browse/CHEF-4553">CHEF-4553</a>. Without
+<code>guard_interpreter</code>, a user of the <code>powershell_script</code> resource who would like to use the same PowerShell
+language in the expression passed to the guard resource to the following
+cumbersome solution:</p>
+<div class="highlight"><pre><span class="c1"># Yuk. Let me look up all the right cli args to powershell.exe.</span>
+<span class="c1"># Oh, do I have to quote my cmd -- what kind of quotes again?</span>
+<span class="c1"># So much fun for me. This is CHEF-4553.</span>
+<span class="n">powershell_script</span> <span class="s2">&quot;oldguard&quot;</span> <span class="k">do</span>
+  <span class="n">code</span> <span class="s1">&#39;new-smbshare systemshare $env:systemdrive&#39;</span>
+  <span class="n">not_if</span> <span class="s1">&#39;powershell.exe -inputformat none -noprofile -nologo -noninteractive -command get-smbshare systemshare&#39;</span>
+<span class="k">end</span>
+</pre></div>
+<p>With the <code>guard_interpreter</code> attribute, we have
+the following more concise, less cumbersome, and less error-prone expression
+for the same <code>powershell_script</code> use case given above:</p>
+<div class="highlight"><pre><span class="c1"># So PowerShell. Such short.</span>
+<span class="n">powershell_script</span> <span class="s2">&quot;newguard&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
+  <span class="n">code</span> <span class="s1">&#39;new-smbshare systemshare $env:systemdrive&#39;</span>
+  <span class="n">not_if</span> <span class="s1">&#39;get-smbshare systemshare&#39;</span>
+<span class="k">end</span>
+</pre></div>
+<h3>Guard attribute inheritance</h3>
+
+<p>A new change is that a resource used within the context of a guard may inherit
+some attributes from the resource that contains the guard. </p>
+
+<p>Inheritance follows these rules:</p>
+
+<ul>
+<li>An attribute in a guard interpreter resource is inherited from the parent resource only if the
+attribute is in a set of inheritable attributes defined by the type of the
+guard resource</li>
+<li>To be inherited from the parent, the attribute must not have been specified as a parameter to the guard
+command -- whatever is passed to the guard command will override any parent
+specification of the attribute.</li>
+<li><p>The Chef <code>script</code> resource, i.e. <code>Chef::Resource::Script</code>, and all resources derived from it,
+including <code>bash</code>, <code>python</code>, and <code>powershell_script</code>, inherit the following
+attributes from the parent resource:</p>
+
+<p><code>:cwd</code>
+<code>:environment</code>
+<code>:group</code>
+<code>:path</code>
+<code>:user</code>
+<code>:umask</code></p></li>
+<li><p>Resource types may define additional rules for inheritance -- the
+<code>powershell_script</code> resource has additional behaviors described in a
+subsequent section.</p></li>
+</ul>
+
+<p>In general, the utility of inheritance derives from a common case where setting system
+configuration through a Chef resource requires some external state such as an
+environment variable, alternate user identity, or current directory, and
+testing the current state to ensure idempotence through a guard requires the
+same state. Inheritance allows that state to be expressed no more than once
+through the Chef DSL.</p>
+
+<h3>Simplification through attribute inheritance</h3>
+
+<p>Consider the following example:</p>
+<div class="highlight"><pre><span class="n">script</span> <span class="s2">&quot;javatooling&quot;</span> <span class="k">do</span>
+  <span class="n">environment</span> <span class="p">{</span><span class="s2">&quot;JAVA_HOME&quot;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/usr/lib/java/jdk1.7/home&#39;</span><span class="p">}</span>
+  <span class="n">code</span> <span class="s1">&#39;java-based-daemon-ctl.sh -start&#39;</span>
+  <span class="n">not_if</span> <span class="s1">&#39;java-based-daemon-ctl.sh -test-started&#39;</span><span class="p">,</span> <span class="ss">:environment</span> <span class="o">=&gt;</span>
+    <span class="p">{</span><span class="s2">&quot;JAVA_HOME&quot;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/usr/lib/java/jdk1.7/home&#39;</span><span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p>In the <code>not_if</code> attribute, the same hash of environment variables specified for
+the resource must also be specified for the guard, both of which use a shell script
+to that relies on the <code>JAVA_HOME</code> environment variable. With inheritance,
+the second environment variable specification (along with the possibility of
+an incorrect specification) can be eliminated with this simplified version:</p>
+<div class="highlight"><pre><span class="n">script</span> <span class="s2">&quot;javatooling&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:csh</span>
+  <span class="n">environment</span> <span class="p">{</span><span class="s2">&quot;JAVA_HOME&quot;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/usr/lib/java/jdk1.7/home&#39;</span><span class="p">}</span>
+  <span class="n">code</span> <span class="s1">&#39;java-based-daemon-ctl.sh -start&#39;</span>
+  <span class="n">not_if</span> <span class="s1">&#39;java-based-daemon-ctl.sh -test-started&#39;</span>
+<span class="k">end</span>
+</pre></div>
+<h4><code>powershell_script</code> inheritance rules</h4>
+
+<ul>
+<li><p>For the <code>powershell_script</code> resource, an additional attribute is inherited
+when this resource is used as a guard resource:</p>
+
+<p><code>:architecture</code></p></li>
+<li><p>When a guard attribute of <code>powershell_script</code> is given a string rather than a
+block, unlike other resources, inheritance of attributes occurs. The
+behavior of the PowerShell interpreter when executing that string is the same
+as if a <code>powershell_script</code> resource has been passed instead with the
+<code>code</code> attribute set to the value of the string.</p></li>
+<li><p>Inherited attributes in this case may be overridden by specifying those same
+attributes as guard parameters using the existing guard parameter syntax</p></li>
+</ul>
+
+<p>This results in a more concise expression of the resource compared
+to the situation without inheritance for string arguments. For example,
+without allowing the architecture attribute to be inherited with a string
+guard, here is the recipe fragment we&#39;d need to set the PowerShell execution
+policy for the x86 PowerShell interpreter:</p>
+<div class="highlight"><pre><span class="c1"># This is what we&#39;d write if we couldn&#39;t inherit the architecture</span>
+<span class="c1"># attribute when a string is passed to a guard -- we&#39;d repeat</span>
+<span class="c1"># the architecture attribute twice.</span>
+<span class="n">powershell_script</span> <span class="s2">&quot;set i386 execution policy&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
+  <span class="n">architecture</span> <span class="ss">:i386</span>
+  <span class="n">code</span> <span class="s2">&quot;set-executionpolicy remotesigned&quot;</span>
+  <span class="n">not_if</span> <span class="s2">&quot;(get-executionpolicy -scope localmachine) -eq &#39;remotesigned&#39;&quot;</span><span class="p">,</span> <span class="ss">:architecture</span> <span class="o">=&gt;</span> <span class="ss">:i386</span>
+<span class="k">end</span>
+</pre></div>
+<p>By allowing inheritance, the expression is more compact, requires less
+up-front consideration of options, and provides the least surprising behavior:</p>
+<div class="highlight"><pre><span class="c1"># Much more concise -- architecture attribute is inherited by the guard</span>
+<span class="n">powershell_script</span> <span class="s2">&quot;set i386 execution policy&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
+  <span class="n">architecture</span> <span class="ss">:i386</span>
+  <span class="n">code</span> <span class="s2">&quot;set-executionpolicy remotesigned&quot;</span>
+  <span class="n">not_if</span> <span class="s2">&quot;(get-executionpolicy -scope localmachine) -eq &#39;remotesigned&#39;&quot;</span>
+<span class="k">end</span>
+</pre></div>
+<h3><code>powershell_script</code> Boolean result code interpretation</h3>
+
+<p>Boolean result code interpretation allows guards that make use of the
+<code>powershell_script</code> resource to treat PowerShell Boolean expressions as if they
+were Ruby boolean expressions as in the code below:</p>
+<div class="highlight"><pre><span class="n">powershell_script</span> <span class="s2">&quot;backup-dc&quot;</span> <span class="k">do</span>
+  <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
+  <span class="n">code</span> <span class="s2">&quot;backup-domain-controller.ps1&quot;</span>
+  <span class="n">only_if</span> <span class="s2">&quot;[Security.Principal.WindowsIdentity]::GetCurrent().IsSystem()&quot;</span>
+<span class="k">end</span>
+</pre></div>
+<p>More formally, the value of guard conditionals for <code>powershell_script</code> gets the following
+modification:</p>
+
+<ul>
+<li>The process exit code for a PowerShell script fragment executed by the
+<code>powershell_script</code> resource will support passing the value of a <em>Boolean</em>
+expression from the script through the interpreter&#39;s exit code.</li>
+<li>The attribute <code>convert_boolean_return</code> is introduced for the
+<code>powershell_script</code> resource to control this behavior -- it may have the
+value <code>true</code> or <code>false</code>.</li>
+<li>The default value of <code>convert_boolean_return</code> is <code>false</code> for
+<code>powershell_script</code> resource instances that are not being evaluated as a
+guard interpreter resource -- this means that recipes using
+<code>powershell_script</code> prior to this change will behave identically after it.</li>
+<li>However, if the <code>powershell_script</code> instance exists as the result of
+evaluating a guard expression because the <code>guard_interpreter</code> attribute was
+set to <code>:powershell_script</code>, the value of <code>convert_boolean_return</code> is set to
+<code>true</code>. There is no backward compatibility issue for this default because the
+guard_interpreter resource was not available prior to versions of Chef
+with the boolean interpolation feature.</li>
+<li>Boolean interpolation only occurs if the script fragment could have been
+executed as the definition of a PowerShell function with a return type of
+<code>bool</code>, a PowerShell type analogous to a typical Boolean data type <strong>AND</strong>
+if the <code>convert_boolean_return</code> attribute of the resource executing the
+script is set to <code>true</code>. </li>
+<li>In this case, if the function return value is the PowerShell value <code>$true</code>,
+the exit code is 0 (overloaded with &#39;success&#39;), otherwise the function return
+value is <code>$false</code> and the exit code is 1.</li>
+<li>In cases where the hypothetical PowerShell function raises an exception or returns a
+type other than PowerShell&#39;s <code>bool</code> type, preexisting exit code rules hold.</li>
+</ul>
+
+<p>This behavior for <code>powershell_script</code> when <code>convert_boolean_return</code> is set to
+<code>true</code> is functionally equivalent to the behavior of the bash shell
+when it evaluates quasi-boolean commands such as the <code>test</code> command and
+related commands.</p>
+
+<h2>Detailed motivation on guard improvements</h2>
+
+<p>Particularly for PowerShell users on Windows, the behavior of guards before
+Chef 11.12.0 was not delightful. Prior to Chef 11.12.0, when a
+string was supplied to a guard, on Unix it was <strong>always</strong> evaluated with
+<code>/bin/sh</code>, even if the guard was being executed in the context of a script
+resource that executes code using something other than sh, like the <code>bash</code>
+resource. On Windows, there is no <code>/bin/sh</code>, so <code>cmd.exe</code> was always used for guards.</p>
+
+<p>Both Unix and Windows experiences could have been better in multiple respects. For Windows, <code>cmd.exe</code> is
+guaranteed to exist on the system, but that&#39;s about as much good as you can
+say for it. It&#39;s a vestigial component that still shows signs of its 1970&#39;s
+CP/M heritage even in 2014, and as Windows admins turned to PowerShell or were
+nudged toward it (often by Microsoft itself), it was asking a lot for Chef users to know
+how to use legacy <code>cmd.exe</code> to accomplish tasks. Most likely, users of <code>powershell_script</code>
+would choose to run powershell.exe in the <code>not_if</code> and <code>only_if</code> blocks. Since
+that was the common case for <code>powersell_script</code> users, the guards should have
+had some way to allow that, or to
+provide guard execution via PowerShell in a more natural fashion. </p>
+
+<p>Even for Unix users, however, there was still room to be delightful since
+<code>/bin/sh</code>, while not the antediluvian relic that is <code>cmd.exe</code> on Windows, is
+certainly not a modern shell. Thus guards require users of, say, the <code>bash</code> resource,
+to use two different shell dialects. The bash dialect is a modern and familiar one for the code to be
+executed by the script resource, and <code>sh</code> is a more limited one for the guards. It&#39;s confusing behavior
+for new users. And even for those who are experienced,
+it requires awkward workarounds like explicitly running bash with some set of
+switches and/or researching workarounds for missing features in <code>sh</code>. Overall,
+it decreases the efficiency of using resources like <code>bash</code> -- one might just as
+well use the generic script or execute resources if knowledge of the best way
+to a given interpreter cannot be contained in the resource.</p>
+
+<p>So the addition of the <code>guard_interpreter</code> attribute as adopted via this
+RFC lets users choose to adopt a
+more natural way of expressing idempotence that lets you embed shell-specific
+expressions in the clean Chef DSL without all of the awkwardness and corner
+cases described earlier. The result is an uncluttered description of
+infrastructure that doesn&#39;t sacrifice on the shell or underlying platform&#39;s
+native descriptive and functional capabilities.</p>
+
+<h3>Boolean result code interpolation details</h3>
+
+<p>Consider the Chef DSL fragment below where a string passed to an <code>only_if</code> guard performs a
+Boolean test using the sh &quot;[&quot; command:</p>
+<div class="highlight"><pre><span class="n">bash</span> <span class="s2">&quot;systemrestart&quot;</span> <span class="k">do</span>
+  <span class="n">code</span> <span class="s1">&#39;~/rebootnow.sh&#39;</span>
+  <span class="n">only_if</span> <span class="s1">&#39;[ &quot;$USER&quot; == &quot;root&quot; ]&#39;</span>
+<span class="k">end</span>
+</pre></div>
+<p>This results in the bash script &#39;rebootnow.sh&#39; being executed only when this
+code is executed with chef-client running as root. The Boolean-like expression
+in the sh script passed to the guard is treated as a Boolean result for the
+guard, resulting in a natural way of using the sh interpreter from within Chef
+and Ruby.</p>
+
+<p>A similar mapping between Boolean results for strings passed to guards on the
+Windows platform does not exist. This partially due to guards always being
+executed with cmd.exe. However, the behavior shown on Unix guards that
+interpret script strings is actually present in the script resources
+themselves when the same Boolean-like code is executed as part of the <code>code</code>
+attribute. Here&#39;s an example:</p>
+<div class="highlight"><pre><span class="n">bash</span> <span class="s2">&quot;myfail&quot;</span> <span class="k">do</span>
+  <span class="n">code</span> <span class="s1">&#39;[ &quot;$USER&quot; == &quot;root&quot; ]&#39;</span>
+<span class="k">end</span>
+</pre></div>
+<p>If this resource is run as the root user, it will succeed and subsequent
+resources in the recipe can be executed. If the user is not root, this will
+result in /bin/sh returning a non-zero exit code, and the execution will fail,
+terminating any chef-client run.</p>
+
+<p>While the utility of translating Boolean values to interpreter exit codes is debatable within a resource executed
+at recipe scope, it is consistent with the much more useful guard behavior
+described in the previous example.</p>
+
+<p>Contrast this to the existing <code>powershell_script</code> resource, which does not interpolate
+Boolean results of scripts to exit codes consistent with truth or falsehood in
+any context. The added interpolation for <code>powershell_script</code> rectifies the
+deficiency in this resource compared to bash and the other Unix shell-based resources.</p>
+
+<h3>PowerShell Boolean symmetry with Unix shells</h3>
+
+<p>This boolean interpolation behavior is similar to the <code>bash</code> or <code>sh</code>
+interpreters&#39; behavior in certain contexts, where the
+Boolean-like result of the test command causes the interpreter process to exit with 0 if
+the test command resulted in a true result, 1 otherwise, assuming the test
+command was the last line of the script.</p>
+
+<p>This enables cases where a test that can be expressed very cleanly with
+the PowerShell language can be used directly within a guard expression with no
+need to try to generate a process exit code that Chef will interpret as a true
+or false value. For example, the true or false value of a PowerShell
+expression like </p>
+<div class="highlight"><pre><span class="p">([</span><span class="vg">Security</span><span class="o">.</span><span class="vg">Principal</span><span class="o">.</span><span class="vg">WindowsPrincipal</span><span class="p">][</span><span class="vg">Security</span><span class="o">.</span><span class="vg">Principal</span><span class="o">.</span><span class="vg">WindowsIdentity</span><span class="p">]</span><span class="o">::</span><span class="vg">GetCurrent</span><span class="p">())</span><span class="o">.</span>
+<span class="w">  </span><span class="vg">IsInRole</span><span class="p">([</span><span class="vg">Security</span><span class="o">.</span><span class="vg">Principal</span><span class="o">.</span><span class="vg">WindowsBuiltInRole</span><span class="p">]</span><span class="w"> </span><span class="s2">&quot;Administrator&quot;</span><span class="p">)</span>
+</pre></div>
+<p>or</p>
+<div class="highlight"><pre><span class="p">(</span><span class="vg">gi</span><span class="w"> </span><span class="nl">WSMan:</span><span class="o">\</span><span class="vg">localhost</span><span class="o">\</span><span class="vg">Shell</span><span class="o">\</span><span class="vg">MaxMemoryPerShellMB</span><span class="p">)</span><span class="o">.</span><span class="vg">value</span><span class="w"> </span><span class="o">-</span><span class="vg">ge</span><span class="w"> </span><span class="il">300</span>
+</pre></div>
+<p>can be passed directly to Ruby and evaluated as true or false by the guard
+without specifying any additional PowerShell code. This interpolation of
+Boolean return values also happens when a string of code is passed to a guard
+in a <code>powershell_script</code> resource, a scenario that builds on top of the
+previously described switch to the PowerShell language as the script interpreter of
+strings passed to guards in the <code>powershell_script</code> resource.</p>
+
+<h2>Future guard improvements</h2>
+
+<p>In the future, some of the features around <code>guard_interpreter</code> may have
+different defaults. For example, the <code>powershell_script</code> and <code>bash</code> resources
+may default to setting this attribute to <code>:powershell_script</code> and <code>:bash</code>
+respectively rather than <code>:default</code>. The initial implementation introduced in
+Chef 11.12.0 does not make this change to avoid compatibility issues with
+guard expressions in use in existing cookbooks used with earlier versions of
+Chef Client.</p>
+
+<h2>References and further reading</h2>
+
+<ul>
+<li>Chef documentation: <a href="http://docs.opscode.com">http://docs.opscode.com</a></li>
+<li>Chef resource documentation: <a href="http://docs.opscode.com/resource.html">http://docs.opscode.com/resource.html</a></li>
+<li>Chef guard documentation: <a href="http://docs.opscode.com/resource_common.html">http://docs.opscode.com/resource_common.html</a>.</li>
+<li>Chef guard<em>interpreter documentation: &lt;http://docs.opscode.com/resource</em>common.html&gt;.</li>
+<li>Chef Client open source project: <a href="https://github.com/opscode/chef">https://github.com/opscode/chef</a>. </li>
+</ul>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

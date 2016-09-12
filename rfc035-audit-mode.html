@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Audit-Mode for Chef Client</h1>
+
+<p>Audit mode is an new phase in Chef which allows you to evaluate custom rules,
+defined in your recipes, on every node during each chef-client run. Use audits
+to ensure nodes fall into existing &quot;known states&quot; categories even before Chef
+converges, and to validate your infrastructure after Chef converges.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">inheritor</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">non</span><span class="o">-</span><span class="vg">Chef</span><span class="o">-</span><span class="vg">managed</span><span class="w"> </span><span class="vg">infrastructure</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">run</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">collect</span><span class="w"> </span><span class="vg">data</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">each</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">converging</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">determine</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">existing</span><span class="w"> </span><span class="vg">state</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">inherited</span><span class="w"> </span><span class="vg">infrastructure</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">maintainer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="o">-</span><span class="vg">managed</span><span class="w"> </span><span class="vg">infrastructure</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">custom</span><span class="w"> </span><span class="vg">rules</span><span class="w"> </span><span class="vg">defining</span><span class="w"> </span><span class="vg">expected</span><span class="w"> </span><span class="vg">state</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">validate</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">infrastructure</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3>Audit mode phase</h3>
+
+<p>Audits are evaluated in their own phase. During a full <code>chef-client</code> run,
+auditing occurs independently after client converges.</p>
+
+<h4>Configuration</h4>
+
+<p>By default, client will converge the node
+and executed audits. Chef can be configured to skip audit mode via the command
+line flag <code>--no-audit-mode</code> or the configuration file option <code>audit_mode :disabled</code>.</p>
+
+<p>Alternatively, converge can be skipped via the command line flag <code>--audit-mode</code>
+or the configuration file option <code>audit_mode :audit_only</code>.</p>
+
+<h4>Logging</h4>
+
+<p>As controls are evaluated during the audit phase, results will be streamed to
+<code>Chef::Config[:log_location]</code>` in an easy to read format using
+RSpec&#39;s <a href="https://www.relishapp.com/rspec/rspec-core/v/2-9/docs/command-line/format-option#documentation-format">documentation formatter</a>.</p>
+
+<h4>Event dispatch</h4>
+
+<p>The <code>Chef::EventDispatch::Base</code> will be updated to support the following events</p>
+
+<p>Event Name | Context
+-----------|---------
+<code>converge_failed(error)</code> | client did not converge successfully with <code>error</code>
+<code>audit_phase_start(run_status)</code> | audit phase started
+<code>audit_phase_complete</code> | audit phase finished
+<code>audit_phase_failed(exception)</code> | an uncaught <code>exception</code> occurred during the audit phase
+<code>control_group_started(name)</code> | signifies the start of a <code>controls</code> group with a defined <code>name</code>
+<code>control_example_success(control_group_name, example_data)</code> | an example in a <code>control_group_name</code> group completed successfully
+<code>control_example_failure(control_group_name, example_data, error)</code> | an example in a <code>control_group_name</code> group failed with <code>error</code></p>
+
+<p>The <code>example_data</code> hash contains the informational fields
+* the <code>name</code> of the evaluated audit rule
+* the full <code>desc</code> of the evaluated audit rule (includes <code>name</code>)
+* the <code>resource_type</code> evaluated, if any
+* the name of the evaluated resource, <code>resource_name</code>
+* any containing scope is saved in <code>context</code>
+* the <code>line_number</code> of the failed audit</p>
+
+<h3>Syntax</h3>
+
+<p>Audits are written inside recipe files. Audits can be written in a separate
+recipe or can be added into recipes defining resources. Audits are collected
+within a named <code>controls</code> block, which does not get evaluated until the audit
+phase begins.</p>
+
+<p>Audit rules are defined within a <code>controls</code> group using RSpec&#39;s <code>it</code> syntax.
+Rules can be grouped together using the <code>control</code> method, or any other RSpec
+example group method (e.g., <code>describe</code> or <code>context</code>). RSpec&#39;s built-in matchers
+are available, as well as Serverspec types and matchers. The use of <code>:should</code>
+is explicitly disabled, as this is deprecated in RSpec 3.</p>
+
+<h4>Example: Nobody is listening</h4>
+
+<p>Audits can be written to help ensure compliance requirements, such as asserting
+nothing is listening on port 111. Depending on your distribution and its version,
+your portmap service may be named &quot;portmap&quot; or &quot;rpcbind&quot;, and could be renamed
+after a version bump. Your recipe may use the correct service provider but the
+init script may have been removed, preventing any service resource <code>:stop</code> action
+from completing successfully.</p>
+
+<p>The <code>ports::audit</code> recipe ensures nothing is listening on port 111:
+```ruby</p>
+
+<h1>cookbook: ports</h1>
+
+<h1>recipe: audit</h1>
+
+<p>controls &quot;port compliance&quot; do
+  control port(111) do
+    it &quot;has nothing listening&quot;
+      expect(port(111)).to<em>not be</em>listening
+  end
+end
+```</p>
+
+<p>When <code>ports::audit</code> is added to the run-list and <code>chef-client</code> is run with
+audit mode enabled, you would expect the log output to contain
+```sh
+port compliance
+  Port &quot;111&quot;
+    has nothing listening</p>
+
+<p>Finished in 0.08615 seconds (files took 0.67889 seconds to load)
+1 example, 0 failures
+```</p>
+
+<h3>Failures</h3>
+
+<p>When an audit fails, the failed example is marked in the log output for debugging.
+At the end of the client run, Chef will exit with exit status 1.</p>
+
+<h4>Example: Somebody is listening</h4>
+
+<p>Suppose port 111 was not shut down correctly and someone is listening on it. When
+the <code>ports::audit</code> recipe is run, the log output would contain something similar
+to
+```sh
+port compliance
+  Port &quot;111&quot;
+    has nothing listening (FAILED - 1)</p>
+
+<p>Failures:</p>
+
+<p>1) port compliance Port &quot;111&quot; has nothing listening
+     Failure/Error: expect(port(111)).to<em>not be</em>listening
+       expected Port &quot;111&quot; not to be listening
+     # cookbooks/ports/recipes/audit.rb:7:in `block (3 levels) in from_file&#39;</p>
+
+<p>Finished in 0.12515 seconds (files took 0.70174 seconds to load)
+1 example, 1 failure</p>
+
+<p>Failed examples:</p>
+
+<p>rspec cookbooks/ports/recipes/audit.rb:6 # port compliance Port &quot;111&quot; has nothing listening
+```</p>
+
+<h3>Exceptions</h3>
+
+<p>These exceptions can be raised during a client run due to errors in the audits
+included in recipes in the run list:</p>
+
+<ul>
+<li><code>Chef::Exceptions::AuditNameMissing</code>: Raised when <code>controls</code> is declared without
+a name.</li>
+<li><code>Chef::Exceptions::NoAuditsProvided</code>: Raise when <code>controls</code> is declared but
+defines no audits.</li>
+<li><code>Chef::Exceptions::AuditControlGroupDuplicate</code>: Raised when two <code>controls</code> are
+declared with the same name. Multiple <code>controls</code> groups can
+be defined in the same recipe, as this may happen when using <code>include_recipe</code>.
+However, no two <code>controls</code> groups in the run list can have the same name.</li>
+</ul>
+
+<h3>Error handling</h3>
+
+<p>Errors occurring in the converge phase do not affect the execution of the audit
+phase. Similarly, errors occurring in the audit phase do not affect later phases.
+Errors are collected to be provided to the appropriate error handlers once
+each phase completes.</p>
+
+<h2>Rationale</h2>
+
+<h3>Why distribute audits in recipes?</h3>
+
+<p>Cookbooks support versioning and are an effective medium for distributing code.
+Including audits in recipes help to maintain a flat directory structure, and don&#39;t
+require the addition of a new server segment.</p>
+
+<h3>Why implement this in core chef?</h3>
+
+<p>Even though it&#39;s possible to build this logic as external libraries
+(see <a href="https://github.com/calavera/minitest-chef-handler">minitest-chef-handler</a>)
+building it as a first class citizen with config options, CLI options and hooks
+for event handlers and maintaining it overtime will be a challenge.</p>
+
+<p>Also to achieve usability, any TDI (test driven infrastructure) related logic
+should be available out of the box inside the Client omnibus packages. As long
+as functionality is available out of the box, building it into core as an alpha
+feature vs implementing it as an external gem is only an implementation choice.
+This doesn&#39;t change any compatibility commitments.</p>
+
+<h3>Why use RSpec and Serverspec in audits?</h3>
+
+<p>In the future we can definitely come up with a better DSL than RSpec. But we
+would like to reuse the awesome tool Serverspec and its practices as well as we
+would like to provide a generic interface for the power users.</p>
+
+<h3>Why support an audit-only phase?</h3>
+
+<p>The use case for auditing without converging is to support an existing Chef
+customer absorbing a non-Chef managed infrastructure. In this instance, they can
+only run audits until cookbooks have been prepared for the new infrastructure.
+Similarly, an audit-only phase can help new users convert their unmanaged
+infrastructure to a Chef-managed infrastructure.</p>
+
+<h3>Why run audits after a failed converge?</h3>
+
+<p>So that you can validate your infrastructure is still in a state consistent
+with your expectations. Ideally, when converge fails your audits should still
+pass. It&#39;s reassuring to have that sanity check.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

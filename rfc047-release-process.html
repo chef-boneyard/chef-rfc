@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Chef Client Release Process</h1>
+
+<p>This RFC describes the steps involved in building and releasing the Chef Client, project versioning, and release contingencies.</p>
+
+<h2>Motivation</h2>
+
+<p>As a Chef maintainer,
+I need an established release process,
+so I can make my release consistent.</p>
+
+<p>As a Chef maintainer,
+I want to be able to release the exact build I have tested,
+so I do not need to make an additional release build.</p>
+
+<p>As a Chef user,
+I want to know what the release process is,
+so I can install appropriate version.</p>
+
+<p>As a Chef user,
+I want to know the project versioning system,
+so I can decide when to upgrade.</p>
+
+<p>As a Chef user,
+I want to understand what happens when a critical bug is found,
+so I can react accordingly.</p>
+
+<h2>Specification</h2>
+
+<h3>Versioning</h3>
+
+<p>We generally adhere to the Semantic Version scheme published <a href="http://semver.org/">here</a>, with noted exceptions.</p>
+
+<p>From Semantic Versioning:</p>
+<div class="highlight"><pre><span class="vg">Given</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">number</span><span class="w"> </span><span class="vg">MAJOR</span><span class="o">.</span><span class="vg">MINOR</span><span class="o">.</span><span class="vg">PATCH</span><span class="p">,</span><span class="w"> </span><span class="vg">increment</span><span class="w"> </span><span class="nl">the:</span>
+
+<span class="vg">MAJOR</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">you</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">incompatible</span><span class="w"> </span><span class="vg">API</span><span class="w"> </span><span class="vg">changes</span><span class="p">,</span>
+<span class="vg">MINOR</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">you</span><span class="w"> </span><span class="vg">add</span><span class="w"> </span><span class="vg">functionality</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">backwards</span><span class="o">-</span><span class="vg">compatible</span><span class="w"> </span><span class="vg">manner</span><span class="p">,</span><span class="w"> </span><span class="vg">and</span>
+<span class="vg">PATCH</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">you</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">backwards</span><span class="o">-</span><span class="vg">compatible</span><span class="w"> </span><span class="vg">bug</span><span class="w"> </span><span class="vg">fixes</span><span class="o">.</span>
+<span class="vg">Additional</span><span class="w"> </span><span class="vg">labels</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">pre</span><span class="o">-</span><span class="vg">release</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">build</span><span class="w"> </span><span class="vg">metadata</span><span class="w"> </span><span class="vg">are</span><span class="w"> </span><span class="vg">available</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">extensions</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">MAJOR</span><span class="o">.</span><span class="vg">MINOR</span><span class="o">.</span><span class="vg">PATCH</span><span class="w"> </span><span class="vg">format</span><span class="o">.</span>
+</pre></div>
+<p>Chef Client specific clarifications:</p>
+<div class="highlight"><pre><span class="vg">Given</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">number</span><span class="w"> </span><span class="vg">MAJOR</span><span class="o">.</span><span class="vg">MINOR</span><span class="o">.</span><span class="nl">BUILD:</span>
+
+<span class="vg">Increment</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">MAJOR</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">break</span><span class="w"> </span><span class="vg">existing</span><span class="w"> </span><span class="vg">functionality</span>
+<span class="vg">Increment</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">MINOR</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">you</span><span class="w"> </span><span class="vg">add</span><span class="w"> </span><span class="vg">any</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">features</span>
+<span class="vg">The</span><span class="w"> </span><span class="vg">BUILD</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">same</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">PATCH</span><span class="p">,</span><span class="w"> </span><span class="vg">but</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">increased</span><span class="w"> </span><span class="vg">automatically</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">build</span><span class="w"> </span><span class="vg">system</span>
+</pre></div>
+<ul>
+<li>When MINOR increases, BUILD must be reset to zero.</li>
+<li>When MAJOR increases, MINOR and BUILD must be reset to zero.</li>
+<li>Changes that require the MINOR version number to be increased may be included in a release that increases the MAJOR and allow the MINOR to be reset to zero. That is, new features that do not exist in version 1.1.0 may be released in 2.0.0 without any intermediary releases.</li>
+</ul>
+
+<p>Versions are always displayed in the MAJOR.MINOR.BUILD format. For example, <code>knife -v</code> prints <code>Chef: 12.5.1</code>. When contextually appropriate a version may be referred to by only the MAJOR or MAJOR and MINOR versions. Examples include:
+* a breaking change: &quot;This behaviour will change in the Chef 13&quot; which would be referring to the first release in the 13.MINOR.BUILD series
+* a future feature release: &quot;We expect to release Chef 12.6 this month&quot; which would refer to the highest 12.6.BUILD release.</p>
+
+<h4>Caveats</h4>
+
+<p>We do not consistently and clearly delineate which public methods are also part of the public API and guaranteed to only change with major version releases. Public methods may change in minor releases based on the likelihood of that method being used by other projects or cookbooks.</p>
+
+<h4>Examples</h4>
+
+<p>MAJOR: When changing the load order of any cookbook segments (e.g. attributes, templates), the major version number shall be incremented.</p>
+
+<p>MINOR: When adding support to the mount provider for special filesystem types that were previously unsupported, the minor version number shall be incremented.</p>
+
+<p>BUILD: Automatically when a build is started in the build system.</p>
+
+<h3>Continuous Integration / Continuous Delivery (build system)</h3>
+
+<p>The BUILD version is numeric and must be increased for each build.</p>
+
+<p>The build system may consume unreleased BUILD versions. For example, a build which is successful but does not pass integration testing must not have its version reused.</p>
+
+<p>Therefore, a released build is unlikely to have BUILD be zero because these numbers are now consumed during pre-release testing.</p>
+
+<h4>Build Repeatability</h4>
+
+<p>There is a large set of dependencies for Chef (rubygems) and the packaging (omnibus). Many rubygems dependencies are allowed to float to facilitate other projects that use Chef as a library. This allows other projects to not match dependencies in lock-step, which helps prevent ecosystem failure when one project upgrades before another.</p>
+
+<p>The matrix of platforms and platform versions that Chef supports (see RFC 21) is extensive. The build for each system is expected to be consistent across all platforms. This is achieved by building all platforms at roughly the same time.</p>
+
+<p>Thus, a later build of the same Chef commit is not guaranteed to produce the same package.</p>
+
+<p>Currently the omnibus packaging configuration is shared between multiple projects in the omnibus-chef repository, which causes subsequent builds to change due to updated omnibus dependencies. This will be mitigated in the future by moving the omnibus packaging configuration into each projects repository.</p>
+
+<h4>Version Configuration</h4>
+
+<p>A text file named VERSION exists at the top of chef git repository which contains the current MAJOR.MINOR version. If BUILD is included, it is ignored. Maintainers are responsible for increasing MAJOR and MINOR as necessary based on the above specification when merging code to the master branch.</p>
+
+<p>The VERSION constants, Chef::VERSION and ChefConfig::VERSION are automatically updated by the processes below. The full version, i.e. MAJOR.MINOR.BUILD, is stored as annotated git tags.</p>
+
+<p>Ohai&#39;s version shall be the same as Chef&#39;s, and updated by the same
+process at the same time.</p>
+
+<p>The following steps will be automated:</p>
+
+<h5>Github Bot</h5>
+
+<ol>
+<li>Blocks merge on Github with a &#39;required status check&#39;</li>
+<li>Waits for a comment indicating the PR is accepted, e.g. &quot;@shipment approve&quot;</li>
+<li>Examines the VERSION file on <code>chef/chef</code> master to determine MAJOR.MINOR</li>
+<li>Uses existing tags to determine the next incremental BUILD</li>
+<li>For both <code>chef/chef</code> and <code>chef/ohai</code>
+
+<ol>
+<li>Checks out the branch</li>
+<li>Update the VERSION constants for the build and commits locally</li>
+<li>Merges the branch with the version commit to master</li>
+<li>Pushes master to Github</li>
+</ol></li>
+</ol>
+
+<h5>Build Tool</h5>
+
+<ol>
+<li>Monitors the repository for commits using Github web hooks or git polling</li>
+<li>Builds the project using Omnibus</li>
+<li>Places a successful build in the internal &#39;unstable&#39; channel</li>
+<li>Runs the build through automated acceptance tests</li>
+<li>Places a successful build in the external &#39;current&#39; channel</li>
+</ol>
+
+<p>The above process is intended to happen only after successful unit tests. This verification is currently provided by Travis/Appveyor. This will help catch regressions before a build version and build resources are consumed.</p>
+
+<p>To facilitate local development and testing, a modified process is used when built outside of CI/CD:</p>
+
+<ol>
+<li>Examine the VERSION file to determine MAJOR.MINOR</li>
+<li>Use the existing tags to determine the most recent BUILD and use it with a <code>.dev</code> suffix, e.g. <code>1.2.3.dev</code></li>
+<li>Does not create or push tags</li>
+<li>Updates the VERSION constants for the build</li>
+</ol>
+
+<p>This process is automated by using the <code>rake FIXME-TBD</code> task.</p>
+
+<p>The development version may be committed and pushed to development branches as necessary for working with bundler and other tools, but must not be merged to the <code>master</code> branch, e.g. drop the commit with an interactive rebase.</p>
+
+<h4>Channels</h4>
+
+<p>The build system moves builds through multiple repositories, designated as channels. The channels publicly exposed to Omnitruck are:</p>
+
+<ul>
+<li>unstable: Builds that have completed successfully, pending testing. Internal to the build system.</li>
+<li>stable: Builds that have been manually promoted from current and are considered a releases.</li>
+<li>current: Builds that has passed all automated testing.</li>
+</ul>
+
+<h3>Releasing</h3>
+
+<p>A release is a build that is available in the <code>stable</code> channel.</p>
+
+<p>Releases must be announced on the Chef Discourse (mailing list, see RFC 28) and should be cross-posted on the Chef Software blog.</p>
+
+<h4>Release Candidates</h4>
+
+<p>Official releases are made by promoting builds from the current channel to the stable channel. We no longer use the addition of a two-part alphanumeric suffix (e.g. X.Y.Z.rc.0) to describe prereleases. The stability of a build is now indicated by the release channel, e.g. current or stable, that the build is available from. All builds in the current channel are potential release candidates.</p>
+
+<p>An announcement should be made to the Chef Discourse (mailing list) at least three business days prior to the release of a build with an increase of either the MAJOR or MINOR versions over the last release. The announcement should specify the version of the build which is currently being tested if available.</p>
+
+<p>Releases which do not increase MAJOR or MINOR versions are expected to have only bug/regression fixes which have been extensively tested, and thus may be released without pre-notification.</p>
+
+<h4>Chef Client Release Process</h4>
+
+<ul>
+<li>Verify the CHANGELOG.md is accurate for the current release</li>
+<li>Update <code>lib/chef/version.rb</code> to the appropriate next version</li>
+<li>Create an annotated git tag for the version</li>
+<li>Trigger a build in CI (chef-trigger-release)</li>
+<li>Write the release announcement and share a public draft (e.g. a gist)</li>
+</ul>
+
+<p>Once the CI pipeline completes successfully:</p>
+
+<ul>
+<li>Locally build and release the gems</li>
+<li>Public the release notes in the chef category on Discourse (mailing list)</li>
+<li>Cross-post the release notes on the Chef Software blog</li>
+<li>Tweet the blog post</li>
+</ul>
+
+<h3>Critical Regression Handling</h3>
+
+<p>If an issue is filed against the project that is triaged as a critical regression:</p>
+
+<p>1) Communicate the regression
+    - Post in the chef category on Discourse (mailing list)
+    - Update the Chef Software blog post for the release with a message at the top regarding the regression
+    - Post a message in the #chef irc channel linking to the Discourse post</p>
+
+<p>2) There are two paths for correction. After five hours, the second option must begin.</p>
+<div class="highlight"><pre><span class="vg">A</span><span class="p">)</span><span class="w"> </span><span class="vg">Provide</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">resolves</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">regression</span><span class="o">.</span>
+<span class="vg">B</span><span class="p">)</span><span class="w"> </span><span class="vg">Revoke</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">release</span><span class="o">.</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="vg">rubygems</span><span class="p">,</span><span class="w"> </span><span class="vg">packagecloud</span><span class="p">,</span><span class="w"> </span><span class="vg">omnitruck</span>
+</pre></div>
+<p>3) Communicate the regression resolution.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

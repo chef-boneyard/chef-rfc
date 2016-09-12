@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<p>Steven, Paul, and myself were having a discussion about adding
+an <code>on_failure</code> handler on a per-resource basis. I wrote up an RFC proposing
+an API for this functionality.</p>
+
+<p>Defining an +on_failure+ block will rescue any exceptions, execute the given
+block, and then retry the resource action.</p>
+<div class="highlight"><pre><span class="n">meal</span> <span class="s1">&#39;breakfast&#39;</span> <span class="k">do</span>
+  <span class="n">on_failure</span> <span class="p">{</span> <span class="n">notify</span> <span class="ss">:eat</span><span class="p">,</span> <span class="s1">&#39;food[bacon]&#39;</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p>The +on_failure+ block accepts an optional list of options, such as the number
+of times to retry before bubbling the exception up the stack.</p>
+<div class="highlight"><pre><span class="n">meal</span> <span class="s1">&#39;breakfast&#39;</span> <span class="k">do</span>
+  <span class="n">on_failure</span><span class="p">(</span><span class="ss">retries</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span> <span class="n">notify</span> <span class="ss">:eat</span><span class="p">,</span> <span class="s1">&#39;food[bacon]&#39;</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p>You can also specify an exception or list of exceptions to run the failure
+block against. If the exception raised matches the given exception class (or
+a subclass of that exception) the block is executed. Otherwise the exception
+will bubble up.</p>
+<div class="highlight"><pre><span class="n">meal</span> <span class="s1">&#39;breakfast&#39;</span> <span class="k">do</span>
+  <span class="n">on_failure</span><span class="p">(</span><span class="no">UncookedError</span><span class="p">)</span> <span class="p">{</span> <span class="n">notify</span> <span class="ss">:fry</span><span class="p">,</span> <span class="s1">&#39;food[bacon]&#39;</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p>It&#39;s possible to specify multiple exceptions to rescue in a given block.</p>
+<div class="highlight"><pre><span class="n">meal</span> <span class="s1">&#39;breakfast&#39;</span> <span class="k">do</span>
+  <span class="n">on_failure</span><span class="p">(</span><span class="no">UncookedError</span><span class="p">,</span> <span class="no">HungryError</span><span class="p">)</span> <span class="p">{</span> <span class="n">notify</span> <span class="ss">:fry</span><span class="p">,</span> <span class="s1">&#39;food[bacon]&#39;</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p>The +on<em>failure+ parameter is compilative, meaning declaring multiple
++on</em>failure+ blocks is permissive. Blocks are executed in the order in
+which they are defined, from top-to-bottom. The pattern is useful if you
+need different exception handling depending on the type of exception raised.</p>
+<div class="highlight"><pre><span class="n">meal</span> <span class="s1">&#39;breakfast&#39;</span> <span class="k">do</span>
+  <span class="n">on_failure</span><span class="p">(</span><span class="no">UncookedError</span><span class="p">)</span> <span class="p">{</span> <span class="n">notify</span> <span class="ss">:fry</span><span class="p">,</span> <span class="s1">&#39;food[bacon]&#39;</span> <span class="p">}</span>
+  <span class="n">on_failure</span><span class="p">(</span><span class="no">ColdError</span><span class="p">)</span> <span class="p">{</span> <span class="n">notify</span> <span class="ss">:microwave</span><span class="p">,</span> <span class="s1">&#39;food[bacon]&#39;</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p>For more complex failure handling, you can specify a multi-step block. The
+contents of the block are executed in the context of the containing recipe,
+in the top-level run_context (so it can notify existing resources in the
+top-level resource collection).</p>
+<div class="highlight"><pre><span class="n">meal</span> <span class="s1">&#39;breakfast&#39;</span> <span class="k">do</span>
+  <span class="n">on_failure</span> <span class="k">do</span>
+    <span class="n">alarm</span> <span class="s1">&#39;7:00am&#39;</span> <span class="k">do</span>
+      <span class="n">action</span> <span class="ss">:buzz</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>The block for +on_failure+ yields an optional reference to the parent
+resource (+meal[breakfast]+ in this example). This is helpful if you need
+information about the parent resource, such as the value of a parameter
+in your failure handling.</p>
+<div class="highlight"><pre><span class="n">meal</span> <span class="s1">&#39;breakfast&#39;</span> <span class="k">do</span>
+  <span class="n">on_failure</span> <span class="k">do</span> <span class="o">|</span><span class="n">breakfast</span><span class="o">|</span>
+    <span class="n">alarm</span> <span class="n">breakfast</span><span class="o">.</span><span class="n">start_time</span> <span class="k">do</span>
+      <span class="n">action</span> <span class="ss">:buzz</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>And these different methodologies can be mixed-and-matched.</p>
+<div class="highlight"><pre><span class="n">meal</span> <span class="s1">&#39;breakfast&#39;</span> <span class="k">do</span>
+  <span class="n">on_failure</span><span class="p">(</span><span class="no">UncookedError</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">oven</span> <span class="s1">&#39;main&#39;</span> <span class="k">do</span>
+      <span class="n">action</span> <span class="ss">:start</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">on_failure</span><span class="p">(</span><span class="no">ThirstyError</span><span class="p">,</span> <span class="ss">retries</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">breakfast</span><span class="o">|</span>
+    <span class="n">breakfast</span><span class="o">.</span><span class="n">minutes_until_served</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span>
+      <span class="n">juice</span> <span class="s1">&#39;orange&#39;</span> <span class="k">do</span>
+        <span class="n">action</span> <span class="ss">:drink</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Actions With Inline Resources</h1>
+
+<p>In this proposal, we change the way in which inline resources are processed
+to make actions that call each other clearer.</p>
+
+<p>This is a backcompat break and requires a major version bump.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">recipes</span><span class="w"> </span><span class="vg">defined</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">actions</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">execute</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">order</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">predict</span><span class="w"> </span><span class="vg">what</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">happen</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>At present, when inline_resources is on and one action calls another,
+the inner action is converged immediately:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">resource_name</span> <span class="ss">:x</span>
+  <span class="n">action</span> <span class="ss">:outer</span> <span class="k">do</span>
+    <span class="n">execute</span> <span class="s1">&#39;echo before inner&#39;</span>
+    <span class="n">action_inner</span>
+    <span class="n">execute</span> <span class="s1">&#39;echo after inner&#39;</span>
+  <span class="k">end</span>
+  <span class="n">action</span> <span class="ss">:inner</span> <span class="k">do</span>
+    <span class="n">execute</span> <span class="s1">&#39;echo inner&#39;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">x</span> <span class="s1">&#39;hi&#39;</span>
+</pre></div>
+<p>In Chef 12, the resources execute in this order:</p>
+<div class="highlight"><pre><span class="nl">Recipe</span><span class="p">:</span> <span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">cookbook</span><span class="p">)</span><span class="o">::</span><span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">recipe</span><span class="p">)</span>
+  <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">hi</span><span class="p">]</span> <span class="n">action</span> <span class="n">outer</span>
+    <span class="o">*</span> <span class="n">execute</span><span class="p">[</span><span class="n">echo</span> <span class="n">inner</span><span class="p">]</span> <span class="n">action</span> <span class="n">run</span>
+      <span class="o">-</span> <span class="n">execute</span> <span class="n">echo</span> <span class="n">inner</span>
+    <span class="o">*</span> <span class="n">execute</span><span class="p">[</span><span class="n">echo</span> <span class="n">before</span> <span class="n">inner</span><span class="p">]</span> <span class="n">action</span> <span class="n">run</span>
+      <span class="o">-</span> <span class="n">execute</span> <span class="n">echo</span> <span class="n">before</span> <span class="n">inner</span>
+    <span class="o">*</span> <span class="n">execute</span><span class="p">[</span><span class="n">echo</span> <span class="n">after</span> <span class="n">inner</span><span class="p">]</span> <span class="n">action</span> <span class="n">run</span>
+      <span class="o">-</span> <span class="n">execute</span> <span class="n">echo</span> <span class="n">after</span> <span class="n">inner</span>
+</pre></div>
+<p>This is unintuitive any way you slice it.</p>
+
+<p>We suggest that the inner action simply become part of the compile phase of the outer action, and the entire resource collection is only converged once.</p>
+
+<p>When this RFC is implemented, the order of execution will be:</p>
+<div class="highlight"><pre><span class="nl">Recipe</span><span class="p">:</span> <span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">cookbook</span><span class="p">)</span><span class="o">::</span><span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">recipe</span><span class="p">)</span>
+  <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">hi</span><span class="p">]</span> <span class="n">action</span> <span class="n">outer</span>
+    <span class="o">*</span> <span class="n">execute</span><span class="p">[</span><span class="n">echo</span> <span class="n">before</span> <span class="n">inner</span><span class="p">]</span> <span class="n">action</span> <span class="n">run</span>
+      <span class="o">-</span> <span class="n">execute</span> <span class="n">echo</span> <span class="n">before</span> <span class="n">inner</span>
+    <span class="o">*</span> <span class="n">execute</span><span class="p">[</span><span class="n">echo</span> <span class="n">inner</span><span class="p">]</span> <span class="n">action</span> <span class="n">run</span>
+      <span class="o">-</span> <span class="n">execute</span> <span class="n">echo</span> <span class="n">inner</span>
+    <span class="o">*</span> <span class="n">execute</span><span class="p">[</span><span class="n">echo</span> <span class="n">after</span> <span class="n">inner</span><span class="p">]</span> <span class="n">action</span> <span class="n">run</span>
+      <span class="o">-</span> <span class="n">execute</span> <span class="n">echo</span> <span class="n">after</span> <span class="n">inner</span>
+</pre></div>
+<h2>Backwards Compatibility</h2>
+
+<p>This will be a backwards compatibility break for all resources that call other
+actions and depend on the action running immediately. Thankfully, this is not
+super common.</p>
+
+<p>Here&#39;s a summary of some of the more common cases that will be affected or
+unaffected. None of these are <em>extremely</em> common--actions calling other actions
+is not endemic throughout all code--but it&#39;s common enough that many cookbooks
+will have the potential to be affected.</p>
+
+<h3>Affected Patterns</h3>
+
+<p>Here are some of the cases which might be adversely affected:</p>
+
+<ol>
+<li>Action calls mixed with immediate checks</li>
+</ol>
+
+<p>Sometimes you depend on the effects of called action converging immediately.
+   These cases can break:</p>
+<div class="highlight"><pre>   <span class="n">action</span> <span class="ss">:recreate</span> <span class="k">do</span>
+     <span class="n">action_delete</span>
+     <span class="k">if</span> <span class="o">!</span><span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="s1">&#39;/the_file&#39;</span><span class="p">)</span>
+       <span class="c1"># Do something</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+</pre></div>
+<p>This is generally considered an antipattern in a recipe, and it should be
+   considered an antipattern in a resource with inline_resources as well.</p>
+
+<p>Note that the effect is limited to actions that declare resources; if you
+   call an action that does its work immediately, the order of operations will
+   not change.</p>
+
+<h3>Unaffected Cases</h3>
+
+<p>The impact is lessened because the two most common patterns for actions calling actions will not have an issue:</p>
+
+<ol>
+<li>Action aliases or call chains</li>
+</ol>
+
+<p>Sometimes one action is an alias of another or sets a flag before calling
+   another action. In these cases, the calling action does not depend at all
+   on when the called action executes, so there&#39;s no issue:</p>
+<div class="highlight"><pre>   <span class="n">action</span> <span class="ss">:purge</span> <span class="k">do</span>
+     <span class="vi">@purge</span> <span class="o">=</span> <span class="kp">true</span>
+     <span class="n">action_clean</span>
+   <span class="k">end</span>
+</pre></div>
+<p>Call chains--calling one action after another--will be unaffected as well.</p>
+
+<ol>
+<li>Purge-then-create</li>
+</ol>
+
+<p>Some resources cannot be updated and need to be recreated. It is common to
+   do this by calling a cleanup action before doing the rest of the job, and
+   this will be unaffected as well:</p>
+<div class="highlight"><pre>   <span class="n">action</span> <span class="ss">:recreate</span> <span class="k">do</span>
+     <span class="n">action_delete</span>
+     <span class="n">file</span> <span class="s1">&#39;/create_the_thing&#39;</span>
+   <span class="k">end</span>
+</pre></div>
+<p>Any method calls that do the actions <em>before</em> declaring resources or calling
+   other recipes will be unaffected.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Chef should be able to upgrade itself</h1>
+
+<p>Users should be able to automatically upgrade to the desired version of chef without having to use third party cookbooks. The upgrade should occur without affecting the normal chef client run, ensuring that a consistent state is preserved.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="w">  </span><span class="vg">As</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">operator</span><span class="p">,</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">chef</span><span class="w"> </span><span class="vg">versions</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">consistent</span><span class="w"> </span><span class="vg">across</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">infrastructure</span><span class="p">,</span>
+<span class="w">  </span><span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">ensure</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">code</span><span class="w"> </span><span class="vg">works</span><span class="w"> </span><span class="vg">correctly</span>
+</pre></div><div class="highlight"><pre><span class="w">  </span><span class="vg">As</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">operator</span><span class="p">,</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">safely</span><span class="w"> </span><span class="vg">upgrade</span><span class="w"> </span><span class="vg">chef</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">desired</span><span class="w"> </span><span class="vg">version</span><span class="p">,</span>
+<span class="w">  </span><span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">roll</span><span class="w"> </span><span class="vg">out</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">versions</span><span class="o">.</span>
+</pre></div><div class="highlight"><pre><span class="w">  </span><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">our</span><span class="w"> </span><span class="vg">users</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">get</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">features</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">bug</span><span class="w"> </span><span class="vg">fixes</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">timely</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">safe</span><span class="w"> </span><span class="vg">manner</span><span class="p">,</span>
+<span class="w">  </span><span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">everyone</span><span class="c1">&#39;s happy.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>At the beginning of each chef run, the client should decide whether or not to upgrade, based on configuration supplied by the administrator.</p>
+
+<p>If the administrator has specified a version of chef different to the one currently running, the chef client should check with an update service to ensure the specified version is available. If so, the client will download the specified version, and install it appropriately. The client run should then exit, using an appropriate exit code to signal an upgrade.</p>
+
+<h3>Determining the desired chef version</h3>
+
+<p>The desired chef version should be provided to the node through a new first class environment or node attribute tree, named <code>__chef_upgrade__</code>. Once RFC 45 is completed, that attribute tree will be marked as desired state, and not mutable by the node.</p>
+
+<p>The attribute tree will contain one mandatory attribute, <code>version</code>, and
+some additional attributes. Currently, we intend to support <code>channel</code>
+to allow the administrator to specify that they would like to consume
+unreleased builds. Channels are documented in <a href="https://github.com/chef/chef-rfc/blob/master/rfc047-release-process.md#channels">RFC 47</a>.</p>
+
+<p>The <code>version</code> attribute shall contain either MAJOR, MAJOR.MINOR, or
+MAJOR.MINOR.BUILD as documented in <a href="https://github.com/chef/chef-rfc/blob/master/rfc047-release-process.md#versioning">RFC 47</a>.
+It can also be the special string &quot;latest&quot;, signifying that the node
+should always upgrade to the latest available version.</p>
+
+<h3>Checking for an upgrade</h3>
+
+<p>Currently, Chef provides an omnitruck API service that allows one to query
+for versions of packages. The API is <a href="https://docs.chef.io/api_omnitruck.html">documented</a>,
+and provides the ability to request various groups of versions. In
+future it may be desirable to provide a similar API in the Chef
+Server, to provide upgrades to nodes that have no external connectivity.</p>
+
+<h3>Installing the upgrade</h3>
+
+<p>The chef client will use the most appropriate mechanism to install the
+latest version of chef. The chef client will then exit with an appropriate
+error code, allowing the parent process to restart gracefully.</p>
+
+<h3>Example scenario</h3>
+
+<p>Given the environment below:
+<code>json
+{
+  &quot;name&quot;: &quot;production&quot;,
+  &quot;__chef_upgrade__&quot;: {
+    &quot;version&quot;: 12.5&quot;
+  }
+}
+</code>
+A chef client on an ubuntu node in the <code>production</code> environment, will make a request to omnitruck:
+<code>
+http://www.chef.io/chef/metadata?p=ubuntu&amp;pv=14.04&amp;m=x86_64&amp;v=12.5
+</code>
+and receive metadata containing the latest package in the <code>12.5</code> series.
+Should that package be newer than the current version, chef will download
+the deb package, install it via <code>dpkg</code>, and end the chef run with a suitable
+exit code.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

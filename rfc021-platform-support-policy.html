@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Chef Platform Policy</h1>
+
+<p>The purpose of this RFC is to clarify which platforms the Chef community chooses to work on, and how those platforms are maintained.</p>
+
+<p>The <a href="https://docs.chef.io/">chef docs site</a> has <a href="https://docs.chef.io/platforms.html">details of the platforms Chef Software, Inc validates for release</a>.</p>
+
+<h1>Adding a new platform</h1>
+
+<p>Community maintenance of a platform requires that core chef resources,
+including <code>package</code>, <code>file</code>, and <code>service</code>, MUST have working providers
+for the platform. For example, on Debian the package provider supports both
+<code>dpkg</code> and <code>apt</code>. Ohai SHOULD also be able to gather relevant
+information on the platform.</p>
+
+<p>In addition to support in code, there SHOULD be a Lieutenant for the
+platform, per RFC 30. There MAY also be one or more Maintainers for the
+platform. The Lieutenant and any Maintainers are responsible for
+reviewing RFCs and code that affects the platform, and SHOULD be
+responsible for ensuring that new versions of the platform are
+supported.</p>
+
+<h1>Currently supported platforms</h1>
+
+<p>If not specified, chef works with all versions of a given
+platform that the manufacturer supports.</p>
+
+<p>Platform | Versions | Architectures | Package Format
+ ---- | --- | --- | --- | ---<br>
+AIX | 6.1, 7.1, 7.2 | ppc64 | bff
+CentOS | 5, 6, 7 | i386, x86<em>64 | rpm
+Cisco IOS XR | 6 | x86</em>64 | rpm
+Cisco NX-OS | 7 | x86<em>64 | rpm
+Debian | 7, 8 | i386, x86</em>64 | deb
+FreeBSD | 9, 10 | i386, amd64 | pkg<em>add pkg
+Mac OS X | 10.9, 10.10, 10.11 | x86</em>64 | dmg
+Oracle Enterprise Linux | 5, 6, 7 | i386, x86<em>64 | rpm
+Red Hat Enterprise Linux | 5, 6, 7 | i386, x86</em>64 | rpm
+Solaris | 10u11, 11 | sparc, x86 | shar
+Windows | 7, 8, 8.1, 2008, 2008R2, 2012, 2012R2 | x86, x86<em>64 | msi
+Ubuntu Linux | | x86, x86</em>64 | deb
+SUSE Linux Enterprise Server  | 11, 12 | x86<em>64
+Scientific Linux | 5.x, 6.x and 7.x | i386, x86</em>64<br>
+Fedora  | | x86<em>64
+OpenSUSE | 13.1/13.2/42.1 | x86</em>64
+OmniOS | | x86<em>64
+Gentoo Linux | | x86</em>64
+Arch Linux | | x86_64</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

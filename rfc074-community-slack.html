@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Chef Community Slack</h1>
+
+<p>This document describes a plan to migrate the &quot;default&quot; chat for the Chef
+community from IRC to Slack.</p>
+
+<h2>tl;dr</h2>
+
+<p>We are creating a public Slack team, name tbd. IRC will continue to exist but
+new users will receive a message from an IRC bot suggesting they ask questions
+in Slack instead, with a link to the SlackIn instance. Existing &quot;web chat&quot; links
+from the Chef website and documentation will point at (or embed) SlackIn instead.
+One channel in the Slack team will be bridged to each of the IRC channels
+(<code>#chef</code>, <code>#chef-hacking</code>) however this may be removed pending further review of
+how useful it is.</p>
+
+<h2>Personas</h2>
+
+<p>Three distinct user stories are being considered. First we have the way many
+people start with IRC, seeking help with a question. We will refer to the user
+in this story as &quot;Alex&quot;.</p>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">get</span><span class="w"> </span><span class="vg">near</span><span class="o">-</span><span class="vg">real</span><span class="o">-</span><span class="vg">time</span><span class="w"> </span><span class="vg">support</span><span class="w"> </span><span class="vg">from</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">community</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">learn</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">debug</span><span class="w"> </span><span class="vg">problems</span><span class="o">.</span>
+</pre></div>
+<p>Then we have more the answer-er side of things, wanting to help others so that
+they can be successful with Chef. This persona is named &quot;Bonnie&quot;.</p>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">member</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">help</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">members</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">help</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">grow</span><span class="o">.</span>
+</pre></div>
+<p>And then finally  a more nebulous use case, but no less important. Since day
+one, Chef has thrived on having a strong, welcoming, friendly community. Any
+change to our community tools must maintain this high standard of social
+interaction for the future. This persona is dubbed &quot;Colin&quot;.</p>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">member</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">talk</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">members</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">socialize</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">people</span><span class="o">.</span>
+</pre></div>
+<p>These personas are named for use in this document and the surrounding discussion
+to allow easier communication about plans and potential issues.</p>
+
+<h2>The Plan</h2>
+
+<p>The first and most obvious step is to register a new Slack team. This will be
+distinct from Chef Software Inc&#39;s Slack team as Slack does not offer a
+permissions system which would allow these to co-exist in the same structure.</p>
+
+<p><a href="https://github.com/rauchg/slackin">SlackIn</a> will be deployed and mapped to
+<code>slack.chef.io</code>. This tool allows users to &quot;sign up&quot; for Slack by requesting an
+invitation email. <a href="https://github.com/ekmartin/slack-irc">Slack-IRC</a> will be
+deployed to map the two Freenode IRC channels to Slack. An IRC bot will be
+written and deployed to notify new users of the Slack channel and provider them
+a link to SlackIn. This information will also be added to the <code>/topic</code> of both
+channels.</p>
+
+<p>Running the new services (SlackIn and the various bots) is left to the discretion
+of Chef Software in their role as stewards of the Chef community.</p>
+
+<p>The new Slack channel will be advertised on the <a href="https://discourse.chef.io">Chef Forums</a>,
+the pending <code>community.chef.io</code> landing page, and the Chef documentation.</p>
+
+<h2>Why Slack</h2>
+
+<p>IRC has been the backbone of the open-source software community for decades,
+but it is more or less a UI/UX dead end. As the Chef community grows, we are
+having increasing problems keeping our IRC channels a healthy part of it. This
+has two sides. One is that Alex, in most cases, is unfamiliar with IRC and the
+world of clients (web or otherwise), social customs (pastebins etc), and overall
+usage that it entails. This has led to many Alexes unable to find the support
+they need to be successful with Chef. The flip is that the Bonnies of the world
+often don&#39;t want to deal with the usability nightmare that is IRC, and thus are
+not able to jump in and answer questions even when they would otherwise have the
+time and energy to do so. This has left the Bonnie role on the shoulders of
+relatively few individuals in an overall unsustainable way. Slack helps both
+Alex and Bonnie to reach their goals with a more modern experience and tools
+they are already familiar with.</p>
+
+<h2>Prior Art</h2>
+
+<p>Some other communities have gone through similar transitions recently, with
+mixed results. The most high-profile negative experience was from <a href="http://blog.freecodecamp.com/2015/06/so-yeah-we-tried-slack-and-we-deeply-regretted-it.html">Free Code Camp</a>,
+who quickly hit problems around membership caps. <a href="https://facebook.github.io/react/blog/2015/10/19/reactiflux-is-moving-to-discord.html">Reactiflux</a>
+had the same problem at around 7,500 users. The <code>#chef</code> IRC channel has had
+3,137 distinct usernames in the past year, so we aren&#39;t likely to immediately
+hit that kind of cap, but it persistent risk factor going forward.</p>
+
+<p>More positively, <a href="https://make.wordpress.org/chat/">Wordpress</a> migrated from
+IRC to Slack and has been successful with over 8000 users. The HangOps community
+Slack has also been far more successful than it&#39;s prior IRC channel. The Elixir
+and Clojure communities have both started a similar migration, with around 5000
+users each in their Slack teams.</p>
+
+<p>Overall it seems like communities that have done similar IRC to Slack migrations
+have been happy with them, but those hitting hard limits on the Slack side have
+had zero recourse but to abort and move elsewhere.</p>
+
+<h2>Alternatives</h2>
+
+<p>For the two problem cases mentioned above, they chose to migrate to <a href="https://gitter.im/">Gitter</a>
+and <a href="https://discordapp.com/">Discord</a> respectively. Gitter doesn&#39;t have the
+same level of mobile device support and might confuse some users as our
+support discussions generally happen in a single, shared channel rather than
+the smattering of repositories that make up Chef, Chef Server, etc. Discord
+seems reasonable as an alternative, but the market penetration of Slack is a
+strong nod in their favor.</p>
+
+<p>There are a few generally-similar FOSS options
+(<a href="http://www.mattermost.org/">Mattermost</a>, <a href="https://www.zulip.org/">Zulip</a>, etc)
+but none seem to be well polished enough to be worth migrating to at this point.
+Additionally most require self-hosting, which would increase the operational
+load on Chef Software&#39;s staff.</p>
+
+<p>Another option is to simply stick with IRC, and try to set up a mix of hosted
+bouncers/proxies and an improved web client. While this is possible, I&#39;ve not
+heard of any other major community providing this level of service for IRC.</p>
+
+<h2>Problems</h2>
+
+<p>The biggest problem is mentioned above, unknown and nebulous user limits. We
+will not be butting up against those immediately, but based on IRC usage numbers
+I would expect us to be within striking distance within a year. This could
+probably be solved with some level of pruning of idle users, only 14% of our
+yearly IRC users have been active in the last month, but that brings really
+gross UX with it. Additionally our projections are based on IRC, which could be
+a drastic under-estimation as the improved UX of Slack encourages more users to
+participate.</p>
+
+<p>The second big problem is that Slack requires making your email address used
+for the account public. Wordpress has built a workaround for this in the form
+of a <code>chat.wordpress.org</code> mailserver that forwards based on your Wordpress.org
+account information and only accepts email from Slack. We could take a similar
+approach using Chef Supermarket logins, but this would require either augmenting
+SlackIn or developing something custom.</p>
+
+<p>The third big problem is the overall new user flow. Slack is designed assuming
+a company structure, so it does not offer any form of public chat or
+user-initiated signup. SlackIn offers this, but the UX is a bit awkward compared
+to normal web application signup.</p>
+
+<p>A fourth general systemic issue is that Slack, as a company, seems to not
+consider this to be a use case worth pursuing. This means they have <a href="https://www.quora.com/Is-there-a-way-to-ignore-certain-users-in-Slack">stated
+directly</a>
+that they do not plan to offer any community control or moderation features.
+This means no user ignores, no kick/ban abilities, no way to mark trusted users
+(equivalent to op/mod in IRC). Slack also doesn&#39;t offer public logs, though they
+are visible to users once logged in. Some of these we could build ourselves by
+virtue of the user signup process being external, others we will simply have to
+hope that Slack will prioritize eventually.</p>
+
+<p>None of these are fatal flaws, but all seem unlikely to improve given Slack&#39;s
+corporate focus as we know it. The lack of moderation tools is the biggest gap,
+and one that will need careful planning to overcome. <em>ed: we should come up with
+a plan for moderation tools and update this document before merging /ed</em></p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

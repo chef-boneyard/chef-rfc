@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Remove magic and method_missing from Chef::Resource lookup</h1>
+
+<p>This proposal:</p>
+
+<ul>
+<li>Switches to explicit methods for Chef recipe DSL instead of method_missing</li>
+<li>Removes all special treatment of classes in the Chef::Resource and Chef::Provider namespaces</li>
+<li>Automatically adds resource DSL for all named descendants of Chef::Resource, no matter what their namespace</li>
+</ul>
+
+<h2>Compatibility</h2>
+
+<p>In Chef 12, three behavior changes will be noted:</p>
+
+<ul>
+<li>Stack traces for resource declarations will usually no longer contain
+<code>method_missing</code> (and will instead contain the name of the resources).</li>
+<li>Classes outside of the Chef::Resource namespace will now be placed in recipe
+DSL automatically.</li>
+<li>Warnings are issued for deprecated behavior that will change in Chef 13 (see
+Deprecations section).</li>
+</ul>
+
+<p>In Chef 13, deprecated behavior will be removed (along with method_missing).  All
+of these have deprecation warnings enabled for Chef 12 (see Deprecations section).</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">declared</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">own</span><span class="w"> </span><span class="vg">namespace</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">recipe</span><span class="w"> </span><span class="vg">DSL</span><span class="w"> </span><span class="vg">automatically</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to write the name of the resource twice.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">declare</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">own</span><span class="w"> </span><span class="vg">namespace</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">get</span><span class="w"> </span><span class="vg">better</span><span class="w"> </span><span class="vg">error</span><span class="w"> </span><span class="vg">messages</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">there</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">conflict</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">meaningful</span><span class="w"> </span><span class="vg">names</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">stack</span><span class="w"> </span><span class="vg">traces</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">methods</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">actually</span><span class="w"> </span><span class="vg">read</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">debug</span><span class="w"> </span><span class="vg">output</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">less</span><span class="w"> </span><span class="vg">if</span><span class="w"> </span><span class="vg">statements</span><span class="p">,</span><span class="w"> </span><span class="vg">case</span><span class="w"> </span><span class="vg">statements</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">metaprogramming</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">DSL</span><span class="w"> </span><span class="vg">method</span><span class="w"> </span><span class="vg">calls</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">debug</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">follow</span><span class="w"> </span><span class="vg">logic</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">easily</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3>Create explicit DSL methods for resources</h3>
+
+<p>When looking up resources, there is no method anywhere that corresponds to the
+actual resource name.  This can lead to a lot of unnecessarily heavy thinking
+when following some very typical stack traces.  It also means that the name of
+the resource being declared is often not on the stack, making debugging harder.</p>
+
+<p>Here we propose that all resource and definition DSL be added to
+<code>Chef::DSL::Recipe</code> as actual methods, as they are created, so that they can be
+subject to inspection and the stack traces can be followed.  This will happen
+automatically when the user declares resources and definitions.</p>
+
+<h3>Stop automatically adding resources to recipe DSL</h3>
+
+<p>Presently, when you create a class under <code>Chef::Resource</code>, a magical Chef DSL
+based on the class name (<code>my_resource</code>) will automatically work.  Now you will
+need to use <code>provides</code> to explicitly mark the DSL you provide:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyPackage</span><span class="o">::</span><span class="no">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">provides</span> <span class="ss">:shazam</span>
+<span class="k">end</span>
+<span class="c1"># Now `shazam` will work fine in a recipe, but `my_resource` will not.</span>
+</pre></div>
+<p>We will ensure that all existing core Chef classes in the <code>chef</code>, <code>cheffish</code>,
+and <code>chef-provisioning*</code> gems use <code>provides</code> to avoid warnings.  LWRPs will
+automatically do this as well.</p>
+
+<h3>Remove the <code>dsl_name</code> and <code>resource_name</code> class methods</h3>
+
+<p>When resource DSL becomes explicit, the idea that a class has a single DSL name
+no longer makes sense.  We will remove <code>self.dsl_name</code> from <code>Resource</code> and <code>self.resource_name</code> from <code>Chef::Resource::LWRPBase</code>.</p>
+
+<h3>Move LWRPs out of the Chef::Resource namespace</h3>
+
+<p>With Chef::Resource no longer a special place for class lookup, LWRPs no longer
+need to be given a namespace.  We will now make resources/x.rb and providers/x.rb
+an anonymous class, with string methods to make it easy to see where they come
+from.  This avoids a number of potential errors and warnings that can happen in
+the case of conflicts, and gives us control over how we handle conflicts.</p>
+
+<p>Users who wish to set the class of the resource can assign it directly in the
+LWRP with <code>Namespace::MyResource = self</code>.</p>
+
+<h2>Deprecations and Errors</h2>
+
+<p>Removing <code>method_missing</code> means several methods of creating resource names cannot
+be caught.  These are the cases.  We will issue deprecation warnings for each one
+and remove them (and method_missing) come Chef 13.</p>
+
+<h3>Chef::Resource::MyResource without <code>provides</code></h3>
+
+<p>When you have a class in the <code>Chef::Resource</code> namespace without <code>provides</code>, the
+DSL will no longer work in Chef 13.  In 12 we will issue a deprecation warning
+whenever the user tries to use a DSL class without corresponding DSL.</p>
+
+<p>There is a backwards compatibility break related to moving a <code>Chef::Resource</code>
+class from not having <code>provides</code>, to having <code>provides</code>.  Specifically, in Chef 12
+we don&#39;t check for <code>Chef::Resource::FooBar</code> until after we have asked all
+resources if <code>provides?</code> is true.  This gave <code>provides</code> classes an implicit
+<em>priority</em> over non-provides <code>Chef::Resource</code> classes.</p>
+
+<p>If someone is (knowingly or unknowingly) taking advantage of this implicit
+priority, and adds <code>provides :foo_bar</code> to <code>Chef::Resource::FooBar</code>, it would be
+considered (and possibly selected) along with other classes that say things like
+<code>provides :foo_bar, os: &#39;linux&#39;</code>.  If there are multiple matches, we pick the
+first class alphabetically.  This would change behavior.</p>
+
+<p>The correct workaround for the user in this case is to use
+<code>Chef.set_resource_priority_array :foo_bar [Linux::FooBar, Chef::Resource::FooBar]</code>, which will bring the correct version into ascendancy
+again.</p>
+
+<h3>Calling <code>method_missing</code> directly</h3>
+
+<p>If people call <code>method_missing</code> directly to invoke DSL methods, and we don&#39;t
+define it anymore, it obviously won&#39;t actually invoke the methods.  We will
+detect this in method<em>missing, issue a warning telling people to call the
+actual method instead or use public</em>send(), and remove it come Chef 13.</p>
+
+<h3>Custom <code>provides?</code> without corresponding <code>provides :name</code></h3>
+
+<p>If someone creates a resource class with a custom <code>provides?</code> method, they can
+currently</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="k">def</span> <span class="nf">provides?</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">name</span><span class="p">)</span>
+    <span class="nb">name</span> <span class="o">==</span> <span class="ss">:blah</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>The implications of this are that we have to scan every single resource when
+you type <code>blah</code> in a recipe, just so we can catch this one.  In Chef 12 we will
+issue a deprecation warning and tell you to do this instead:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">provides</span> <span class="ss">:blah</span>
+<span class="k">end</span>
+</pre></div>
+<h3>Referencing Chef::Resource::MyLWRPResource</h3>
+
+<p>When you create an LWRP, it is presently placed in
+<code>Chef::Resource::CookbooknameResourcename</code>.  In the spirit of not placing user
+defined stuff into the core Chef namespace, this will no longer happen.  Any
+user that calls <code>Chef::Resource::MyLwrpResource.new</code> or extends directly from
+the name <code>Chef::Resource::MyLwrpResource</code> will receive a warning.</p>
+
+<h2>Risks To Specific Software</h2>
+
+<p>While we&#39;re trying to maintain full compatibility, there&#39;s risk here, particularly for people doing metaprogramming of resources.  We will run the tests of the following packages, and make sure current versions still work (possibly emitting
+deprecation warnings):</p>
+
+<ul>
+<li>chef-sugar</li>
+<li>chefspec</li>
+<li>chef-rewind</li>
+<li>Poise</li>
+<li>Crazytown</li>
+<li>Halite</li>
+<li>foodcritic</li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

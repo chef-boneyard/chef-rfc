@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Omnibus Chef Native Gem Additions</h1>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">User</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">omnibus</span><span class="o">-</span><span class="vg">chef</span><span class="w"> </span><span class="vg">ship</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">nokogiri</span><span class="p">,</span>
+<span class="vg">Because</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">speed</span><span class="w"> </span><span class="vg">up</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">initial</span><span class="w"> </span><span class="vg">converges</span><span class="p">,</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">ease</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">pain</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">installing</span><span class="w"> </span><span class="vg">it</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">User</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">omnibus</span><span class="o">-</span><span class="vg">chef</span><span class="w"> </span><span class="vg">ship</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">popular</span><span class="w"> </span><span class="vg">Open</span><span class="w"> </span><span class="vg">Source</span><span class="w"> </span><span class="vg">databases</span><span class="p">,</span>
+<span class="vg">Because</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">speed</span><span class="w"> </span><span class="vg">up</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">initial</span><span class="w"> </span><span class="vg">converges</span><span class="p">,</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">again</span><span class="w"> </span><span class="vg">ease</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">pain</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Postgres</span><span class="w"> </span><span class="vg">Cookbook</span><span class="w"> </span><span class="vg">Author</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">need</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">better</span><span class="w"> </span><span class="vg">way</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">install</span><span class="w"> </span><span class="vg">native</span><span class="w"> </span><span class="vg">gems</span><span class="p">,</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">required</span><span class="w"> </span><span class="vg">workarounds</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">unstable</span><span class="w"> </span><span class="vg">Ruby</span><span class="w"> </span><span class="vg">APIs</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">links</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">omnibus</span><span class="w"> </span><span class="vg">packaged</span><span class="w"> </span><span class="vg">OpenSSL</span><span class="w"> </span><span class="vg">library</span><span class="p">,</span><span class="w"> </span><span class="vg">which</span><span class="w"> </span><span class="vg">makes</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">very</span><span class="w"> </span><span class="vg">complex</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">brittle</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>The supporting native libraries:</p>
+
+<ul>
+<li>libxml2</li>
+<li>libxslt</li>
+<li>libpq</li>
+<li>MariaDB Connector/C</li>
+</ul>
+
+<p>And the following gems:</p>
+
+<ul>
+<li>nokogiri</li>
+<li>pg</li>
+<li>mysql2</li>
+</ul>
+
+<p>Will be added to the omnibus-chef distribution on all Tier #1 systems.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

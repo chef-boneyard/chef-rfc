@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Migration Status - Complete</h1>
+
+<p>This RFC was accepted and the work proposed herein has been completed.  The mailing list was cutover from http://lists.opscode.com to https://discourse.chef.io on 13 October 2015.</p>
+
+<p>The details below are being maintained to provide insight on motivation for the switch and for other historical purposes.</p>
+
+<h1>Mailing List Migration</h1>
+
+<p>This RFC proposes the migration of all existing Chef mailing lists
+(namely, <code>{chef,chef-dev}@lists.opscode.com</code>) to 
+<a href="http://www.discourse.org/">Discourse</a>.  Discourse is a modern web application
+for discussion forums that can also be used like a mailing list with 
+subscriptions and mail-in responses and posts.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">Chef</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">mailing</span><span class="w"> </span><span class="vg">lists</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">reliable</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">easy</span><span class="o">-</span><span class="vg">to</span><span class="o">-</span><span class="vg">use</span><span class="w"> </span><span class="vg">platform</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">collaborate</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">others</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">community</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">system</span><span class="w"> </span><span class="vg">administrator</span><span class="w"> </span><span class="vg">working</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Software</span><span class="p">,</span><span class="w"> </span><span class="vg">Inc</span><span class="o">.</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">retire</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">old</span><span class="w"> </span><span class="vg">mailing</span><span class="w"> </span><span class="vg">list</span><span class="w"> </span><span class="vg">system</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">manage</span><span class="w"> </span><span class="vg">one</span><span class="w"> </span><span class="vg">in</span><span class="o">-</span><span class="vg">house</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">focus</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">attention</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">higher</span><span class="o">-</span><span class="vg">priority</span><span class="w"> </span><span class="vg">infrastructure</span><span class="w"> </span><span class="vg">issues</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>This RFC proposes to migrate the existing Sympa-run mailing lists at
+<code>lists.opscode.com</code> to <a href="http://www.discourse.org/">Discourse</a>.</p>
+
+<p>There are only two mailing lists of note: <code>chef</code> and <code>chef-dev</code>. The
+desired group names would be the same, but if <code>chef</code> is already taken,
+we propose that the new group name become <code>chef-users</code>.</p>
+
+<h3>Subscriber Migration</h3>
+
+<p>All existing subscribers on the current mailing list(s) would be
+migrated to their counterparts on Discourse.</p>
+
+<h3>Archive Migration</h3>
+
+<p>Chef Software, Inc. will make a reasonable attempt to migrate the
+archives of each of these mailing lists out of Sympa, potentially
+using a tool like 
+<a href="https://github.com/cdelacroix/sympa-data-extract">sympa-data-exporter</a> and into 
+Discourse.</p>
+
+<p>However, we recognize that this may not be feasible. If it is not,
+we will simply create a static HTML site of the old Sympa archives
+and publish that.</p>
+
+<h2>Rationale</h2>
+
+<p>The existing mailing list system at 
+<a href="http://lists.opscode.com">lists.opscode.com</a>, Sympa, is very old and fragile.
+Additionally, it is not a delightful experience for end-users of
+Chef, who must navigate a non-intuitive interface to subscribe to,
+unsubscribe from, and view the archives of the Chef user and developer
+mailing lists.</p>
+
+<p>There have been <a href="http://archive.lists.chef.io/sympa/arc/chef-dev/2012-06/msg00029.html">previous efforts dating to 2012</a> to 
+try and migrate off Sympa, but none have succeeded thus far.</p>
+
+<p>In February, 2015, we attempted a move to Google Groups.  This failed because we 
+immediately exceeded the allowable number of messages for our group.  Our group 
+is tied to our business google apps account which should have the limit 
+increased in April of 2015 but there&#39;s no guarantee that the system will then 
+support our group.  It&#39;s best not to proceed with Google Groups.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

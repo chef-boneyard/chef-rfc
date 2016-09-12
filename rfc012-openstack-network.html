@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Named Network Support in knife-openstack</h1>
+
+<p>Proposal for generically supporting networks not named <code>public</code> or <code>private</code> with knife-openstack.</p>
+
+<p>For the existing knife plugins there has been a general assumption that virtual machines provisioned have a <code>public</code> and/or a <code>private</code> IP address. With OpenStack&#39;s capability of having essentially unlimited named networks this assumption falls short. There have been several proposed fixes, but a generalized solution that is adaptable for each use case is needed.</p>
+
+<p>This was previously discussed internally at Chef at http://wiki.corp.opscode.com/display/CORP/RFC+Generalized+Network+Configuration+Specification+for+Knife+Cloud+Plugins</p>
+
+<h2>knife openstack server create</h2>
+
+<p><code>knife openstack server create</code> will provide support for bootstrapping nodes on networks other than <code>public</code> and <code>private</code> IP addresses.</p>
+
+<h3>Current</h3>
+
+<p><code>knife openstack server create</code> currently supports <code>--private-network</code> to use the private IP for bootstrapping rather than the public IP.</p>
+
+<p>There are also a number of networking-related tickets open with patches that may be relevant:</p>
+
+<ul>
+<li><a href="https://tickets.opscode.com/browse/KNIFE-231">KNIFE-231</a> added ability to specify arbitrary network ID</li>
+<li><a href="https://tickets.opscode.com/browse/KNIFE-277">KNIFE-277</a> knife openstack &quot;ERROR: No IP address available for bootstrapping.&quot;</li>
+</ul>
+
+<h3>Proposal</h3>
+
+<ul>
+<li><code>knife openstack server create --bootstrap-network LABEL_OR_ID</code>: specify network to use for bootstrapping. Default is <code>public</code></li>
+<li><code>knife openstack server create --private-network</code>: Use the private IP for bootstrapping rather than the public IP, unchanged behavior but same as <code>--bootstrap-network private</code></li>
+<li><code>knife openstack server create --no-network</code>: Names of networks are potentially unknown, if &#39;public&#39; or &#39;private&#39; are unavailable select first IP from first network alphabetically.</li>
+</ul>
+
+<h2>knife openstack server delete</h2>
+
+<p><code>knife openstack server delete</code> will display the proper network information for the node.</p>
+
+<h3>Current</h3>
+
+<p><code>knife openstack server delete</code> currently lists the <code>public</code> and <code>private</code> networks associated with the node marked for deletion.</p>
+
+<h3>Proposal</h3>
+
+<p><code>knife openstack server delete</code>: list all networks and IPs networks associated with the node.</p>
+
+<h4>Example output</h4>
+<div class="highlight"><pre>$ knife openstack server delete 5fe19d0d-431a-415e-84f2-4281a5460460
+Instance Name: os-3703903309844765
+Instance ID: 5fe19d0d-431a-415e-84f2-4281a5460460
+Flavor: 1
+Image: c6ec4c81-e116-4d78-9b78-6c9bb9b91377
+Bar IP Address: 172.168.100.81
+Foo IP Address: 10.138.100.5
+Public IP Address: 192.168.100.2
+
+Do you really want to delete this server? (Y/N)
+</pre></div>
+<h2>Future work</h2>
+
+<p>This RFC is focused on associating with known named networks and these changes will be included in future releases after the <a href="https://github.com/opscode/knife-cloud/">knife-cloud</a> refactoring. The knife-cloud refactoring will make these options available to additional knife plugins.</p>
+
+<h3>knife openstack server list</h3>
+
+<p><code>knife openstack server list</code> will provide support for listing nodes&#39; networks other than <code>public</code> and <code>private</code>.</p>
+
+<h4>Current</h4>
+
+<p>&#39;Public IP&#39; and &#39;Private IP&#39; are hard-coded in the output.</p>
+<div class="highlight"><pre>Instance ID                           Name                 Public IP      Private IP  Flavor  Image                                 Keypair  State
+5fe19d0d-431a-415e-84f2-4281a5460460  os-3703903309844765  192.168.100.2              1       c6ec4c81-e116-4d78-9b78-6c9bb9b91377  testing  active
+</pre></div>
+<h4>Proposal</h4>
+
+<p>The various permutations of &quot;knife CLOUD server list&quot; all have &#39;Public IP&#39; and &#39;Private IP&#39; as column headers (in various capitalizations and spacings). Standardizing this under knife-cloud and making an additional argument of <code>--network [NAMES_OR_IDS]</code> that defaulted to <code>public,private</code> would allow for overriding to show different networks without requiring the display of every potential network. An additional option of <code>--network-filter [NAMES_OR_IDS]</code> could be used to only show the nodes on those networks. Because this information may be easier to pull from the Chef node than from Fog (depending on the particular cloud provider), knife-cloud shold also provide the associated node&#39;s name as a column, a frequently mentioned feature request.</p>
+
+<p>This will be part of a future knife-cloud-based release.</p>
+
+<h3>knife openstack network list</h3>
+
+<p><code>knife openstack network list</code> will list all of the networks available for attaching new nodes to.</p>
+
+<h4>Current</h4>
+
+<p>Not currently available. There is a ticket open with patches that may be relevant:</p>
+
+<ul>
+<li><a href="https://tickets.opscode.com/browse/KNIFE-423">KNIFE-423</a> Add new command &#39;knife openstack network list&#39;</li>
+</ul>
+
+<h4>Proposal</h4>
+
+<p>Outputs a list of available networks to the currently configured OpenStack account. <code>knife rackspace network list</code> currently lists the networks available for Rackspace users, the <code>knife CLOUD network list</code> will behave similarly.</p>
+
+<p>This will be part of a future knife-cloud-based release.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

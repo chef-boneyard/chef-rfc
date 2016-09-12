@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>On-Demand Cookbook Libraries</h1>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">nested</span><span class="w"> </span><span class="vg">directories</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">organize</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">code</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">readable</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">control</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">load</span><span class="w"> </span><span class="vg">order</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">library</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">code</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">one</span><span class="w"> </span><span class="vg">file</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">refers</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">code</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">another</span><span class="w"> </span><span class="vg">file</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">constraining</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">filenames</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="err">`</span><span class="vg">require</span><span class="err">`</span><span class="w"> </span><span class="vg">files</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to deal with the pitfalls of `require_relative` (particularly that it loads things multiple times).</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="err">`</span><span class="vg">require</span><span class="err">`</span><span class="w"> </span><span class="vg">files</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbooks</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">use</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">pick</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">choose</span><span class="w"> </span><span class="vg">what</span><span class="w"> </span><span class="vg">functionality</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">load</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>When a user creates a cookbook, they can add the following directive to the metadata:</p>
+<div class="highlight"><pre><span class="c1"># metadata.rb</span>
+<span class="nb">name</span> <span class="s2">&quot;mylibrary&quot;</span>
+<span class="n">version</span> <span class="s2">&quot;0.0.1&quot;</span>
+<span class="n">eager_load_libraries</span> <span class="kp">false</span>
+</pre></div>
+<p>If <code>eager_load_libraries</code> is false, Chef Client would instead append it to the ruby load path.  This would occur in the phase where the <code>libraries</code> files of a cookbook otherwise be automatically required in alphabetical order.  All recipes, libraries, and other Ruby code running in the Chef Client can then use <code>require &#39;filename&#39;</code><code>and it will load</code>cookbooks/mycookbook/libraries/filename` if present.</p>
+
+<p>If <code>eager_load_libraries</code> contains a list of files or globs, the library path is appended to the Ruby load path, and the listed files are loaded during the library load phase.</p>
+
+<p>If <code>eager_load_libraries</code> is <code>true</code> or not specified, Chef Client loads the top level of files in alphabetical order, as before.</p>
+
+<h2>Rationale</h2>
+
+<p>When a user wants to create a more complex library cookbook with multiple Ruby files, they have an issue right now: the library is automatically loaded in alphabetical order, making it hard to organize files.  You can circumvent it somewhat using <code>require_relative</code> to load the other files out of order, but that may load a file twice, leading to other problems.  This RFC circumvents that by requiring files to be loaded explicitly by the user or library writer using <code>require</code>, but allowing for an entry point (<code>default.rb</code>).</p>
+
+<p>There is also the fact that you don&#39;t necessarily <em>need</em> all the functionality in a library cookbook, and this RFC lets you pick and choose what to load.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

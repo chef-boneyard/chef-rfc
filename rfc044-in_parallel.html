@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Parallelization in Chef Recipes</h1>
+
+<p>Chef presently runs the resources in a recipe serially, one after the next.  In this proposal, groups of resources can be created which will run in parallel.</p>
+
+<h2>MVP (Minimum Viable Product) Features</h2>
+
+<h3>resource_group</h3>
+
+<p>To run a group of resources in parallel, you write it this way:</p>
+<div class="highlight"><pre><span class="n">resource_group</span> <span class="ss">:parallel</span> <span class="k">do</span>
+  <span class="n">remote_file</span> <span class="s1">&#39;/tmp/bigfile.txt&#39;</span> <span class="k">do</span>
+    <span class="n">source</span> <span class="s1">&#39;https://a.com/bigfile.txt&#39;</span>
+  <span class="k">end</span>
+  <span class="n">remote_file</span> <span class="s1">&#39;/tmp/bigfile2.txt&#39;</span> <span class="k">do</span>
+    <span class="n">source</span> <span class="s1">&#39;https://a.com/bigfile2.txt&#39;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p><code>resource_group</code> groups a set of resources together to apply a behavior to all of them.  It can take a options, including <code>:serial</code>, <code>:parallel</code>, and <code>:concurrency =&gt; n</code> (the maximum number of things to do simultaneously).</p>
+
+<p>By default, a <code>resource_group</code> is <code>:serial</code>, meaning resources are executed in order, one by one.</p>
+
+<h3>Declaring Parallel Safety</h3>
+
+<p>In order to run inside a <code>:parallel</code> group, a resource must declare that it is parallel safe.  To do this, it should override the <code>parallel_safe?</code> method and return <code>true</code>.  If the <code>parallel_safe?</code> method is missing or returns <code>false</code>, the recipe will fail to compile.</p>
+
+<h3>Notifications</h3>
+
+<p>If a resource in a parallel group notifies another resource, behavior will depend on whether the notified resource is parallel-safe.  If it <em>is</em> parallel-safe, the notification will be queued to run as part of the existing parallel group.  If it is <em>not</em> parallel-safe, the notification will be queued to run after the entire parallel group completes.</p>
+
+<h3>Failure Handling</h3>
+
+<p>If a resource action in a parallel group fails, the parallel group will run all other actions to completion (or failure) before exiting the recipe.</p>
+
+<h3>Group notifications</h3>
+
+<p>When the entire group finishes, it is sometimes desirable to send a single notification.  The <code>subscribes</code> and <code>notifies</code> primitives work inside a <code>resource_group</code> (whether it is serial or parallel) and if <em>any</em> resource is changed, the group will send the notification.</p>
+
+<p>resource_groups can also be given names if a string is passed as the first parameter:</p>
+<div class="highlight"><pre><span class="vg">resource_group</span><span class="w"> </span><span class="c1">&#39;hi&#39; do</span>
+<span class="w">  </span><span class="o">...</span>
+<span class="vg">end</span>
+<span class="vg">file</span><span class="w"> </span><span class="c1">&#39;/x.txt&#39;</span>
+<span class="w">  </span><span class="vg">action</span><span class="w"> </span><span class="o">:</span><span class="vg">nothing</span>
+<span class="w">  </span><span class="vg">subscribes</span><span class="w"> </span><span class="c1">&#39;resource_group[hi]&#39;, :create</span>
+<span class="vg">end</span>
+</pre></div>
+<h3>Output formatting: groups</h3>
+
+<p>Groups are a form of nested resource (whose output would be similar to that of use<em>inline</em>resources).  Nested resources currently print something like this:</p>
+<div class="highlight"><pre><span class="nl">Recipe:</span><span class="w"> </span><span class="err">@</span><span class="nl">recipe_files:</span><span class="o">:/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">oc</span><span class="o">/</span><span class="vg">code</span><span class="o">/</span><span class="vg">opscode</span><span class="o">/</span><span class="vg">chef</span><span class="o">-</span><span class="vg">rfc</span><span class="o">/</span><span class="vg">blah</span><span class="o">.</span><span class="vg">rb</span>
+<span class="w">  </span><span class="o">*</span><span class="w"> </span><span class="vg">compound_resource</span><span class="p">[</span><span class="vg">a</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w">  </span><span class="o">*</span><span class="w"> </span><span class="vg">file</span><span class="p">[</span><span class="o">/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">x</span><span class="o">.</span><span class="vg">txt</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
+<span class="w">  </span><span class="o">*</span><span class="w"> </span><span class="vg">file</span><span class="p">[</span><span class="o">/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">y</span><span class="o">.</span><span class="vg">txt</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
+<span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
+</pre></div>
+<p>With this proposal, a resource_group or other compound resource would print like this:</p>
+<div class="highlight"><pre><span class="nl">Recipe:</span><span class="w"> </span><span class="err">@</span><span class="nl">recipe_files:</span><span class="o">:/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">oc</span><span class="o">/</span><span class="vg">code</span><span class="o">/</span><span class="vg">opscode</span><span class="o">/</span><span class="vg">chef</span><span class="o">-</span><span class="vg">rfc</span><span class="o">/</span><span class="vg">blah</span><span class="o">.</span><span class="vg">rb</span>
+<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="vg">compound_resource</span><span class="p">[</span><span class="vg">a</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span>
+<span class="w">   </span><span class="o">*</span><span class="w"> </span><span class="vg">file</span><span class="p">[</span><span class="o">/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">x</span><span class="o">.</span><span class="vg">txt</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
+<span class="w">   </span><span class="o">*</span><span class="w"> </span><span class="vg">file</span><span class="p">[</span><span class="o">/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">y</span><span class="o">.</span><span class="vg">txt</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
+<span class="w">   </span><span class="vg">compound_resource</span><span class="p">[</span><span class="vg">a</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
+</pre></div>
+<h3>Output formatting: parallelism and batch</h3>
+
+<p>There are two major ways of formatting output when many things run in parallel: batched output or streamed output.  In the batch case, we queue output for each resource and print it when the resource completes.  In the streamed case, we print each piece of output as the resource goes.  By default, output is batched.  Streamed output is a future enhancement.</p>
+
+<h2>Future Features</h2>
+
+<p>This is intended to give a flavor of the future--anything underspecified here will require a new RFC.</p>
+
+<h3>Thread pool configuration</h3>
+
+<p>The <code>Chef::Config.concurrency</code> parameter, and <code>--concurrency</code> argument to <code>chef-client</code>, limits the number of concurrent parallel resources globally.  To limit them specifically, you add parameters to the <code>in_parallel</code> directive like so:</p>
+<div class="highlight"><pre><span class="n">resource_group</span> <span class="ss">:parallel</span><span class="p">,</span> <span class="ss">:concurrency</span> <span class="o">=&gt;</span> <span class="mi">10</span> <span class="k">do</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="k">end</span>
+</pre></div>
+<h3>in_serial</h3>
+
+<p>To run a group of actions serially, but inside a parallel grouping, you write this:</p>
+<div class="highlight"><pre><span class="n">resource_group</span> <span class="ss">:parallel</span> <span class="k">do</span>
+  <span class="n">resource_group</span> <span class="k">do</span>
+    <span class="n">directory</span> <span class="s1">&#39;/dir1&#39;</span>
+    <span class="n">file</span> <span class="s1">&#39;/dir1/blah.txt&#39;</span> <span class="k">do</span>
+      <span class="n">content</span> <span class="s1">&#39;hi&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="n">resource_group</span> <span class="k">do</span>
+    <span class="n">directory</span> <span class="s1">&#39;/dir2&#39;</span>
+    <span class="n">file</span> <span class="s1">&#39;/dir2/blah.txt&#39;</span> <span class="k">do</span>
+      <span class="n">content</span> <span class="s1">&#39;hi&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Custom parallelization</h2>
+
+<p>Some resource types (such as packages) handle parallelization internally.  We will create a directive allowing multiple resources to collaborate and run a single parallel thing to handle multiple actions.  For example, if you wrote 10 package directives inside <code>resource_group :parallel</code>, they would cooperate and run a single package installation command, passing all the packages to it.</p>
+
+<h3>Output formatting: parallelism and streaming</h3>
+
+<p>We will support streamed output from parallel groups, so that you can see when things start and when they end.  How this happens and what the output looks like will be specified later.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

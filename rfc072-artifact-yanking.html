@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Cookbook and Cookbook Version Yanking Policy</h1>
+
+<h2>Motivation</h2>
+
+<p>As a Supermarket User</p>
+
+<p>When I download an artifact from Supermarket</p>
+
+<p>And I depend on that artifact</p>
+
+<p>I do NOT want that artifact to be removed from Supermarket</p>
+
+<p>As a artifact author or collaborator</p>
+
+<p>When I upload an artifact to Supermarket</p>
+
+<p>And something is wrong with the artifact</p>
+
+<p>I want a way to hide it from the Supermarket UI</p>
+
+<p>And from the /universe endpoint</p>
+
+<h2>Specification</h2>
+
+<p>Currently, a Supermarket artifact author cannot remove a cookbook version from Supermarket without contacting the Supermarket admins.</p>
+
+<p>A cookbook author CAN remove a cookbook completely from Supermarket.</p>
+
+<p>The problem is when another user is depending on a cookbook version (or other future Supermarket artifact) and it is removed from Supermarket, that user&#39;s Chef setups could break.  Additionally, if someone were to accidentally upload security credentials (as happens from time to time with uploads to Supermarket) and yank the cookbook or cookbook version from Supermarket, it could provide a false sense of security.  Once a cookbook version has been uploaded to Supermarket, it can be downloaded or copied within seconds.  It is far better to invalidate the security credentials.</p>
+
+<p>Here&#39;s my proposal:</p>
+
+<p>When a user unshares a cookbook from Supermarket (such as through $knife cookbook site unshare), Supermarket will assign the cookbook version a flag</p>
+
+<p>When a cookbook version has that flag, it will be hidden from both the Supermarket UI and the /universe endpoint</p>
+
+<p>It will not, however, be completely deleted from the Supermarket artifact store.</p>
+
+<p>If someone depends on the cookbook version, they will still be able to download and access it</p>
+
+<p>But it will be harder for a new user of the cookbook version to find the unshared version.</p>
+
+<p>The user who unshares the cookbook will be notified of this, along with a message that if they REALLY need it deleted to contact the Supermarket admins</p>
+
+<h2>Downstream Impact</h2>
+
+<p>Ideally this would not affect Berkshelf...but it must be tested thoroughly before deployment.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

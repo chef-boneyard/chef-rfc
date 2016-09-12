@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Policyfile HTTP Resource API</h1>
+
+<p>Policyfiles are a new feature of Chef that allow the user to specify a
+<code>run_list</code> and exact set of cookbooks that <code>chef-client</code> will use to
+converge a node (host) to a desired state. In contrast with the current
+behaviors of Chef Client and Server, Policyfiles provide a way to
+describe and manage configuration code on a whole-node basis, reducing
+Chef Client&#39;s use of shared, mutable resources hosted on the server and
+providing operators easier visibility into configuration code and
+changes. For further description of the Policyfile feature, read the dedicated
+<a href="https://github.com/chef/chef-dk/blob/master/POLICYFILE_README.md">POLICYFILE README.</a></p>
+
+<p>A preview implementation of the Policyfile feature is currently available; in
+this implementation, Policyfile documents are stored as data bag items.
+Although this implementation works, it does not provide the baseline quality
+users expect. In particular, there is no validation, no means to make any
+relational queries, and documents are indexed for search as data bag items.</p>
+
+<p>This RFC describes a new Policyfile HTTP Resource API that remediates these
+issues.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">Policyfiles</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">dedicated</span><span class="w"> </span><span class="vg">HTTP</span><span class="w"> </span><span class="vg">Resource</span><span class="w"> </span><span class="vg">API</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">Policyfiles</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">validated</span><span class="w"> </span><span class="vg">upon</span><span class="w"> </span><span class="vg">upload</span>
+<span class="vg">and</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">query</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">relationships</span><span class="w"> </span><span class="vg">between</span><span class="w"> </span><span class="vg">Policyfiles</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">objects</span><span class="p">,</span>
+<span class="vg">and</span><span class="w"> </span><span class="vg">Policyfiles</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">indexed</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">incorrect</span><span class="w"> </span><span class="vg">data</span><span class="w"> </span><span class="vg">type</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3>General Concepts</h3>
+
+<p>A Policyfile lock is a JSON document that specifies a node&#39;s run list and the
+set of cookbooks a node will use to converge the node.</p>
+
+<p>A Policy Group is a set of nodes defined by a single token. Nodes must be a
+member of a Policy Group in order to use the Policyfile feature, and nodes may
+only be a member of one policy group.</p>
+
+<h3>Policyfile Lock</h3>
+
+<p>A Policyfile lock is a JSON document that has the following structure:</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">&quot;revision_id&quot;</span><span class="p">:</span> <span class="s2">&quot;edd40c30c4e0ebb3658abde4620597597d2e9c17&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;some_policy_name&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;run_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;recipe[policyfile_example_cookbook::default]&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;cookbook_locks&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;policyfile_example_cookbook&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;f04cc40faf628253fe7d9566d66a1733fb1afbe9&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<h4><code>revision_id</code> Field (required)</h4>
+
+<p>The <code>revision_id</code> field is used to distinguish revisions of a Policyfile lock
+document. It is a JSON String containing a hash of the canonicalized content of
+the Policyfile lock, given in hexadecimal form. A fully compliant server MUST
+independently compute the <code>revision_id</code> and reject a creation request if the
+submitted <code>revision_id</code> is incorrect.</p>
+
+<p>The canonicalized form of the Policyfile lock is not finalized at this time,
+but will be provided in a future update to this document. Note that the format
+will not be based on JSON, as JSON has no canonical form.</p>
+
+<h4><code>name</code> Field (required)</h4>
+
+<p>The <code>name</code> field describes the functional role that is fulfilled by a node that
+applies this policy. It may contain alphanumeric characters, hyphens,
+underscores, the dot character and the colon character. In regular expression
+form: <code>/^[\-[:alnum:]_\.\:]+$/</code>. The name is also limited to a maximum of 255
+characters. The Chef Server must reject a Policyfile lock document if the name
+does not meet these criteria.</p>
+
+<h4><code>run_list</code> Field (required)</h4>
+
+<p>The <code>run_list</code> field gives the ordered list of recipes that Chef client should
+apply to converge a node. Each item MUST be in fully qualified form, that is,
+<code>recipe[COOKBOOK_NAME::RECIPE_NAME]</code>. Roles are not valid run list items in the
+Policyfile lock document, and the Chef Server MUST reject run lists that
+contain roles.</p>
+
+<h4><code>cookbook_locks</code> Field (required)</h4>
+
+<p>The <code>cookbook_locks</code> Field is a JSON object (Ruby Hash). The keys are cookbook
+names. The Chef Server MUST validate the keys according to the same validation
+rules applied to cookbook names for other APIs. The values are JSON objects
+that contain information about the cookbook.  These objects MUST have a
+<code>version</code> field that gives the cookbook&#39;s version number. The server must apply
+the same validation rules to this field as it applies to cookbooks uploaded to
+the cookbook artifacts API, described in <a href="https://github.com/chef/chef-rfc/blob/master/rfc022-arbitrary-cookbook-identifiers.md">Chef RFC022.</a>
+They MUST also have an <code>identifier</code> field. This gives the cookbook&#39;s
+identifier, as described in Chef RFC022. The Chef Server must validate this
+field according to the same rules as applied to cookbooks uploaded to the
+cookbook artifacts API.  Cookbook lock objects MAY contain other fields with
+arbitrary information about the cookbook. The Chef Server must accept and
+persist this data. For example, ChefDK generates Policyfile lock documents that
+include source URLs, version control information, and the name of the directory
+where the cookbook is stored in ChefDK&#39;s cache. Cookbook lock objects MAY
+contain a <code>dotted_decimal_identifier</code> field which contains a representation of
+the identifier as a version number.  This field is used when cookbooks are
+stored on a server that does not support the arbitrary cookbook identifier API
+described in Chef RFC022.</p>
+
+<p>Example cookbook locks including optional fields:</p>
+<div class="highlight"><pre>    <span class="s2">&quot;policyfile_demo&quot;</span><span class="err">:</span> <span class="p">{</span>
+      <span class="nt">&quot;revision_id&quot;</span><span class="p">:</span> <span class="s2">&quot;edd40c30c4e0ebb3658abde4620597597d2e9c17&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;f04cc40faf628253fe7d9566d66a1733fb1afbe9&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;dotted_decimal_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;67638399371010690.23642238397896298.25512023620585&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;cookbooks/policyfile_demo&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;cache_key&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;scm_info&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;scm&quot;</span><span class="p">:</span> <span class="s2">&quot;git&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;remote&quot;</span><span class="p">:</span> <span class="s2">&quot;git@github.com:danielsdeleo/policyfile-jenkins-demo.git&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;revision&quot;</span><span class="p">:</span> <span class="s2">&quot;edd40c30c4e0ebb3658abde4620597597d2e9c17&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;working_tree_clean&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="nt">&quot;published&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="nt">&quot;synchronized_remote_branches&quot;</span><span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;source_options&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;cookbooks/policyfile_demo&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span><span class="err">,</span>
+    <span class="s2">&quot;apt&quot;</span><span class="err">:</span> <span class="p">{</span>
+      <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.6.1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;5f7045a8aeaf6ccda3b3594258df9ee982b3a023&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;dotted_decimal_identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;26863567272587116.57882360917678303.174725757378595&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;cache_key&quot;</span><span class="p">:</span> <span class="s2">&quot;apt-2.6.1-supermarket.chef.io&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;origin&quot;</span><span class="p">:</span> <span class="s2">&quot;https://supermarket.chef.io/api/v1/cookbooks/apt/versions/2.6.1/download&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;source_options&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;artifactserver&quot;</span><span class="p">:</span> <span class="s2">&quot;https://supermarket.chef.io/api/v1/cookbooks/apt/versions/2.6.1/download&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.6.1&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span><span class="err">,</span>
+</pre></div>
+<p>Note that a future update to Chef RFC 022 will introduce a standardized format
+for cookbook identifiers based on the content of the cookbook and will
+introduce strict server-side checking of the identifier field.</p>
+
+<h4><code>named_run_lists</code> Field (Optional)</h4>
+
+<p>Named run lists provide a replacement for the override run list feature in Chef
+Client, which is not compatible with Policyfiles because the run list and
+cookbook set must be bundled together in a Policyfile lock document.</p>
+
+<p>Then <code>named_run_lists</code> field is a JSON object; inside this object, the keys are
+the names of the named run lists and values are JSON arrays of run list items.
+As with the top-level <code>run_list</code> field, run list items for named run lists MUST
+be in fully qualified recipe form, and roles are not accepted.</p>
+
+<p>A named run list name may contain alphanumeric characters, hyphens,
+underscores, the dot character and the colon character. In regular expression
+form: <code>/^[\-[:alnum:]_\.\:]+$/</code>. It must be a least one character long and
+cannot exceed 255 characters.</p>
+<div class="highlight"><pre>  <span class="s2">&quot;named_run_lists&quot;</span><span class="err">:</span> <span class="p">{</span>
+    <span class="nt">&quot;update_jenkins&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;recipe[jenkins::master]&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;recipe[policyfile_demo::default]&quot;</span>
+    <span class="p">]</span>
+  <span class="p">}</span><span class="err">,</span>
+</pre></div>
+<h4>Attributes Fields (Optional)</h4>
+
+<p>A Policyfile lock may contain default and override attributes. Chef Client will
+treat these attributes the same as it currently treats role attributes. Default
+and override attributes are stored in separate top-level keys:</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">&quot;default_attributes&quot;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="nt">&quot;override_attributes&quot;</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+<h4>Other Optional Fields</h4>
+
+<p>A Policyfile lock can contain arbitrary information in other top-level fields.
+The Chef Server MUST accept and preserve the data in these fields (though the
+server MAY enforce a limit on overall document size). ChefDK currently uses a
+<code>solution_dependencies</code> field to store a list of all dependencies relevant to
+the cookbook set.</p>
+
+<h3>API Schema</h3>
+
+<h4><code>/policy_groups</code></h4>
+
+<p>Container for policy groups.</p>
+
+<h5><code>GET /policy_groups</code></h5>
+
+<p>Returns a list of policy groups that exist.</p>
+
+<h4><code>/policy_groups/:policy_group_name/_acl</code></h4>
+
+<p>Authorization endpoint for the policy group <code>:policy_group_name</code></p>
+
+<h4><code>/policy_groups/:policy_group_name/policies/</code></h4>
+
+<h5><code>GET /policy_groups/:policy_group_name/policies/</code></h5>
+
+<p>Returns a JSON object showing the active policy names and revision IDs for the
+policy group <code>:policy_group_name</code>.</p>
+
+<h4><code>/policy_groups/:policy_group_name/policies/:policy_name</code></h4>
+
+<h5><code>GET /policy_groups/:policy_group_name/policies/:policy_name</code></h5>
+
+<p>Returns the policyfile lock document at the revision that is currently
+associated with the given policy group and policy name.</p>
+
+<h5><code>PUT /policy_groups/:policy_group_name/policies/:policy_name</code></h5>
+
+<p>Sets the active revision of <code>:policy_name</code> for the policy group
+<code>:policy_group_name</code> to the policyfile lock document in the request body. The
+policy group, policy name, and policyfile lock revision will be created if any
+does not exist.</p>
+
+<p>Policyfile lock revisions may not be updated. When the server already has a
+Policyfile lock document with the same <code>revision_id</code> as given in the request
+body, the effect of the request is to set the current active revision of
+<code>:policy_name</code> for the given <code>:policy_group_name</code> to the revision specified in
+the request body and ignore the other fields in the request body.</p>
+
+<h5><code>POST /policy_groups/:policy_group_name/policies/:policy_name</code></h5>
+
+<p>Sets the current active revision of <code>:policy_name</code> for the <code>:policy_group_name</code>
+to the value given in the POST body. The revision must already exist on the
+server. For example, to set the active revision of the &#39;appserver&#39; policy in
+the &#39;qa&#39; policy group, you would POST to
+<code>/policy_groups/qa/policies/appserver</code>, with a POST body like the following:</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">&quot;revision_id&quot;</span><span class="p">:</span> <span class="s2">&quot;bfec256f76a52ff707ca72e71b464a41c410b229&quot;</span>
+<span class="p">}</span>
+</pre></div>
+<h4><code>/policy_groups/:policy_group_name/nodes</code></h4>
+
+<h5><code>GET /policy_groups/:policy_group_name/nodes</code></h5>
+
+<p>Returns a list of nodes that belong to the policy group. Can be filtered for a
+specific <code>:policy_name</code> with the <code>policy_name</code> query parameter, using a URL of
+the form: <code>GET /policy_groups/:policy_group_name/nodes?policy_name=:policy_name</code></p>
+
+<h4><code>/policies/:policy_name</code></h4>
+
+<p>TODO: This is where AuthZ for policies goes, does it do anything else?</p>
+
+<h4><code>/policies/:policy_name/revisions/</code></h4>
+
+<h5><code>POST /policies/:policy_name/revisions/</code></h5>
+
+<p>Create a new Policyfile lock document. The POST body MUST be a valid Policyfile
+lock document, as described above. The document can subsequently be retrieved
+at the relative URL <code>/policies/:policy_name/revisions/:revision_id</code></p>
+
+<p>Policyfile lock revisions cannot be updated. If the server already has a
+Policyfile lock document with the same <code>revision_id</code> as given in the body of
+the request, the server MUST return 409 response.</p>
+
+<h5><code>GET /policies/:policy_name/revisions/</code></h5>
+
+<p>Returns a list of the available revisions for the given policy name</p>
+
+<h4><code>/policies/:policy_name/revisions/:revision_id</code></h4>
+
+<h5><code>GET /policies/:policy_name/revisions/:revision_id</code></h5>
+
+<p>Returns the policyfile lock document with the given name and revision ID.</p>
+
+<h5><code>DELETE /policies/:policy_name/revisions/:revision_id</code></h5>
+
+<p>Deletes the policyfile lock document with the given name and revision ID.</p>
+
+<h4><code>/policies/:policy_name/revisions/:revision_id/policy_groups</code></h4>
+
+<h5><code>GET /policies/:policy_name/revisions/:revision_id/policy_groups</code></h5>
+
+<p>Returns the list of policy groups that are associated with the given policy
+name at the given revision ID.</p>
+
+<h3>Promotion API (Optional)</h3>
+
+<p>In addition to the basic REST interface described above, the server may also
+provide a promotion API. The promotion API facilitates defining the deployment
+cycle for policies (i.e., the order in which policies move through policy
+groups) and allows policies to be promoted to subsequent stages of the
+deployment cycle with a single API call.</p>
+
+<h4><code>/policy_groups/:policy_group_name</code></h4>
+
+<h4><code>GET /policy_groups/:policy_group_name</code></h4>
+
+<p>Returns the policy group configuration for <code>:policy_group_name</code>. The document
+will contain the name of the next policy group in the deployment cycle. Exact
+format is TBD, but it could look like:</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;development&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;next_group_name&quot;</span><span class="p">:</span> <span class="s2">&quot;qa&quot;</span>
+<span class="p">}</span>
+</pre></div>
+<h4><code>PUT /policy_groups/:policy_group_name</code></h4>
+
+<p>Set the policy group configuration for <code>:policy_group_name</code>. Exact format is
+TBD, but will be identical to the document format described above for <code>GET</code>.</p>
+
+<h4><code>POST /policy_groups/:policy_group_name/promote</code></h4>
+
+<p>Promotes all or some of the policyfile lock revisions currently active in
+<code>:policy_group_name</code> to the next stage of the deployment cycle. POST body
+format is TBD.</p>
+
+<h3>End to End API Calls</h3>
+
+<p>The user generates a Policyfile lock document locally. When using ChefDK, the
+policyfile lock document is generated by gathering requirements specified in a
+Ruby DSL (e.g., the <code>Policyfile.rb</code>) and solving cookbook dependencies, but
+users may create the policyfile lock document in some other way if desired.</p>
+
+<p>Before the Policyfile lock document is published to the Chef Server, all
+cookbooks described in the <code>cookbook_locks</code> section of the document are
+uploaded to the cookbook artifacts API.</p>
+
+<h4>Policyfile Lock Document Upload</h4>
+
+<p>The policyfile lock document may be uploaded in a single step:</p>
+
+<ul>
+<li><code>PUT /policy_groups/:policy_group_name/policies/:policy_name</code></li>
+</ul>
+
+<p>Or it may be uploaded in two steps:</p>
+
+<ul>
+<li><code>POST /policies/:policy_name/revisions/</code>: Upload the policy to the Chef Server</li>
+<li><code>POST /policy_groups/:policy_group_name/policies/:policy_name</code>: make the
+policyfile lock document revision uploaded in the previous step the active
+one for the specified policy group.</li>
+</ul>
+
+<h4>Chef Client Policyfile Lock Document Download</h4>
+
+<p>Chef Client is configured with both a desired <code>:policy_group_name</code> and
+<code>:policy_name</code>. Given that information, it can retrieve the Policyfile lock
+document with a single request:</p>
+
+<ul>
+<li><code>GET /policy_groups/:policy_group_name/policies/:policy_name</code>: Get the policy
+document with the run list and cookbook set for the chef run.</li>
+</ul>
+
+<h3>Authorization</h3>
+
+<p>The Chef Server authorizes an actor to access the Policyfile API separately for
+policy groups and policy names (i.e., the set of all policyfile lock documents
+with the same name). For operations that affect both policy groups and policy
+names, an actor must have all relevant permissions to perform the requested
+operation.</p>
+
+<h4>Policy Groups</h4>
+
+<p>Container-level Authorization:</p>
+
+<ul>
+<li>An actor must have <code>Create</code> permission on the <code>policy_groups</code> container to
+create a new group.</li>
+<li>An actor must have <code>List</code> permission on the <code>policy_groups</code> container to list
+groups.</li>
+</ul>
+
+<p>Object-level Authorization:</p>
+
+<ul>
+<li>An actor must have <code>Read</code> permission on a specific <code>policy_group</code> to read the
+promotion configuration for that group (promotion API only)</li>
+<li>An actor must have <code>Read</code> permission on a specific <code>policy_group</code> to read the
+list of active policies and revisions.</li>
+<li>An actor must have <code>Update</code> permission to set the active revision for a given
+<code>policy_name</code> to a specific revision via <code>POST /policy_groups/:policy_group_name/policies/:policy_name</code></li>
+<li>An actor must have <code>Update</code> permission to set the active revision for a given
+<code>policy_name</code> to a specific revision via the promotion API.</li>
+<li>An actor must have <code>Update</code> permission to modify the promotion policy for a
+given <code>policy_group</code>.</li>
+<li>An actor must have <code>Read</code> permission on a specific <code>policy_group</code> and <code>List</code>
+permission on the <code>nodes</code> container to list nodes in a policy group via
+<code>GET /policy_groups/:policy_group_name/nodes</code></li>
+<li>An actor must have <code>Delete</code> permission on a specific <code>policy_group</code> to delete it.</li>
+</ul>
+
+<h4>Policy Names</h4>
+
+<p>Authorization for policy names is similar to cookbook versions and data bags in
+that actions on individual objects are authorized based on permissions to the
+collection; individual policy file lock revisions do not have independent ACLs.</p>
+
+<p>Container-level Authorization:</p>
+
+<ul>
+<li>An actor must have <code>Create</code> permission on the <code>policies</code> container to
+create a new <code>policy_name</code>. This applies when creating a new policyfile lock
+revision via <code>POST /policies/:policy_name/revisions/</code> and no existing
+policyfile lock document with the same name exists.</li>
+<li>An actor must have <code>List</code> permission on the <code>policies</code> container to list
+all policy names.</li>
+</ul>
+
+<p>Object-level Authorization:</p>
+
+<ul>
+<li>An actor must have <code>Update</code> to create a new policyfile lock revision. This
+applies when creating a new revision of a policy name via <code>POST /policies/:policy_name/revisions/</code>
+and there is an existing policyfile lock document with the same name.</li>
+<li>An actor must have <code>Read</code> to list the available revisions for a given
+<code>policy_name</code> via <code>GET /policies/:policy_name/revisions/</code>.</li>
+<li>An actor must have <code>Read</code> to retrieve a specific revision of a given <code>policy_name</code>
+via <code>GET /policies/:policy_name/revisions/:revision_id</code>.</li>
+<li>An actor must have <code>Delete</code> to delete a specific revision of a given <code>policy_name</code>.</li>
+</ul>
+
+<h4>Both</h4>
+
+<p>For convenience and to reduce HTTP round-trips, some APIs update and/or
+disclose information about different object types. An actor is permitted to
+perform the requested action only if authorized for all of the requested
+actions individually,</p>
+
+<ul>
+<li>An actor must have <code>Read</code> permission on a specific <code>policy_group</code> and also
+have <code>Read</code> on a specific <code>policy_name</code> to retrieve the active policy lock
+document revision for the given group and name.</li>
+<li>To set the current active policy lock revision via <code>PUT /policy_groups/:policy_group_name/policies/:policy_name</code>,
+an actor must have either <code>Update</code> permission on the given <code>policy_group</code> if
+it exists, or <code>Create</code> on the <code>policy_groups</code> container to create the desired
+group, AND either <code>Update</code> permission on the given <code>policy_name</code> if it exists
+or <code>Create</code> on the <code>policies</code> containter to create the the desired policy if
+it doesn&#39;t exist. The same restrictions apply to the promotion API.</li>
+<li>An actor must have <code>Read</code> permission on a sepcific <code>policy_name</code> and <code>List</code>
+permission on the <code>policy_groups</code> container to list the groups associated
+with a given policy at a given revision via <code>GET /policies/:policy_name/revisions/:revision_id/policy_groups</code></li>
+</ul>
+
+<h2>Rationale</h2>
+
+<h3>Policy Groups</h3>
+
+<p>The means by which a node is associated to a Policyfile lock is designed such
+that it is possible to have more than one revision of a Policyfile lock active
+in a Chef organization at one time. That is, it must be possible to update the
+Policyfile lock for only some nodes with a given functional role. For example,
+a configuration code change may deploy a newer version of some important
+software that must be tested in a non-production environment before production
+deployment, or may cause a service restart that temporarily reduces capacity.</p>
+
+<p>It is also desirable that the Policyfile lock document itself not contain any
+information about which nodes it is applied to, as this simplifies the overall
+design and makes it easy to create tooling to manage promotion of a Policyfile
+lock through the phases of a deployment cycle.</p>
+
+<p>To accommodate these two constraints, Policyfile locks are associated to a node
+via both the policy name and policy group. The policy group models the phases
+of a deployment cycle, such as &quot;development&quot;, &quot;staging&quot; and &quot;production.&quot;
+Each policy group can have a different revision of a Policyfile lock, which
+enables configuration code to be updated in one policy group without any effect
+on the configuration code in other policy groups.</p>
+
+<h3>HTTP Resource API Design Goals</h3>
+
+<h4>Retrive the Active Policy for a Given Policy Group and Policy Name</h4>
+
+<p>This is how <code>chef-client</code> retrieves the policy it will apply for the current
+<code>chef-client</code> run. It is also possible to compare (diff) the active policy for
+two different policy groups by retrieving the active policy for each group and
+computing the difference.</p>
+
+<h4>Query the List of Group Names</h4>
+
+<p>This enables a GUI to provide a list of groups for navigational purposes and
+for list-based input (such as selecting the policy group for a new node object).</p>
+
+<h4>Query the List of Policy Names</h4>
+
+<p>This enables a GUI to provide a list of policy names for navigational purposes
+and for list-based input.</p>
+
+<h4>List Nodes By Group And Policy Name</h4>
+
+<p>When the node document is updated to include the policy group and policy name
+(a future change outside the scope of this RFC), this information will be
+accessible via search; however, the information can be easily retrieved via a
+relational database query for use in a web-based UI.</p>
+
+<h4>Data Cleanup</h4>
+
+<p>Although the design of Policyfile and related APIs greatly simplifies the task
+of finding and deleting unused cookbook versions (cookbook artifacts in this
+case), no such feature is proposed at this time.</p>
+
+<h3>Authorization Design Goals and Considerations.</h3>
+
+<p>The authorization behaviors for Policyfiles are designed to allow the user to
+limit access by either deployment phase or host&#39;s functional role.</p>
+
+<p>In the first case, it may be desirable, for example, to limit access to
+production policy groups to a subset of individuals or perhaps a Ci system
+while still giving users access to update dev environments or create one-off
+dev environments for testing.</p>
+
+<p>In the second case, a business may have some types of systems where access must
+be restricted to a smaller set of individuals, perhaps because those machines
+store sensitive data or require expertise from other teams to vet changes
+(e.g., a DBA must review changes to database nodes).</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

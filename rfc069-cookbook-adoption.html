@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Cookbook Adoption On Supermarket</h1>
+
+<h2>Motivation</h2>
+
+<h3>When a Cookbook is Up For Adoption</h3>
+<div class="highlight"><pre><span class="w">    </span><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">supermarket</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="w">    </span><span class="vg">When</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">find</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">cookbook</span><span class="p">,</span>
+<span class="w">    </span><span class="vg">And</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">up</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">adoption</span><span class="p">,</span>
+<span class="w">    </span><span class="vg">And</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">has</span><span class="w"> </span><span class="vg">been</span><span class="w"> </span><span class="vg">up</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">adoption</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">least</span><span class="w"> </span><span class="il">6</span><span class="w"> </span><span class="vg">months</span><span class="p">,</span>
+<span class="w">    </span><span class="vg">Then</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Supermarket</span><span class="w"> </span><span class="vg">team</span><span class="w"> </span><span class="vg">should</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">notified</span><span class="p">,</span>
+<span class="w">    </span><span class="vg">And</span><span class="w"> </span><span class="vg">ownership</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">should</span><span class="w"> </span><span class="vg">transferred</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">brigade</span>
+</pre></div>
+<h3>When a Cookbook is NOT Up for Adoption</h3>
+<div class="highlight"><pre><span class="w">    </span><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">supermarket</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="w">    </span><span class="vg">When</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">believe</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">should</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">transferred</span><span class="w"> </span><span class="vg">away</span><span class="w"> </span><span class="vg">from</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">owner</span><span class="p">,</span>
+<span class="w">    </span><span class="vg">Only</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">extreme</span><span class="w"> </span><span class="vg">cases</span><span class="w"> </span><span class="p">(</span><span class="vg">i</span><span class="o">.</span><span class="vg">e</span><span class="o">.</span><span class="w"> </span><span class="vg">death</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">owner</span><span class="p">),</span>
+<span class="w">    </span><span class="vg">I</span><span class="w"> </span><span class="vg">should</span><span class="w"> </span><span class="vg">open</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="p">[</span><span class="vg">RFC</span><span class="p">](</span><span class="nl">https:</span><span class="o">//</span><span class="vg">github</span><span class="o">.</span><span class="vg">com</span><span class="o">/</span><span class="vg">chef</span><span class="o">/</span><span class="vg">chef</span><span class="o">-</span><span class="vg">rfc</span><span class="p">)</span>
+<span class="w">    </span><span class="vg">And</span><span class="w"> </span><span class="vg">request</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">ownership</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">transferred</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3>When a Cookbook is Up For Adoption</h3>
+
+<p>When a cookbook owner puts the cookbook up for adoption, that means they no
+longer wish to be the owner and maintainer of the cookbook. At anytime a user
+can click on the &quot;Adopt Me!&quot; button on the cookbook&#39;s page on Supermarket and
+the current owner of the cookbook will be notified. The owner can then transfer
+ownership to the user who wants it.</p>
+
+<p>However, sometimes cookbooks remain up for adoption for 6+ months.  In this
+case, the cookbook ownership will be transferred the chef-brigade.  This will
+be done manually at first but may be automated in the future.</p>
+
+<p>The chef-brigade will then take over responsibility for the cookbook.  At their
+discretion, they can transfer ownership to someone else on Supermarket at any time.</p>
+
+<h3>When a Cookbook is NOT Up For Adoption</h3>
+
+<p>It is not the normal policy of Chef to transfer ownership of a cookbook to anyone
+else, that is left to the cookbook&#39;s current owner.  See above for guidelines on
+when a cookbook has been placed up for adoption.</p>
+
+<p>We do recognize, however, that extreme circumstances do happen (i.e. death of the
+cookbook&#39;s current owner).  In this case a community member who wishes to take
+ownership of the cookbook (or see ownership transferred to someone else with their
+consent) is welcome to file an <a href="https://github.com/chef/chef-rfc">RFC</a>.</p>
+
+<p>The RFCs will be decided on by the Chef Community on a case by case basis.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

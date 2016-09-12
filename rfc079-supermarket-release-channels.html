@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Supermarket Release Channels</h1>
+
+<p>Add the ability to assign supermarket artifacts (cookbook versions) to a named
+channel, and to filter the universe endpoint data by specifying a channel name.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Supermarket</span><span class="w"> </span><span class="vg">User</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">promote</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">artifacts</span><span class="w"> </span><span class="vg">through</span><span class="w"> </span><span class="vg">named</span><span class="w"> </span><span class="vg">channels</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">them</span><span class="w"> </span><span class="vg">according</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">testing</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">policy</span><span class="o">.</span>
+</pre></div>
+<p>Many users implement a testing pipeline to automate testing and release of chef
+artifacts. An example of this kind of system is the workflow component of the
+Chef Automate product. Frequently it is necessary or convenient to publish an
+artifact to a Supermarket service at an early pipeline stage, so that the
+artifact can be distributed to other systems for testing. For example, when
+using Chef Automate, the default behavior is to publish the artifact in the
+build phase, so that it may be retrieved by other systems during acceptance
+testing. In the current implementation, publishing the artifact makes it
+available to all users of the Supermarket service. For example, a berkshelf
+user developing a cookbook may retrieve this artifact when installing
+dependencies. This is undesireable because the artifact has not yet passed
+acceptance testing and therefore may contain flaws. Additionally, in the case
+of Chef Automate, there is a manual release gate that occurs later in the
+pipeline; it would be preferable that users only access artifacts that have
+passed this gate.</p>
+
+<p>In other artifact storage systems, artifacts may be assigned to channels and
+promoted as they pass automated or manual verification. For example, each Chef
+Client build is initially created in an &quot;unstable&quot; channel for distribution to
+automated testing systems. If the package passes automated testing, it is
+promoted to the &quot;current&quot; channel where users may access it.</p>
+
+<p>Adding release channels gives Supermarket users this same ability to control
+the release process for their Chef artifacts.</p>
+
+<h2>Specification</h2>
+
+<h4>Creation of Channels</h4>
+
+<p>Supermarket administrators set the list of valid channel names via
+configuration. Artifacts may not be created in or promoted to channel names
+that are not in the approved list. The implementation may allow existing
+artifact-channel associations to exist when a channel is removed from the
+approved list.</p>
+
+<p>The implementation will specify a default set of approved channels if the
+administrator does not specify the approved channel set.</p>
+
+<h4>Association of Artifacts to Channels</h4>
+
+<p>Artifacts may belong to an arbitrary number of channels. We expect that in the
+case of Chef Automate, users will want artifacts to remain available in the
+union channel even after promoting that artifact to rehearsal.</p>
+
+<p>Supermarket administrators may set a default channel to be associated to new
+artifacts. If the administrator does not set a default channel, the
+implementation will specify a default.</p>
+
+<h4>Artifact Versions and Channels</h4>
+
+<p>Channels may have any number of versions of an artifact, so that old versions
+remain available after a newer version is promoted to that channel.</p>
+
+<p>There are some use cases where it is desirable to only allow one version of an
+artifact in a channel. Users of Chef Automate, for example, are encouraged to
+only use one version of an artifact in a given environment. Thefore, the
+user may specify that an artifact is <em>exclusive.</em> When this option
+is active, promoting a version of an artifact to a channel removes all other
+versions from that channel. The exact mechanism by which this happens, e.g.,
+configuration or API call, will be determined when implemented.</p>
+
+<h4>Filtering Artifacts by Channel</h4>
+
+<p>Filtering is implemented by modifying the response from the <code>/universe</code>
+endpoint to include only the artifacts in the requested channel.</p>
+
+<p>The API will be extended to allow requests to specify a channel when requesting
+the universe data. The exact details of this implementation will be decided in
+the future, with special consideration given to compatibility with existing
+consumers of the universe data.</p>
+
+<p>Supermarket administrators may set a default channel to be used for requests
+that do not specify a channel. The implementation will specify a default to be
+used if the administrator does not specify one.</p>
+
+<h4>Configuration and Backwards Compatibility</h4>
+
+<p>For compatibility, there must be a mode of operation where Supermarket works
+the same as it does now. This is achieved by a combination of the following:</p>
+
+<ol>
+<li>Upon upgrade, all artifacts are associated to a default channel.</li>
+<li>The implementation specifies a default channel for new artifacts that is the
+same as in (1).</li>
+<li>The implementation specifies a default channel for requests for the universe
+data that is the same as (1)</li>
+<li>The implementation specifies the default set of allowed channel names to a
+list containing only the default channel in (1).</li>
+</ol>
+
+<p>Together, these factors provide the following outcomes:</p>
+
+<ul>
+<li>All cookbooks are associated to the same single channel</li>
+<li>Requests for the universe data are de facto unfiltered, because all artifacts
+are associated to the one channel that exists</li>
+</ul>
+
+<p>Thus the existing behavior is maintained.</p>
+
+<h4>Web User Interface Considerations</h4>
+
+<p>Decisions about changes to Supermarket&#39;s web interface will be left to
+implementers to decide. One goal should be to give the user an understanding of
+what version of a cookbook will be available to them for a given channel
+configuration on their client (e.g., berks).</p>
+
+<h2>Downstream Impact</h2>
+
+<p>Tools that use the <code>/universe</code> endpoint will function correctly unmodified.
+However, these tools will need to be modified to allow the user to select the
+desired channel in order for users to be able to use the channel functionality.</p>
+
+<p>It is unclear whether this feature would be useful for the public supermarket.
+One way to deal with this is to have a feature flag to disable the
+functionality and leave it disabled on the public supermarket.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Resource Attribute Improvements</h1>
+
+<p>We add a number of enhancements to <code>attribute</code>:</p>
+
+<ul>
+<li>Make nil a valid value (<code>path nil</code>)</li>
+<li>Make a nicer type / validation syntax (<code>property :path, String</code>)</li>
+<li>Add lazy defaults.</li>
+<li>Add coercion.</li>
+<li>Add <code>property</code> (an alias to <code>attribute</code>) to <code>Chef::Resource</code> to make it available to all users.</li>
+<li>Add <code>property_is_set?(:property_name)</code></li>
+</ul>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">natural</span><span class="w"> </span><span class="vg">syntax</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">properties</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">spend</span><span class="w"> </span><span class="vg">less</span><span class="w"> </span><span class="vg">time</span><span class="w"> </span><span class="vg">writing</span><span class="w"> </span><span class="vg">cookbooks</span><span class="p">,</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">them</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">readable</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">readable</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">ubiquitous</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">tell</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">interface</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">things</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">use</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">attributes</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">attributes</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">different</span><span class="w"> </span><span class="vg">words</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">they</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t lead me to conflate them as concepts.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3><code>property</code></h3>
+
+<p><code>property</code> will be added to <code>Chef::Resource</code> as the primary way to write properties. This is to alleviate confusion around resource and node attributes.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="no">Path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
+  <span class="n">property</span> <span class="ss">:content</span><span class="p">,</span> <span class="nb">String</span>
+<span class="k">end</span>
+</pre></div>
+<p>This calls MyResource.properties[name] = <property type>.</p>
+
+<p>When a property is defined this way:
+- <code>my_resource.&lt;name&gt;</code> will get the property value.
+- <code>my_resource.&lt;name&gt; = &lt;value&gt;</code> will set the property value.
+- <code>my_resource.&lt;name&gt; &lt;value&gt;</code> will set the property value.
+- <code>MyResource.state_attrs</code> will include the property name.
+- <code>MyResource.properties</code> will contain the property type.
+- The setter and getter manipulate the class variable <code>@&lt;name&gt;</code>.</p>
+
+<p>(This is the same as before, except the addition of the <code>properties</code> hash.)</p>
+
+<h3>Make nil a valid value</h3>
+
+<p>It will now be possible to set a property to <code>nil</code> by saying <code>my_property nil</code>.  (Currently, this will not change the value of <code>my_property</code>.)</p>
+
+<p>In Chef 12, we will keep behavior the same, and <em>deprecate</em> the current behavior of silently doing nothing when you set a property to nil.  We will allow properties to explicitly allow <code>nil</code>, however, by specifying it explicitly as a valid value: <code>property :path, [ String, nil ]</code>.</p>
+
+<h3>Make defaults lazy</h3>
+
+<p><code>lazy</code> defaults are automatically run in the context of the <em>instance</em>:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MysqlInstall</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:root_path</span><span class="p">,</span> <span class="nb">String</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="s1">&#39;/&#39;</span>
+  <span class="n">property</span> <span class="ss">:config_path</span><span class="p">,</span> <span class="nb">String</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="n">lazy</span> <span class="p">{</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_path</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p>This is a breaking change since <code>attribute</code> is the same as <code>property</code>, but it is considered a bugfix and not a backcompat feature, so backwards compatibility will not be maintained.</p>
+
+<h4><code>attribute</code></h4>
+
+<p><code>attribute</code> will remain on LWRPs, and be an alias to <code>property</code> with no distinctions.</p>
+
+<h4>Use <code>property</code> instead of <code>attribute</code> in documentation</h4>
+
+<p><code>attribute</code> will continue to be supported; there are simply too many things in the world to deprecate it. However, any generic documentation that talks about attributes will be renamed to talk about properties. <code>attribute</code> itself will still be documented.</p>
+
+<p>We will need to write a comprehensive resource writing guide as well, in order to get it pumped to the top of Google, so that <code>attribute</code> comes up less and less often in searches and <code>property</code> comes up more and more.</p>
+
+<h3>Property type</h3>
+
+<p>Properties with a single type are common enough that we support a &quot;type&quot; for a property, specifiable after its name.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:content</span><span class="p">,</span> <span class="nb">String</span>
+<span class="k">end</span>
+</pre></div>
+<p>This is actually an alias for <code>is</code> (described later here).</p>
+
+<h4>Reusing types</h4>
+
+<p>The type of a property is represented by <code>Chef::Resource::PropertyType</code>, and contains accessors for all the properties of a type (<code>must_be</code>, <code>name_attribute</code>, <code>kind_of</code>, etc.).</p>
+
+<p>When you declare <code>property :name, &lt;type&gt;, &lt;options&gt;</code>, one of two things happens:</p>
+
+<ul>
+<li>If the type is a PropertyType instance, it is dup&#39;d and any <option>s are set on the new type.</li>
+<li>If the type is a Class, a new PropertyType instance is created with <code>kind_of</code> set to [Class] and any options are set on the new type.</li>
+<li>If type is not passed, a new PropertyType instance is created, and any options are set on the new type.</li>
+</ul>
+
+<h4>Property Inheritance</h4>
+
+<p>Subclasses get properties from their parent.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:a</span><span class="p">,</span> <span class="nb">String</span>
+<span class="k">end</span>
+<span class="k">class</span> <span class="nc">B</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:b</span><span class="p">,</span> <span class="nb">String</span>
+<span class="k">end</span>
+<span class="n">B</span><span class="o">.</span><span class="n">state_attrs</span> <span class="o">-&gt;</span> <span class="o">[</span> <span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span> <span class="o">]</span>
+</pre></div>
+<h4>Overriding Properties</h4>
+
+<p>When a property is overridden, the override is <em>complete</em>: that is, the parent
+type is not extended or mixed in any way.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:a</span><span class="p">,</span> <span class="nb">String</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="s1">&#39;Hello&#39;</span>
+<span class="k">end</span>
+<span class="k">class</span> <span class="nc">B</span> <span class="o">&lt;</span> <span class="n">A</span>
+  <span class="n">property</span> <span class="ss">:a</span>
+<span class="k">end</span>
+<span class="n">A</span><span class="o">.</span><span class="n">properties</span><span class="o">[</span><span class="ss">:a</span><span class="o">].</span><span class="n">default</span> <span class="c1">#=&gt; &#39;Hello&#39;</span>
+<span class="n">B</span><span class="o">.</span><span class="n">properties</span><span class="o">[</span><span class="ss">:a</span><span class="o">].</span><span class="n">default</span> <span class="c1">#=&gt; nil</span>
+</pre></div>
+<h4><code>is</code></h4>
+
+<p><code>is</code> is a new validation parameter that uses Ruby&#39;s match operator <code>===</code> (the thing that drives <code>case</code> and <code>when</code>).</p>
+<div class="highlight"><pre><span class="c1"># These are equivalent</span>
+<span class="n">property</span> <span class="ss">:x</span><span class="p">,</span> <span class="o">[</span> <span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">:c</span> <span class="o">]</span>
+<span class="n">property</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">is</span><span class="p">:</span> <span class="o">[</span> <span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">:c</span> <span class="o">]</span>
+</pre></div>
+<p>It is worth noting that many existing validations can be expressed directly in terms of <code>is</code>:</p>
+
+<p>Old Qualifier          | <code>is</code>
+-----------------------|---------------
+<code>kind_of: String</code>      | <code>is: String</code>
+<code>equal_to: [ :a, :b ]</code> | <code>is: [ :a, :b ]</code>
+<code>regex: /@chef.io/</code>    | <code>is: /@chef.io/</code>
+<code>respond_to: :merge</code>   | <code>is: proc { |v| v.respond_to?(:merge) }</code>
+<code>cannot_be: :empty</code>    | <code>is: proc { |v| !v.empty? }</code></p>
+
+<p>As well as some things that were hard to express before:</p>
+<div class="highlight"><pre><span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="o">[</span> <span class="nb">String</span><span class="p">,</span> <span class="ss">:up</span><span class="p">,</span> <span class="ss">:down</span><span class="p">,</span> <span class="kp">nil</span> <span class="o">]</span>
+</pre></div>
+<p>If both <code>is</code> and a type are specified, the values in the type are prepended to <code>is</code>.</p>
+
+<h3>RSpec matchers</h3>
+
+<p><code>is</code> allows for rspec 3 matchers to be passed, and will validate them and print failures.</p>
+<div class="highlight"><pre><span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="n">a_string_starting_with</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+</pre></div>
+<p>There are no current plans to actually include the matcher syntax in <code>Resource</code> by default; users will do this if they want it by doing <code>include RSpec::Matchers</code>.</p>
+
+<h3>Coercion</h3>
+
+<p><code>coerce</code> is a proc run when the user sets a non-lazy value, or reads a lazy or default value. It allows normalization of input, which makes it simple to create expressive interfaces while preserving a simple programming model that knows what to expect:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">attribute</span> <span class="ss">:mode</span><span class="p">,</span> <span class="ss">coerce</span><span class="p">:</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="n">m</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="nb">String</span><span class="p">)</span> <span class="p">?</span> <span class="n">m</span><span class="o">.</span><span class="n">to_s</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="p">:</span> <span class="n">m</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p><code>coerce</code> procs are run in the context of the instance, so that they have access to other attributes and methods.</p>
+
+<h3><code>property_is_set?</code></h3>
+
+<p>We introduce <code>property_is_set?(:blah)</code> to determine whether a given property has been explicitly set on an instance (so you can distinguish between default and non-default values).</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">provides</span> <span class="ss">:x</span>
+  <span class="n">property</span> <span class="ss">:a</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="n">property</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mi">1</span>
+<span class="k">end</span>
+
+<span class="n">x</span> <span class="s1">&#39;blah&#39;</span> <span class="k">do</span>
+  <span class="n">a</span> <span class="mi">1</span>
+  <span class="nb">puts</span> <span class="n">a</span>                    <span class="c1">#=&gt; 1</span>
+  <span class="nb">puts</span> <span class="n">property_is_set?</span><span class="p">(</span><span class="ss">:a</span><span class="p">)</span> <span class="c1">#=&gt; true</span>
+  <span class="nb">puts</span> <span class="n">b</span>                    <span class="c1">#=&gt; 1</span>
+  <span class="nb">puts</span> <span class="n">property_is_set?</span><span class="p">(</span><span class="ss">:b</span><span class="p">)</span> <span class="c1">#=&gt; false</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Backwards Compatibility Summary</h2>
+
+<p>Two things will change in Chef 13:</p>
+
+<ul>
+<li>Lazy defaults: <code>attribute :x, default: lazy { name }</code> will run in the context of the instance.</li>
+<li><code>nil</code> is a valid value: <code>path nil</code> will set the value of path to nil (or throw a validation error if it is not a valid value).</li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

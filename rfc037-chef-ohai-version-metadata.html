@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Add chef<em>version and ohai</em>version fields to cookbook metadata</h1>
+
+<p>Increasingly, as momentum on Chef development continues to grow, it is necessary to release modifications to the recipe DSL or core resources which can result in backwards incompatible cookbook code that may result in cookbooks using those features breaking under old versions of chef-client. Further, it is often necessary to make these changes in minor chef-client releases rather than waiting multiple months for the next major release cycle. There is currently no way to surface this version requirement to Chef users.</p>
+
+<p>This RFC proposes the addition of the &quot;chef<em>version&quot; and &quot;ohai</em>version&quot; fields to cookbook metadata to indicate the required versions of chef-client and ohai needed to run that cookbook. </p>
+
+<h2>Motivation</h2>
+
+<p>As a user of chef, I want to be able to easily determine if a specific cookbook uses any features not supported by my version of chef-client or ohai, so that I don&#39;t have to diagnose mysterious errors during a chef run.</p>
+
+<h2>Specification</h2>
+
+<p>This change would require adding two additional fields to the supported list of cookbook metadata fields. These fields will be called &quot;chef<em>version&quot; and &quot;ohai</em>version&quot;</p>
+
+<p>This change would potentially break backwards compatibility for older versions of chef-client which would not expect the presence of that field, but I propose that the benefit gained from easily being able to surface chef-client and ohai version requirements to cookbook users in all future versions makes this worthwhile. It may also be possible to implement the addition of these fields in a backwards compatible manner.</p>
+
+<p>During a chef-client run, it will check these fields in all cookbooks against the currently running version of chef-client and ohai. In the event that a version requirement is not satisfied at any level of the dependency tree, the Chef run will fail with a meaningful error, for example:</p>
+
+<p><code>FATAL: Cookbook &#39;apache&#39; depends on chef-client version &gt;= 12.0.4, but the running chef-client version is 12.0.3. Exiting.</code></p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

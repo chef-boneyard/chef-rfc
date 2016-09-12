@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Property Default Value Improvements</h1>
+
+<p>This RFC addresses some longstanding issues with <code>default</code> values on properties (attributes), and addresses how we will move core Chef resources over to use defaults and properties.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">core</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="err">`</span><span class="vg">property</span><span class="err">`</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">people</span><span class="w"> </span><span class="vg">are</span><span class="w"> </span><span class="vg">cribbing</span><span class="w"> </span><span class="vg">off</span><span class="w"> </span><span class="vg">good</span><span class="w"> </span><span class="vg">examples</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">core</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">actually</span><span class="w"> </span><span class="vg">change</span><span class="w"> </span><span class="vg">behavior</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">rely</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">things</span><span class="w"> </span><span class="vg">I</span><span class="c1">&#39;ve built on top of them.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3>Non-Sticky Defaults</h3>
+
+<p>Defaults are presently <em>sticky</em>, in that the first time a property is accessed, it is stored in the instance variable:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
+  <span class="n">resource_name</span> <span class="ss">:x</span>
+  <span class="n">attribute</span> <span class="ss">:foo</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="n">lazy</span> <span class="p">{</span> <span class="no">Random</span><span class="o">.</span><span class="n">rand</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="n">x</span> <span class="s1">&#39;blah&#39;</span> <span class="k">do</span>
+  <span class="nb">puts</span> <span class="vi">@foo</span> <span class="c1">#=&gt; nil</span>
+  <span class="nb">puts</span> <span class="n">foo</span>  <span class="c1">#=&gt; 1</span>
+  <span class="nb">puts</span> <span class="n">foo</span>  <span class="c1">#=&gt; 1</span>
+  <span class="nb">puts</span> <span class="vi">@foo</span> <span class="c1">#=&gt; 1</span>
+<span class="k">end</span>
+</pre></div>
+<p>Once a default is assigned, it is not re-evaluated.</p>
+
+<h4>Frozen constants</h4>
+
+<p>Sticky defaults create a serious issue for literals (non-lazy default values): <em>every instance</em> of a resource gets the same value.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
+  <span class="n">resource_name</span> <span class="ss">:x</span>
+  <span class="n">attribute</span> <span class="ss">:foo</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="o">[]</span>
+<span class="k">end</span>
+<span class="n">x</span> <span class="s1">&#39;a&#39;</span> <span class="k">do</span>
+  <span class="n">foo</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span>
+  <span class="n">foo</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+<span class="k">end</span>
+<span class="n">x</span> <span class="s1">&#39;b&#39;</span> <span class="k">do</span>
+  <span class="c1"># ERROR we picked up the values that got added to &#39;a&#39;</span>
+  <span class="nb">puts</span> <span class="n">foo</span> <span class="c1">#=&gt; [ 1, 2 ]</span>
+<span class="k">end</span>
+</pre></div>
+<p>To fix this, we propose freezing non-lazy default values, and not assigning them to the instance.</p>
+
+<p>An alternative would have been to <code>dup</code> the default value before assigning it to the instance. We didn&#39;t go this direction because it&#39;s more error-prone: dup doesn&#39;t do a deep duplication; not all objects can be dup&#39;d, and it&#39;s a little surprising to boot.</p>
+
+<h4>Backcompat break: writing to constant defaults</h4>
+
+<p>Users may rely on this behavior to <em>write</em> to <code>myprop</code>, like this:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
+  <span class="n">resource_name</span> <span class="ss">:foo</span>
+  <span class="n">attribute</span> <span class="ss">:myhash</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="p">{}</span>
+  <span class="n">attribute</span> <span class="ss">:mylist</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="o">[]</span>
+<span class="k">end</span>
+<span class="n">foo</span> <span class="s1">&#39;x&#39;</span> <span class="k">do</span>
+  <span class="n">mylist</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;hi&#39;</span>
+  <span class="n">myhash</span><span class="o">[</span><span class="ss">:a</span><span class="o">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">end</span>
+</pre></div>
+<p>This would cause <code>mylist &lt;&lt; &#39;hi&#39;</code> to fail with a message &quot;RuntimeError: can&#39;t modify frozen Array&quot;, letting the user know that <em>writes</em> will not work. To create a mutable default value, you must use a lazy value.</p>
+
+<p>This will fail to work in the new world, because we are freezing the constants. This is deliberate and a bugfix; the purpose is to avoid users setting values that affect all instances.</p>
+
+<h3>Validating defaults</h3>
+
+<p>We propose that defaults be validated consistently: non-lazy defaults would be validated when the resource class is declared, and lazy defaults would be validated when they are retrieved.</p>
+
+<h4>Backcompat</h4>
+
+<p>Defaults are presently validated inconsistently: they would be validated or not validated based on the order of declaration in the property information. To wit:</p>
+<div class="highlight"><pre><span class="c1"># This currently does not validate, even though 10 is not a string</span>
+<span class="n">property</span> <span class="ss">:a</span><span class="p">,</span> <span class="ss">kind_of</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mi">10</span>
+<span class="c1"># This currently validates correctly</span>
+<span class="n">property</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="ss">kind_of</span><span class="p">:</span> <span class="nb">String</span>
+</pre></div>
+<p>For backcompat purposes, if validation of a default value fails, we will emit a deprecation warning (&quot;you must specify defaults that pass validation&quot;).</p>
+
+<h3>Move Core resources to <code>default</code> [compatbreak w/deprecation]</h3>
+
+<p><code>default</code> is generally a better thing for memory pressure, and is useful for detecting whether a user has set a value or not.  Currently, core Resources tend to assign property default values to the proper instance variable during <code>initialize</code>, and it is possible that subclasses may rely on this behavior.</p>
+
+<p>Resources <em>should</em> instead be using the property getter method, and in the future the instance variable may not even always be there. For Chef 12, we will grab the default values of any lazy arrays or hashes on initialize, and we will issue a deprecation warning for subclasses that directly use the initialized instance variable.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

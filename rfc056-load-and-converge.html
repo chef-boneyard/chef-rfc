@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Easy Resource Load And Converge</h1>
+
+<p>With the introduction of <code>action</code> on resources, it becomes useful to have a
+blessed way to get the actual value of the resource. This proposal adds
+<code>load_current_value</code> and <code>converge_if_changed</code> to help with this purpose, enabling:</p>
+
+<ul>
+<li>Low-ceremony load methods (as easy to write as we can make it)</li>
+<li>A super easy converge model that automatically compares current vs. desired
+values and prints green text</li>
+</ul>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">read</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">value</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">converge</span><span class="w"> </span><span class="vg">time</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">easy</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">tell</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">difference</span><span class="w"> </span><span class="vg">between</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">desired</span><span class="w"> </span><span class="vg">value</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">converge</span><span class="w"> </span><span class="vg">model</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">compares</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">desired</span><span class="w"> </span><span class="vg">values</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">me</span><span class="p">,</span>
+<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">easiest</span><span class="w"> </span><span class="vg">converge</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">most</span><span class="w"> </span><span class="vg">correct</span><span class="w"> </span><span class="vg">one</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3><code>load_current_value</code>: in-place resource load</h3>
+
+<p>When using <code>action</code>, one needs a way to load the <em>actual</em> system value of the resource, so that it can be compared to the desired value and a decision made as to whether to change anything.</p>
+
+<p>When the resource writer defines <code>load_current_value</code> on the resource class, it can be called to load the real system value into the resource. Before any action runs, this will be used by <code>load_current_resource</code> to load the resource. <code>action</code> will do some important work before calling the new method:</p>
+
+<ol>
+<li>Create a new instance of the resource with the same name.</li>
+<li>Copy all non-desired-state values from the desired resource into the new instance.</li>
+<li>Call <code>load_current_value</code> on the new instance.</li>
+</ol>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
+  <span class="n">property</span> <span class="ss">:mode</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mo">0666</span>
+  <span class="n">property</span> <span class="ss">:content</span>
+
+  <span class="n">load_current_value</span> <span class="k">do</span>
+    <span class="n">current_value_does_not_exist!</span> <span class="k">unless</span> <span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">mode</span> <span class="no">File</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span>
+    <span class="n">content</span> <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">action</span> <span class="ss">:create</span> <span class="k">do</span>
+    <span class="n">converge_if_changed</span> <span class="k">do</span>
+      <span class="no">File</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+      <span class="no">IO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">file</span> <span class="s1">&#39;/x.txt&#39;</span> <span class="k">do</span>
+  <span class="c1"># Before the change, the above code would have modified `mode` to be `0666`.</span>
+  <span class="c1"># After, it leaves `mode` alone.</span>
+  <span class="n">content</span> <span class="s1">&#39;Hello World&#39;</span>
+<span class="k">end</span>
+</pre></div>
+<h4>Non-existence</h4>
+
+<p>To appropriately handle actual value loading, the user needs a way to specify that the actual value legitimately does not exist (rather than simply not filling in the object and getting <code>nil</code>s in it). If <code>load_current_value</code> raises <code>Chef::Exceptions::ActualValueDoesNotExist</code>, the new resource will be discarded and <code>current_resource</code> becomes <code>nil</code>. The <code>current_value_does_not_exist!</code> method can be called to raise this.</p>
+
+<p>NOTE: The alternative was to have users return <code>false</code> if the resource does not exist; but I didn&#39;t want users to be forced into the ceremony of a trailing <code>true</code> line.</p>
+<div class="highlight"><pre>  <span class="n">load_current_value</span> <span class="k">do</span>
+    <span class="c1"># Check for existence before doing anything else.</span>
+    <span class="n">current_value_does_not_exist!</span> <span class="k">if</span> <span class="o">!</span><span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="c1"># Set &quot;mode&quot; on the resource.</span>
+    <span class="n">mode</span> <span class="no">File</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span>
+  <span class="k">end</span>
+</pre></div>
+<p>The block will also be passed the original (desired) resource as a parameter, in case it is needed.</p>
+
+<h4>Inheritance</h4>
+
+<p><code>super</code> in <code>load_current_value!</code> will call the superclass&#39;s <code>load_current_value!</code> method.</p>
+
+<h4>Handling Multi-Key Resources</h4>
+
+<p>The new resource is created with all properties copied over <em>except</em> desired state properties (properties in <code>ResourceClass.state_properties</code>). This means <code>name</code>, and properties with <code>identity: true</code> or <code>desired_state: false</code> are copied over.  Normal <code>property</code> and <code>attribute</code> are not.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">DataBagItem</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="c1"># Copied</span>
+  <span class="n">attribute</span> <span class="ss">:item_name</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
+  <span class="n">attribute</span> <span class="ss">:data_bag_name</span><span class="p">,</span> <span class="ss">identity</span><span class="p">:</span> <span class="kp">true</span>
+  <span class="n">attribute</span> <span class="ss">:recursively_delete</span><span class="p">,</span> <span class="ss">desired_state</span><span class="p">:</span> <span class="kp">false</span>
+  <span class="c1"># Not copied:</span>
+  <span class="n">attribute</span> <span class="ss">:data</span>
+  <span class="k">def</span> <span class="nf">load_current_value!</span>
+    <span class="n">data</span> <span class="no">Chef</span><span class="o">::</span><span class="no">DataBagItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">data_bag_name</span><span class="p">,</span> <span class="n">item_name</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h3><code>converge_if_changed</code>: automatic test-and-set</h3>
+
+<p>The new <code>converge_if_changed do ... end</code> syntax is added to actions, which enables a <em>lot</em> of help for resource writers to make safe, effective resources.  It performs several key tasks common to nearly every resource (which are often not done correctly):</p>
+
+<ul>
+<li>Goes through all attributes on the resource and checks whether the desired
+value is different from the current value.</li>
+<li>If any attributes are different, prints appropriate green text.</li>
+<li>Honors why-run (and does not call the <code>converge_if_changed</code> block if why-run is enabled).</li>
+</ul>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
+  <span class="n">property</span> <span class="ss">:content</span>
+
+  <span class="n">load_current_value</span> <span class="k">do</span>
+    <span class="n">current_value_does_not_exist!</span> <span class="k">unless</span> <span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">content</span> <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">action</span> <span class="ss">:create</span> <span class="k">do</span>
+    <span class="n">converge_if_changed</span> <span class="k">do</span>
+      <span class="no">IO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h4>Side-by-side: new and old</h4>
+
+<p>Here is a sample <code>converge_if_changed</code> statement from a hypothetical FooBarBaz resource with properties <code>foo</code>, <code>bar</code> and <code>baz</code>:</p>
+<div class="highlight"><pre><span class="n">converge_if_changed</span> <span class="k">do</span>
+  <span class="k">if</span> <span class="n">current_resource</span>
+    <span class="no">FooBarBaz</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">baz</span><span class="p">)</span>
+  <span class="k">else</span>
+    <span class="no">FooBarBaz</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">baz</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>This is what you would have to write to do the equivalent:</p>
+<div class="highlight"><pre><span class="k">if</span> <span class="n">current_resource</span>
+  <span class="c1"># We&#39;re updating; look for properties that the user wants to change (do the &quot;test&quot; part of test-and-set)</span>
+  <span class="n">differences</span> <span class="o">=</span> <span class="o">[]</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">property_is_set?</span><span class="p">(</span><span class="ss">:foo</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span> <span class="o">!=</span> <span class="n">current_resource</span><span class="o">.</span><span class="n">foo</span><span class="p">)</span>
+    <span class="n">differences</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;foo = </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">property_is_set?</span><span class="p">(</span><span class="ss">:bar</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">bar</span> <span class="o">!=</span> <span class="n">current_resource</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
+    <span class="n">differences</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;bar = </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">bar</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">property_is_set?</span><span class="p">(</span><span class="ss">:baz</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">baz</span> <span class="o">!=</span> <span class="n">current_resource</span><span class="o">.</span><span class="n">baz</span><span class="p">)</span>
+    <span class="n">differences</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;baz = </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">baz</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+
+  <span class="k">if</span> <span class="o">!</span><span class="n">differences</span><span class="o">.</span><span class="n">empty?</span>
+    <span class="n">converge_by</span> <span class="s2">&quot;updating FooBarBaz </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, setting </span><span class="si">#{</span><span class="n">differences</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">do</span>
+      <span class="no">FooBarBaz</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">baz</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+<span class="k">else</span>
+  <span class="c1"># If the current resource doesn&#39;t exist, we&#39;re definitely creating it</span>
+  <span class="n">converge_by</span> <span class="s2">&quot;creating FooBarBaz </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> with foo = </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span><span class="si">}</span><span class="s2">, bar = </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">bar</span><span class="si">}</span><span class="s2">, baz = </span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">baz</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">do</span>
+    <span class="no">FooBarBaz</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">baz</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h4>Desired value = actual value</h4>
+
+<blockquote>
+<p>The easiest way to write a resource must be the most correct one.</p>
+</blockquote>
+
+<p>There is a subtle pitfall when updating a resource, where the user has set <em>some</em> values, but not all. One can easily end up writing a resource which will overwrite perfectly good system properties with their defaults, which can cause instability. If the user does not specify a property, it is generally preferable to preserve its existing value rather than overwrite it.</p>
+
+<p>To prevent this, referencing the bare property in an <code>action</code> will now yield the <em>actual</em> value if load<em>current</em>value succeeded, and the <em>default</em> value if we are creating a new resource (if <code>load_current_value</code> raised <code>ActualValueDoesNotExist</code>).</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
+  <span class="n">property</span> <span class="ss">:mode</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mo">0666</span>
+  <span class="n">property</span> <span class="ss">:content</span>
+
+  <span class="n">load_current_value</span> <span class="k">do</span>
+    <span class="n">current_value_does_not_exist!</span> <span class="k">unless</span> <span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">mode</span> <span class="no">File</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span>
+    <span class="n">content</span> <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">action</span> <span class="ss">:create</span> <span class="k">do</span>
+    <span class="n">converge_if_changed</span> <span class="k">do</span>
+      <span class="no">File</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+      <span class="no">IO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">file</span> <span class="s1">&#39;/x.txt&#39;</span> <span class="k">do</span>
+  <span class="c1"># Before the change, the above code would have modified `mode` to be `0666`.</span>
+  <span class="c1"># After, it leaves `mode` alone.</span>
+  <span class="n">content</span> <span class="s1">&#39;Hello World&#39;</span>
+<span class="k">end</span>
+</pre></div>
+<p>There will be times when the old behavior of overwriting with defaults is desired. The resource writer can still find out whether <code>mode</code> was set with <code>property_is_set?(:mode)</code>, and can still access the default value with <code>new_resource.mode</code> if it is not set.</p>
+
+<p>There are no backwards-compatibility issues with this because it only applies to <code>action</code>, which has not been released yet.</p>
+
+<h4>Compound Resource Convergence</h4>
+
+<p>Some resources perform several different (possibly expensive) operations depending on what is set. <code>converge_if_changed :attribute1, :attribute2, ... do</code> allows the user to target different groups of changes based on exactly which attributes have changed:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+  <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
+  <span class="n">property</span> <span class="ss">:mode</span>
+  <span class="n">property</span> <span class="ss">:content</span>
+
+  <span class="n">load_current_value</span> <span class="k">do</span>
+    <span class="n">current_value_does_not_exist!</span> <span class="k">unless</span> <span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">mode</span> <span class="no">File</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">mode</span>
+    <span class="n">content</span> <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">action</span> <span class="ss">:create</span> <span class="k">do</span>
+    <span class="n">converge_if_changed</span> <span class="ss">:mode</span> <span class="k">do</span>
+      <span class="no">File</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="n">converge_if_changed</span> <span class="ss">:content</span> <span class="k">do</span>
+      <span class="no">IO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

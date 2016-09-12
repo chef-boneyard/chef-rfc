@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>File Specificity Overhaul</h1>
+
+<p>The file specificity system allows overriding templates and cookbook files on
+a per-platform or per-host basis. It is used relatively infrequently, but can
+be invaluable when it is used. Unfortunately it adds significant mental overhead
+to new users that don&#39;t understand the meaning of the <code>default/</code> folder. It is
+also relatively inflexible, the lookup path is fixed to use the node name and
+platform information. This can be improved on both counts, simplifying the
+default case as well as improving flexibility for cases when it is needed.</p>
+
+<h2>Specification</h2>
+
+<p>The current file specificity lookup process is governed by two things, the
+lookup path and the source attribute. The current lookup path is:</p>
+
+<ol>
+<li><code>/host-$fqdn/$source</code></li>
+<li><code>/$platform-$platform_version/$source</code></li>
+<li><code>/$platform/$source</code></li>
+<li><code>/default/$source</code></li>
+</ol>
+
+<p>The first of these paths that exists is used, or an error is raised in none
+exist.</p>
+
+<p>The revised default lookup path would add <code>/</code> to the end:</p>
+
+<ol>
+<li><code>/host-$fqdn/$source</code></li>
+<li><code>/$platform-$platform_version/$source</code></li>
+<li><code>/$platform/$source</code></li>
+<li><code>/default/$source</code></li>
+<li><code>/$source</code></li>
+</ol>
+
+<p>If the source attribute is given as an array, this will be used instead of the
+default lookup path.</p>
+
+<p>The default lookup path can be deprecated in the future, but this is outside
+the scope of this RFC.</p>
+
+<h2>Motivation</h2>
+
+<p>The motivation for this change is two-fold; to reduce the difficulty of creating
+a cookbook and improving flexibility for conditional file selection. The first
+goal is addressed by removing the need for the <code>default/</code> folder when adding
+templates and cookbook files. This is currently a stumbling block for new users
+that don&#39;t yet know about the file specificity system and don&#39;t need the
+features it provides.</p>
+
+<p>The latter goal is addressed by adding support for an explicit lookup path by
+giving an array for the source attribute:</p>
+<div class="highlight"><pre><span class="n">template</span> <span class="s1">&#39;/test&#39;</span> <span class="k">do</span>
+  <span class="n">source</span> <span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">node</span><span class="o">.</span><span class="n">chef_environment</span><span class="si">}</span><span class="s2">.erb&quot;</span><span class="p">,</span> <span class="s1">&#39;default.erb&#39;</span><span class="o">]</span>
+<span class="k">end</span>
+</pre></div>
+<p>This allows for far more flexibility in file selection while reducing the magic
+of the default lookup path.</p>
+
+<p>The default lookup path can be emulated explicitly:</p>
+<div class="highlight"><pre><span class="n">template</span> <span class="s1">&#39;/test&#39;</span> <span class="k">do</span>
+  <span class="n">source</span> <span class="sx">%W{</span>
+<span class="sx">    host-</span><span class="si">#{</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;fqdn&#39;</span><span class="o">]</span><span class="si">}</span><span class="sx">/test.erb</span>
+<span class="sx">    </span><span class="si">#{</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;platform&#39;</span><span class="o">]</span><span class="si">}</span><span class="sx">-</span><span class="si">#{</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;platform_version&#39;</span><span class="o">]</span><span class="si">}</span><span class="sx">/test.erb</span>
+<span class="sx">    </span><span class="si">#{</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;platform&#39;</span><span class="o">]</span><span class="si">}</span><span class="sx">/test.erb</span>
+<span class="sx">    default/test.erb</span>
+<span class="sx">  }</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Compatibility</h2>
+
+<p>This change is effectively backwards compatible. It is possible some recipe code
+which currently results in an error will now converge successfully, but the
+impact of this is likely to be infinitesimal. By keeping the default lookup path
+for now, full compatibility with current cookbooks is maintained.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

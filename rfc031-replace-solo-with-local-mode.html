@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Replace chef-solo with chef-client local mode</h1>
+
+<p>Replace chef-solo&#39;s core with chef-client &quot;local-mode,&quot; to run chef without an external Chef Server</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">run</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">server</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">am</span><span class="w"> </span><span class="vg">using</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">same</span><span class="w"> </span><span class="vg">API</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">core</span><span class="w"> </span><span class="vg">features</span><span class="p">,</span>
+<span class="vg">and</span><span class="w"> </span><span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">any</span><span class="w"> </span><span class="vg">published</span><span class="w"> </span><span class="vg">cookbooks</span><span class="o">.</span>
+</pre></div>
+<p>Case in point, the <code>chef-solo-search</code> cookbook exists to provide search-like functionality so that users of <code>chef-solo</code> can use public cookbooks unmodified.</p>
+
+<p>The <code>knife-solo</code> RubyGem exists to make it easier to distribute the parts of a &quot;chef repository&quot; to target nodes. However, it has a completely different workflow than what users who have a Chef Server use, leading to confusion and differences in help systems such as IRC and the mailing list.</p>
+
+<p>Amazon Web Services &quot;OpsWorks&quot; uses <code>chef-solo</code> as its implementation, which leads to issues with workflow and support similar to <code>knife-solo</code>.</p>
+
+<p>There doesn&#39;t exist a clear and easy way for <code>chef-solo</code> users to migrate to a <code>chef-client</code>/Chef Server implementation and vice versa, due to the lack of &quot;server&quot; features.</p>
+
+<h2>Specification</h2>
+
+<p>This RFC proposes to replace <code>chef-solo</code> with <code>chef-client --local-mode</code>. The<code>chef-solo</code> command will continue to exist, and to the extent possible, work with existing solo-specific workflows without modification.</p>
+
+<p>This means that <code>chef-solo</code> using &quot;local mode&quot; <strong>must</strong> be 100% backwards-compatible with existing <code>chef-solo</code> usage.</p>
+
+<p>The local mode feature of <code>chef-client</code> uses <code>chef-zero</code>, an in-memory API-complete implementation of the Chef Server. This would give &quot;solo&quot; users the capability of performing searches, &quot;saving&quot; node objects, and easily saving and retrieving data bags. The <code>chef-zero</code> server can persist data to disk, allowing that to be distributed to other nodes as necessary.</p>
+
+<p>The application implementation of <code>chef-solo</code> would be changed to invoke <code>chef-client</code> with <code>Chef::Config[:local_mode]</code> set to <code>true</code> by default in the application class.</p>
+
+<h2>Rationale</h2>
+
+<p>Chef has always had <code>chef-solo</code>, a standalone recipe execution engine that can run recipes on nodes. However, as new <code>chef-client</code>/Chef Server features are added, they slowly trickle down to <code>chef-solo</code>, if they even get implemented at all. This makes <code>solo</code> users unable to have complete consistency when consuming cookbooks from the community.</p>
+
+<p>This will also simplify the codebase, as there is a great deal of duplication between <code>Chef::Application::Solo</code> and <code>Chef::Application::Client</code>. This would create a single place to go for the application config - the <code>Chef::Application::Client</code> class.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Automatically manage Pull Requests</h1>
+
+<p>We would like to automatically assign pull requests to
+a suitable reviewer on submission. A reviewer would be chosen from the
+group of maintainers of the project, attempting to ensure that no
+reviewer becomes overloaded by Pull Requests.</p>
+
+<p>Especially for community developers, providing fast feedback ensures
+that the contributer stays engaged, rather than becoming discouraged by
+a submission languishing for an extended period of time.</p>
+
+<p>We would also like to capture metrics related to pull requests, such as
+life times, conversation length, and merge/reject/abandon ratios.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Maintainer</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">ensure</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">PRs</span><span class="w"> </span><span class="vg">are</span><span class="w"> </span><span class="vg">handled</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">timely</span><span class="w"> </span><span class="vg">manner</span>
+<span class="vg">by</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">most</span><span class="w"> </span><span class="vg">suitable</span><span class="w"> </span><span class="vg">developer</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Maintainer</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">learn</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">about</span><span class="w"> </span><span class="vg">how</span><span class="w"> </span><span class="vg">we</span><span class="w"> </span><span class="vg">engage</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">our</span><span class="w"> </span><span class="vg">open</span><span class="w"> </span><span class="vg">source</span><span class="w"> </span><span class="vg">projects</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">we</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">improve</span><span class="w"> </span><span class="vg">our</span><span class="w"> </span><span class="vg">processes</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>Each project should expose a machine readable MAINTAINERS file, allowing
+for discovery of maintainers by an automated process (&quot;bot&quot;).</p>
+
+<p>For each new Pull Request, the bot will automatically assign a reviewer
+based on the list retrieved from the maintainers file. It will attempt
+to ensure that no-one has too many PRs assigned to them at any one time.</p>
+
+<p>Any reviewer must be able to place themselves on vacation, which
+would prevent the bot assigning any PRs to them.</p>
+
+<p>A list of file paths will be associated with each component so that the
+bot can correctly choose to use either a subsystem maintainer or a core
+maintainer, prefering the most specific possible.</p>
+
+<p>If the reviewer is not able to help, they can choose to ask the bot to
+assign a new reviewer, or they can reassign the PR themselves.</p>
+
+<p>Once a Pull Request is closed, the bot will record a set of metrics
+related to the PR.</p>
+
+<h2>References</h2>
+
+<ul>
+<li><a href="http://huonw.github.io/blog/2015/03/rust-infrastructure-can-be-your-infrastructure/">Rust&#39;s Infrastructure</a></li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

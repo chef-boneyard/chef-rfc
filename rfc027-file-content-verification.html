@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>File Content Verification</h1>
+
+<p>File-based resources should be able to verify a file&#39;s content via
+user-supplied instructions before deploying the new content.</p>
+
+<h2>Specification</h2>
+
+<p>The <code>verify</code> attribute of the <code>file</code>, <code>template</code>, <code>cookbook_file</code>, and
+<code>remote_file</code> resources will take a user-provided block or string. At
+converge time, a block will be passed the path to a temporary file
+holding the proposed content for the file. If the block returns <code>true</code>
+the provider will continue to update the file on disk as
+appropriate. If the block returns false, the provider will raise an
+error.</p>
+
+<p>If a string argument to verify is passed, it will then be executed as
+a system command. If the command&#39;s return code indicates success (0 on
+unix-like system) the provider will continue to update the file on
+disk as appropriate.  If the command&#39;s return code indicates failure,
+the provider will raise an error.</p>
+
+<p>The path to the temporary file with the proposed content will be
+available by using Ruby&#39;s sprinf formatting:</p>
+
+<p>&quot;%{path}&quot;</p>
+
+<p>other variables may be made available to commands in the future.</p>
+
+<p>If no verification block or string is supplied by the user, the
+provider assumes the content is valid.</p>
+
+<p>Multiple verify blocks may be provided by the user.  All given verify
+block must pass before the content is deployed.</p>
+
+<p>As an example:</p>
+<div class="highlight"><pre><span class="c1"># This should succeed</span>
+<span class="n">template</span> <span class="s2">&quot;/tmp/foo&quot;</span> <span class="k">do</span>
+  <span class="n">verify</span> <span class="k">do</span> <span class="o">|</span><span class="n">path</span><span class="o">|</span>
+    <span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># This should succeed on most systems</span>
+<span class="n">template</span> <span class="s2">&quot;/tmp/wombat&quot;</span> <span class="k">do</span>
+  <span class="n">verify</span> <span class="s2">&quot;/usr/bin/true&quot;</span>
+<span class="k">end</span>
+
+<span class="c1"># This should raise an error</span>
+<span class="n">template</span> <span class="s2">&quot;/tmp/bar&quot;</span> <span class="k">do</span>
+  <span class="n">verify</span> <span class="k">do</span> <span class="o">|</span><span class="n">path</span><span class="o">|</span>
+    <span class="kp">false</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># This should raise an error on most systems</span>
+<span class="n">template</span> <span class="s2">&quot;/tmp/turtle&quot;</span> <span class="k">do</span>
+  <span class="n">verify</span> <span class="s2">&quot;/usr/bin/false&quot;</span>
+<span class="k">end</span>
+
+<span class="c1"># This should pass</span>
+<span class="n">template</span> <span class="s2">&quot;/tmp/baz&quot;</span> <span class="k">do</span>
+  <span class="n">verify</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">}</span>
+  <span class="n">verify</span> <span class="p">{</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="c1"># This should raise an error</span>
+<span class="n">template</span> <span class="s2">&quot;/tmp/bat&quot;</span> <span class="k">do</span>
+   <span class="n">verify</span> <span class="p">{</span> <span class="kp">true</span> <span class="p">}</span>
+   <span class="n">verify</span> <span class="p">{</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+<p>Users could use this feature to shell out to tools which check the
+configuration:</p>
+<div class="highlight"><pre><span class="n">template</span> <span class="s2">&quot;/etc/nginx.conf&quot;</span> <span class="k">do</span>
+  <span class="n">verify</span> <span class="s2">&quot;nginx -t -c %{path}&quot;</span>
+<span class="k">end</span>
+</pre></div>
+<p>Chef may ship built-in verifiers for common checks such as
+content-type verification. Built-in verifiers can be used by passing
+well-known symbols to the verify attribute:</p>
+<div class="highlight"><pre><span class="n">template</span> <span class="s2">&quot;/etc/config.json&quot;</span> <span class="k">do</span>
+  <span class="n">verify</span> <span class="ss">:json</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Motivation</h2>
+
+<p>Typos and bugs in a template can lead Chef to render invalid
+configuration files on a node. In some cases, this will cause the
+related service to fail a notified restart, bringing down the user&#39;s
+application. One hopes to catch such errors in testing, but that is
+not always possible.</p>
+
+<p>Many applications provide a means to verify a configuration file, but
+it is currently difficult to use these tools to verify a template
+without an elaborate series of resources chained together with
+notifications.</p>
+
+<h2>Related BUGS</h2>
+
+<p>https://tickets.opscode.com/browse/CHEF-4416
+https://tickets.opscode.com/browse/CHEF-3634</p>
+
+<h2>Compatibility</h2>
+
+<p>This feature is backwards compatible with existing recipes.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow
+for this, this work is available under CC0. To the extent possible
+under law, the person who associated CC0 with this work has waived all
+copyright and related or neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

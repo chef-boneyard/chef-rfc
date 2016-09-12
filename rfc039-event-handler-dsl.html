@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Recipe DSL method for event handler hooks</h1>
+
+<p>Allow cookbook authors to easily add custom logic on Chef events.</p>
+
+<h2>Motivation</h2>
+
+<p>Chef has an extensive event <a href="https://github.com/chef/chef/blob/master/lib/chef/event_dispatch/base.rb">dispatch mechanism</a>.
+But incorporating some custom logic against any of the events is an onerous process which involves
+subclassing the based event handler and adding it via the config. This RFC
+proposes a recipe DSL method to ease this. For new chef users this will reduce
+the entry barrier.</p>
+
+<h2>Specification</h2>
+
+<p>Currently chef client sets up couple of default handlers (doc, base) during
+initialization. An additional empty event handler (a subclass
+of the base handler without any custom logic) can be added alongside the
+existing handlers which will used as a placeholder for user specific hooks.</p>
+
+<p>A top level (::Chef) method will be introduced (<code>event_handler</code>) to wrap the
+main event handler DSL (<code>on</code>). Users can tap into one of the event types
+(as specified in base dispatcher) using this DSL to execute their custom logic.</p>
+
+<p>The additional top level method(<code>Chef.event_handler</code>) will allow the handler
+DSL usage in and outside of recipes and also ease writing backward compatible
+changes for the <code>on</code> method if need be.</p>
+
+<p>Following is an example of sending hipchat notification on chef run failure.</p>
+<div class="highlight"><pre><span class="no">Chef</span><span class="o">.</span><span class="n">event_handler</span> <span class="k">do</span>
+  <span class="n">on</span> <span class="ss">:run_failed</span> <span class="k">do</span> <span class="o">|</span><span class="n">exception</span><span class="o">|</span>
+    <span class="n">hipchat_notify</span> <span class="n">exception</span><span class="o">.</span><span class="n">message</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>Following is another example of taking a distributed lock via etcd, to 
+prevent concurrent chef runs in different nodes</p>
+<div class="highlight"><pre><span class="n">lock_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">node</span><span class="o">.</span><span class="n">chef_environment</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="no">Chef</span><span class="o">.</span><span class="n">event_handler</span> <span class="k">do</span>
+  <span class="n">on</span> <span class="ss">:converge_start</span> <span class="k">do</span> <span class="o">|</span><span class="n">run_context</span><span class="o">|</span>
+    <span class="no">Etcd</span><span class="o">.</span><span class="n">lock_acquire</span><span class="p">(</span><span class="n">lock_key</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Chef</span><span class="o">.</span><span class="n">event_handler</span> <span class="k">do</span>
+  <span class="n">on</span> <span class="ss">:converge_complete</span> <span class="k">do</span>
+    <span class="no">Etcd</span><span class="o">.</span><span class="n">lock_release</span><span class="p">(</span><span class="n">lock_key</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<p>Following is another example of sending a hipchat alert on a key config change</p>
+<div class="highlight"><pre><span class="no">Chef</span><span class="o">.</span><span class="n">event_handler</span> <span class="k">do</span>
+  <span class="n">on</span> <span class="ss">:resource_updated</span> <span class="k">do</span> <span class="o">|</span><span class="n">resource</span><span class="p">,</span> <span class="n">action</span><span class="o">|</span>
+    <span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">to_s</span> <span class="o">==</span> <span class="s1">&#39;template[/etc/nginx/nginx.conf]&#39;</span>
+      <span class="no">Helper</span><span class="o">.</span><span class="n">hipchat_message</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">resource</span><span class="si">}</span><span class="s2"> was updated by chef&quot;</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

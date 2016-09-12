@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Chef 12 Attributes Changes</h1>
+
+<p>Chef 11 added a variety of features and abilities to the Attributes ecosystem within Chef. Unfortunately certain abilities were also lost.</p>
+
+<p>This proposal is the result of copious discussion between Daniel DeLeo, Adam Jacob, and myself on how to add the following in a consistent and clean way that preserves the goals behind the Chef 11 Attributes changes.</p>
+
+<p>While these are mostly backwards compatible there are some minor breaking changes and as such these are intended to be put into Chef 12.</p>
+
+<p>The desired abilities are:
+* To be able to safely delete a key in the Attribute at a given precedence level
+* To be able to safely delete a key in the Attribute at all precedence levels
+* To be able to assign into a precedence level in a way that overwrites the
+entire nested value of a key at that precedence level, ala Chef 10.</p>
+
+<h2>Motivation</h2>
+
+<h3>Precedence Key Deletion</h3>
+
+<p>Due to the fact that a precedence levels in Chef 11 are made up of multiple components, simple deletes no longer work as they once did. However, it is important to be able to delete a key at a given precendence level as one once could. One may be doing a safety check and realize an entry in a hash is dangerous or bad.</p>
+
+<h4>What&#39;s wrong?</h4>
+
+<p>You can no longer call <code>node[&#39;foo&#39;].delete(&#39;bar&#39;)</code> because writing without a precedence is forbidden in Chef 11, there is no functional delete.</p>
+
+<p>Further, you cannot delete at a precedence level because <code>node.default[&#39;foo&#39;].delete(&#39;bar&#39;)</code> will end up acting on the cookbook_default sub-Mash inside the default precedence and not effect role defaults.</p>
+
+<p>And for the same reason there is no way to overwrite a key at a precedence - you end up merging.</p>
+
+<h3>Global Key Deletion</h3>
+
+<p>For the same reasons as above, being able to delete a key globally is important.</p>
+
+<h3>To be able to assign with overwrite</h3>
+
+<p>As a side-effect of the changes in Chef 11, this code:</p>
+<div class="highlight"><pre><span class="vg">node</span><span class="o">.</span><span class="vg">default</span><span class="p">[</span><span class="c1">&#39;foo&#39;][&#39;bar&#39;][&#39;baz&#39;] = 12</span>
+<span class="vg">node</span><span class="o">.</span><span class="vg">role_default</span><span class="p">[</span><span class="c1">&#39;foo&#39;][&#39;bar&#39;][&#39;baz&#39;] = 52</span>
+<span class="vg">node</span><span class="o">.</span><span class="vg">default</span><span class="p">[</span><span class="c1">&#39;foo&#39;][&#39;bar&#39;] = {&#39;thing&#39; =&gt; &#39;stuff&#39;}</span>
+</pre></div>
+<p>No longer overwrites the &#39;bar&#39; key with a new hash-like structure, but instead merges these new entries into the existing Attribute. While this is desired for a variety of use-cases, having a way to fully assign the value of a key is important.</p>
+
+<h2>Specification</h2>
+
+<p>We propose 2 additions and one change to accomplish these goals.</p>
+
+<h3>Precedence Level Removals</h3>
+
+<h4>Syntax</h4>
+<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">rm_normal</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">rm_override</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+</pre></div>
+<p>This will be aliased to <code>node.remove_default</code>, <code>node.delete_default</code>, <code>node.remove_normal</code>, <code>node.delete_normal</code>, <code>node.remove_override</code>, and <code>node.delete_override</code> respectively.</p>
+
+<p>This function would return the computed value of the key being deleted for the
+specified precedence level.</p>
+
+<h4>Examples</h4>
+
+<p>Delete a default value when only defaults exist</p>
+<div class="highlight"><pre><span class="c1"># Given this structure under &#39;foo&#39;</span>
+<span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="s1">&#39;thing&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;stuff&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="s1">&#39;bat&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;things&#39;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="o">]</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># Given also some role attrs</span>
+<span class="c1"># Please don&#39;t ever do this in real code :)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">role_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;thing&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;otherstuff&#39;</span>
+
+<span class="c1"># And a force attr</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;thing&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;allthestuff&#39;</span>
+
+<span class="c1"># When we remove default precedence of node[&#39;foo&#39;][&#39;bar&#39;]</span>
+<span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span> <span class="c1">#=&gt; {&#39;baz&#39; =&gt; 52, &#39;thing&#39; =&gt; &#39;allthestuff&#39;}</span>
+
+<span class="c1"># What&#39;s left under &#39;foo&#39; is only &#39;bat&#39;</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bat&#39; =&gt; { &#39;things&#39; =&gt; [5,6] } }</span>
+</pre></div>
+<p>Delete a default value when higher precedences exists, doesn&#39;t touch them</p>
+<div class="highlight"><pre><span class="c1"># Given the same structure as before:</span>
+<span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="s1">&#39;thing&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;stuff&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="s1">&#39;bat&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;things&#39;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="o">]</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># Given also some role attrs</span>
+<span class="c1"># Please don&#39;t ever do this in real code :)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">role_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;thing&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;otherstuff&#39;</span>
+
+<span class="c1"># And a force attr</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;thing&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;allthestuff&#39;</span>
+
+<span class="c1"># And also some overrides:</span>
+<span class="n">node</span><span class="o">.</span><span class="n">override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">99</span>
+
+<span class="c1"># The same delete as before</span>
+<span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span> <span class="c1">#=&gt; { &#39;baz&#39; =&gt; 52, &#39;thing&#39; =&gt; &#39;allthestuff&#39; }</span>
+
+<span class="c1"># But the other precedences are unaffected:</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; { &#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 99} }</span>
+<span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; { &#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 99}, &#39;bat&#39; =&gt; { &#39;things&#39; =&gt; [5,6] }</span>
+</pre></div>
+<p>Deletes an override when lower-precedence exists without touching them</p>
+<div class="highlight"><pre><span class="c1"># Given the same structure as before - but as an override</span>
+<span class="n">node</span><span class="o">.</span><span class="n">override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="s1">&#39;thing&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;stuff&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="s1">&#39;bat&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;things&#39;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="o">]</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># And having a single default value</span>
+<span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">11</span>
+
+<span class="c1"># And a force at each precedence</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">55</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">99</span>
+
+<span class="c1"># Delete the override</span>
+<span class="n">node</span><span class="o">.</span><span class="n">rm_override</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span> <span class="c1">#=&gt; { &#39;baz&#39; =&gt; 99, &#39;thing&#39; =&gt; &#39;stuff&#39; }</span>
+
+<span class="c1"># But the other precedences are unaffected:</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; { &#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 55} }</span>
+</pre></div>
+<p>Non-existent key deletes return nil:</p>
+<div class="highlight"><pre><span class="c1"># Delete Non-Existent Key</span>
+<span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;such&quot;</span><span class="p">,</span> <span class="s2">&quot;thing&quot;</span><span class="p">)</span> <span class="c1">#=&gt; nil</span>
+</pre></div>
+<h3>Global Level Removals</h3>
+
+<h4>Syntax</h4>
+<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+</pre></div>
+<p>This will be aliased as <code>node.remove</code> and <code>node.delete</code>.</p>
+
+<p>The syntax <code>node[&#39;foo&#39;].delete(&#39;bar&#39;)</code> will throw an exception pointing you to
+the new API.</p>
+
+<h4>Examples</h4>
+<div class="highlight"><pre><span class="c1"># Given a similar structure to before</span>
+<span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="s1">&#39;thing&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;stuff&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="s1">&#39;bat&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;things&#39;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="o">]</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># With overrides</span>
+<span class="n">node</span><span class="o">.</span><span class="n">override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">999</span>
+
+<span class="c1"># Removing the &#39;bar&#39; key returns the computed value</span>
+<span class="n">node</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span> <span class="c1">#=&gt; {&#39;baz&#39; =&gt; 999, &#39;thing&#39; =&gt; &#39;stuff&#39;}</span>
+
+<span class="c1"># Looking at foo, all that&#39;s left is the &#39;bat&#39; entry</span>
+<span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bat&#39; =&gt; { &#39;things&#39; =&gt; [5,6] } }</span>
+</pre></div>
+<p>Deleting a non-existent key returns nil</p>
+<div class="highlight"><pre><span class="c1"># Delete Non-Existent Key</span>
+<span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;such&quot;</span><span class="p">,</span> <span class="s2">&quot;thing&quot;</span><span class="p">)</span> <span class="c1">#=&gt; nil</span>
+</pre></div>
+<h3>Full Assignment</h3>
+
+<p>We propose we stop making <code>!</code> an alias for <code>force_</code>, and use <code>!</code> as a modifier
+to functions to indicate this behavior.</p>
+
+<p>We propose that adding ! to a precedence-component-write function will clear out
+the key for that precedent for all &quot;components&quot; that merge earlier than it, and
+then complete the write.</p>
+
+<h4>Syntax</h4>
+<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">normal!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">override!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_override!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+</pre></div>
+<p>Since <code>node.role_default</code>, <code>node.env_default</code>, and their override equivalents
+are considered private APIs, the <code>!</code> syntax will not be implemented for them,
+but the desire is that the <code>!</code> operator is defined clearly enough that such an
+implementation has a clear specification. For example, <code>node.role_default!</code>
+would clear the value for default, env<em>default, role</em>default before assignment,
+but not force_default.</p>
+
+<h4>Examples</h4>
+
+<p>Example 1: Just one component</p>
+<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;d&#39;</span><span class="p">}</span>
+
+<span class="c1"># The &#39;!&#39; caused the entire &#39;bar&#39; key to be overwritten</span>
+<span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;c&#39; =&gt; &#39;d&#39;}</span>
+</pre></div>
+<p>Example 2: Multiple components; one &quot;after&quot; us:</p>
+<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<span class="c1"># Please don&#39;t ever do this in real code :)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">role_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;d&#39;</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;d&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;e&#39;</span><span class="p">}</span>
+
+<span class="c1"># The &#39;!&#39; write overwrote the &quot;cookbook-default&quot; value of &#39;bar&#39;,</span>
+<span class="c1"># but since role data is later in the resolution list, it was unaffected</span>
+<span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;c&#39; =&gt; &#39;d&#39;, &#39;d&#39; =&gt; &#39;e&#39;}</span>
+</pre></div>
+<p>Example 3: Multiple components; all &quot;before&quot; us:</p>
+<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<span class="c1"># Please don&#39;t ever do this in real code :)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">role_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;d&#39;</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;d&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;e&#39;</span><span class="p">}</span>
+
+<span class="c1"># Given a force_default!, there is no other data under &#39;bar&#39; than</span>
+<span class="c1"># what we wrote</span>
+<span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;d&#39; =&gt; &#39;e&#39;}</span>
+</pre></div>
+<p>Example 4: With multiple precedences</p>
+<div class="highlight"><pre><span class="c1"># Given a similar structure to before</span>
+<span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="s1">&#39;thing&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;stuff&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="s1">&#39;bat&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s1">&#39;things&#39;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="o">]</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="c1"># Please don&#39;t ever do this in real code :)</span>
+<span class="n">node</span><span class="o">.</span><span class="n">role_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">55</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">66</span>
+
+<span class="c1"># And other precedences</span>
+<span class="n">node</span><span class="o">.</span><span class="n">normal</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">88</span>
+<span class="n">node</span><span class="o">.</span><span class="n">override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">][</span><span class="s1">&#39;baz&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">99</span>
+
+<span class="c1"># And we do a full assignment</span>
+<span class="n">node</span><span class="o">.</span><span class="n">default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># Now we have role-default and force-default left in default</span>
+<span class="c1"># plus other precedences</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 66}, &#39;bat&#39;=&gt;{&#39;things&#39;=&gt;[5, 6]}}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">normal</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 88}}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 99}}</span>
+<span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;baz&#39; =&gt; 99}</span>
+
+<span class="c1"># If we then write with force_default!</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># We see the difference</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bat&#39;=&gt;{&#39;things&#39;=&gt;[5, 6]}, &#39;bar&#39; =&gt; {}}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">normal</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 88}}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 99}}</span>
+<span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;baz&#39; =&gt; 99}</span>
+</pre></div>
+<p>NOTE: This also requires that <code>!</code> functions no longer functions as a reader.</p>
+
+<h2>Rationale</h2>
+
+<p>As stated above this provides much-needed abilities currently lacking in the Chef 11 model.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

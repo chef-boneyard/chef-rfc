@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Mode-Agnostic Run Data Collection</h1>
+
+<p>In order to provide increased clarity into a user&#39;s fleet operations, and to support Chef deployments that do not necessarily include the use of a Chef Server, this change aims to provide an easy and consistent way for the Chef Client to report run statistics to a data collection system. The initial statistics we look to collect include node state, converge start/end times, and converge details.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">who</span><span class="w"> </span><span class="vg">uses</span><span class="w"> </span><span class="vg">both</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Client</span><span class="w"> </span><span class="vg">Mode</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Solo</span><span class="w"> </span><span class="vg">Mode</span><span class="w"> </span><span class="p">(</span><span class="vg">including</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">mode</span><span class="w"> </span><span class="vg">commonly</span><span class="w"> </span><span class="vg">known</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="s2">&quot;Chef Client Local Mode&quot;</span><span class="p">),</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">collect</span><span class="w"> </span><span class="vg">data</span><span class="w"> </span><span class="vg">about</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">entire</span><span class="w"> </span><span class="vg">fleet</span><span class="w"> </span><span class="vg">regardless</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">their</span><span class="w"> </span><span class="vg">client</span><span class="w"> </span><span class="vg">operation</span><span class="w"> </span><span class="vg">type</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">may</span><span class="w"> </span><span class="vg">better</span><span class="w"> </span><span class="vg">understand</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">impacts</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">may</span><span class="w"> </span><span class="vg">better</span><span class="w"> </span><span class="vg">detect</span><span class="w"> </span><span class="vg">failures</span><span class="o">.</span>
+</pre></div>
+<h2>Definitions</h2>
+
+<p>To eliminate ambiguity and confusion, the following terms are used throughout this RFC:</p>
+
+<ul>
+<li><strong>Chef</strong>: the tool used to automate your system.</li>
+<li><strong>Chef Client Mode</strong>: Chef configured in &quot;client mode&quot; where a Chef Server is used to provide Chef its resources and artifacts</li>
+<li><strong>Chef Solo Mode</strong>: Chef configured in a mode that utilizes a local Chef Zero server. Formerly known as &quot;Chef Client Local Mode&quot; (run as <code>chef-client --local-mode</code>) before <a href="https://github.com/chef/chef-rfc/blob/master/rfc031-replace-solo-with-local-mode.md">RFC 031</a> was implemented, available in Chef version 12.10.54 and later.</li>
+<li><strong>Chef Solo Legacy Mode</strong>: Chef in the former Solo operational mode (run as <code>chef-solo</code>) before <a href="https://github.com/chef/chef-rfc/blob/master/rfc031-replace-solo-with-local-mode.md">RFC 031</a> was implemented (in Chef versions earlier than 12.10.54), or Chef run as <code>chef-solo --legacy-mode</code> in Chef version 12.10.54 and later.</li>
+</ul>
+
+<h2>Specification</h2>
+
+<p>Similar to how data is collected and reported for Chef Reporting, we expect to implement a new EventDispatch class/instance that collects data about the Chef run and reports it accordingly. Unlike Chef Reporting, the server that receives this data is <strong>not</strong> running on the Chef Server, allowing users to utilize this function whether they use Chef Server or not. No new data collection methods are expected to be implemented as a result of this change; this change serves to implement a generic way to report the collected data in a &quot;webhook-like&quot; fashion to a non-Chef-Server receiver.</p>
+
+<p>The implementation must work with Chef running in any mode:</p>
+
+<ul>
+<li>Chef Client Mode</li>
+<li>Chef Solo Mode</li>
+<li>Chef Solo Legacy Mode</li>
+</ul>
+
+<h3>Protocol and Authentication</h3>
+
+<p>All payloads will be sent to the Data Collector server via HTTP POST to the URL specified in the <code>data_collector_server_url</code> configuration parameter. Users should be encouraged to use a TLS-protected endpoint.</p>
+
+<p>For the initial implementation, transmissions to the Data Collector server can optionally be authenticated with the use of a pre-shared token which will be sent in a HTTP header. Given that the receiver is not the Chef Server, existing methods of using a Chef <code>client</code> key to authenticate the request are unavailable.</p>
+
+<h3>Configuration</h3>
+
+<p>The configuration required for this new functionality can be placed in the client.rb or any other <code>Chef::Config</code>-supported location (such as a client.d or solo.d directory).</p>
+
+<h4>Parameters</h4>
+
+<ul>
+<li><strong>data<em>collector</em>server_url</strong>: required. The full URL to the data collector server API. All messages will be POST&#39;d to this URL. The Data Collector class will be registered and enabled if this config parameter is specified.</li>
+<li><strong>data<em>collector</em>token</strong>: optional. A pre-shared token that, if present, will be passed as an HTTP header named <code>x-data-collector-token</code> to the Data Collector server. The server can choose to accept or reject the data posted based on the token or lack thereof.</li>
+<li><strong>data<em>collector</em>mode</strong>: The Chef mode in which the Data Collector will be enabled. For example, you may wish to only enable the Data Collector when running in Chef Solo Mode. Must be one of: <code>:solo</code>, <code>:client</code>, or <code>:both</code>. The <code>:solo</code> value is used for Chef operating in Chef Solo Mode or Chef Solo Legacy Mode. Default: <code>:both</code>.</li>
+<li><strong>data<em>collector</em>raise<em>on</em>failure</strong>: If true, the Chef run will fatally exit if it is unable to successfully POST to the Data Collector server. Default: <code>false</code></li>
+</ul>
+
+<h3>Schemas</h3>
+
+<p>For the initial implementation, three JSON schemas will be utilized.</p>
+
+<h4>Action Schema</h4>
+
+<p>The Action Schema is used to notify when a Chef object changes. In our case, the primary use will be to update the Data Collector server with the current node object.</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Data Collector - action schema&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;entity_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The name of the entity&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;entity_type&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The type of the entity&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;bag&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;client&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cookbook&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;environment&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;group&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;node&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;organization&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;permission&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;entity_uuid&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Unique ID identifying this object, which should persist across runs and invocations&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Globally Unique ID for this message&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;message_version&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Message Version&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;1.1.0&quot;</span>
+      <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;message_type&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Message Type&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;organization_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the name of the org on which the run took place&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;null&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;recorded_at&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the ISO timestamp when the action happened&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-5][0-9]:[0-9]{2}Z$&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;remote_hostname&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The remote hostname which initiated the action&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;requestor_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The name of the client or user that initiated the action&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;requestor_type&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Was the requestor a client or user?&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;client&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;run_id&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The run ID of the run in which this node object was updated&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;service_hostname&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The FQDN of the Chef server, if appropriate&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The tool / client mode that initiated the action. Note that &#39;chef_solo&#39; includes Chef Solo Mode and Chef Solo Legacy Mode.&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;chef_solo&quot;</span><span class="p">,</span> <span class="s2">&quot;chef_client&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;task&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;What action was performed?&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;associate&quot;</span><span class="p">,</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;dissociate&quot;</span><span class="p">,</span> <span class="s2">&quot;invite&quot;</span><span class="p">,</span> <span class="s2">&quot;reject&quot;</span><span class="p">,</span> <span class="s2">&quot;update&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;user_agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The User-Agent of the requestor&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The payload containing the entire request data&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;entity_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;entity_type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;entity_uuid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;message_type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;message_version&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;organization_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;recorded_at&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;remote_hostname&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;requestor_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;requestor_type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;run_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;service_hostname&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;user_agent&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;ActionSchema&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+<span class="p">}</span>
+</pre></div>
+<p>The <code>data</code> field will contain the value of the object on which an action took place.</p>
+
+<h4>Run Start Schema</h4>
+
+<p>The Run Start Schema will be used by Chef to notify the data collection server at the start of the Chef run.</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Data Collector - Runs run_start schema&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;chef_server_fqdn&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the FQDN of the chef_server against whch current reporting instance runs&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;entity_uuid&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Unique ID identifying this node, which should persist across Chef runs&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the internal message id for the run&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;message_version&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Message Version&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;1.0.0&quot;</span>
+      <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;message_type&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It defines the type of message being sent&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;run_start&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;node_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the name of the node on which the run took place&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;organization_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the name of the org on which the run took place&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;run_id&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the runid for the run&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The tool / client mode that initiated the action. Note that &#39;chef_solo&#39; includes Chef Solo Mode and Chef Solo Legacy Mode.&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;chef_solo&quot;</span><span class="p">,</span> <span class="s2">&quot;chef_client&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;start_time&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the ISO timestamp of when the run started&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;chef_server_fqdn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;entity_uuid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;message_version&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;message_type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;node_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;organization_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;run_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;start_time&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;RunStartSchema&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+<span class="p">}</span>
+</pre></div>
+<h4>Run End Schema</h4>
+
+<p>The Run End Schema will be used by Chef Client to notify the data collection server at the completion of the Chef Client&#39;s converge phase and report data on the Chef Client run, including resources changed and any errors encountered.</p>
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Data Collector - Runs run_converge schema&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;chef_server_fqdn&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the FQDN of the chef_server against whch current reporting instance runs&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;end_time&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the ISO timestamp of when the run ended&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;entity_uuid&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Unique ID identifying this node, which should persist across Chef Client/Solo runs&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It has the details of the error in the run if any&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;expanded_run_list&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The expanded run list object from the node&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the internal message id for the run&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;message_type&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It defines the type of message being sent&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;run_converge&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;message_version&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Message Version&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;1.1.0&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;node&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The node object after the converge completed&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;node_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Node Name&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;node-name&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;organization_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Organization Name&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;resources&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;This is the list of all resources for the run&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;after&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Final State of the resource&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;before&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Initial State of the resource&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;cookbook_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Name of the cookbook that initiated the change&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;cookbook_version&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Version of the cookbook that initiated the change&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[0-9]*\\.[0-9]*(\\.[0-9]*)?$&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;delta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Difference between initial and final value of resource&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;duration&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Duration of the run consumed by processing of this resource, in milliseconds&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Resource ID&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;ignore_failure&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;the ignore_failure setting on a resource, indicating if a failure on this resource should be ignored&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Resource Name&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;result&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The action taken on the resource&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Status indicating how Chef processed the resource&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                          <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;skipped&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;unprocessed&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;up-to-date&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;updated&quot;</span>
+                        <span class="p">]</span>
+                    <span class="p">},</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Resource Type&quot;</span><span class="p">,</span>
+                        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;after&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;before&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;delta&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;duration&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;ignore_failure&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;result&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;run_id&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the runid for the run&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;run_list&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the runlist for the run&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;items&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The tool / client mode that initiated the action. Note that &#39;chef_solo&#39; includes Chef Solo Mode and Chef Solo Legacy Mode.&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;chef_solo&quot;</span><span class="p">,</span> <span class="s2">&quot;chef_client&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;start_time&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the ISO timestamp of when the run started&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It gives the status of the run&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;enum&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;failure&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;total_resource_count&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the total number of resources for the run&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;updated_resource_count&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;It is the number of updated resources during the course of the run&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;minimum&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;chef_server_fqdn&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;entity_uuid&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;end_time&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;expanded_run_list&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;message_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;message_version&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;node&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;node_name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;organization_name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;resources&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;run_id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;run_list&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;start_time&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;total_resource_count&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;updated_resource_count&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;RunEndSchema&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span>
+<span class="p">}</span>
+</pre></div>
+<h2>Downstream Impact</h2>
+
+<p>No downstream impacts are expected by this work.</p>
+
+<h2>Future Work</h2>
+
+<p>We expect to include Audit Mode results in future Data Collector payloads, upon which the schema will be published.</p>
+
+<p>After Audit Mode results are included, the deprecation of the <code>ResourceReporter</code> and <code>AuditReporter</code> classes will be possible.</p>
+
+<p>Enhanced authentication and authorization, such as per-client auth, is a logical next step for this feature as well.</p>
+
+<h2>Notes</h2>
+
+<p>While it can be argued that the existing <a href="https://docs.chef.io/handlers.html">handlers</a> implementation is a possible fit for this requirement, placing this logic directly in the Chef offers some advantages:</p>
+
+<ul>
+<li><strong>ease of use</strong>: adding one, possibly two, configuration properties to the node&#39;s client.rb is all that&#39;s required to start collecting and reporting data</li>
+<li><strong>chicken vs. egg</strong>: when an event handler is deployed and registered during a Chef run, the data for that run is potentially lost or incomplete</li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

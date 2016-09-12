@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Make Homebrew OS X&#39;s Default Package Provider</h1>
+
+<p><a href="http://brew.sh">Homebrew</a> is a very popular source-compile based package manager for OS X. A <a href="https://supermarket.getchef.com/cookbooks/homebrew">cookbook</a> providing a homebrew as the OS X default provider for Chef&#39;s package resource has existed for years. Currently in Chef, the default package provider on <code>mac_os_x</code> platforms is <a href="http://www.macports.org/">Macports</a>. Since the cookbook makes homebrew the default in a <code>libraries</code> file, it is automatically loaded and present on any node that has the homebrew cookbook downloaded as a dependency, even if they&#39;re not using it. Many users may not even be aware that macports is the Chef default.</p>
+
+<h2>Specification</h2>
+
+<p><code>Chef::Provider::Package::Macports</code> is the default for platforms <code>mac_os_x</code> and <code>mac_os_x_server</code> in Chef&#39;s <a href="https://github.com/opscode/chef/blob/master/lib/chef/platform/provider_mapping.rb">platform provider mapping</a>.</p>
+<div class="highlight"><pre><span class="ss">:mac_os_x</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="ss">:package</span> <span class="o">=&gt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Provider</span><span class="o">::</span><span class="no">Package</span><span class="o">::</span><span class="no">Macports</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">},</span>
+<span class="ss">:mac_os_x_server</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="ss">:package</span> <span class="o">=&gt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Provider</span><span class="o">::</span><span class="no">Package</span><span class="o">::</span><span class="no">Macports</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>This RFC proposes to change this to:</p>
+<div class="highlight"><pre><span class="ss">:mac_os_x</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="ss">:package</span> <span class="o">=&gt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Provider</span><span class="o">::</span><span class="no">Package</span><span class="o">::</span><span class="no">Homebrew</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">},</span>
+<span class="ss">:mac_os_x_server</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="ss">:package</span> <span class="o">=&gt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Provider</span><span class="o">::</span><span class="no">Package</span><span class="o">::</span><span class="no">Homebrew</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>It would largely leverage the code in the homebrew cookbook&#39;s <code>homebrew_package.rb</code> <a href="https://github.com/opscode-cookbooks/homebrew/blob/master/libraries/homebrew_package.rb">libraries</a>. We would probably need to clean some things up and modernize it to better fit with the rest of the Chef core package providers, and we would definitely need to have tests added.</p>
+
+<p>Macports would still remain in Chef as an alternative for those who use it, and it could be set as default similar to what the homebrew cookbook does now, in its <a href="https://supermarket/getchef.com/cookbooks/macports">own cookbook</a>.</p>
+
+<h2>Motivation</h2>
+
+<p>The motivation for this change is to modernize the &quot;sane defaults&quot; that Chef provides as primitives. When Chef was created, Homebrew didn&#39;t exist - Macports was the &quot;de facto&quot; way to install software packages from source &quot;ports-style.&quot; Ticket <a href="https://tickets.opscode.com/browse/CHEF-1250">CHEF-1250</a> was opened four years ago proposing homebrew as the package provider, so interest in this has existed for a long time. The general developer community that uses OS X seems to have rallied around Homebrew (680+ watchers, 18,500+ stars, 9000+ forks on its GitHub repo) to provide this functionality. It is very comprehensive (over 2900 packages), and reuses the system libraries that OS X provides so users don&#39;t have to compile the entire world to install software.</p>
+
+<h2>Rationale</h2>
+
+<p>Issue #28 was opened to briefly propose this change and within a week received an overwhelming &quot;:+1&quot; from respondants. So far I haven&#39;t found many people that are still using Macports instead of Homebrew, and no one has mentioned anything in the issue or on the mailing list.</p>
+
+<h2>Compatibility</h2>
+
+<p>This is a backwards-incompatible change for cookbooks for users who rely on using the Macports provider. All users who have the <code>homebrew</code> cookbook already use it for the default package provider. Recipe code in cookbooks that <code>depends &quot;homebrew&quot;</code> won&#39;t need to be changed at all. Users will still need to have a recipe that installs Homebrew itself. This is no different than <code>macports</code> itself, which isn&#39;t installed on OS X by default either, and needs its own cookbook.</p>
+
+<h2>Reference Implementation</h2>
+
+<p>The <code>homebrew</code> cookbook maintained by CHEF is the reference implementation. It lacks tests, but those would be added as mentioned above.</p>
+
+<h2>Copyright</h2>
+
+<p>The code to implement this feature will come directly from CHEF&#39;s homebrew cookbook. It was originally written by Graeme Mathieson, and was licensed under the <a href="https://github.com/opscode-cookbooks/homebrew/blob/49936df5fd8cc6610262621b3c41c1e3bcbb9c62/metadata.rb#L3">Apache 2.0 Software License</a>. The current copyrights listed in the cookbook are:</p>
+
+<ul>
+<li>Copyright 2011, Graeme Mathieson <a href="mailto:mathie@woss.name">mathie@woss.name</a></li>
+<li>Copyright 2011-2013, Opscode, Inc. <a href="mailto:legal@opscode.com">legal@opscode.com</a></li>
+<li>Copyright 2014, Chef Software, Inc <a href="mailto:legal@getchef.com">legal@getchef.com</a></li>
+</ul>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

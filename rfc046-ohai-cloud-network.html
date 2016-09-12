@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Enhanced Ohai Network Support</h1>
+
+<p>The Ohai <code>cloud</code> plugin pushes information into <code>private_ips</code> and <code>public_ips</code>, but if networks have an alternate name they are overlooked. In EC2, HP and Rackspace for example, <code>local_ipv4</code> is mapped to <code>cloud.private_ipv4</code>, which is likely to be incorrect in some cases. Additional network data may be available from the metadata server (ec2, hp, openstack) but this should be confirmed and normalized within <code>cloud</code>.</p>
+
+<p>This was previously discussed internally at Chef at http://wiki.corp.opscode.com/display/CORP/RFC+Generalized+Network+Configuration+Specification+for+Knife+Cloud+Plugins</p>
+
+<h2>OpenStack</h2>
+
+<p>The Ohai <code>cloud</code> plugin is populated by cloud-specific code, but it generally pushes <code>local</code> attributes into <code>private</code> and anything else gets pushed into a list of additional <code>private_ips</code> (ie. <code>node[&#39;openstack&#39;][&#39;local_ipv4&#39;]</code> becomes <code>[&#39;cloud&#39;][&#39;local_ipv4&#39;]</code> and <code>[&#39;cloud&#39;]&#39;[&#39;private_ips&#39;][0]</code>). The mapping of values from the API into the existing cloud attribute namespaces should be checked for validity.</p>
+
+<h2>Proposal</h2>
+
+<p>Since <code>public</code> and <code>private</code> may not even be applicable (but are almost definitely expected by many current users, so may require longterm deprecation), the proposal is made to add an additional <code>networks</code> attribute with all of the node&#39;s networks embedded within. This allows new attributes without removing existing attributes and minimizes namespace collisions.</p>
+
+<ul>
+<li><code>node[&#39;cloud&#39;][&#39;networks&#39;]</code>, the keys as NAMES<em>OR</em>IDS, likely to be <code>[&#39;public&#39;,&#39;private&#39;]</code>. Users could call <code>node[&#39;cloud&#39;][&#39;networks&#39;].keys</code> to get the list of the node&#39;s networks.</li>
+<li><code>node[&#39;cloud&#39;][&#39;networks&#39;][&#39;NAME_OR_ID&#39;]</code>, each key of <code>node[&#39;cloud&#39;][&#39;networks&#39;]</code> is a hash of all relevant network data (ie. <code>node[&#39;cloud&#39;][&#39;networks&#39;][&#39;public&#39;]</code>)</li>
+<li><code>node[&#39;cloud&#39;][&#39;networks&#39;][&#39;NAME_OR_ID&#39;][&#39;associated_ipv4&#39;]</code>, list of IPv4 addresses associated with the node on this network, likely to be singular (examples include floating IPs, Elastic IPs)</li>
+<li><code>node[&#39;cloud&#39;][&#39;networks&#39;][&#39;NAME_OR_ID&#39;][&#39;associated_ipv6&#39;]</code>, list of IPv6 addresses associated with the node on this network, likely to be singular (examples include floating IPs, Elastic IPs)</li>
+<li><code>node[&#39;cloud&#39;][&#39;networks&#39;][&#39;NAME_OR_ID&#39;][&#39;ipv4&#39;]</code>, list of IPv4 addresses on this network, likely to be singular</li>
+<li><code>node[&#39;cloud&#39;][&#39;networks&#39;][&#39;NAME_OR_ID&#39;][&#39;ipv6&#39;]</code>, list of IPv6 addresses on this network, likely to be singular</li>
+<li><code>node[&#39;cloud&#39;][&#39;networks&#39;][&#39;NAME_OR_ID&#39;][&#39;hostnames&#39;]</code>, list of hostnames associated with this network, likely to be singular</li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Chef GitHub Issues Workflow</h1>
+
+<p>This RFC codifies the workflow Chef uses to track bug reports and contributions using <a href="https://github.com/opscode/chef/issues">GitHub Issues</a>.
+The terms and policies used in this workflow are defined by <a href="https://github.com/chef/chef-rfc/blob/master/rfc030-maintenance-policy.md">RFC 30</a>.</p>
+
+<h2>Terms</h2>
+
+<p>In the context of this document below terms are used:</p>
+
+<ul>
+<li><strong>Chef Users:</strong> End users of Chef who participate in this workflow by filing <strong>issues</strong>.</li>
+<li><strong>Contributors:</strong> Users of Chef who would like to improve Chef. They participate in this workflow by submitting <strong>contributions</strong> to Chef.</li>
+<li><strong>Chef Maintainers:</strong> Developers of Chef who are responsible for one or more <strong>subcomponents</strong>.</li>
+<li><strong>Lieutenants:</strong> Developers of Chef who lead the maintenance of a subcomponent.</li>
+<li><strong>Issue</strong>: A filed <strong>GitHub Issue</strong> which can be a bug report, feature request, style change request.</li>
+<li><strong>Contribution</strong>: A filed <strong>GitHub Pull Request</strong> (PR).</li>
+<li><strong>Subcomponents</strong>: A sub-area of Chef project which is lead by a <strong>Lieutenant</strong> and a set of <strong>maintainers</strong>.</li>
+</ul>
+
+<h2>Goals</h2>
+
+<p>Everyone can:</p>
+
+<ul>
+<li>Make contributions in a timely and efficient manner</li>
+</ul>
+
+<p>Chef Users can:</p>
+
+<ul>
+<li>Be aware of the cause &amp; the next steps for the issues they have filed.</li>
+</ul>
+
+<p>Contributors can:</p>
+
+<ul>
+<li>Identify the state of their contribution.</li>
+</ul>
+
+<p>Chef Maintainers can:</p>
+
+<ul>
+<li>See the list of contributions they need to review in a single page.</li>
+<li>See the list of issues they need to investigate in a single page.</li>
+</ul>
+
+<h2>Workflow</h2>
+
+<p><img src="./support/rfc048-GithubIssuesWorkflow.png" alt="Chef GitHub Issues Workflow"></p>
+
+<h2>Notes</h2>
+
+<h3>Common Steps for Issues &amp; PRs</h3>
+
+<p>The first step of Chef GitHub Issues Workflow is to identify the subcomponent for which the issue or PR belongs to. Once the subcomponent is identified, the rest of the workflow is the responsibility of the maintainers of the identified subcomponent.</p>
+
+<h3>Issues Workflow</h3>
+
+<p>The issues workflow can be broken down into these high level steps:</p>
+
+<ol>
+<li>Understand the issue and determine the resolution.</li>
+<li>Identify the major version the issue should be fixed in.</li>
+<li>Label the issue to indicate completeness of <strong>Triage</strong> process.</li>
+</ol>
+
+<p>Any code or contributions associated with the issue will follow the
+contribution workflow documented below.</p>
+
+<h4>Rules</h4>
+
+<ul>
+<li>If an issue is not commented on for more than a year, the issue is retired by closing.</li>
+</ul>
+
+<h3>Contribution Workflow</h3>
+
+<p>The contribution workflow can be broken down into these high level steps:</p>
+
+<ol>
+<li>Maintainers check the contribution and give <strong>:+1:</strong> if the code is looking good, or leave a comment that clearly identifies what is needed for the contribution to move forward.</li>
+<li>At their discretion, the reviewer may choose to complete a contribution by writing tests. This can be a fantastic mentoring opportunity for our community.</li>
+<li>Once at least two maintainers <strong>:+1:</strong> a PR, the last reviewer should:
+
+<ul>
+<li>If clean up, such as a Changelog entry or a rebase, is required, mark the PR with the <code>Ready to Merge</code> label.</li>
+<li>If no further work is required, merge the PR.</li>
+</ul></li>
+<li>PRs marked with <code>Ready to Merge</code> will be merged by maintainers of the subcomponent after including the required documentation updates.</li>
+<li><code>Waiting for Contributor Response</code> label indicates that an action is needed from the contributor.</li>
+<li><code>Needs Maintainer Review</code> label indicates that an action is needed from Chef maintainers.</li>
+</ol>
+
+<h4>Rules</h4>
+
+<ul>
+<li>PRs labeled with <code>Waiting for Contributor Response</code> and not updated for more than a month are labelled as <code>Incomplete Contribution</code>.</li>
+<li>PRs labeled with <code>Incomplete Contribution</code> for 6 months are closed.</li>
+<li>PRs labeled with <code>Needs Maintainer Review</code> and not reviewed for 2 weeks escalate to the Lieutenants of the subcomponent.</li>
+<li>PRs labeled with <code>Ready to Merge</code> and not merged for 2 weeks escalate to the Lieutenants of the subcomponent.</li>
+</ul>
+
+<h2>Queries</h2>
+
+<ul>
+<li>List of PRs that need review for a subcomponent:
+
+<ul>
+<li>Search Query: <code>is:open is:pr label:&quot;Needs Maintainer Review&quot; label: &quot;subcomponent_name&quot;</code></li>
+<li><strong>TODO</strong> Add link to the query</li>
+</ul></li>
+<li>List of Issues that need investigation for a subcomponent:
+
+<ul>
+<li>Search Query: <code>is:open is:issue label:&quot;subcomponent_name&quot; -label:Bug -label:Enhancement -label:&quot;Tech Cleanup&quot;</code></li>
+<li><strong>TODO</strong> Add link to the query</li>
+</ul></li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

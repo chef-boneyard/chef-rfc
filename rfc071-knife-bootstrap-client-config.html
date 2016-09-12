@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Knife Bootstrap <code>client.rb</code> Configuration</h1>
+
+<p>Knife bootstrap currently only allows a select few <code>client.rb</code> parameters
+to be specified during bootstrap. This RFC proposes a solution to allow users
+to pass bulk configuration data to <code>knife bootstrap</code> to be placed in the
+<code>client.rb</code> before the first chef-client run.</p>
+
+<h2>Background</h2>
+
+<p>The <code>knife bootstrap</code> command supports a small subset of possible parameters
+a user can configure in the <code>client.rb</code>. The chef-client cookbook provides a
+template that supports many more, allowing the user to configure additional
+options during a Chef client converge. If something you are trying to do does
+not fit into the template provided, you are also free to specify config files
+in a <code>client.d</code> folder that will automatically be loaded. However, because
+the chef-client cookbook is run along with the rest of the run list on the
+first run, your settings do not take effect until the second chef-client
+run.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">configure</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">options</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">aren</span><span class="c1">&#39;t supported by knife bootstrap,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">do</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">maintain</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">fork</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">bootstrap</span><span class="w"> </span><span class="vg">template</span><span class="p">,</span>
+<span class="vg">or</span><span class="w"> </span><span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">do</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">learn</span><span class="w"> </span><span class="vg">about</span><span class="w"> </span><span class="vg">bootstrap</span><span class="w"> </span><span class="vg">templates</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">all</span><span class="p">,</span>
+<span class="vg">or</span><span class="w"> </span><span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to make two chef-client runs on bootstrap to apply and use my configuration file.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">generic</span><span class="w"> </span><span class="vg">way</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">pass</span><span class="w"> </span><span class="vg">custom</span><span class="w"> </span><span class="vg">client</span><span class="w"> </span><span class="vg">configuration</span><span class="w"> </span><span class="vg">file</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have the maintenance cost of additional bootstrap arguments for new features</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3>Append Config Files From <code>client.d</code></h3>
+
+<p>The <code>chef-client</code> cookbook adds a block to load all <code>.rb</code> files in
+the <code>client.d</code> folder. The proposal here is to do the same thing.
+Knife bootstrap will take a <code>client.d</code> folder, by default looking
+the chef repo under <code>bootstrap</code>, optionally overwritable with a
+<code>knife.rb</code> configuration parameter <code>client_d_path</code>. The files
+will be loaded in alphabetical order. Knife will still sync all files
+under <code>client.d</code>, however only top-level files will the automatically
+loaded. The block to do this would look something like:</p>
+<div class="highlight"><pre><span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/etc/chef/client.d/*.rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+  <span class="no">Chef</span><span class="o">::</span><span class="no">Config</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+<h4>Example</h4>
+
+<p>For this example, consider we want to configure Ohai&#39;s hostname plugin.
+The execution of this plugin will determine the node name that will be
+assigned to the node we are bootstraping, so it needs to be correct on
+the first run.</p>
+
+<p>We store the <code>ohai_config.rb</code> file in the Chef repo on our workstation:</p>
+<div class="highlight"><pre><span class="c1"># chef-repo/bootstrap/client.d/ohai_config.rb</span>
+
+<span class="n">ohai</span><span class="o">.</span><span class="n">plugin</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">][</span><span class="ss">:fqdn_using</span><span class="o">]</span> <span class="o">=</span> <span class="o">[</span> <span class="ss">:hostname</span><span class="p">,</span> <span class="ss">:nis</span><span class="p">,</span> <span class="ss">:dns</span> <span class="o">]</span>
+</pre></div><div class="highlight"><pre><span class="c1"># chef-repo/bootstrap/client.d/ohai_plugins/custom_plugin.rb</span>
+
+<span class="c1"># My custom ohai plugin</span>
+</pre></div>
+<p>Next we bootstrap the node:</p>
+<div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">bootstrap</span><span class="w"> </span><span class="mf">10.0.0.100</span><span class="w"> </span><span class="o">-</span><span class="vg">x</span><span class="w"> </span><span class="vg">chefuser</span><span class="w"> </span><span class="o">-</span><span class="vg">P</span><span class="w"> </span><span class="vg">oneofus</span>
+</pre></div>
+<p>This generates the following <code>client.rb</code> and copies it to the box,
+along with all the contents in our chef repo&#39;s <code>client.d</code> directory:</p>
+<div class="highlight"><pre><span class="c1"># /etc/chef/client.rb</span>
+
+<span class="n">log_level</span>        <span class="ss">:info</span>
+<span class="n">log_location</span>     <span class="no">STDOUT</span>
+<span class="n">chef_server_url</span>  <span class="s2">&quot;https://api.chef.io/organizations/oneofus&quot;</span>
+<span class="n">ohai</span><span class="o">.</span><span class="n">plugin_path</span> <span class="o">=</span> <span class="s2">&quot;/etc/chef/client.d/ohai_plugins&quot;</span>
+
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/etc/chef/client.d/*.rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+  <span class="no">Chef</span><span class="o">::</span><span class="no">Config</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div><div class="highlight"><pre><span class="c1"># /etc/chef/client.d/ohai_config.rb</span>
+
+<span class="n">ohai</span><span class="o">.</span><span class="n">plugin</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">][</span><span class="ss">:fqdn_using</span><span class="o">]</span> <span class="o">=</span> <span class="o">[</span> <span class="ss">:hostname</span><span class="p">,</span> <span class="ss">:nis</span><span class="p">,</span> <span class="ss">:dns</span> <span class="o">]</span>
+</pre></div><div class="highlight"><pre><span class="c1"># /etc/chef/client.d/ohai_plugins/custom_plugin.rb</span>
+
+<span class="c1"># My custom ohai plugin</span>
+</pre></div>
+<p>Now, when chef-client runs on the box, our configurations to
+Ohai&#39;s hostname plugin will be loaded before Ohai runs, allowing
+the first Chef run to get the correct hostname.</p>
+
+<p>Taking a look under <code>/etc/chef</code>, we should see something like:</p>
+<div class="highlight"><pre><span class="cp">[</span><span class="nx">vagrant</span><span class="p">@</span><span class="nx">localhost</span> <span class="err">~</span><span class="cp">]</span><span class="x">$ tree /etc/chef/</span>
+<span class="x">/etc/chef/</span>
+<span class="x">├── client.d</span>
+<span class="x">│   ├── ohai_config.rb</span>
+<span class="x">│   └── ohai_plugins</span>
+<span class="x">│       └── custom_plugin.rb</span>
+<span class="x">├── client.pem</span>
+<span class="x">├── client.rb</span>
+<span class="x">├── first-boot.json</span>
+<span class="x">├── trusted_certs</span>
+<span class="x">│   └── localhost.crt</span>
+<span class="x">└── validation.pem</span>
+</pre></div>
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

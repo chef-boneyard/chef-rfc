@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Cookbook Quality Metrics</h1>
+
+<p>The question of what makes a good cookbook has been asked since the dawn of Chef.  As a community we&#39;ve struggled with answering this in part because each recipe is unique to the specific requirements it is trying to meet.  Allowing Supermarket users to rate cookbooks is one thing that we&#39;ve tried in the past.  This did not work because you simply do not have enough knowledge about the quality of a cookbook when you discover and download it from the Supermarket.  Similarly, download counts cannot be trusted because of <a href="https://www.chef.io/blog/2015/01/21/those-pesky-supermarket-download-counts/">the way some older versions of the berkshelf-api server work</a>.</p>
+
+<p>The Supermarket should make it easy for anyone to find quality cookbooks.  In order to do so, we must agree on some qualities that indicate whether or not a cookbook is considered to have high quality.  Ideally, these qualities are objective and able to be determined automatically.  These qualities should be defined and agreed on by the community.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">author</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">cookbooks</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">shared</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">used</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">community</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">easier</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">get</span><span class="w"> </span><span class="vg">going</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">Chef</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Supermarket</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">identify</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">relative</span><span class="w"> </span><span class="vg">quality</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">given</span><span class="w"> </span><span class="vg">cookbook</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">spend</span><span class="w"> </span><span class="vg">less</span><span class="w"> </span><span class="vg">time</span><span class="w"> </span><span class="vg">looking</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">good</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">time</span><span class="w"> </span><span class="vg">automating</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>A <a href="https://github.com/chef-cookbooks/cookbook-quality-metrics">Cookbook Quality Metrics</a> system will be implemented to provide indicators of certain qualities for each cookbook.  These indicators will be visible on the Supermarket.</p>
+
+<ul>
+<li>The community will be able to collaborate on the metrics.</li>
+<li>The community has expressed a desire for an aggregate metric to make the quality ranking easy to consume without needing to fully understand what makes up the metric.</li>
+<li>Metrics should not be visible on the Supermarket by default until the community has had time to review the data associated with the implemented metrics.</li>
+<li>A Supermarket user should be able to easily assess a cookbook&#39;s compliance with any given metric.</li>
+</ul>
+
+<p>We will collaborate on quality metrics in the <a href="https://github.com/chef-cookbooks/cookbook-quality-metrics">Cookbook Quality Metrics</a> repository.</p>
+
+<p>The lifecycle of a metric will be:</p>
+
+<ul>
+<li><em>Draft</em> - this is a proposed metric, ready for community discussion and approval.</li>
+<li><em>Accepted</em> - this metric has been accepted and merged into the master branch of the <a href="https://github.com/chef-cookbooks/cookbook-quality-metrics">Cookbook Quality Metrics repository</a>.
+
+<ul>
+<li><em>In Progress</em> - data for this metric is being gathered and is visible by some mechanism but not displayed on the Supermarket by default.</li>
+</ul></li>
+<li><em>Implemented</em> - this metric has been implemented and is visible on the Supermarket.</li>
+<li><em>Closed</em> - this metric has not been accepted or has been removed from the system.</li>
+</ul>
+
+<h3>Viewing Cookbook Metrics</h3>
+
+<p>The <a href="https://supermarket.chef.io">Supermarket</a> may show some sort of aggregate score for each cookbook.</p>
+
+<p>Each cookbook listed on the Supermarket will have a tab or other view showing how it adheres to each quality metric.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

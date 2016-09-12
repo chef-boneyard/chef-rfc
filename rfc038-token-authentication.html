@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Token Authentication for Chef Server</h1>
+
+<p>Currently the Chef Server currently only supports a single authentication method,
+using RSA signatures and key pairs. This has worked well for chef-client and
+knife, but it is less convenient for some other use cases. A token-based
+authentication method would allow for some additional use cases. This would
+work by passing an opaque token to the Server which is associated with an
+existing user or client.</p>
+
+<h2>Motivation</h2>
+
+<p>This proposal covers two, unrelated use cases.</p>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">web</span><span class="w"> </span><span class="vg">interface</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">simpler</span><span class="w"> </span><span class="vg">web</span><span class="w"> </span><span class="vg">application</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">maintenance</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">easier</span><span class="o">.</span>
+</pre></div>
+<p>Adding a token authentication system will allow most of the requests to go
+directly to the Chef Server (once CORS support is handled). This will
+drastically reduce the number of API endpoints needed for the web UI, most of
+which are currently just proxies for the relevant Chef Server functionality.</p>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">security</span><span class="w"> </span><span class="vg">engineer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">accept</span><span class="w"> </span><span class="vg">secure</span><span class="w"> </span><span class="vg">identity</span><span class="w"> </span><span class="vg">assertions</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">implement</span><span class="w"> </span><span class="vg">object</span><span class="o">-</span><span class="vg">capability</span><span class="w"> </span><span class="vg">systems</span><span class="o">.</span>
+</pre></div>
+<p>Token authentication provides a simple way to prove your identity to an
+external system. This is the basic building block of an object-capability
+system.</p>
+
+<h2>Specification</h2>
+
+<h3>Authenticating with a token</h3>
+
+<p>Token authentication allows passing an opaque string token as a header in
+Chef Server API requests.</p>
+<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">path</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<span class="nl">Authorization:</span><span class="w"> </span><span class="vg">Bearer</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">token</span><span class="o">&gt;</span>
+</pre></div>
+<p>The token can also be passed as a query parameter, however this is discouraged
+due to the risk of inadvertently logging or otherwise exposing the token. The
+Chef Server itself will not log the token, but HTTP proxies could.</p>
+<div class="highlight"><pre><span class="kr">GET</span><span class="w"> </span><span class="o">/</span><span class="vg">path</span><span class="o">?</span><span class="vg">access_token</span><span class="o">=&lt;</span><span class="vg">token</span><span class="o">&gt;</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+</pre></div>
+<p>In either case, this is equivalent to key-based authentication from the client
+or user associated with the token. If the token is invalid or expired, the
+server must respond HTTP 401.</p>
+
+<p>The server must ensure tokens are checked using constant-time comparisons to
+avoid timing attacks.</p>
+
+<h3>Generating a token</h3>
+
+<p>A new token can generated using the token API:</p>
+<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+
+<span class="p">{}</span>
+</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+
+<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;created_at&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+</pre></div>
+<p>This new token is associated with the client or user that issued the request to
+create it.</p>
+
+<p>Tokens must be 16 characters from the set <code>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</code>.</p>
+
+<p>A new token can also be created for a user using their username and password.
+This API will be limited to the webui key as it is now. This will allow a web
+interface to entirely avoid using the impersonation key behavior as it does now.</p>
+<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">authenticate_user</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+
+<span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;username&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;password&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="vg">true</span><span class="p">}</span>
+</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+
+<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;linked&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;username&gt;&quot;</span><span class="p">}</span>
+</pre></div>
+<p>There is no support for making a token for a different client.</p>
+
+<p>Tokens can optionally have a description attached to them:</p>
+<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+
+<span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;objcap&quot;</span><span class="p">}</span>
+</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+
+<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;objcap&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;created_at&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+</pre></div>
+<h3>Other token operations</h3>
+
+<p>Tokens support list, read, and delete operations. At this time, tokens are
+immutable so no support for update operations is required. This may be revised
+in the future.</p>
+
+<h4>List</h4>
+<div class="highlight"><pre><span class="kr">GET</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+
+<span class="p">{</span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://chef.example.com/tokens/&lt;token&gt;&quot;</span><span class="p">}</span>
+</pre></div>
+<p>This API must be restricted such that only tokens belonging to the current
+user or client are visible. This does potentially present an escalation
+vulnerability whereby one compromised token could steal other tokens for the
+same user. This could be mitigated through per-token permissions detailed below.</p>
+
+<h4>Read</h4>
+<div class="highlight"><pre><span class="kr">GET</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="o">/&lt;</span><span class="vg">token</span><span class="o">&gt;</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+
+<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;objcap&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;created_at&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+</pre></div>
+<h4>Delete</h4>
+<div class="highlight"><pre><span class="vg">DELETE</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="o">/&lt;</span><span class="vg">token</span><span class="o">&gt;</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+</pre></div>
+<h3>Token expiration</h3>
+
+<p>A token can have an expiration timestamp after which is cannot be used. This is
+set during token creation.</p>
+<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+
+<span class="p">{</span><span class="s2">&quot;expires&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+
+<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;expires&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+</pre></div>
+<p>After a token&#39;s expiration is passed, using it will return an error message.</p>
+
+<h3>Token permissions</h3>
+
+<p>In a future iteration, specific permissions could be attached to a token. This
+would allow creating restricted tokens with a subset of the permissions of the
+requesting user or client.</p>
+
+<p>This would be especially useful in an objcap system, to create a token with only
+&quot;whoami&quot; permission so it can be used for secure, remote identity assertions.</p>
+
+<h2>Rationale</h2>
+
+<p>The token authentication scheme is designed to be overall compatible with
+OAuth2 without requiring the Chef Server to implement an Oauth2-compatible
+token request/creation API. This will allow the complex bits of Oauth to stay
+in oc-id, while once a token is issued it can be used directly with the Chef
+Server. No support is outlined for the form-encoded style of passing
+bearer tokens as at this time Chef Server has no endpoints that accept
+form-encoded data.</p>
+
+<p>As token checking can happen at the same point in the request cycle as the
+current key verification, the new authentication modes will be transparent to
+the rest of the Chef Server code.</p>
+
+<p>The simple CRD API matches the structure of most Chef Server operations. Adding
+optional token creation to the <code>authenticate_user</code> endpoint allows services
+like oc-id or Manage to avoid using the impersonation key behavior.</p>
+
+<p>Care will have to be taken through all token-handling code to avoid timing
+attacks on the token content. This includes token authentication, token reads,
+and token deletes.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Node State Separation</h1>
+
+<p>The purpose of this RFC is to logically split up the description of a node from
+its &quot;desired&quot; state (typically what the administrator imposes - <code>run_list</code>,
+<code>environment</code>, <code>tags</code>) and the &quot;current&quot; state (typically what the node itself
+discovers -- automatic ohai variables and default and override attributes
+constructed as part of the chef client run).</p>
+
+<p>This proposal fixes <a href="https://tickets.opscode.com/browse/CHEF-4978">CHEF-4978</a>.
+The major bug which constantly occurs due to this is where a chef-client run is
+in flight and has done the initial GET request of the node, while a human
+administrator changes the <code>run_list</code>, and then the in-flight chef-client run
+finishes and POSTs the node and overwrites the administrator&#39;s changes to the
+<code>run_list</code>.</p>
+
+<p>The approach that will be taken is to split up the data so that the node is not
+constantly overwriting its own <code>run_list</code>.  This solution does not implement
+locking around the node data, so it is still open to some edge conditions that
+may cause race conditions.</p>
+
+<p>The proposed implementation will also support separately ACL&#39;ing the desired
+state from the current state.  This will allow locking down the desired state
+so that the node will not be allowed to update its own <code>run_list</code>.  This
+addresses security concerns where hostile compromised nodes could &#39;inject&#39;
+themselves into search results via changing their <code>run_list</code> and/or environment
+which may make other infrastructure components redirect traffic at them and
+could be used to compromise an environment.</p>
+
+<p>Both systems of ACLs will be supported so that some customers may allow nodes
+to update their <code>run_lists</code>, and other customers may restrict nodes to not be
+able to update their <code>run_lists</code>.  It would also be possible to mix and match
+at one site, although if any host is able to update its own <code>run_list</code> then if
+it gets hacked into the security is defeated so it is not clear that mixed-mode
+will be useful.</p>
+
+<p>The choice of which mode should be the default (secure by default vs codeable
+by default) is out of the scope of this RFC.  For backwards compatibility, we
+must allow nodes to update their desired state by default to begin with as
+changing that default would be a breaking change.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">knife</span><span class="w"> </span><span class="vg">CLI</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">update</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">node</span><span class="c1">&#39;s run_list</span>
+<span class="vg">and</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">reverted</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">in</span><span class="o">-</span><span class="vg">flight</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">run</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">search</span><span class="w"> </span><span class="vg">who</span><span class="w"> </span><span class="vg">cares</span><span class="w"> </span><span class="vg">about</span><span class="w"> </span><span class="vg">security</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">attackers</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">be</span>
+<span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">change</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">search</span><span class="w"> </span><span class="vg">results</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">controlling</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">single</span><span class="w"> </span><span class="vg">node</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3>API Schema</h3>
+
+<h4><code>/nodes/:name/desired</code></h4>
+
+<p>This endpoint is for manipulating desired data (<code>run_list</code>, environment, tags,
+normal attributes)</p>
+
+<h5><code>GET /nodes/:name/desired</code></h5>
+
+<p>The <code>GET</code> method is used to return the desired details of the node as JSON.</p>
+
+<p>This method has no parameters.</p>
+
+<p>The response will be similar to:</p>
+
+<p><code>{ &quot;name&quot;: &quot;node_name&quot;, &quot;chef_environment&quot;: &quot;_default&quot;, &quot;run_list&quot;: [
+&quot;recipe[recipe_name]&quot; ], &quot;normal&quot;: { &quot;tags&quot;: [ ] } }</code></p>
+
+<p>Response Codes:</p>
+
+<ul>
+<li>200 OK.  The request was successful</li>
+<li>401 Unauthorized.  The user or client who made the request could not be
+authenticated. Verify the user/client name, and that the correct key was used
+to sign the request.</li>
+<li>403 Forbidden.  The user which made the request is not authorized to perform
+the action.</li>
+<li>404 Not found.  The requested object does not exist.</li>
+</ul>
+
+<h5><code>PUT /nodes/:name/desired</code></h5>
+
+<p>The <code>PUT</code> method is used to update the desired data on an already created node.</p>
+
+<p>This method has no parameters.</p>
+
+<p>The request body will be similar to:</p>
+
+<p><code>{ &quot;name&quot;: &quot;node_name&quot;, &quot;chef_environment&quot;: &quot;_default&quot;, &quot;run_list&quot;: [
+&quot;recipe[recipe_name]&quot; ], &quot;normal&quot;: { &quot;tags&quot;: [ ] } }</code></p>
+
+<p>The response will return the updated desired data in the same format as the
+request.</p>
+
+<p>Response Codes:</p>
+
+<ul>
+<li>200 OK.  The request was successful</li>
+<li>401 Unauthorized.  The user or client who made the request could not be
+authenticated. Verify the user/client name, and that the correct key was used
+to sign the request.</li>
+<li>403 Forbidden.  The user which made the request is not authorized to perform
+the action.</li>
+<li>404 Not found.  The requested object does not exist.</li>
+<li>413 Request entity too large. A request may not be larger than 1000000 bytes.</li>
+</ul>
+
+<h5><code>POST /nodes/:name/desired</code></h5>
+
+<p>This method will not be implemented, use <code>POST /nodes</code> to create a new node
+object.</p>
+
+<h5><code>DELETE /nodes/:name/desired</code></h5>
+
+<p>This method will not be implemented, partial clearing of data will not be
+supported.  Use <code>DELETE /nodes/:name</code>.</p>
+
+<h4><code>/nodes/:name/current</code></h4>
+
+<p>This endpoint is for storing the current data (default attributes, override
+attributes, automatic attributes)</p>
+
+<h5><code>GET /nodes/:name/current</code></h5>
+
+<p>The <code>GET</code> method is used to return the current details of the node as JSON.</p>
+
+<p>This method has no parameters.</p>
+
+<p>The response will be similar to:</p>
+
+<p><code>{ &quot;name&quot;: &quot;node_name&quot;, &quot;default&quot;: { [...] }, &quot;override&quot;: { [...] },
+&quot;automatic&quot;: { [...] } }</code></p>
+
+<p>Response Codes:</p>
+
+<ul>
+<li>200 OK.  The request was successful</li>
+<li>401 Unauthorized.  The user or client who made the request could not be
+authenticated. Verify the user/client name, and that the correct key was used
+to sign the request.</li>
+<li>403 Forbidden.  The user which made the request is not authorized to perform
+the action.</li>
+<li>404 Not found.  The requested object does not exist.</li>
+</ul>
+
+<h5><code>PUT /nodes/:name/current</code></h5>
+
+<p>The <code>PUT</code> method is used to update the current data on an already created node.</p>
+
+<p>This method has no parameters.</p>
+
+<p>The request body will be similar to:</p>
+
+<p><code>{ &quot;name&quot;: &quot;node_name&quot;, &quot;default&quot;: { [...] }, &quot;override&quot;: { [...] },
+&quot;automatic&quot;: { [...] } }</code></p>
+
+<p>The response will return the updated desired data in the same format as the
+request.</p>
+
+<p>Response Codes:</p>
+
+<ul>
+<li>200 OK.  The request was successful</li>
+<li>401 Unauthorized.  The user or client who made the request could not be
+authenticated. Verify the user/client name, and that the correct key was used
+to sign the request.</li>
+<li>403 Forbidden.  The user which made the request is not authorized to perform
+the action.</li>
+<li>404 Not found.  The requested object does not exist.</li>
+<li>413 Request entity too large. A request may not be larger than 1000000 bytes.</li>
+</ul>
+
+<h5><code>POST /nodes/:name/current</code></h5>
+
+<p>This method will not be implemented, use <code>POST /nodes</code> to create a new node
+object.</p>
+
+<h5><code>DELETE /nodes/:name/current</code></h5>
+
+<p>This method will not be implemented, partial clearing of data will not be
+supported.  Use <code>DELETE /nodes/:name</code>.</p>
+
+<h4><code>/nodes/:name</code></h4>
+
+<p>This endpoint is unchanged, and is only included here for context.</p>
+
+<h5><code>GET /nodes/:name</code></h5>
+
+<p>This method will return the combined desired and current data and its semantics
+will be unchanged.</p>
+
+<h5><code>PUT /nodes/:name</code></h5>
+
+<p>This method will create a new node with the combined desired and current data
+and its semantics will be unchanged.</p>
+
+<h5><code>DELETE /nodes/:name</code></h5>
+
+<p>This method will delete a node and its semantics will be unchanged.</p>
+
+<h4><code>/nodes</code></h4>
+
+<p>This endpoint is unchanged, and is only included here for context.</p>
+
+<h5><code>POST /nodes</code></h5>
+
+<p>This method will create a new node object and its semantics will be unchanged.</p>
+
+<h5><code>GET /nodes</code></h5>
+
+<p>This method returns a list of all node URIs on the server and its semantics
+will be unchanged.</p>
+
+<h3>Core Chef Server Changes</h3>
+
+<h4>Nodes As Composed Objects</h4>
+
+<p>The implementation of this will break up the node object into different objects
+for the current and desired state.  This will imply a migration to the new code
+  which will take existing node objects in a server and will break them up into
+  the new current and desired objects in the database.</p>
+
+<p>The ACLs on the node will also be composed of the ACLs on the underlying
+current and desired objects.  As part of the data migration on the server
+upgrade the ACLs on the node objects will be copied to both the desired and the
+current state (preserving the default behavior that nodes may update their own
+desired state).  The ACLs on the composed endpoints (e.g. <code>GET /nodes/:name</code>)
+will be composed of the ACLs on the underlying desired and current state and
+will require both of those to be allowed for the operation to succeed.  There
+will be no support for getting partial results back if the client has only
+partial permissions to the node components.</p>
+
+<h3>Core Chef Client Changes</h3>
+
+<h4>Node Retrieval</h4>
+
+<p>The initial request from the chef-client will be changed to GET the
+<code>nodes/:name/desired</code> endpoint to retrieve only the saved desired data.  This
+avoids having the client retrieve all the node data, parse the JSON, inflate
+the attributes and then remove the normal, override and automatic attributes --
+saving time, bandwidth and memory.</p>
+
+<p>A copy of the desired data will be saved so that it can later be determined if
+the data has been &quot;dirtied&quot; during the chef-client run.</p>
+
+<p>For backwards compatibility if the prior request to the desired endpoint 404s,
+then the client will retrieve its node data from the old <code>/nodes/:name</code>
+endpoint and will fallback to backwards compatibility mode for all further
+operations.</p>
+
+<p>If the node does not exist it will still be created with a POST to <code>/nodes</code></p>
+
+<h4>Node Save</h4>
+
+<p>Provided the desired endpoint is supported, the Chef::Node#save method will be
+updated to typically PUT its data only to the <code>/nodes/:name/current</code> endpoint.
+This will affect both the final <code>node.save</code> of the chef-client run, and any
+user called <code>node.save</code> in recipe code.</p>
+
+<p>If it is detected that the desired data has been dirtied then <code>node.save</code> will
+instead PUT to <code>/nodes/:name</code>.  On success the updated desired data will be
+used as the data to compare to in order to determine if it is &quot;re-dirtied&quot;
+again later.</p>
+
+<p>If the initial GET to the <code>/nodes/:name/desired</code> endpoint failed, then
+node.save will automatically fall back to PUT to <code>/nodes/:name</code> for backwards
+compatibility.</p>
+
+<p>The node.save API will still support falling back to <code>POST /node</code> to create the
+node if it has not already been created.</p>
+
+<h3>Knife Changes</h3>
+
+<p>All changes will hit the new endpoints and then fallback to using
+<code>/nodes/:name</code> for backwards compatibility on a 404.</p>
+
+<p>The <code>knife node run_list</code> commands will be updated to PUT to the
+<code>/nodes/:name/desired</code> endpoint.</p>
+
+<p>The <code>knife tag</code> commands will be updated to PUT to the <code>/nodes/:name/desired</code>
+endpoint.</p>
+
+<p>The <code>knife node environment set</code> command will be updated to PUT to the
+<code>/nodes/:name/desired</code> endpoint.</p>
+
+<p>The <code>knife node from file</code> command will be unchanged and will PUT/POST to
+<code>/nodes/:name</code>.</p>
+
+<p>The <code>knife node show</code> command will be unchanged and will GET from
+<code>/nodes/:name</code>.</p>
+
+<p>The <code>knife node edit</code> command will be unchanged by default and will GET from
+<code>/nodes/:name</code>, it will be extended to support <code>--current</code> and <code>--desired</code>
+flags, and at some point in the future <code>--configuation</code> is expected to become
+the default behavior (a breaking change).</p>
+
+<h3>ChefFS Changes</h3>
+
+<p>The ChefFS repo will be extended to support a &quot;nodes/current&quot; directory.</p>
+
+<p>The knife download command will attempt to download the individual node data
+from /nodes/:name/desired and /nodes/:name/current and place them in
+<code>/nodes/&lt;nodename&gt;.json</code> and <code>/nodes/current/&lt;nodename&gt;.json</code> respectively.  If
+the endpoints 404 then the <code>/nodes/:name</code> endpoint will be used and the data
+will be split out into the new format.  In other words, the knife download
+command will be able to talk to servers that do and do not support this API and
+will always write in the new format.</p>
+
+<p>The knife upload command will look for a <code>/nodes/current/&lt;nodename&gt;.json</code> file
+and if it finds it, will assume a new repo and will attempt to use the new
+endpoints to upload the data.  If the endpoints 404 then it will fall back to
+using the <code>/nodes</code> and <code>/nodes/:name</code> endpoint for backwards compatibility
+(which it must do anyway in the case that the node does not exist, so this
+should not be much extra code).  If it does not find the current file in the
+repo then it will skip to directly uploading the node to the old endpoints.  In
+other words knife upload supports reading from both different repo styles and
+supports writing to the new and old server APIs.</p>
+
+<h3>Solr Indexing</h3>
+
+<p>Any change to either the desired or current state will result in the whole node
+object being submitted to solr for indexing.</p>
+
+<h3>Future</h3>
+
+<p>In order to implement the ability to make the desired state read-only there
+will need to be some additional changes outside of the scope of this RFC.  The
+implementation of read-only desired state will most likely require using an
+adminstrative key to create both the client and the node (a form of
+validatorless bootstrapping).  To have the client create both the new current
+and desired state object and then drop its perms on the desired node object
+would require a client to drop its own GRANT perms which is an antipattern and
+should not be allowed.  Instead an admin key will need to create both the new
+client and the new desired and current state node objects.  A helper API
+endpoint may be written to move that logic server-side and keep it consistent.
+It also may be useful to introduce per-org configuration state to control
+default ACLs and other behavior of that endpoint.  Those implementation details
+are well beyond the scope of this RFC.  The implementation of this node state
+seperation, however, allows for all of those future implementations.</p>
+
+<p>This RFC does not directly solve the problem of configuring servers so that
+desired node state is read-only to the node.</p>
+
+<h2>Thanks</h2>
+
+<p>This was liberally stolen and plagiarized from John Keiser&#39;s work:
+https://gist.github.com/jkeiser/6628674</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

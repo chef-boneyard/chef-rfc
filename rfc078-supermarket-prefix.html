@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Supermarket Prefix Reservation</h1>
+
+<p>While the question of explicit namespace support for Supermarket and the broader
+Chef ecosystem has mostly been answered, a de facto standard has emerged over
+the years to prefix cookbook names with the originating organization or team.
+In most cases these are internal, but more and more of these prefixed names are
+being released to the public Supermarket.</p>
+
+<p>This has benefits to both cookbook authors who want to make it clear a cookbook
+is part of their brand and thus meets their quality standards, as well as to
+users who can use brand-level trust to find new cookbooks to use.</p>
+
+<p>The downside is there is no explicit tooling built for this prefix management.
+Currently any user can register any unused name, possibly causing confusion as
+to if a cookbook is officially associated with the prefix name or not.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">author</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">maintain</span><span class="w"> </span><span class="vg">brand</span><span class="w"> </span><span class="vg">continuity</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">cookbooks</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">clearly</span><span class="w"> </span><span class="vg">identified</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">consumer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">know</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">cookbooks</span><span class="w"> </span><span class="vg">come</span><span class="w"> </span><span class="vg">from</span><span class="w"> </span><span class="vg">trusted</span><span class="w"> </span><span class="vg">authors</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">feel</span><span class="w"> </span><span class="vg">confident</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">using</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">cookbooks</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>A group or company will have exclusive control to prefixes registered to them.
+These prefixes are subject to approval by Chef Software as part of their operation
+of the public Supermarket application. Private deployments of Supermarket can
+define their own governance structure for allocating prefixes.</p>
+
+<p>If a prefix is registered, the user or users that are responsible for it will
+be the only ones allowed to register new cookbooks or tool with that prefix.
+The responsible user or users can authorize other users to create cookbooks in
+their prefix, but this requires explicit permission from the prefix holder.</p>
+
+<p>In the short term, prefix management can be handled ad hoc via existing cookbook
+rename/removal tooling in Supermarket. Established prefixes can be added to this
+RFC by pull request. As a reactive strategy for the time being, you will have
+to notify the Supermarket team of an inappropriately named cookbook by
+<a href="https://github.com/chef/supermarket/issues/new">opening a ticket</a>.</p>
+
+<p>In the long term, it would be good to see native functionality added to
+Supermarket to enable this, though care will have to be taken at that point to
+ensure abuse is not a problem. This could allow automatic enforcement of
+prefixes in the future.</p>
+
+<h2>Prefixes</h2>
+
+<p>To register a prefix, fork this repository and create a Pull Request adding
+your prefix and the person or organization that will be responsible for it.</p>
+
+<ul>
+<li><code>poise</code> - <a href="https://github.com/coderanger">coderanger</a></li>
+<li><code>sigsci</code> - <a href="https://github.com/signalsciences">signalsciences</a></li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>

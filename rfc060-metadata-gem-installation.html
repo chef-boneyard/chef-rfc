@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/main.css">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <link href="/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+        </div>
+        <div class="right">
+          <a id="logo" href="https://www.chef.io">
+            <img src="images/logo.svg"/>
+          </a>
+        </div>
+      </header>
+<h1>Enable gem dependencies in cookbook metadata</h1>
+
+<p>Support a &#39;gem&#39; DSL method for cookbook metadata to create a dependency on a rubygem.  The
+gem will be installed via <code>chef_gem</code> after all the cookbooks are synchronized but before any
+other cookbook loading is done.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">User</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">additional</span><span class="w"> </span><span class="vg">gems</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">libraries</span><span class="p">,</span><span class="w"> </span><span class="vg">attributes</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">resources</span><span class="p">,</span>
+<span class="vg">to</span><span class="w"> </span><span class="vg">avoid</span><span class="w"> </span><span class="vg">complex</span><span class="w"> </span><span class="vg">workarounds</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">double</span><span class="o">-</span><span class="vg">run</span><span class="w"> </span><span class="vg">converges</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>Allow users to specify additional gem dependencies like:</p>
+<div class="highlight"><pre><span class="n">gem</span> <span class="s2">&quot;poise&quot;</span>
+<span class="n">gem</span> <span class="s2">&quot;chef-sugar&quot;</span>
+<span class="n">gem</span> <span class="s2">&quot;chef-provisioning&quot;</span>
+</pre></div>
+<p>In the <code>Chef::RunContext::CookbookCompiler#compile</code> method a phase will be added before <code>compile_libraries</code> which will install all of the gem declarations from all of the synchronized cookbooks before any other cookbook code is compiled.</p>
+
+<p>The implementation will use an in-memory bundler Gemfile which is constructed against all gem statements in all cookbooks which are in the <code>run_list</code>, solved
+at the same time.  The syntax of the &#39;gem&#39; statement will support the bundler gem syntax, with the qualification that since it is compiled into metadata.json
+that arbitrary ruby code will be expanded at cookbook upload time.</p>
+
+<p>The resulting gemset bundle will be installed into the LIBPATH of the running chef-client.  This may either be directly into the base ruby libraries (per current <code>chef_gem</code> behavior) or into a custom location with the LIBPATH of the chef-client extended to use that location--as an open implementation question.</p>
+
+<p>The normal Gemfile <code>requires</code> tag may be used by users to autoload files out of gems.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </body>
+</html>
