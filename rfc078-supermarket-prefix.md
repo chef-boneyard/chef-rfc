@@ -62,6 +62,7 @@ your prefix and the person or organization that will be responsible for it.
 
 * `poise` - [coderanger](https://github.com/coderanger)
 * `sigsci` - [signalsciences] (https://github.com/signalsciences)
+* `gcp` - [googlecloudplatform](https://github.com/googlecloudplatform)
 * `fb` - [Faceboook](https://github.com/facebook)
 
 ## Copyright
