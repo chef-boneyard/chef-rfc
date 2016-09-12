@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
     <title>Chef RFCs</title>
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/skeleton.css">
-    <link href="/images/favicon.png" rel="icon" type="image/png">
     <link href="/images/favicon.ico" rel="shortcut icon">
+    <script src="https://style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="https://style.chef.io/dist/1.0.1/stylesheets/chef.css">
   </head>
   <body>
     <div class="container">
@@ -255,5 +254,15 @@ compatibility with any supported version of the server.</li>
 <p>We are keeping track of the minor things that need to be fixed or included in Chef 12 on <a href="https://github.com/opscode/chef/issues">Github Issues</a> with <code>Milestone: Chef 12</code>. Feel free to check them out or file a new issue there.</p>
     </div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="https://style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
+    <script>
+      $(document).chef({
+        assets: {
+          images: 'https://style.chef.io/assets/images'
+        }
+      });
+    </script>
   </body>
 </html>
