@@ -1,5 +1,6 @@
 ---
 RFC: 68
+Title: PostgreSQL Search for Chef
 Author: Jeremy Bingham <jeremy@goiardi.gl>
 Status: Accepted
 Type: Informational

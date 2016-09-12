@@ -1,5 +1,6 @@
 ---
 RFC: 71
+Title: Knife Bootstrap client Configuration
 Authors: Jay Mundrawala <jdm@chef.io>, Bryan McLellan <btm@chef.io>
 Status: Accepted
 Type: Standards Track

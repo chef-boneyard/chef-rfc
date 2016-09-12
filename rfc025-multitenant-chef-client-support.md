@@ -1,5 +1,6 @@
 ---
 RFC: 25
+Title: Multitenant Chef Client Support
 Author: John Keiser <jkeiser@getchef.com>
 Status: Accepted
 Type: Standards Track

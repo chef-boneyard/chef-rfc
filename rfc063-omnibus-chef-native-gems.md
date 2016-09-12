@@ -1,5 +1,6 @@
 ---
 RFC: 63
+Title: Omnibus Chef Native Gem Additions
 Author: Lamont Granquist <lamont@chef.io>
 Status: Accepted
 Type: Standards Track
@@ -7,9 +8,7 @@ Tracking:
   - https://github.com/chef/chef/pull/4435
 ---
 
-# Title
-
-Omnibus Chef Native Gem Additions
+# Omnibus Chef Native Gem Additions
 
 ## Motivation
 

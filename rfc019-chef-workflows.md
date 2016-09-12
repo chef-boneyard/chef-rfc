@@ -1,5 +1,6 @@
 ---
 RFC: 19
+Title: The Great Workflow RFC
 Author: Adam Jacob <adam@getchef.com>
 Status: Accepted
 Type: Standards Track

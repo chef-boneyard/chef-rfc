@@ -1,5 +1,6 @@
 ---
 RFC: 34
+Title: Ruby Version Deprecation Policy
 Author: Daniel DeLeo <dan@getchef.com>
 Status: Accepted
 Type: Standards Track

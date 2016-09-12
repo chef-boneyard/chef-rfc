@@ -1,5 +1,6 @@
 ---
 RFC: 35
+Title: Audit-Mode for Chef Client
 Author: Claire McQuin <claire@getchef.com>
 Status: Accepted
 Type: Standards Track

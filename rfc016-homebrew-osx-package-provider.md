@@ -1,9 +1,10 @@
 ---
-RFC:
+RFC: 016
 Author: Joshua Timberman <joshua@getchef.com>
-Status: Draft
-Type: New Feature
+Status: Accepted
+Type: Standards Track
 Chef-Version: 12
+Title: Make Homebrew OS X's Default Package Provider
 ---
 
 # Make Homebrew OS X's Default Package Provider

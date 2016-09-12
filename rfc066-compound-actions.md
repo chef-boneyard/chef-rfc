@@ -1,5 +1,6 @@
 ---
 RFC: 66
+Title: Actions With Inline Resources
 Author: John Keiser <john@johnkeiser.com>
 Status: Accepted
 Type: Standards Track

@@ -1,5 +1,6 @@
 ---
 RFC: 64
+Title: Chef code should have a consistent style
 Author: Thom May <thom@chef.io>
 Status: Accepted
 Type: Standards Track

@@ -1,6 +1,7 @@
 ---
 RFC: 010
 Author: Bryan McLellan <btm@loftninjas.org>
+Title: Windows Package Resource and Providers
 Status: Accepted
 Type: Standards Track
 ---

@@ -1,5 +1,6 @@
 ---
 RFC: 36
+Title: Dialects in Chef
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Accepted
 Type: Standards Track

@@ -1,5 +1,6 @@
 ---
 RFC: 30
+Title: Maintenance Policy
 Author: Adam Jacob <adam@chef.io>
 Status: Accepted
 Type: Process

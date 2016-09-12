@@ -1,5 +1,6 @@
 ---
 RFC: 32
+Title: Powershell DSC Resource Modules
 Author:
 - Mukta Aphale <mukta.aphale@clogney.com>
 - Siddheshwar More <siddheshwar.more@clogeny.com>

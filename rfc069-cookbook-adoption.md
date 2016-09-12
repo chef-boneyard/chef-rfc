@@ -1,5 +1,6 @@
 ---
 RFC: 69
+Title: Cookbook Adoption On Supermarket
 Author: Nell Shamrell-Harrington <nshamrell@chef.com>
 Status: Accepted
 Type: Process

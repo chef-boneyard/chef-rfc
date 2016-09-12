@@ -1,6 +1,7 @@
 ---
 RFC: 012
 Author: Matt Ray <mray@chef.io>
+Title: Named Network Support in knife-openstack
 Status: Accepted
 Type: Standards Track
 ---

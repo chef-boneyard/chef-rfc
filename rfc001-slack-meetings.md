@@ -1,5 +1,6 @@
 ---
 RFC: 001
+Title: Chef Community Slack Meetings
 Author: Adam Jacob <adam@chef.io>
 Status: Accepted
 Type: Process

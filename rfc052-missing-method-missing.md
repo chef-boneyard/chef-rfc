@@ -1,5 +1,6 @@
 ---
 RFC: 52
+Title: Remove magic from Chef::Resource lookup
 Author: John Keiser <john@johnkeiser.com>
 Status: Accepted
 Type: Standards Track

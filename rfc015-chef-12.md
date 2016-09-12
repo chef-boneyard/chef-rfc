@@ -1,5 +1,6 @@
 ---
 RFC: 015
+Title: Chef 12
 Author: Serdar Sutay <serdar@chef.io>
 Status: Accepted
 Type: Informational

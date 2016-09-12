@@ -1,5 +1,6 @@
 ---
 RFC: 55
+Title: Property Default Value Improvements
 Author: John Keiser <jkeiser@chef.io>
 Status: Accepted
 Type: Standards Track

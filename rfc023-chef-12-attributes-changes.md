@@ -1,5 +1,6 @@
 ---
 RFC: 23
+Title: Chef 12 Attributes Changes
 Author: Phil Dibowitz <phil@ipom.com>
 Status: Accepted
 Type: Standards Track
