@@ -1,7 +1,8 @@
 ---
-RFC: unassigned
+RFC: 80
+Title: Developer Certificate of Origin (DCO) for Contributions
 Author: Nathen Harvey <nharvey@chef.io>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
