@@ -1,5 +1,6 @@
 ---
 RFC: 53
+Title: Ohai User Configuration
 Author: Bryan McLellan <btm@loftninjas.org>
 Status: Accepted
 Type: Standards Track

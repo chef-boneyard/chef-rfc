@@ -1,5 +1,6 @@
 ---
 RFC: 74
+Title: Chef Community Slack
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Accepted
 Type: Informational

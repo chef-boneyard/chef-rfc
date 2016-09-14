@@ -1,5 +1,6 @@
 ---
 RFC: 50
+Title: Resource Actions
 Author: John Keiser <john@johnkeiser.com>
 Status: Accepted
 Type: Standards Track

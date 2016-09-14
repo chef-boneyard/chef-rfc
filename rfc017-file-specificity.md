@@ -1,5 +1,6 @@
 ---
 RFC: 017
+Title: File Specificity Overhaul
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Accepted
 Type: Standards Track

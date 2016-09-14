@@ -1,5 +1,6 @@
 ---
 RFC: 61
+Title: Hugging in the Chef Community
 Author: Aaron Kalin and JJ Asghar
 Status: Accepted
 Type: Informational, Process

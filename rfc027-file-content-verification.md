@@ -1,5 +1,6 @@
 ---
 RFC: 27
+Title: File Content Verification
 Author: Steven Danna <steve@getchef.com>
 Status: Accepted
 Type: Standards Track

@@ -1,5 +1,6 @@
 ---
 RFC: 56
+Title: Easy Resource Load And Converge
 Author: John Keiser <john@johnkeiser.com>
 Status: Accepted
 Type: Standards Track

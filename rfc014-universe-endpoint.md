@@ -1,5 +1,6 @@
 ---
 RFC: 14
+Title: Universe Endpoint for Chef Server
 Author: Daniel DeLeo <dan@getchef.com>
 Status: Accepted
 Type: Standards Track

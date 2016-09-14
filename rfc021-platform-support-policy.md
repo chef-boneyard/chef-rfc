@@ -1,6 +1,7 @@
 ---
 RFC: 21
 Author: Julian Dunn <jdunn@chef.io>
+Title: Chef Platform Support Policy
 Status: Accepted
 Type: Informational
 ---

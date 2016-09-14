@@ -1,5 +1,6 @@
 ---
 RFC: 33
+Title: Root Aliases in Cookbooks
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Accepted
 Type: Standards Track

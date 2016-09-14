@@ -1,5 +1,6 @@
 ---
 RFC: 41
+Title: Chef Server API Versioning
 Author: Marc Paradise <marc@chef.io>
 Status: Final
 Type: Standards Track

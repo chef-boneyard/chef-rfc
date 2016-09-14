@@ -1,5 +1,6 @@
 ---
 RFC: 29
+Title: Chef Board of Governance
 Author: Adam Jacob <adam@getchef.com>
 Status: Accepted
 Type: Process

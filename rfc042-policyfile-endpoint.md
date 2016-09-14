@@ -1,5 +1,6 @@
 ---
 RFC: 42
+Title: Policyfile HTTP Resource API
 Author: Daniel DeLeo <dan@chef.io>
 Status: Accepted
 Type: Standards Track

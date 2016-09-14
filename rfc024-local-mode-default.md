@@ -1,5 +1,6 @@
 ---
 RFC: 24
+Title: Local Mode Default
 Author: John Keiser <jkeiser@getchef.com>
 Status: Accepted
 Type: Standards Track

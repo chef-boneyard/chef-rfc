@@ -1,5 +1,6 @@
 ---
 RFC: 54
+Title: Resource Attribute Improvements
 Author: John Keiser <jkeiser@chef.io>
 Status: Accepted
 Type: Standards Track

@@ -1,13 +1,12 @@
 ---
 RFC: 51
+Title: Chef Telemetry
 Author: Ranjib Dey <ranjib@linux.com>
 Status: Accepted
 Type: Standards Track
 ---
 
-# Title
-
-Chef telemetry
+# Chef telemetry
 
 ## Motivation
 

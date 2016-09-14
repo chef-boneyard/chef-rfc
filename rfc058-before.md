@@ -1,5 +1,6 @@
 ---
 RFC: 58
+Title: Trigger resources prior to an action occurring
 Author:
 - John Keiser <jkeiser@chef.io>
 - Joe Nuspl <nuspl@nvwls.com>
@@ -8,9 +9,7 @@ Status: Accepted
 Type: Standards Track
 ---
 
-# Title
-
-Let users trigger another resource prior to an action happening.
+# Let users trigger another resource prior to an action happening.
 
 ## Motivation
 

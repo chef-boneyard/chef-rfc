@@ -1,5 +1,6 @@
 ---
 RFC: 18
+Title: Attribute Subkey Syntax
 Author: Steven Danna <steve@getchef.com>
 Status: Accepted
 Type: Standards Track

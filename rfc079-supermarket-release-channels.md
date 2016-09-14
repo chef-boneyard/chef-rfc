@@ -1,5 +1,6 @@
 ---
 RFC: 79
+Title: Supermarket Release Channels
 Author: Daniel DeLeo <dan@chef.io>
 Status: Accepted
 Type: Standards Track

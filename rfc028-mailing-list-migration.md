@@ -1,5 +1,6 @@
 ---
 RFC: 28
+Title: Mailing List Migration
 Author: Julian C. Dunn <jdunn@aquezada.com>
 Status: Accepted
 Type: Informational

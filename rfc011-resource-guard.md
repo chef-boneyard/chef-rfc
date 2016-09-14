@@ -1,12 +1,12 @@
 ---
 RFC: 011
 Author: Adam Edwards <adamed@chef.io>
+Title: Resource-based Guard Interpreters for Chef
 Status: Accepted
 Type: Standards Track
 ---
 
-Resource-based Guard Interpreters for Chef
-==========================================
+# Resource-based Guard Interpreters for Chef
 
 The *guard interpreter* is a feature of Chef resources that
 allows authors to specify their choice of Chef resource classes to evaluate a guard expression (i.e. `only_if` or

@@ -1,5 +1,6 @@
 ---
 RFC: 22
+Title: Arbitrary Cookbook Identifiers
 Author: Daniel DeLeo <ddeleo@getchef.com>
 Status: Accepted
 Type: Standards Track

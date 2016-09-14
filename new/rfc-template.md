@@ -1,5 +1,6 @@
 ---
 RFC: unassigned
+Title: My Title
 Author: Alan Smithee <asmithee@example.com>
 Status: Draft
 Type: <Standards Track, Informational, Process>

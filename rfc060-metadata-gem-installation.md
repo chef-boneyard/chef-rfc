@@ -1,11 +1,12 @@
 ---
 RFC: 60
+Title: Enable gem dependencies in cookbook metadata
 Author: Lamont Granquist <lamont@chef.io>
 Status: Accepted
 Type: Standards Track
 ---
 
-# Title
+# Enable gem dependencies in cookbook metadata
 
 Support a 'gem' DSL method for cookbook metadata to create a dependency on a rubygem.  The
 gem will be installed via `chef_gem` after all the cookbooks are synchronized but before any

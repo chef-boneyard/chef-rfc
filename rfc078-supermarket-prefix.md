@@ -1,5 +1,6 @@
 ---
 RFC: 78
+Title: Supermarket Prefix Reservation
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Accepted
 Type: Process

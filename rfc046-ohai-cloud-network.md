@@ -1,5 +1,6 @@
 ---
 RFC: 46
+Title: Enhanced Ohai Network Support
 Author: Matt Ray <matt@chef.io>
 Status: Accepted
 Type: Standards Track

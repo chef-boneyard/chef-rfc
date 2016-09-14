@@ -1,13 +1,12 @@
 ---
 RFC: 40
+Title: On-Demand Cookbook Libraries
 Author: John Keiser <jkeiser@chef.io>
 Status: Accepted
 Type: Standards Track
 ---
 
-# Title
-
-On-Demand Cookbook Libraries
+# On-Demand Cookbook Libraries
 
 ## Motivation
 

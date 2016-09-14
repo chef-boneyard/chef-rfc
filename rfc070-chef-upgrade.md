@@ -1,5 +1,6 @@
 ---
 RFC: 70
+Title: Chef should be able to upgrade itself
 Author: Thom May <thom@chef.io>
 Status: Accepted
 Type: Standards Track

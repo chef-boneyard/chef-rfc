@@ -1,11 +1,12 @@
 ---
 RFC: 59
+Title: Add Ohai cookbook segment
 Author: Lamont Granquist <lamont@chef.io>
 Status: Accepted
 Type: Standards Track
 ---
 
-# Title
+# Add Ohai cookbook segment
 
 Support Ohai plugins under an `ohai` top level directory in cookbooks.  Load all
 Ohai plugins in all synchronized cookbooks after cookbook synchronization.

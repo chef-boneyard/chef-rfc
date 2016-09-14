@@ -1,5 +1,6 @@
 ---
 RFC: 000
+Title: Chef RFC Process and Guidelines
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Accepted
 Type: Process

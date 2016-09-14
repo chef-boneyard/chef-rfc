@@ -1,5 +1,6 @@
 ---
 RFC: 45
+Title: Node State Separation
 Author: Lamont Granquist <lamont@chef.io> 
 Status: Accepted
 Type: Standards Track

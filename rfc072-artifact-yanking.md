@@ -1,13 +1,12 @@
 ---
 RFC: 72
+Title: Cookbook and Cookbook Version Yanking Policy
 Author: Nell Shamrell-Harrington <nshamrell@chef.io>
 Status: Accepted
 Type: Process
 ---
 
-# Title
-
-Cookbook and Cookbook Version Yanking Policy
+# Cookbook and Cookbook Version Yanking Policy
 
 ## Motivation
 
