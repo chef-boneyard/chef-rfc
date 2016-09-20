@@ -151,6 +151,7 @@ updated to Replaced by an Editor.
 ```markdown
 ---
 RFC: unassigned
+Title: Title Goes Here
 Author: Alan Smithee <asmithee@example.com>
 Status: Draft
 Type: <Standards Track, Informational, Process>
