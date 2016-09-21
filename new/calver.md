@@ -100,7 +100,7 @@ minor release. This either leads to sad users in the former case, or stressed
 maintainers in the latter. Having a support policy like this wouldn't preclude
 cookbooks from defining their own policy, but it would be a good starting point
 for most community authors. If combined with date-based version numbers above,
-it can make it very easy to tell if a release is LTS (eg. `x.0` or `x.6`).
+it can make it very easy to tell if a release is LTS (eg. `x.1` or `x.7`).
 
 The specifics of what constitutes "long term support" is left to another RFC.
 
