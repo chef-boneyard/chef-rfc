@@ -1,19 +1,19 @@
 ---
 RFC: unassigned
-Title: Calender Versioning for Chef
+Title: Calendar Versioning for Chef
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Draft
 Type: Standards Track
 ---
 
-# Calender Versioning for Chef
+# Calendar Versioning for Chef
 
 Since its inception, Chef has followed the structure of [Semantic Versioning](http://semver.org/)
 (SemVer). This way of expressing API compatibility has been
 popular in the software world for many years, and is a widely understood and
 well-liked standard. Unfortunately as Chef has grown both in scope and user
 base, this is increasingly difficult to manage. This RFC proposes migrating to
-a [Calender Versioning](http://calver.org/) (CalVer) standard instead.
+a [Calendar Versioning](http://calver.org/) (CalVer) standard instead.
 
 ## Motivation
 
