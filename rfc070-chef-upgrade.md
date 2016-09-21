@@ -29,7 +29,7 @@ Users should be able to automatically upgrade to the desired version of chef wit
 
 At the beginning of each chef run, the client should decide whether or not to upgrade, based on configuration supplied by the administrator.
 
-If the administrator has specified a version of chef different to the one currently running, the chef client should check with an update service to ensure the specified version is available. If so, the client will download the specified version, and install it appropriately. The client run should then exit, using an appropriate exit code to signal an upgrade.
+If the administrator has specified a version of chef different to the one currently running, the chef client should check with an update service to ensure the specified version is available. If so, the client will download the specified version, and install it appropriately. The client run will then exit with exit code 213 to signal an upgrade has occurred as defined in RFC 62.
 
 ### Determining the desired chef version
 
