@@ -55,8 +55,8 @@ right move for the time, we now have a looming issue: Chef 13 _(cue spooky music
 Chef 12.0.0 was released in December 2014, meaning at the time of writing it is
 rapidly approaching two years old. In those two years we have made many improvements
 to the codebase and moved to deprecate numerous old mis-features and bad APIs.
-We are not faced with the prospect of Chef 13 representing an even bigger
-compatibility break than Chef 12 was, and even that was a long slog to get the
+We are now faced with the prospect of Chef 13 representing an even bigger
+compatibility break than Chef 12 was, and that was a long slog to get the
 community to upgrade. While it may be too late to avert this Chef 13 calamity,
 if something isn't done it is likely the cycle will repeat and Chef 14 will have
 all the same problems.
@@ -117,10 +117,11 @@ option to allow testing for future compatibility with a specific release.
 
 ## Specification
 
-Starting with either the next major release (i.e. Chef 13) we will
+Starting with the next major release (i.e. Chef 13) we will
 change Chef version numbers to a `year.month.build` format. The `year.month` for
-a release is the date it is released, not when work s begun. If a monthly release
-is missed, we will move on to the next version number.
+a release is the date it is released, not when work is begun. If a monthly release
+is missed, we will move on to the next version number. The `build` number retains
+the same auto-bump semantics as it currently has.
 
 Feature deprecations will be classified as either high-impact or low-impact.
 High-impact deprecations will take place over 6 months, low-impact over 2 months.
