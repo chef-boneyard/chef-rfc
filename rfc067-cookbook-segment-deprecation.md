@@ -19,17 +19,17 @@ Type: Standards Track
 This RFC specifies a new format for the GET and PUT requests to the cookbooks/NAME/VERSION
 endpoint.  This is a breaking change which will mandate a bumping of the API version to
 the protocol.  The existing 'segments' will be removed out of the cookbook version and a
-new 'all_files' segment will be introduced which will simply be a list of all the files in
+new `all_files` segment will be introduced which will simply be a list of all the files in
 the cookbook.
 
 The Chef Server MUST respond to all GET requests that do not contain an appropriate API version
 with the old protocol with segments.  Cookbooks that have been uploaded in the new format
 MUST have their manifest information filtered so that an old style response can be constructed.
 When the Chef Server sees an API version in the GET request that accepts the new style it
-MUST respond only with the 'all_files' segment in the body of the response.
+MUST respond only with the `all_files` segment in the body of the response.
 
 All new Clients MUST set their API version correctly in order to get the new behavior on
-PUT or GET.  Since old Servers will not accept the new 'all_files' segment Clients MUST determine
+PUT or GET.  Since old Servers will not accept the new `all_files` segment Clients MUST determine
 the server version they are talking to and send their PUT requests correctly.  Clients MAY
 use prior communication with the Chef Server (i.e. during the uploading of sandbox files they
 MAY determine the API version of the Chef Server off of the replies and use that information) to
@@ -37,7 +37,7 @@ determine the correct API version to use and format their PUT request accordingl
 MAY also PUT with the new format and after receiving a 4xx code from the Server retry the
 request in the old format and downgrade.
 
-Note that the paths in 'all_files' necessarily change to include the leading segment (or not
+Note that the paths in `all_files` necessarily change to include the leading segment (or not
 in the case of the old `root_files`).
 
 The implementation of this RFC must still fully support both settings of the `no_lazy_load`
