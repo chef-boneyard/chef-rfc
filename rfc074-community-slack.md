@@ -13,13 +13,11 @@ community from IRC to Slack.
 
 ## tl;dr
 
-We are creating a public Slack team, name tbd. IRC will continue to exist but
-new users will receive a message from an IRC bot suggesting they ask questions
-in Slack instead, with a link to the SlackIn instance. Existing "web chat" links
-from the Chef website and documentation will point at (or embed) SlackIn instead.
-One channel in the Slack team will be bridged to each of the IRC channels
-(`#chef`, `#chef-hacking`) however this may be removed pending further review of
-how useful it is.
+We have created a public Slack team, Chef Community. IRC will continue to exist
+but new users will receive a message from an IRC bot suggesting they ask questions
+in Slack instead, with a link to the sign-up page
+(http://community-slack.chef.io). Existing "web chat" links from the Chef
+website and documentation will point at (or embed) the Slack team.
 
 ## Personas
 
@@ -38,10 +36,10 @@ they can be successful with Chef. This persona is named "Bonnie".
     I want to help other community members,
     so that I can help the community grow.
 
-And then finally  a more nebulous use case, but no less important. Since day
-one, Chef has thrived on having a strong, welcoming, friendly community. Any
-change to our community tools must maintain this high standard of social
-interaction for the future. This persona is dubbed "Colin".
+And then finally a more nebulous use case, but no less important. Since day one,
+Chef has thrived on having a strong, welcoming, friendly community. Any change
+to our community tools must maintain this high standard of social interaction
+for the future. This persona is dubbed "Colin".
 
     As a Chef community member,
     I want to talk with other community members,
@@ -57,18 +55,19 @@ distinct from Chef Software Inc's Slack team as Slack does not offer a
 permissions system which would allow these to co-exist in the same structure.
 
 [SlackIn](https://github.com/rauchg/slackin) will be deployed and mapped to
-`slack.chef.io`. This tool allows users to "sign up" for Slack by requesting an
-invitation email. [Slack-IRC](https://github.com/ekmartin/slack-irc) will be
-deployed to map the two Freenode IRC channels to Slack. An IRC bot will be
-written and deployed to notify new users of the Slack channel and provider them
-a link to SlackIn. This information will also be added to the `/topic` of both
-channels.
+`community-slack.chef.io`. This tool allows users to "sign up" for Slack by
+requesting an invitation email.
+[Slack-IRC](https://github.com/ekmartin/slack-irc) will be deployed to map the
+two Freenode IRC channels to Slack. An IRC bot will be written and deployed to
+notify new users of the Slack channel and provider them a link to SlackIn. This
+information will also be added to the `/topic` of both channels.
 
 Running the new services (SlackIn and the various bots) is left to the discretion
 of Chef Software in their role as stewards of the Chef community.
 
-The new Slack channel will be advertised on the [Chef Forums](https://discourse.chef.io),
-the pending `community.chef.io` landing page, and the Chef documentation.
+The new Slack channel will be advertised on the [Chef
+Forums](https://discourse.chef.io), the pending `community.chef.io` landing
+page, and the Chef documentation.
 
 ## Why Slack
 
