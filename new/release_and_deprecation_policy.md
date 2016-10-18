@@ -1,16 +1,20 @@
 ---
 RFC: unassigned
-Title: Chef Deprecation Policy and Process
+Title: Chef Release and Deprecation Policy
 Author: Tim Smith <tsmith@chef.io>
 Status: Draft
 Type: <Process>
 ---
 
-# Chef Deprecation Policy and Process
+# Chef Release and Deprecation Policy
 
-A policy for the deprecation of functionality in Chef and a process for the communication of such deprecation to end users.
+A policy for shipping major Chef releases on a predictable schedule along with the communication of breaking changes to users.
 
-This RFC is two fold. It requires changes both to how breaking Chef client changes are released and how users consume Chef client changes. Breaking changes will no longer be reserved for major version bumps. In exchange, Chef will provide a clear road map of upcoming compatibility breaks, including remediation steps users can take to update their codebase. This allows for the project to progress while also providing users with the knowledge to plan for future work. It avoids what has been called the "Chef 13" problem, in which large breaking releases become too large to consume and are avoided by both developers and end users.
+This RFC is two fold:
+
+It states that Chef will ship a new major release of the chef-client on a yearly schedule.
+
+It also sets policy for the for when breaking changes can occur, and how Chef will communicate those changes to users. Chef will provide a clear road map of upcoming compatibility breaks, including remediation steps users can take to update their codebase. This allows for the project to progress while also providing users with the information necessary to scope future upgrades. It avoids what has been called the Chef 13 problem, in which the large time between major releases creates a mass of breaking changes that hinders adoption of new major releases.
 
 ## Motivation
 
@@ -24,11 +28,15 @@ I want a clear path to deprecation
 so that I have a predictable schedule of work to adopt new Chef releases.
 
 As a user of Chef,
-I do not want a major breaking Chef release
+I do not want infrequent major releases with large numbers of breaking changes
 so that I can more easily stay current with Chef releases.
 ```
 
 ## Specification
+
+### Proposed Release schedule
+
+Chef will release a major version of Chef (13, 14, etc) on a yearly schedule during the month of April. The avoids releasing during winter holidays, summer vacations, ChefConf and Chef Summits. A reminder notice will be sent via Discourse and Slack in March that will summarize the changes slated for the release.
 
 ### Proposed Deprecation Process
 
