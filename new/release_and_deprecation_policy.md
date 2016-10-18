@@ -1,20 +1,20 @@
 ---
 RFC: unassigned
-Title: Chef Release and Deprecation Policy
+Title: Chef Major Version Release and Deprecation Policy
 Author: Tim Smith <tsmith@chef.io>
 Status: Draft
 Type: <Process>
 ---
 
-# Chef Release and Deprecation Policy
+# Chef Major Version Release and Deprecation Policy
 
-A policy for shipping major Chef releases on a predictable schedule along with the communication of breaking changes to users.
+A policy for shipping major Chef releases on a predictable schedule along with the communication of breaking changes in those releases to users.
 
 This RFC is two fold:
 
-It states that Chef will ship a new major release of the chef-client on a yearly schedule.
+It states that Chef will ship a new major release of the chef-client on a yearly schedule, while continuing to ship minor releases on the previous monthly schedule.
 
-It also sets policy for the for when breaking changes can occur, and how Chef will communicate those changes to users. Chef will provide a clear road map of upcoming compatibility breaks, including remediation steps users can take to update their codebase. This allows for the project to progress while also providing users with the information necessary to scope future upgrades. It avoids what has been called the Chef 13 problem, in which the large time between major releases creates a mass of breaking changes that hinders adoption of new major releases.
+It also sets policy for the for how and when breaking changes will be included and communicated to users. Chef will provide a clear road map of upcoming compatibility breaks, including remediation steps users can take to update their codebase. This will allow the project to progress while also providing users with the information necessary to scope future upgrades. It avoids what has been called the Chef 13 problem, in which the large time between major releases creates a mass of breaking changes that hinders adoption of new major releases.
 
 ## Motivation
 
@@ -40,38 +40,40 @@ Chef will release a major version of Chef (13, 14, etc) on a yearly schedule dur
 
 ### Proposed Deprecation Process
 
-To deprecate functionality Chef developers will complete the following steps:
+Deprecations, also known as breaking changes, will be reserved for the yearly major chef-client release per SemVer.
 
-1. Open a PR against the Chef github repository for the proposed deprecation
+In order to schedule future deprecations Chef developers will complete the following steps:
+
+1. Open a PR against the Chef github repository for the proposed deprecation.
 
   - Add a deprecation notice to the release notes of the upcoming release. This follows the example format shown below.
   - If technically feasible, add deprecation messaging in the client so that users will be notified of code changes they need to make during the client runtime. This follows the example format shown below.
 
-2. Open a PR to the Chef Docs to add a page outlining the deprecation. This is linked to from the release notes and deprecation messaging. It provides the user with context for the deprecation and remediation steps. This allows users to easily update their code for the upcoming changes. Also add the deprecation to the main Chef Docs deprecation page so that users can easily refer to a list of past and future breaking changes.
+2. Open a PR to the Chef Docs repository to add a page documenting the deprecation. This will be linked to from the release notes and deprecation messaging in the client. It provides the user with context for the deprecation and remediation steps. This allows users to easily update their code for the upcoming changes. Also add the deprecation to the main Chef Docs deprecation page so that users can easily refer to a list of past and future breaking changes.
 
-3. If technically feasible, add a linting rule to either Foodcritic or Cookstyle that will allow us to test community cookbooks for compatibility upon uploading to Supermarket.
+3. If technically feasible, add a linting rule to either Foodcritic or Cookstyle that will allow us to test community cookbooks for compatibility upon their upload to Supermarket.
 
-4. When performing the Chef release, the release announcement post to discourse will include the notice of the future deprecation as well as any deprecations that took place in the release.
+4. When performing the Chef release, the release announcement post to discourse will include the notice of the future deprecation.
 
 ### Advantages for Users
 
-Moving to a model in which we slowly deprecate functionality avoids large breaking Chef releases which are painful to end users for two main reasons:
+Moving to a model in which we release major releases more often, with fewer deprecations per major release improves the user experience. It avoids large breaking Chef releases which are painful to end users for two main reasons:
 
-1. They delay functionality and the resolution of bugs that impact user workflow. There are numerous open issues and feature requests in the Chef github repository that we cannot resolve as they require a major breaking release. Chef 12 was released approximately 18 months ago. We do not currently have a plan for a Chef 13 release. Waiting multiple years for resolution of issues is less than ideal for end users.
+1. They delay functionality and the resolution of bugs that impact user workflow. There are numerous open issues and feature requests in the Chef github repository that we cannot resolve as they require a major breaking release. Chef 12 was released nearly two years ago, yet we do not currently have a plan for a Chef 13 release. Waiting multiple years for resolution of issues is less than ideal for end users.
 
-2. Major version bump releases, which include large numbers of small breaking changes, are bound to break nearly everyone. Due to this many users avoid adoption of these releases for significant periods of time. Large numbers of users delayed their upgrade from Chef 10 to 11 and many have still delayed their upgrade from 11 to 12\. This makes it hard for the community to utilize new functionality in Chef releases since using these new features breaks the large number of users that have held back on upgrades.
+2. Traditionally our major releases have had a huge user impact and due to this many users avoid adoption of these releases for significant periods of time. Large numbers of users delayed their upgrade from Chef 10 to 11 and many have still delayed their upgrade from 11 to 12\. This makes it hard for the community to utilize new functionality in Chef releases since using these new features breaks the large number of users that have held back on upgrades.
 
 ### Advantages for Development
 
-A gradual deprecation model provides the following benefits to developers of Chef (and in turn users):
+A more gradual deprecation model provides the following benefits to developers of Chef (and in turn users):
 
-1. Allows for the introduction of new functionality that benefits end users, but may break some workflows
-2. Avoids the need for overly complex backwards compatibility that rarely predicts every use case of the product
+1. Allows for the introduction of new functionality that benefits end users, but may break some workflows without waiting years.
+2. Avoids the need for overly complex backwards compatibility that rarely predicts every use case of the product.
 
 ### Sample chef-client deprecation messaging
 
 ```
-node.set is deprecated and will be removed in Chef 12.20 scheduled for release 03/2017\. See https://docs.chef.io/deprecation_node_set.html for details. Code in question:
+node.set is deprecated and will be removed in Chef 13.0 scheduled for release 04/2017\. See https://docs.chef.io/deprecation_node_set.html for details. Code in question:
            - /tmp/kitchen/cache/cookbooks/monitor/recipes/_handler_deregister.rb:30:in `from_file'
 ```
 
@@ -85,9 +87,9 @@ This notice would appear in the release notes of the chef Github repository as w
 
 **New deprecation warnings added**: Yes
 
-**Deprecation Date**: March 2017
+**Deprecation Date**: April 2017
 
-**Deprecation in Chef Release**: 12.20
+**Deprecation in Chef Release**: 13.0
 
 **Description**: The node.set method will be removed from the chef-client. Node.set is actually an alias for node.normal which persists attribute data to the node. However, due to the "set" name, new users often see it as the correct way to set data that should not persist. This causes unexpected behavior if the node.set call is later removed from a cookbook. In order to avoid the confusion that occurs we will remove node.set.
 
@@ -98,7 +100,7 @@ This notice would appear in the release notes of the chef Github repository as w
 Change           | Status     | Impact | Deprecation Date | Deprecation Release | Remediation Page
 :--------------- | :--------- | :----- | :--------------- | :------------------ | :-----------------------------------------------------
 SSL by default   | Deprecated | Medium | 12/2014          | 12.0                | <https://docs.chef.io/deprecation_ssl_by_default.html>
-node.set removal | Proposed   | Medium | 03/2017          | 12.20               | <https://docs.chef.io/deprecation_node_set.html>
+node.set removal | Proposed   | Medium | 03/2017          | 13.0                | <https://docs.chef.io/deprecation_node_set.html>
 
 ## To Be Determined Before Acceptance
 
