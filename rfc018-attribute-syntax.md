@@ -42,7 +42,7 @@ as a field separator:
 Additionally, in order to avoid escaping for keys that might contain
 "." it should be possible to pass a user-defined field separator key:
 
-   - knife node show mynode -F: -a foo:bar 
+   - knife node show mynode -S: -a foo:bar
 
 The use of command line syntax in ruby code which can use one of the
 prior two formats is discouraged.  The use of the field separator is
@@ -69,7 +69,7 @@ default key separator.
 
 ```
 knife node show foo -a key1.key2
-knife node show foo -F: key1:key2
+knife node show foo -S: key1:key2
 ```
 
 ### Command-line access (other)
@@ -79,7 +79,7 @@ dot-separated strings and arrays to specify not attributes, including Ohai:
 
 ```
 ohai cpu.real
-ohai -F: cpu:real
+ohai -S: cpu:real
 ```
 
 Documentation for 3rd-party tool writers should encourage the use of
@@ -94,10 +94,10 @@ notation:
 search(:node, "key1", "key2", "4")
 ```
 
-Knife search should suport the -F notation on the command line:
+Knife search should suport the -S notation on the command line:
 
 ```
-knife search node -F; "key1;key2:4"
+knife search node -S; "key1;key2:4"
 ```
 
 For backward compatibility, `"_"` should should be supported as
