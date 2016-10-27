@@ -14,15 +14,15 @@ versions (eg 12.1 -> 12.2) will include new features and bug fixes but will be
 backwards-compatible to the best of our ability. Patch versions are governed
 by [RFC 47](rfc047-release-process.md).
 
-Chef feature releases are promoted to the stable channel once per month, in the
-second week of the month unless delayed by the Chef Software Release Engineering
-team. Additional patch releases for a given feature release may be promoted if
-critical issues are found.
+Chef feature releases are promoted to the stable channel once per month. It is
+expected that this occur during the second week of the month unless
+circumstances intervene. Additional patch releases for a given feature release
+may be promoted if critical issues are found.
 
-ChefDK is released once per month, in the fourth week of the month unless delayed
-by the Chef Software Release Engineering team.
+ChefDK is released once per month. It is expected that this occur during the
+fourth week of the month unless circumstances intervene.
 
-Both Chef and ChefDK will prepare the release candidate in the week prior to the
+Both Chef and ChefDK will prepare a release candidate in the week prior to the
 target release date.
 
 The Chef release in April of each year is a major version release, which will
@@ -32,7 +32,7 @@ Discourse and Slack in March that will summarize the changes slated for the rele
 ## Rationale
 
 Monthly releases help ensure we get new features and minor bug fixes out to Chef
-users in a timely fashion while not overloading the Release Engineering team.
+users in a timely fashion while not overloading the maintainer teams.
 Similarly, offsetting the Chef and ChefDK releases allows the full attention of
 the Chef development team on each of those releases and leaves time for any
 potential hot fixes or follow-up.
