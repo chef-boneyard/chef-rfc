@@ -22,6 +22,9 @@ critical issues are found.
 ChefDK is released once per month, in the fourth week of the month unless delayed
 by the Chef Software Release Engineering team.
 
+Both Chef and ChefDK will prepare the release candidate in the week prior to the
+target release date.
+
 The Chef release in April of each year is a major version release, which will
 contain backwards-incompatible changes. A reminder notice will be sent via
 Discourse and Slack in March that will summarize the changes slated for the release.
