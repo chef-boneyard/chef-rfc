@@ -60,11 +60,12 @@ prefixes in the future.
 To register a prefix, fork this repository and create a Pull Request adding
 your prefix and the person or organization that will be responsible for it.
 
+* `blp` - [Bloomberg](https://github.com/bloomberg)
+* `fb` - [Faceboook](https://github.com/facebook)
+* `gcp` - [googlecloudplatform](https://github.com/googlecloudplatform)
 * `poise` - [coderanger](https://github.com/coderanger)
 * `sigsci` - [signalsciences] (https://github.com/signalsciences)
-* `gcp` - [googlecloudplatform](https://github.com/googlecloudplatform)
-* `fb` - [Faceboook](https://github.com/facebook)
-* `blp` - [Bloomberg](https://github.com/bloomberg)
+
 
 ## Copyright
 
