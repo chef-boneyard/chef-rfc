@@ -66,8 +66,24 @@ Since normal attributes have different semantics they will be changed to use `st
 
 ```ruby
 store_set("wordpress", "passwd").to("sekret1")
+store_set("wordpress") do |s|
+  s["passwd"] = "sekret1"
+end
 store("wordpress", "passwd")
 ```
+
+## Note on why the New Syntax has split setter/getters
+
+It isn't possible to have a fused setter/getter and to use method chaining.  This API does not work with ruby:
+
+```
+default("foo", "bar", "baz").to("quux")
+default("foo", "bar", "baz")
+ => "quux"
+```
+
+The problem is going to be values like nil and false which would need to be wrapped to implement `#to` methods in
+a decorator to allow writing which would be a truthy return value for the getter and not falsey.
 
 ## Removal of Method Missing Syntax
 
