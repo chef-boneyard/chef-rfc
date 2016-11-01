@@ -59,8 +59,10 @@ $ chef run <ssh|winrm> <list-of-hostnames.txt|yml> recipe.rb
 
 ## Downstream Impact
 
-- There is a `knife` plugin called `knife-solo` that does this type of work, but
-having it baked into the chefdk would allow for a natural adoption.
+- There is a `knife` plugin called [knife-solo][solo] that does this type of work
+but has not been adopted by the ChefDK.
+- There is a `knife` plugin called [knife-zero][zero] that does this type of work
+but has not been adopted by the ChefDK either.
 
 ## Copyright
 
@@ -68,3 +70,6 @@ This work is in the public domain. In jurisdictions that do not allow for this,
 this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.
+
+[solo]: https://matschaffer.github.io/knife-solo/
+[zero]: https://github.com/higanworks/knife-zero
