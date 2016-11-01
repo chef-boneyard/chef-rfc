@@ -37,9 +37,37 @@ shipped.
 Write access to ohai data will continue through the existing `node.automatic` API.  In a future RFC
 that will be replaced.
 
+## New Syntax for Merged Default and Override Attributes
+
+```ruby
+attr("foo", "bar", "baz")
+```
+
+This is a reader-only that only reads values merged from default and override levels, with hash-only merging.
+
+It is not intended to be identical to the existing `node["foo"]["bar"]["baz"]` although once deprecation warnings
+against the node object are fixed (see below) they should converge to the same semantics.
+
+# New Syntax for Accessing Default and Override Levels
+
+The writer uses `default_set` and `override_set` while the reader uses simply `default` and `override`.
+
+```ruby
+default_set("foo", "bar", "baz").to("quux")
+default_set("foo", "bar") do |n|
+  n["baz"] = "quux"
+end
+default("foo", "bar", "baz")
+```
+
 ## New Syntax for Normal Attributes
 
-## New Syntax for Merged Default And Override Attributes
+Since normal attributes have different semantics they will be changed to use `store` and will not deep merge with anything:
+
+```ruby
+store_set("wordpress", "passwd").to("sekret1")
+store("wordpress", "passwd")
+```
 
 ## Removal of Method Missing Syntax
 
