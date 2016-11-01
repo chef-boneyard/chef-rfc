@@ -99,22 +99,34 @@ array merging with hash keys instead.
 ## Deprecation of Deep Merging with Normal Attributes
 
 Before the node.save the chef-client will walk the node object and warn on any normal attribute which
-also have default, override or automatic attributes set and are being merged.  In a future major release this
-deep merging will be removed.
+also have default, override or automatic attributes set and are being merged.
 
 ## Deprecation of Deep Merging with Automatic Attributes
 
 Before the node.save the chef-client will walk the node object and warn on any automatic attribute which
-also have default, normal or override attributes set and are being merged.  In a future major release this
-deep merging will be removed.
+also have default, normal or override attributes set and are being merged.
 
 ## Deprecate Access to Automatic Attributes to the Node Object
 
 Rubocop rules will be added to cookstyle to warn when common automatic node attributes are being accessed
 through (e.g.) `node["platform"]` and will have an autofix rule to change them to (e.g.) `ohai("platform")`.
 
-On access the chef-client will issue deprecation warnings to any access to the node object through the
+On access the chef-client will issue deprecation warnings to any access to automatic attributes through the
 deep-merged view of the node object.
+
+## Deprecate Access to Normal Attributes to the Node Object
+
+Rubocop rules will be added to cookstyle to warn when common automatic node attributes are being accessed
+through (e.g.) `node["wordpress"]["passwd"]` and will have an autofix rule to change them to (e.g.)
+`store("wordpress", "passwd")`.
+
+On access the chef-client will issue deprecation warnings to any access to normal attributes through the
+deep-merged view of the node object.
+
+## Future:  Deprecate Access to Attributes Through the Node Object
+
+In Chef > 13 access to default and override objects through the node object APIs will be deprecated completely
+in favor of the new APIs.
 
 ## NOTE: Favoring Strings Over Symbols
 
