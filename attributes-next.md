@@ -22,6 +22,9 @@ Description and rationale.
     As a Chef Developer,
     The monolithic Node attributes API tries to do too much.
 
+    As a Maintainer of Existing Cookbooks,
+    I need a slow and backwards compatibile transition to any new API.
+
 ## New Syntax for Ohai Attributes
 
 A new sugar for ohai attributes will be introduced:
