@@ -16,14 +16,41 @@ Description and rationale.
     I want Attributes to be Less Confusing.
 
     As a Chef User,
-    I dislike NoMethodError for NilClass Errors,
-    Because those are confusing and unhelpful.
+    I dislike NoMethodError for NilClass Errors.
 
     As a Chef Developer,
-    The monolithic Node attributes API tries to do too much.
+    The monolithic Node attributes API tries to do too much with a shared namespace.
 
     As a Maintainer of Existing Cookbooks,
     I need a slow and backwards compatibile transition to any new API.
+
+    As a Ohai Plugin Developer,
+    I want to be able to add ohai attributes without clobbering someone's cookbook attributes.
+
+## Overall Design
+
+Migration Strategy:
+
+- Existing APIs remain unchanged
+- Deprecation warnings will be emitted for edge cases where the APIs differ
+- Ater fixing the deprecation warnings, autofixing from the old APIs to the new APIs should be possible
+
+Three Separated Namespaces:
+
+- Ohai attributes
+- Default and override attributes
+- Normal/storage attributes
+
+Deprecated Behavior:
+
+- Array deep merging is removed (must be manually replaced with hash-key merging)
+- Deep merging of normal values with default and override is removed (users who were incorrectly using normal
+  as a third precedence level will need to manually fix)
+- Deep merging of automatic values with default/normal/override is removed (this is likely just namespace
+  collision mistakes and stright-up bugs?)
+- The force_default/force_override levels are now the standard behavior of setting attributes in recipe code, the
+  "force" behavior becomes the standard behavior.
+- Environment files consistently have a higher priority / later merge order than roles.
 
 ## New Syntax for Ohai Attributes
 
@@ -51,6 +78,21 @@ This is a reader-only that only reads values merged from default and override le
 It is not intended to be identical to the existing `node["foo"]["bar"]["baz"]` although once deprecation warnings
 against the node object are fixed (see below) they should converge to the same semantics.
 
+The order of merging of the hashes will be:
+
+- default (attribute files)
+- role_default
+- env_default
+- force_default (recipe files)
+- override (attribute files)
+- role_override
+- env_override
+- force_override (recipe files)
+
+Note (below) that attributes written in recipe files will go into the force_default/force_override hashes and will not
+mix with the default/override hashes written in attribute files.  Also note that env_default and role_default have been
+swapped for consistency (the ordering will consistently be attributes/roles/environments/recipes).
+
 # New Syntax for Accessing Default and Override Levels
 
 The writer uses `default_set` and `override_set` while the reader uses simply `default` and `override`.
@@ -62,6 +104,11 @@ default_set("foo", "bar") do |n|
 end
 default("foo", "bar", "baz")
 ```
+
+In attribute files default and override will be applied to the default and override VividMashes (lowest priority).
+
+In recipe files default and override will be applied to the `force_default` and `force_override` VividMashes.  Setting
+default-level attributes in recipe code will not be supported by the new API.
 
 ## New Syntax for Normal Attributes
 
@@ -108,6 +155,11 @@ also have default, override or automatic attributes set and are being merged.
 
 Before the node.save the chef-client will walk the node object and warn on any automatic attribute which
 also have default, normal or override attributes set and are being merged.
+
+## Deprecation of role_default overriding env_default
+
+Before the node.save the chef-client will walk the node object and warn on any env_default attribute which
+also has a role_default attribute set and are being merged.
 
 ## Deprecate Access to Automatic Attributes to the Node Object
 
