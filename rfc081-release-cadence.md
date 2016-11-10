@@ -1,9 +1,9 @@
 ---
-RFC: unassigned
+RFC: 81
 Title: Chef Release Cadence
 Author: Tim Smith <tsmith@chef.io>
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Draft
+Status: Accepted
 Type: Informational
 ---
 
