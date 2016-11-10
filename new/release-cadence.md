@@ -23,8 +23,8 @@ may be promoted if critical issues are found.
 ChefDK is released once per month. It is expected that this occur during the
 fourth week of the month unless circumstances intervene.
 
-Both Chef and ChefDK will prepare a release candidate in the week prior to the
-target release date.
+Both Chef and ChefDK will prepare a release candidate before the target release
+date, usually in the week before but at least three business days before release.
 
 The Chef release in April of each year is a major version release, which will
 contain backwards-incompatible changes. A reminder notice will be sent via

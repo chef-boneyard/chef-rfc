@@ -158,7 +158,7 @@ Releases must be announced on the Chef Discourse (mailing list, see RFC 28) and 
 
 Official releases are made by promoting builds from the current channel to the stable channel. We no longer use the addition of a two-part alphanumeric suffix (e.g. X.Y.Z.rc.0) to describe prereleases. The stability of a build is now indicated by the release channel, e.g. current or stable, that the build is available from. All builds in the current channel are potential release candidates.
 
-An announcement should be made to the Chef Discourse (mailing list) at least three business days prior to the release of a build with an increase of either the MAJOR or MINOR versions over the last release. The announcement should specify the version of the build which is currently being tested if available.
+An announcement should be made to the Chef Discourse (mailing list) before the release of a build with an increase of either the MAJOR or MINOR versions over the last release. The announcement should specify the version of the build which is currently being tested if available.
 
 Releases which do not increase MAJOR or MINOR versions are expected to have only bug/regression fixes which have been extensively tested, and thus may be released without pre-notification.
 
