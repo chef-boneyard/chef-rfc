@@ -1,14 +1,14 @@
 ---
 RFC: unassigned
-Title: Attributes v2.7182818284
+Title: Attributes v.Next
 Author: Lamont Granquist <lamont@chef.io>
 Status: Draft
 Type: <Standards Track>
 ---
 
-# Title
+# Attributes v.Next
 
-Description and rationale.
+Overhauling Attributes to be simpler.
 
 ## Motivation
 
