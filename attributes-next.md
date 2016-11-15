@@ -198,8 +198,9 @@ deep-merged view of the node object.
 
 ## Future:  Deprecate Access to Attributes Through the Node Object
 
-In Chef > 13 access to default and override objects through the node object APIs will be deprecated completely
-in favor of the new APIs.
+In a future version of Chef (no sooner than Chef 14) access to default and override objects through the node
+object APIs will be deprecated completely in favor of the new APIs.  In the following major release (no
+sonner than Chef 15) the old APIs will be disabled.
 
 ## NOTE: Favoring Strings Over Symbols
 
