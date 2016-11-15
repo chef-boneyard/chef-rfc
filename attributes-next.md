@@ -27,6 +27,18 @@ Overhauling Attributes to be simpler.
     As a Ohai Plugin Developer,
     I want to be able to add ohai attributes without clobbering someone's cookbook attributes.
 
+    As a Chef Support Person,
+    We see normal attribute persistence cause consistent user confusion.
+
+    As a Chef Support Person,
+    We see array merging (sometimes) to cause consistent user confusion, with most users being surprised by merging behavior.
+
+    As a Chef Support Person,
+    We see consistent user confusion over what the point of force_default is.
+
+    As a Chef Developer,
+    I've never seen anyone user o understand the role/environment precedence order swap between default and override.
+
 ## Overall Design
 
 Migration Strategy:
