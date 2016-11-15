@@ -52,6 +52,24 @@ Deprecated Behavior:
   "force" behavior becomes the standard behavior.
 - Environment files consistently have a higher priority / later merge order than roles.
 
+Merged Precedence Levels Before:
+
+| level | lowest  |  | | highest |
+| ---- | ------ | ------ | ---- | ---- |
+| default       | attribute | recipe | environment | role |
+| force_default | attribute | recipe | | |
+| normal | attribute | recipe | | |
+| override | attribute | recipe | role | environment |
+| force_override | attribute | recipe | | |
+| automatic| node |
+
+Merged Precedence Levels After:
+
+| level | lowest  |  | | highest |
+| ---- | ------ | ------ | ---- | ---- |
+| default       | attribute | role | environment | recipe
+| override | attribute | role | environment | recipe
+
 ## New Syntax for Ohai Attributes
 
 A new sugar for ohai attributes will be introduced:
