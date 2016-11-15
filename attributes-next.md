@@ -52,7 +52,7 @@ Deprecated Behavior:
   "force" behavior becomes the standard behavior.
 - Environment files consistently have a higher priority / later merge order than roles.
 
-Merged Precedence Levels Before:
+Merged Precedence Levels (Current API):
 
 | level | lowest  |  | | highest |
 | ---- | ------ | ------ | ---- | ---- |
@@ -63,7 +63,7 @@ Merged Precedence Levels Before:
 | force_override | attribute | recipe | | |
 | automatic| node |
 
-Merged Precedence Levels After:
+Merged Precedence Levels (New API):
 
 | level | lowest  |  | | highest |
 | ---- | ------ | ------ | ---- | ---- |
