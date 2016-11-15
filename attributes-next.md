@@ -37,7 +37,7 @@ Overhauling Attributes to be simpler.
     We see consistent user confusion over what the point of force_default is.
 
     As a Chef Developer,
-    I've never seen anyone user o understand the role/environment precedence order swap between default and override.
+    I've never seen anyone use or understand the role/environment precedence order swap between default and override.
 
 ## Overall Design
 
