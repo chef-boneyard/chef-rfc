@@ -24,7 +24,7 @@ Type: Process
 ```
     As a supermarket user,
     When I believe a cookbook should be transferred away from the current owner,
-    Only in extreme cases (i.e. death of the current owner),
+    Only in extreme cases (i.e. death of the current owner, long outdated but a major cookbook),
     I should open an [RFC](https://github.com/chef/chef-rfc)
     And request that the cookbook ownership be transferred
 ```
@@ -53,9 +53,16 @@ else, that is left to the cookbook's current owner.  See above for guidelines on
 when a cookbook has been placed up for adoption.
 
 We do recognize, however, that extreme circumstances do happen (i.e. death of the
-cookbook's current owner).  In this case a community member who wishes to take
-ownership of the cookbook (or see ownership transferred to someone else with their
+cookbook's current owner) and that sometimes a ciritical cookbook goes unmaintained.
+In either of these cases a community member who wishes to take ownership
+of the cookbook (or see ownership transferred to someone else with their
 consent) is welcome to file an [RFC](https://github.com/chef/chef-rfc).
+
+In cases where a critical cookbook is no longer being actively maintained by the
+current owner (i.e. no commits on github and releases to supermarket for at least 6
+months with multple open issues and PRs), a best effort must be made to contact the
+author via at least 2 methods (i.e. email, slack, twitter) before opening an RFC to
+transfer ownership.
 
 The RFCs will be decided on by the Chef Community on a case by case basis.
 
