@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href="/images/favicon.ico" rel="shortcut icon">
+    <script src="//style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="//style.chef.io/dist/1.0.1/stylesheets/chef.css">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Chef Release Cadence</h1>
+
+<p>Chef follows <a href="https://semver.org/">Semantic Versioning</a> for releases. Major
+versions (eg. 11.x -&gt; 12.x) will include backwards-incompatible changes, minor
+versions (eg 12.1 -&gt; 12.2) will include new features and bug fixes but will be
+backwards-compatible to the best of our ability. Patch versions are governed
+by <a href="rfc047-release-process.md">RFC 47</a>.</p>
+
+<p>Chef feature releases are promoted to the stable channel once per month. It is
+expected that this occur during the second week of the month unless
+circumstances intervene. Additional patch releases for a given feature release
+may be promoted if critical issues are found.</p>
+
+<p>ChefDK is released once per month. It is expected that this occur during the
+fourth week of the month unless circumstances intervene.</p>
+
+<p>Both Chef and ChefDK will prepare a release candidate before the target release
+date, usually in the week before but at least three business days before release.</p>
+
+<p>The Chef release in April of each year is a major version release, which will
+contain backwards-incompatible changes. A reminder notice will be sent via
+Discourse and Slack in March that will summarize the changes slated for the release.</p>
+
+<h2>Rationale</h2>
+
+<p>Monthly releases help ensure we get new features and minor bug fixes out to Chef
+users in a timely fashion while not overloading the maintainer teams.
+Similarly, offsetting the Chef and ChefDK releases allows the full attention of
+the Chef development team on each of those releases and leaves time for any
+potential hot fixes or follow-up.</p>
+
+<p>Major releases in April avoids releasing during winter holidays, summer
+vacations, ChefConf and Chef Summits.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="//style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
+    <script>
+      $(document).chef({
+        assets: {
+          images: '//style.chef.io/assets/images'
+        }
+      });
+    </script>
+  </body>
+</html>

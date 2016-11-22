@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href="/images/favicon.ico" rel="shortcut icon">
+    <script src="//style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="//style.chef.io/dist/1.0.1/stylesheets/chef.css">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Chef Deprecation Policy</h1>
+
+<p>A policy for the the inclusion and communication of breaking changes.</p>
+
+<p>This RFC sets policy for how and when breaking changes will be included in Chef and how they will be communicated to users. Chef will provide a clear road map of upcoming compatibility breaks, including remediation steps users can take to update their codebase. This will allow the project to progress while also providing users with the information necessary to scope future upgrades. It avoids what has been called the Chef 13 problem, in which the large time between major releases creates a mass of breaking changes that hinders adoption of new major releases.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">developer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">Chef</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">deprecate</span><span class="w"> </span><span class="vg">functionality</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">development</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">functionality</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">unblocked</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">Chef</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">clear</span><span class="w"> </span><span class="vg">path</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">deprecation</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">predictable</span><span class="w"> </span><span class="vg">schedule</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">work</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">adopt</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">releases</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">Chef</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">do</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">infrequent</span><span class="w"> </span><span class="vg">major</span><span class="w"> </span><span class="vg">releases</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">large</span><span class="w"> </span><span class="vg">numbers</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">breaking</span><span class="w"> </span><span class="vg">changes</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">stay</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">releases</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>Deprecations, also known as breaking changes, will be reserved for the yearly major chef-client release defined in RFC #81.</p>
+
+<p>In order to schedule future deprecations Chef developers will complete the following steps:</p>
+
+<ol>
+<li>Open a PR against the Chef github repository for the proposed deprecation.</li>
+</ol>
+
+<ul>
+<li>Add a deprecation notice to the release notes of the upcoming release. This follows the example format shown below.</li>
+<li>If technically feasible, add deprecation messaging in the client so that users will be notified of code changes they need to make during the client runtime. This follows the example format shown below.</li>
+</ul>
+
+<ol>
+<li><p>Open a PR to the Chef Docs repository to add a page documenting the deprecation. This will be linked to from the release notes and deprecation messaging in the client. It provides the user with context for the deprecation and remediation steps. This allows users to easily update their code for the upcoming changes. Also add the deprecation to the main Chef Docs deprecation page so that users can easily refer to a list of past and future breaking changes.</p></li>
+<li><p>If technically feasible, add a linting rule to either Foodcritic or Cookstyle that will allow us to test community cookbooks for compatibility upon their upload to Supermarket.</p></li>
+<li><p>When performing the Chef release, the release announcement post to discourse will include the notice of the future deprecation.</p></li>
+</ol>
+
+<h3>Advantages for Users</h3>
+
+<p>Moving to a model in which we communicate deprecations and move forward with those deprecations in major releases improves the overall user experience. It gives our users prior warning of deprecations that allows them to plan the work necessary to stay current. This avoids users either assigning last minute resources to refactor cookbooks, or avoiding new releases as the breaking changes require too much last minute work.</p>
+
+<h3>Advantages for Development</h3>
+
+<p>A more gradual deprecation model provides the following benefits to developers of Chef (and in turn users):</p>
+
+<ol>
+<li>Allows for the introduction of new functionality that benefits end users, but may break some workflows without waiting years.</li>
+<li>Avoids the need for overly complex backwards compatibility that rarely predicts every use case of the product.</li>
+</ol>
+
+<h3>Sample chef-client deprecation messaging</h3>
+<div class="highlight"><pre><span class="vg">node</span><span class="o">.</span><span class="vg">set</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">deprecated</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">removed</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="mf">13.0</span><span class="w"> </span><span class="vg">scheduled</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="il">04</span><span class="o">/</span><span class="il">2017</span><span class="o">\.</span><span class="w"> </span><span class="vg">See</span><span class="w"> </span><span class="nl">https:</span><span class="o">//</span><span class="vg">docs</span><span class="o">.</span><span class="vg">chef</span><span class="o">.</span><span class="vg">io</span><span class="o">/</span><span class="vg">deprecation_node_set</span><span class="o">.</span><span class="vg">html</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">details</span><span class="o">.</span><span class="w"> </span><span class="vg">Code</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="nl">question:</span>
+<span class="w">           </span><span class="o">-</span><span class="w"> </span><span class="o">/</span><span class="vg">tmp</span><span class="o">/</span><span class="vg">kitchen</span><span class="o">/</span><span class="vg">cache</span><span class="o">/</span><span class="vg">cookbooks</span><span class="o">/</span><span class="vg">monitor</span><span class="o">/</span><span class="vg">recipes</span><span class="o">/</span><span class="vg">_handler_deregister</span><span class="o">.</span><span class="nl">rb:</span><span class="il">30</span><span class="o">:</span><span class="vg">in</span><span class="w"> </span><span class="err">`</span><span class="vg">from_file</span><span class="c1">&#39;</span>
+</pre></div>
+<h3>Sample Deprecation Release Notes Notice</h3>
+
+<p>This notice would appear in the release notes of the chef Github repository as well as the Chef release announcements post to Discourse.</p>
+
+<h4>Future Deprecation of node.set</h4>
+
+<p><strong>Impact</strong>: Medium</p>
+
+<p><strong>New deprecation warnings added</strong>: Yes</p>
+
+<p><strong>Deprecation Date</strong>: April 2017</p>
+
+<p><strong>Deprecation in Chef Release</strong>: 13.0</p>
+
+<p><strong>Description</strong>: The node.set method will be removed from the chef-client. Node.set is actually an alias for node.normal which persists attribute data to the node. However, due to the &quot;set&quot; name, new users often see it as the correct way to set data that should not persist. This causes unexpected behavior if the node.set call is later removed from a cookbook. In order to avoid the confusion that occurs we will remove node.set.</p>
+
+<p><strong>Remediation</strong>: You can simply replace all occurrences of node.set with node.normal to maintain the existing behavior. We highly suggest you evaluate your usage of node.set / node.normal though to see if that is actually the attribute behavior you desire. See <a href="https://docs.chef.io/deprecation_node_set.html">https://docs.chef.io/deprecation_node_set.html</a> for details.</p>
+
+<h3>Sample docs.chef.io Deprecation Page</h3>
+
+<p>Change           | Status     | Impact | Deprecation Date | Deprecation Release | Remediation Page
+:--------------- | :--------- | :----- | :--------------- | :------------------ | :-----------------------------------------------------
+SSL by default   | Deprecated | Medium | 12/2014          | 12.0                | <a href="https://docs.chef.io/deprecation_ssl_by_default.html">https://docs.chef.io/deprecation_ssl_by_default.html</a>
+node.set removal | Proposed   | Medium | 03/2017          | 13.0                | <a href="https://docs.chef.io/deprecation_node_set.html">https://docs.chef.io/deprecation_node_set.html</a></p>
+
+<h2>Implementation details that need to be worked out</h2>
+
+<ol>
+<li>How would we rate impact? Difficulty to fix or how many users are impacted? Node.set is trivial to fix, but impacts a large number of users regardless of platform.</li>
+<li>Should part of our deprecation policy be to develop Cookstyle with autocorrect functionality so that users could auto fix issues like node.set?</li>
+<li>How long exactly should a deprecation notice be and should it be a stepped warning (nothing, warn, fail)? I used 6 months for the node.set example, but does a year make sense to make sure users have a change to upgrade and see the deprecation warnings? Does that slow development pace too much in the name of compatibility?</li>
+</ol>
+
+<h2>Downstream Impact</h2>
+
+<p>Not directly by this RFC, but deprecation in general will most definitely require retooling of downstream tools</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="//style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
+    <script>
+      $(document).chef({
+        assets: {
+          images: '//style.chef.io/assets/images'
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -5,16 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
     <title>Chef RFCs</title>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link href="/images/favicon.ico" rel="shortcut icon">
-    <script src="https://style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
-    <link rel="stylesheet" href="https://style.chef.io/dist/1.0.1/stylesheets/chef.css">
+    <script src="//style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="//style.chef.io/dist/1.0.1/stylesheets/chef.css">
   </head>
   <body>
     <div class="container">
       <header class="clearfix">
         <div class="left">
-          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+          <a href="http://chef.github.io"><h1>Chef RFCs</h1></a>
         </div>
       </header>
 <h1>Cookbook Segment Deprecation</h1>
@@ -29,17 +29,17 @@
 <p>This RFC specifies a new format for the GET and PUT requests to the cookbooks/NAME/VERSION
 endpoint.  This is a breaking change which will mandate a bumping of the API version to
 the protocol.  The existing &#39;segments&#39; will be removed out of the cookbook version and a
-new &#39;all_files&#39; segment will be introduced which will simply be a list of all the files in
+new <code>all_files</code> segment will be introduced which will simply be a list of all the files in
 the cookbook.</p>
 
 <p>The Chef Server MUST respond to all GET requests that do not contain an appropriate API version
 with the old protocol with segments.  Cookbooks that have been uploaded in the new format
 MUST have their manifest information filtered so that an old style response can be constructed.
 When the Chef Server sees an API version in the GET request that accepts the new style it
-MUST respond only with the &#39;all_files&#39; segment in the body of the response.</p>
+MUST respond only with the <code>all_files</code> segment in the body of the response.</p>
 
 <p>All new Clients MUST set their API version correctly in order to get the new behavior on
-PUT or GET.  Since old Servers will not accept the new &#39;all_files&#39; segment Clients MUST determine
+PUT or GET.  Since old Servers will not accept the new <code>all_files</code> segment Clients MUST determine
 the server version they are talking to and send their PUT requests correctly.  Clients MAY
 use prior communication with the Chef Server (i.e. during the uploading of sandbox files they
 MAY determine the API version of the Chef Server off of the replies and use that information) to
@@ -47,8 +47,8 @@ determine the correct API version to use and format their PUT request accordingl
 MAY also PUT with the new format and after receiving a 4xx code from the Server retry the
 request in the old format and downgrade.</p>
 
-<p>Note that the paths in &#39;all<em>files&#39; necessarily change to include the leading segment (or not
-in the case of the old `root</em>files`).</p>
+<p>Note that the paths in <code>all_files</code> necessarily change to include the leading segment (or not
+in the case of the old <code>root_files</code>).</p>
 
 <p>The implementation of this RFC must still fully support both settings of the <code>no_lazy_load</code>
 config parameter.</p>
@@ -205,14 +205,14 @@ this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.</p>
     </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
-    <script src="https://style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="//style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
     <script>
       $(document).chef({
         assets: {
-          images: 'https://style.chef.io/assets/images'
+          images: '//style.chef.io/assets/images'
         }
       });
     </script>

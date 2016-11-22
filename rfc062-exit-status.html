@@ -5,16 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
     <title>Chef RFCs</title>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link href="/images/favicon.ico" rel="shortcut icon">
-    <script src="https://style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
-    <link rel="stylesheet" href="https://style.chef.io/dist/1.0.1/stylesheets/chef.css">
+    <script src="//style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="//style.chef.io/dist/1.0.1/stylesheets/chef.css">
   </head>
   <body>
     <div class="container">
       <header class="clearfix">
         <div class="left">
-          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+          <a href="http://chef.github.io"><h1>Chef RFCs</h1></a>
         </div>
       </header>
 <h1>Chef-Client Exit Codes</h1>
@@ -47,7 +47,7 @@
  * Exit Codes Available for Chef use :
      * ~~35,37,40,41,42~~,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97
      * 98,99,115,116,168,169,172,175,176,177,178,179,181,184,185,204,211
-     * 213,219,227,228,235,236,237,238,239,241,242,243,244,245</p>
+     * ~~213~~,219,227,228,235,236,237,238,239,241,242,243,244,245</p>
 
 <h3>Precedence</h3>
 
@@ -74,12 +74,13 @@
 
 <p>Exit Code        | Reason             | Details
 -------------    | -------------      |-----
+-1               | Failed execution*   | Generic error during Chef execution.  On Linux this will show up as 255, on Windows as -1
 0                | Successful run     | Any successful execution of a Chef utility should return this exit code
-42               | Audit Mode Failure | Audit mode failed, but chef converged successfully.
 1                | Failed execution   | Generic error during Chef execution.
 2                | SIGINT received    | Received an interrupt signal
 3                | SIGTERM received   | Received an terminate signal
--1               | Failed execution*   | Generic error during Chef execution.  On Linux this will show up as 255, on Windows as -1</p>
+42               | Audit Mode Failure | Audit mode failed, but chef converged successfully.
+213              | Chef upgrade       | Chef has exited during a client upgrade</p>
 
 <ul>
 <li>*Next release should deprecate any use of this exit code.</li>
@@ -96,14 +97,14 @@ this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.</p>
     </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
-    <script src="https://style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="//style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
     <script>
       $(document).chef({
         assets: {
-          images: 'https://style.chef.io/assets/images'
+          images: '//style.chef.io/assets/images'
         }
       });
     </script>

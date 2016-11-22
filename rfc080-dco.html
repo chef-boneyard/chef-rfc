@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <title>Chef RFCs</title>
+    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href="/images/favicon.ico" rel="shortcut icon">
+    <script src="//style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="//style.chef.io/dist/1.0.1/stylesheets/chef.css">
+  </head>
+  <body>
+    <div class="container">
+      <header class="clearfix">
+        <div class="left">
+          <a href="http://chef.github.io"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Developer Certificate of Origin (DCO) for Contributions</h1>
+
+<p>Chef&#39;s open source projects will no longer require a contributor license agreement (CLA) or corporate contributor license agreement (CCLA).  A developer certificate of origin (DCO) will be required for each contribution to the projects.  The DCO accomplishes the same purpose as the CLAs by indicating that developers are responsible for the code that they contribute and that they understand that the contribution is under the terms of the Apache License. This simple process is familiar to developers and more and more legal departments are willing to consider this approach as well.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">potential</span><span class="w"> </span><span class="vg">contributor</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">Chef</span><span class="c1">&#39;s open source projects,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">do</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">read</span><span class="p">,</span><span class="w"> </span><span class="vg">understand</span><span class="p">,</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">sign</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">contributor</span><span class="w"> </span><span class="vg">license</span><span class="w"> </span><span class="vg">agreement</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">contributing</span><span class="w"> </span><span class="vg">does</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">require</span><span class="w"> </span><span class="vg">unnecessary</span><span class="w"> </span><span class="vg">burdens</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">contributor</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">Chef</span><span class="c1">&#39;s open source projects,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">attest</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">each</span><span class="w"> </span><span class="vg">contribution</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">under</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">terms</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Apache</span><span class="w"> </span><span class="vg">License</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">clear</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">am</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">contribution</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">maintainer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">Chef</span><span class="c1">&#39;s open source projects,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">see</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">developer</span><span class="w"> </span><span class="vg">certificate</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">origin</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">every</span><span class="w"> </span><span class="vg">contribution</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">clear</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">contribution</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">allowed</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>Effective October 1, 2016 (&quot;the cutover date&quot;), Chef will no longer require CLAs or CCLAs for contributions to its open source projects.  Rather, Chef is adopting the developer certificate of origin (&quot;DCO&quot;) used by several other projects and overall smart people.  All commits prior to the cutover date shall fall under the CLA process and will require a signed contributor license agreement.</p>
+
+<p>The DCO is an attestation attached to every contribution made by every developer. In the commit message of the contribution, the developer simply adds a Signed-off-by statement and thereby agrees to the DCO, which you can find below or at <a href="http://developercertificate.org/">http://developercertificate.org/</a>.</p>
+<div class="highlight"><pre><span class="vg">Developer</span><span class="c1">&#39;s Certificate of Origin 1.1</span>
+
+<span class="vg">By</span><span class="w"> </span><span class="vg">making</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">contribution</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">this</span><span class="w"> </span><span class="vg">project</span><span class="p">,</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">certify</span><span class="w"> </span><span class="nl">that:</span>
+
+<span class="p">(</span><span class="vg">a</span><span class="p">)</span><span class="w"> </span><span class="vg">The</span><span class="w"> </span><span class="vg">contribution</span><span class="w"> </span><span class="vg">was</span><span class="w"> </span><span class="vg">created</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">whole</span><span class="w"> </span><span class="vg">or</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">part</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">me</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">I</span>
+<span class="w">    </span><span class="vg">have</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">right</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">submit</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">under</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">open</span><span class="w"> </span><span class="vg">source</span><span class="w"> </span><span class="vg">license</span>
+<span class="w">    </span><span class="vg">indicated</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">file</span><span class="p">;</span><span class="w"> </span><span class="vg">or</span>
+
+<span class="p">(</span><span class="vg">b</span><span class="p">)</span><span class="w"> </span><span class="vg">The</span><span class="w"> </span><span class="vg">contribution</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">based</span><span class="w"> </span><span class="vg">upon</span><span class="w"> </span><span class="vg">previous</span><span class="w"> </span><span class="vg">work</span><span class="w"> </span><span class="vg">that</span><span class="p">,</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">the</span>
+<span class="w">    </span><span class="vg">best</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">knowledge</span><span class="p">,</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">covered</span><span class="w"> </span><span class="vg">under</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">appropriate</span><span class="w"> </span><span class="vg">open</span>
+<span class="w">    </span><span class="vg">source</span><span class="w"> </span><span class="vg">license</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">right</span><span class="w"> </span><span class="vg">under</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">license</span><span class="w"> </span><span class="vg">to</span><span class="w">   </span>
+<span class="w">    </span><span class="vg">submit</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">work</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">modifications</span><span class="p">,</span><span class="w"> </span><span class="vg">whether</span><span class="w"> </span><span class="vg">created</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">whole</span>
+<span class="w">    </span><span class="vg">or</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">part</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">me</span><span class="p">,</span><span class="w"> </span><span class="vg">under</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">same</span><span class="w"> </span><span class="vg">open</span><span class="w"> </span><span class="vg">source</span><span class="w"> </span><span class="vg">license</span><span class="w"> </span><span class="p">(</span><span class="vg">unless</span>
+<span class="w">    </span><span class="vg">I</span><span class="w"> </span><span class="vg">am</span><span class="w"> </span><span class="vg">permitted</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">submit</span><span class="w"> </span><span class="vg">under</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">different</span><span class="w"> </span><span class="vg">license</span><span class="p">),</span><span class="w"> </span><span class="vg">as</span>
+<span class="w">    </span><span class="vg">Indicated</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">file</span><span class="p">;</span><span class="w"> </span><span class="vg">or</span>
+
+<span class="p">(</span><span class="vg">c</span><span class="p">)</span><span class="w"> </span><span class="vg">The</span><span class="w"> </span><span class="vg">contribution</span><span class="w"> </span><span class="vg">was</span><span class="w"> </span><span class="vg">provided</span><span class="w"> </span><span class="vg">directly</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">me</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">some</span><span class="w"> </span><span class="vg">other</span>
+<span class="w">    </span><span class="vg">person</span><span class="w"> </span><span class="vg">who</span><span class="w"> </span><span class="vg">certified</span><span class="w"> </span><span class="p">(</span><span class="vg">a</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="vg">b</span><span class="p">)</span><span class="w"> </span><span class="vg">or</span><span class="w"> </span><span class="p">(</span><span class="vg">c</span><span class="p">)</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">modified</span>
+<span class="w">    </span><span class="vg">it</span><span class="o">.</span>
+
+<span class="p">(</span><span class="vg">d</span><span class="p">)</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">understand</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">agree</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">this</span><span class="w"> </span><span class="vg">project</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">contribution</span>
+<span class="w">    </span><span class="vg">are</span><span class="w"> </span><span class="vg">public</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">record</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">contribution</span><span class="w"> </span><span class="p">(</span><span class="vg">including</span>
+<span class="w">    </span><span class="vg">all</span><span class="w"> </span><span class="vg">personal</span><span class="w"> </span><span class="vg">information</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">submit</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">it</span><span class="p">,</span><span class="w"> </span><span class="vg">including</span><span class="w"> </span><span class="vg">my</span>
+<span class="w">    </span><span class="vg">sign</span><span class="o">-</span><span class="vg">off</span><span class="p">)</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">maintained</span><span class="w"> </span><span class="vg">indefinitely</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">may</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">redistributed</span>
+<span class="w">    </span><span class="vg">consistent</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">this</span><span class="w"> </span><span class="vg">project</span><span class="w"> </span><span class="vg">or</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">open</span><span class="w"> </span><span class="vg">source</span><span class="w"> </span><span class="vg">license</span><span class="p">(</span><span class="vg">s</span><span class="p">)</span>
+<span class="w">    </span><span class="vg">involved</span><span class="o">.</span>
+</pre></div>
+<h2>Downstream Impact</h2>
+
+<ul>
+<li>Currybot, part of the Supermarket, will no longer be necessary.</li>
+<li>The DCO sign-off process must be clearly documented in the contributing documents.</li>
+<li>A small DCO bot will need to be added to each of Chef&#39;s open-source repositories.
+
+<ul>
+<li>The bot must include instructions for how to edit commits adding a <code>Signed-off-by</code> line.</li>
+</ul></li>
+<li>A blog post and mailing list announcement will be made before the cutover.</li>
+<li>This will have <em>no</em> impact on <a href="https://docs.chef.io/community_contributions.html#the-obvious-fix-rule">the &quot;obvious fix&quot; rule</a>.  Contributions that meet these criteria will not need a DCO but should include &quot;obvious fix&quot; in the commit message as outlined in <a href="https://docs.chef.io/community_contributions.html#the-obvious-fix-rule">the &quot;obvious fix&quot; policy</a>.</li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="//style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
+    <script>
+      $(document).chef({
+        assets: {
+          images: '//style.chef.io/assets/images'
+        }
+      });
+    </script>
+  </body>
+</html>

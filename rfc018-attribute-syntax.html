@@ -5,16 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
     <title>Chef RFCs</title>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link href="/images/favicon.ico" rel="shortcut icon">
-    <script src="https://style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
-    <link rel="stylesheet" href="https://style.chef.io/dist/1.0.1/stylesheets/chef.css">
+    <script src="//style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="//style.chef.io/dist/1.0.1/stylesheets/chef.css">
   </head>
   <body>
     <div class="container">
       <header class="clearfix">
         <div class="left">
-          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+          <a href="http://chef.github.io"><h1>Chef RFCs</h1></a>
         </div>
       </header>
 <h1>Attribute Subkey Syntax</h1>
@@ -61,7 +61,7 @@ as a field separator:</p>
 &quot;.&quot; it should be possible to pass a user-defined field separator key:</p>
 
 <ul>
-<li>knife node show mynode -F: -a foo:bar </li>
+<li>knife node show mynode -S: -a foo:bar</li>
 </ul>
 
 <p>The use of command line syntax in ruby code which can use one of the
@@ -89,14 +89,14 @@ been called out.</p>
 <p>When specifying attributes on the command line, &quot;.&quot; should be the
 default key separator.</p>
 <div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">show</span><span class="w"> </span><span class="vg">foo</span><span class="w"> </span><span class="o">-</span><span class="vg">a</span><span class="w"> </span><span class="vg">key1</span><span class="o">.</span><span class="vg">key2</span>
-<span class="vg">knife</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">show</span><span class="w"> </span><span class="vg">foo</span><span class="w"> </span><span class="o">-</span><span class="nl">F:</span><span class="w"> </span><span class="nl">key1:</span><span class="vg">key2</span>
+<span class="vg">knife</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">show</span><span class="w"> </span><span class="vg">foo</span><span class="w"> </span><span class="o">-</span><span class="nl">S:</span><span class="w"> </span><span class="nl">key1:</span><span class="vg">key2</span>
 </pre></div>
 <h3>Command-line access (other)</h3>
 
 <p><em>Requires Change</em> All other Chef-maintained tools should also use
 dot-separated strings and arrays to specify not attributes, including Ohai:</p>
 <div class="highlight"><pre><span class="vg">ohai</span><span class="w"> </span><span class="vg">cpu</span><span class="o">.</span><span class="vg">real</span>
-<span class="vg">ohai</span><span class="w"> </span><span class="o">-</span><span class="nl">F:</span><span class="w"> </span><span class="nl">cpu:</span><span class="vg">real</span>
+<span class="vg">ohai</span><span class="w"> </span><span class="o">-</span><span class="nl">S:</span><span class="w"> </span><span class="nl">cpu:</span><span class="vg">real</span>
 </pre></div>
 <p>Documentation for 3rd-party tool writers should encourage the use of
 these formats as well.</p>
@@ -107,8 +107,8 @@ these formats as well.</p>
 notation:</p>
 <div class="highlight"><pre><span class="vg">search</span><span class="p">(</span><span class="o">:</span><span class="vg">node</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;key1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;key2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">)</span>
 </pre></div>
-<p>Knife search should suport the -F notation on the command line:</p>
-<div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">search</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="o">-</span><span class="vg">F</span><span class="p">;</span><span class="w"> </span><span class="s2">&quot;key1;key2:4&quot;</span>
+<p>Knife search should suport the -S notation on the command line:</p>
+<div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">search</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="o">-</span><span class="vg">S</span><span class="p">;</span><span class="w"> </span><span class="s2">&quot;key1;key2:4&quot;</span>
 </pre></div>
 <p>For backward compatibility, <code>&quot;_&quot;</code> should should be supported as
 well through Chef 13.</p>
@@ -164,14 +164,14 @@ for this, this work is available under CC0. To the extent possible
 under law, the person who associated CC0 with this work has waived all
 copyright and related or neighboring rights to this work.</p>
     </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
-    <script src="https://style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="//style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
     <script>
       $(document).chef({
         assets: {
-          images: 'https://style.chef.io/assets/images'
+          images: '//style.chef.io/assets/images'
         }
       });
     </script>

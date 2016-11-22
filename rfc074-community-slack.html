@@ -5,16 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
     <title>Chef RFCs</title>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link href="/images/favicon.ico" rel="shortcut icon">
-    <script src="https://style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
-    <link rel="stylesheet" href="https://style.chef.io/dist/1.0.1/stylesheets/chef.css">
+    <script src="//style.chef.io/dist/0.1.8/javascripts/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="//style.chef.io/dist/1.0.1/stylesheets/chef.css">
   </head>
   <body>
     <div class="container">
       <header class="clearfix">
         <div class="left">
-          <a href="http://chef.github.io"><h1>Chef <span>Github</span></h1></a>
+          <a href="http://chef.github.io"><h1>Chef RFCs</h1></a>
         </div>
       </header>
 <h1>Chef Community Slack</h1>
@@ -24,13 +24,11 @@ community from IRC to Slack.</p>
 
 <h2>tl;dr</h2>
 
-<p>We are creating a public Slack team, name tbd. IRC will continue to exist but
-new users will receive a message from an IRC bot suggesting they ask questions
-in Slack instead, with a link to the SlackIn instance. Existing &quot;web chat&quot; links
-from the Chef website and documentation will point at (or embed) SlackIn instead.
-One channel in the Slack team will be bridged to each of the IRC channels
-(<code>#chef</code>, <code>#chef-hacking</code>) however this may be removed pending further review of
-how useful it is.</p>
+<p>We have created a public Slack team, Chef Community. IRC will continue to exist
+but new users will receive a message from an IRC bot suggesting they ask questions
+in Slack instead, with a link to the sign-up page
+(http://community-slack.chef.io). Existing &quot;web chat&quot; links from the Chef
+website and documentation will point at (or embed) the Slack team.</p>
 
 <h2>Personas</h2>
 
@@ -47,10 +45,10 @@ they can be successful with Chef. This persona is named &quot;Bonnie&quot;.</p>
 <span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">help</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">members</span><span class="p">,</span>
 <span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">help</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">grow</span><span class="o">.</span>
 </pre></div>
-<p>And then finally  a more nebulous use case, but no less important. Since day
-one, Chef has thrived on having a strong, welcoming, friendly community. Any
-change to our community tools must maintain this high standard of social
-interaction for the future. This persona is dubbed &quot;Colin&quot;.</p>
+<p>And then finally a more nebulous use case, but no less important. Since day one,
+Chef has thrived on having a strong, welcoming, friendly community. Any change
+to our community tools must maintain this high standard of social interaction
+for the future. This persona is dubbed &quot;Colin&quot;.</p>
 <div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">member</span><span class="p">,</span>
 <span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">talk</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">members</span><span class="p">,</span>
 <span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">socialize</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">people</span><span class="o">.</span>
@@ -65,18 +63,19 @@ distinct from Chef Software Inc&#39;s Slack team as Slack does not offer a
 permissions system which would allow these to co-exist in the same structure.</p>
 
 <p><a href="https://github.com/rauchg/slackin">SlackIn</a> will be deployed and mapped to
-<code>slack.chef.io</code>. This tool allows users to &quot;sign up&quot; for Slack by requesting an
-invitation email. <a href="https://github.com/ekmartin/slack-irc">Slack-IRC</a> will be
-deployed to map the two Freenode IRC channels to Slack. An IRC bot will be
-written and deployed to notify new users of the Slack channel and provider them
-a link to SlackIn. This information will also be added to the <code>/topic</code> of both
-channels.</p>
+<code>community-slack.chef.io</code>. This tool allows users to &quot;sign up&quot; for Slack by
+requesting an invitation email.
+<a href="https://github.com/ekmartin/slack-irc">Slack-IRC</a> will be deployed to map the
+two Freenode IRC channels to Slack. An IRC bot will be written and deployed to
+notify new users of the Slack channel and provider them a link to SlackIn. This
+information will also be added to the <code>/topic</code> of both channels.</p>
 
 <p>Running the new services (SlackIn and the various bots) is left to the discretion
 of Chef Software in their role as stewards of the Chef community.</p>
 
-<p>The new Slack channel will be advertised on the <a href="https://discourse.chef.io">Chef Forums</a>,
-the pending <code>community.chef.io</code> landing page, and the Chef documentation.</p>
+<p>The new Slack channel will be advertised on the <a href="https://discourse.chef.io">Chef
+Forums</a>, the pending <code>community.chef.io</code> landing
+page, and the Chef documentation.</p>
 
 <h2>Why Slack</h2>
 
@@ -178,14 +177,14 @@ this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.</p>
     </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
-    <script src="https://style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="//style.chef.io/dist/1.0.1/javascripts/chef.js"></script>
     <script>
       $(document).chef({
         assets: {
-          images: 'https://style.chef.io/assets/images'
+          images: '//style.chef.io/assets/images'
         }
       });
     </script>
