@@ -1,9 +1,9 @@
 ---
-RFC: unassigned
+RFC: 82
 Title: Chef Deprecation Policy
 Author: Tim Smith <tsmith@chef.io>
-Status: Draft
-Type: <Process>
+Status: Accepted
+Type: Process
 ---
 
 # Chef Deprecation Policy
