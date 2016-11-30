@@ -29,15 +29,21 @@ Support audit and compliance checks in a technology agnostic way.
 
 ## Specification
 
-We will add a new directory, `audit`, to the top level of the cookbook.
-In this directory will be tests, typically but not necessarily written
-in Inspec, an operator can use to inspect the state of their system.
+As per RFC-35, audits will be run in the `audit` phase, which occurs
+after the `converge` phase completes.
+
+An audit handler will be introduced to allow cookbooks to register for
+the audit phase.
+
+The current, serverspec based audit mode will be migrated to a cookbook
+and removed from the chef-client.
 
 A cookbook may depend on other gems in the usual manner to provide
 functionality to audit tests.
 
-As per RFC-35, audits will be run in the `audit` phase, which occurs
-after the `converge` phase completes.
+Tools will be updated to upload the `tests` directory to both
+supermarket and chef server. Audits can then be used both at development
+time with test kitchen and similar tools, and with audit mode.
 
 ## Copyright
 
