@@ -82,6 +82,9 @@ Merged Precedence Levels (New API):
 | default       | attribute | role | environment | recipe
 | override | attribute | role | environment | recipe
 
+- automatic attributes are no longer merged so are not shown in the above table (they still exist)
+- `force_default/force_override` becomes the way attributes are applied in recipes
+
 ## New Syntax for Ohai Attributes
 
 A new sugar for ohai attributes will be introduced:
