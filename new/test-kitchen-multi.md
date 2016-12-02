@@ -185,6 +185,12 @@ is for testing things like automated failover or cluster recovery.
 
 [ed: do we also need a step for creating an instance mid-test?]
 
+### `allow_failure` Step Option
+
+All steps will support an `allow_failure` configuration option to allow
+continuing with the supersuite even if the step fails. This can be used to test
+explicit repair of broken instances.
+
 ## Commands
 
 ### `kitchen create`
