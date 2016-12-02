@@ -17,7 +17,7 @@ Type: Process
     And the cookbook is up for adoption,
     And the cookbook has been up for adoption for at least 6 months,
     Then the Supermarket team should be notified,
-    And ownership of the cookbook should transferred to chef-brigade
+    And ownership of the cookbook should transferred to sous-chefs
 ```
 
 ### When a Cookbook is NOT Up for Adoption
@@ -40,10 +40,10 @@ the current owner of the cookbook will be notified. The owner can then transfer
 ownership to the user who wants it.
 
 However, sometimes cookbooks remain up for adoption for 6+ months.  In this
-case, the cookbook ownership will be transferred the chef-brigade.  This will
+case, the cookbook ownership will be transferred the sous-chefs.  This will
 be done manually at first but may be automated in the future.
 
-The chef-brigade will then take over responsibility for the cookbook.  At their
+The sous-chefs will then take over responsibility for the cookbook.  At their
 discretion, they can transfer ownership to someone else on Supermarket at any time.
 
 ### When a Cookbook is NOT Up For Adoption
