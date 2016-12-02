@@ -294,6 +294,10 @@ All Test Kitchen drivers that want to support multi-server testing will need to
 be updated to include an implementation of the gossip phase, even if it might be
 a no-op in some cases.
 
+As the new functionality is only activated if one or more supersuites exist in
+the configuration, existing Test Kitchen users should be unaffected unless they
+opt in to the new features.
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
