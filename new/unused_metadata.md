@@ -30,7 +30,9 @@ Mark as deprecated and subsequently remove the `recommends`, `suggests`,
 ## Downstream Impact
 
 Chef Server should be updated to not serve this metadata, docs need to
-be updated.
+be updated. Also, generators such as `chef generate`, `berks cookbook`
+need to be updated to ensure they do not create metadata files with
+those fields.
 
 ## Copyright
 
