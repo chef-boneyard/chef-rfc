@@ -12,7 +12,11 @@ Type: Informational
 
     As a user of the mongodb cookbook,
     I want to have the cookbook maintained and released to Supermarket,
-    so that I can get cookbook updates for non-EOL versions of MongoDB.
+    so that I can get cookbook updates for non-EOS versions of MongoDB.
+
+    As a user of the mongodb cookbook,
+    I want to have the cookbook up to date on Supermarket,
+    so that I can install a version of MongoDB that is getting security updates.
 
     As a Sous Chef member,
     I want to be able to release to Supermarket,
