@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 84
 Title: Test Kitchen Multi-Execution
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
