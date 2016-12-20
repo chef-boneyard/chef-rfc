@@ -17,7 +17,7 @@ You'll need to have the gh-pages branch checked out locally:
 
 Run:
 
-    bundle install; bundle exec rake generate:pages
+    bundle install; bundle exec rake pages:generate
 
 After that there will be a gh-pages subdirectory that has the generated files
 and is on the gh-pages branch. These can be committed and pushed to deploy the
