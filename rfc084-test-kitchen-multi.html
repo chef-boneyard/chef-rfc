@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Test Kitchen Multi-Execution</h1>
+
+<p>Since the very early days of Test Kitchen there has been a desire to use it to
+test multi-server operations. Several attempts have been made over the years,
+including <code>kitchen-nodes</code>, manual orchestration of the Vagrant plugin, and most
+recently <code>kitchen-terraform</code>. All of these attempts have yielded some success,
+but generally come via major caveats or restrictions. A unified path to true,
+generic multi-server testing has been talked about for years, but only recently
+have we all circled down on a design that seems workable over the long term.
+Test Kitchen is not normally covered by the Chef RFC process, but given both
+the scope and importance of the feature, an exception is being made.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As an operations developer,
+I want to test multi-server interactions,
+so that I have confidence in cluster-oriented CM code.
+</pre></div>
+<p>And a more specific use case that is also rolled in here:</p>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want to test cookbook upgrades and idempotence,
+so that I have confidence in my Chef code.
+</pre></div>
+<h2>The Problems</h2>
+
+<p>To start with, why is this a difficult problem? This is written based on Test
+Kitchen as it stands today and may become out of date in the future.</p>
+
+<ol>
+<li>Test Kitchen is built around the concept that one instance equals one server,
+and that one instance equals one &quot;thing&quot; being tested.</li>
+<li>Instances do not know about each other, either for Chef data integration or
+for things like ensuring networking is set up between instances. For some
+drivers, notably Vagrant, this can be ignored, but in the general case it is
+a factor.</li>
+<li>Test Kitchen has a fairly limited state machine and most scripted control has
+to be external as plugins can&#39;t extend that level of functionality. For
+example if you want to run instances in a particular order or converge a
+specific instance twice with different parameters, that is best achieved
+through a Bash script, <code>Makefile</code>, <code>Rakefile</code>, etc.</li>
+</ol>
+
+<h2>The Basic Design</h2>
+
+<p>[ed: I do not like the term &quot;supersuite&quot;, please come up with something better
+and tell me. maybe &quot;multisuite&quot;?]</p>
+
+<p>The core of the new system is a configuration section called &quot;supersuites&quot;. Each
+supersuite contains a set of steps to be run in a particular order. For example:</p>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">platforms</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">centos-7</span>
+
+<span class="l l-Scalar l-Scalar-Plain">suites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web1</span>
+  <span class="l l-Scalar l-Scalar-Plain">run_list</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">role[web]</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web2</span>
+  <span class="l l-Scalar l-Scalar-Plain">run_list</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">role[web]</span>
+
+<span class="l l-Scalar l-Scalar-Plain">supersuites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web</span>
+  <span class="l l-Scalar l-Scalar-Plain">steps</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web2</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">verify web1</span>
+</pre></div>
+<p>When you run <code>kitchen test web-centos-7</code> on this configuration, it will run the
+steps in the order listed, aborting if any step fails.</p>
+
+<p>This is combined with a new lifecycle phase in the Test Kitchen state machine
+for instances before <code>create</code> called <code>gossip</code>. This passes the driver plugin
+data about which instances will participate in the supersuite so it can set any
+instance state flags it wants to be used later in the <code>create</code> phase. There will
+also be an optional <code>late_gossip</code> phase added after <code>create</code> but before <code>converge</code>
+that is also passed all the instance data for any post-creation fixups. Together
+these phases ensure that instances will be able to see each other on the network
+and will have access to any required shared resources.</p>
+
+<h2>Vocabulary</h2>
+
+<h3>Supersuite</h3>
+
+<p>A supersuite is a configuration section [ed: better word?] which has a name and
+a list of steps to execute. Each supersuite includes one or more suites.</p>
+
+<h3>Superinstance</h3>
+
+<p>A superinstance is the combination of a supersuite and a platform, and represents
+the collective of all the instances which correspond to the suites in the
+supersuite.</p>
+
+<h2>More Details</h2>
+
+<p>If this new <code>supersuites</code> configuration section is present, Test Kitchen switches in to
+multi-server mode where the instance matrix is based on &quot;platforms x
+supersuites&quot; (rather than platforms x suites as normal). Multiple supersuites
+can be present, though a suite can only be a member of a single supersuite to
+allow the existing instance state machine to remain mostly unchanged. A single
+suite can also be referenced multiple times to allow for upgrade/downgrade
+testing and idempotence testing.</p>
+
+<p>The step syntax is built to be similar to the <code>kitchen</code> command line utility to
+make it easier to get started with for experience Test Kitchen users. It consists
+of a string matching <code>&quot;&lt;action&gt; &lt;suite_name&gt;&quot;</code>. Actions use the familiar Test
+Kitchen names: <code>converge</code>, <code>verify</code>, and <code>destroy</code>. All instances that are a part
+of the supersuite are created together during initialization, so this step does
+not need to be explicitly stated. The <code>destroy</code> step action is present to allow
+for testing cluster failover, but any existing instances will be destroyed
+during a <code>kitchen destroy</code> or <code>kitchen test</code> command matching the existing
+Test Kitchen semantics.</p>
+
+<p>Suite names and supersuite names cannot overlap, doing so will be a configuration
+error.</p>
+
+<h2>Step Types</h2>
+
+<h3><code>converge</code></h3>
+
+<p>A <code>converge</code> step runs a provisioner plugin on an instance. With no other
+options this is equivalent to running <code>kitchen converge &lt;instance_name&gt;</code>.
+Additional configuration options can be specified in the step and will be merged
+in to the instance configuration for only that <code>converge</code> action. For example:</p>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">supersuites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web</span>
+  <span class="l l-Scalar l-Scalar-Plain">steps</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">step</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+    <span class="l l-Scalar l-Scalar-Plain">attributes</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="l l-Scalar l-Scalar-Plain">run_list</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">recipe[other]</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">step</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+    <span class="l l-Scalar l-Scalar-Plain">provisioner_config</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">shell</span>
+      <span class="l l-Scalar l-Scalar-Plain">script</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">init.sh</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">verify web1</span>
+</pre></div>
+<p>Driver configuration cannot be set like this as <code>create</code> runs in its own phase
+outside of the <code>converge</code>.</p>
+
+<h3><code>verify</code></h3>
+
+<p>A <code>verify</code> step runs a verifier plugin on an instance. With no other options
+this is equivalent to running <code>kitchen verify &lt;instance_name&gt;</code>. Additional
+configuration options can be specified in the step, in same way as the
+<code>converge</code> step. Unlike normal Test Kitchen usage, this will not execute a
+<code>converge</code> phase if the instance is not already converged. The <code>setup</code> phase will
+be run for any instance not already in that state.</p>
+
+<p>By default the supersuite name will be used in place of the suite name for
+finding the test files, but this can be overridden by a configuration option:</p>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">supersuites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web</span>
+  <span class="l l-Scalar l-Scalar-Plain">steps</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">step</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">verify web1</span>
+    <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">other</span>
+</pre></div>
+<h3><code>destroy</code></h3>
+
+<p>A <code>destroy</code> step runs the driver teardown on an instance. With no other options
+this is equivalent to running <code>kitchen destroy &lt;instance_name&gt;</code>. As with
+<code>converge</code> and <code>verify</code>, additional configuration options can be added to the
+step if needed.</p>
+
+<p>This step is intended to be used much less frequently than the other two and
+is for testing things like automated failover or cluster recovery.</p>
+
+<p>[ed: do we also need a step for creating an instance mid-test?]</p>
+
+<h3><code>allow_failure</code> Step Option</h3>
+
+<p>All steps will support an <code>allow_failure</code> configuration option to allow
+continuing with the supersuite even if the step fails. This can be used to test
+explicit repair of broken instances.</p>
+
+<h2>Commands</h2>
+
+<h3><code>kitchen create</code></h3>
+
+<p>The <code>create</code> action on a superinstance will run the <code>gossip</code>, <code>create</code>, and
+<code>late_gossip</code> phases on all instances that are a part of the supersuite. If no
+input is given, it will process all superinstances in the order specified in the
+configuration. If an input string is given and does not match any
+superinstances, it will be checked against normal instances and if any match
+they will run a normal <code>create</code> action without the <code>gossip</code> and <code>late_gossip</code>
+phases.</p>
+
+<h3><code>kitchen converge</code></h3>
+
+<p>The <code>converge</code> action on a superinstance will run all <code>converge</code> supersuite
+steps in the order specified in the configuration. If no input is given it will
+process all superinstances in the order specified in the configuration. If an
+input string is given and does not match any superinstances, it will be checked
+against normal instances and if any match they will run a normal <code>converge</code>
+action.</p>
+
+<h3><code>kitchen verify</code></h3>
+
+<p>The <code>verify</code> action on a superinstance will run all <code>verify</code> supersuite steps in
+the order specified in the configuration. If an instance is not in the
+<code>converged</code> state, it will not be converged like with normal Test Kitchen
+operation [ed: should verify on an unconverged instance be an error?]. If any
+<code>destroy</code> action steps are present in the superinstance, this will warn that
+<code>destroy</code> steps are not being processed. If no input is given it will process
+all superinstances in the order specified in the configuration. If an input
+string is given and does not match any superinstances, it will be checked
+against normal instances and if any match they will run a normal <code>verify</code>
+action.</p>
+
+<h3><code>kitchen test</code></h3>
+
+<p>The <code>test</code> action on a superinstance will run all supersuite steps in the order
+specified in the configuration. As with normal Test Kitchen, this will include
+running the <code>create</code> action, and destroying all the instances based on the value
+of the <code>--destroy</code> command line option. The destroy at the end is an all-or-
+nothing, so it will either destroy all instances in the superinstance or leave
+them all. A new command-line option will be added, <code>--no-recreate</code> to suppress
+the <code>destroy</code> action before the <code>create</code> [ed: should this apply to non-
+supersuite <code>kitchen test</code> too?]. The <code>--no-recreate</code> flag will allow for
+slightly faster testing when using <code>destroy</code> step actions as this is the only
+way to run those. If no input is given it will process all superinstances in the
+order specified in the configuration. If an input string is given and does not
+match any superinstances, it will be checked against normal instances and if any
+match they will run a normal <code>test</code> action.</p>
+
+<h3><code>kitchen login</code></h3>
+
+<p>The <code>login</code> action is mostly unchanged from normal Test Kitchen. Running <code>login</code>
+on a superinstance will display an error message explaining that it can only be
+used on specific instances, and will show the names of the instances in the
+superinstance.</p>
+
+<h3><code>kitchen list</code></h3>
+
+<p>By default, <code>kitchen list</code> with no input when supersuites are present will
+display only the superinstances. Running <code>kitchen list --instances</code> will display
+the state of the underlying instances, using the same output as normal <code>kitchen
+list</code>. If an input string is given and does not match any superinstances, it
+will be checked against normal instances and if any match they will be displayed
+as normal.</p>
+
+<h3><code>kitchen package</code></h3>
+
+<p>The <code>package</code> action on a supersuite is undefined at this time.</p>
+
+<h2>Unaddressed Problems</h2>
+
+<p>Executing two or more supersuites concurrently is explicitly not going to be
+supported for the foreseeable future. Executing multiple steps within a single
+supersuite concurrently may be added, but not in the first version. A suggested
+syntax for this is:</p>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">supersuites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web</span>
+  <span class="l l-Scalar l-Scalar-Plain">steps</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">concurrent</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web2</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">verify web1</span>
+</pre></div>
+<p>Further exploration of the completed feature will be required to assess the
+impact of concurrent execution on the multi-server model, but it should be
+viable.</p>
+
+<p>This proposal does not explicitly address making Chef search work between
+instances, this feature should be added to the <code>chef_solo</code> and <code>chef_zero</code>
+provisioners in Test Kitchen but does not require any new structural elements
+outside of this design.</p>
+
+<p>Including both single and multi-server tests in the same Test Kitchen
+configuration is possible but not easy to use as most commands will run in
+&quot;supersuite mode&quot; if any supersuites are present in the configuration. This can
+be addressed in a somewhat verbose manner by wrapping any single server tests in
+a supersuite that happens to consist only of <code>converge &lt;suite&gt;</code> and <code>verify
+&lt;suite&gt;</code>.</p>
+
+<h2>Downstream Impact</h2>
+
+<p>All Test Kitchen drivers that want to support multi-server testing will need to
+be updated to include an implementation of the gossip phase, even if it might be
+a no-op in some cases.</p>
+
+<p>As the new functionality is only activated if one or more supersuites exist in
+the configuration, existing Test Kitchen users should be unaffected unless they
+opt in to the new features.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
