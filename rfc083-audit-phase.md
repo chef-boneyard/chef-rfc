@@ -1,10 +1,10 @@
 ---
-RFC: unassigned
+RFC: 83
 Title: Audit Segment
 Author:
 - Christoph Hartmann <chartmann@chef.io>
 - Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
