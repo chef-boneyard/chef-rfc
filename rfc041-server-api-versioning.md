@@ -321,7 +321,7 @@ When an API is modified in a way that requires support of Version, release notes
 documentation MUST reflect this.  API documentation MUST further specify minimum/maximum
 versions for each endpoint that implements support of versioning.
 
-### New Endpoint: /server\_api\_versions
+### New Endpoint: /server\_api\_version
 
 This is a new server endpoint that MUST be implemented, and  which supports only the `GET` method.
 Any other method MUST respond with a 405.
@@ -335,7 +335,7 @@ The `GET` response body MUST look as follows:
 
 `$x` and `$y` refer to the current minimum and maximum supported versions, respectively.
 
-### New Endpoint: /server\_api\_versions/extended
+### New Endpoint: /server\_api\_version/extended
 
 This is a new server endpoint that MAY be implemented, and which supports only the `GET` method.
 Any other method MUST respond with a 405.
@@ -393,7 +393,7 @@ or 404 if there is no such endpoint.
 
 To continue the example above, the request:
 
-`GET /server_api_versions/extended/GET/organizations/:orgname/clients/:client`
+`GET /server_api_version/extended/GET/organizations/:orgname/clients/:client`
 
 Would receive the response:
 
