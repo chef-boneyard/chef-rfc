@@ -64,6 +64,7 @@ your prefix and the person or organization that will be responsible for it.
 * `fb` - [Faceboook](https://github.com/facebook)
 * `gcp` - [googlecloudplatform](https://github.com/googlecloudplatform)
 * `poise` - [coderanger](https://github.com/coderanger)
+* `sc` - [Sous Chefs](https://github.com/sous-chefs)
 * `sigsci` - [signalsciences] (https://github.com/signalsciences)
 
 ## Copyright
