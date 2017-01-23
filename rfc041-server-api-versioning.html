@@ -359,7 +359,7 @@ accordance with the published documentation.</p>
 documentation MUST reflect this.  API documentation MUST further specify minimum/maximum
 versions for each endpoint that implements support of versioning.</p>
 
-<h3>New Endpoint: /server_api_versions</h3>
+<h3>New Endpoint: /server_api_version</h3>
 
 <p>This is a new server endpoint that MUST be implemented, and  which supports only the <code>GET</code> method.
 Any other method MUST respond with a 405.</p>
@@ -370,7 +370,7 @@ Any other method MUST respond with a 405.</p>
 </pre></div>
 <p><code>$x</code> and <code>$y</code> refer to the current minimum and maximum supported versions, respectively.</p>
 
-<h3>New Endpoint: /server_api_versions/extended</h3>
+<h3>New Endpoint: /server_api_version/extended</h3>
 
 <p>This is a new server endpoint that MAY be implemented, and which supports only the <code>GET</code> method.
 Any other method MUST respond with a 405.</p>
@@ -426,7 +426,7 @@ or 404 if there is no such endpoint.</p>
 
 <p>To continue the example above, the request:</p>
 
-<p><code>GET /server_api_versions/extended/GET/organizations/:orgname/clients/:client</code></p>
+<p><code>GET /server_api_version/extended/GET/organizations/:orgname/clients/:client</code></p>
 
 <p>Would receive the response:</p>
 <div class="highlight"><pre><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/organizations/:orgname/clients/:client&quot;</span><span class="p">,</span>

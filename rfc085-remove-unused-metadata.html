@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Remove Unused Cookbook Metadata</h1>
+
+<p>There are a set of metadata fields that have never been really supported
+by Chef, and so we should remove them.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">community</span><span class="w"> </span><span class="vg">advocate</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">ensure</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">maintainers</span><span class="w"> </span><span class="vg">focus</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">things</span><span class="w"> </span><span class="vg">that</span>
+<span class="vg">matter</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">they</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">better</span><span class="w"> </span><span class="vg">cookbooks</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">like</span><span class="w"> </span><span class="vg">removing</span><span class="w"> </span><span class="vg">code</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">there</span><span class="w"> </span><span class="vg">are</span><span class="w"> </span><span class="vg">fewer</span><span class="w"> </span><span class="vg">bugs</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<p>Mark as deprecated and subsequently remove the <code>recommends</code>, <code>suggests</code>,
+<code>conflicts</code>, <code>replaces</code> and <code>grouping</code> metadata fields.</p>
+
+<h2>Downstream Impact</h2>
+
+<p>Chef Server should be updated to not serve this metadata, docs need to
+be updated. Also, generators such as <code>chef generate</code>, <code>berks cookbook</code>
+need to be updated to ensure they do not create metadata files with
+those fields.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
