@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 85
 Title: Remove unused cookbook metadata
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
