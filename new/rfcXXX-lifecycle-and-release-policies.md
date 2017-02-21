@@ -1,7 +1,7 @@
 ---
 RFC: unassigned
 Title: Chef OSS Lifecycle and Release Policies
-Author: Tom Duffield
+Author: Tom Duffield <tom@chef.io>
 Status: Draft
 Type: Process
 Replaces: RFC047, RFC081
@@ -83,7 +83,7 @@ Given a version number `MAJOR.MINOR.PATCH`:
 
   * **MAJOR** version releases (eg. 1.x -> 2.x) will include breaking or backwards-incompatible changes.
     * _Example: When changing the load order of any cookbook segments_
-  * **MINOR** version releases (eg. 1.1 -> 1.2) will include new features, bug fixes, and will be backwards-compatible to the best of the Maintainer's abilities.
+  * **MINOR** version releases (eg. 1.1 -> 1.2) will include new features, bug fixes, and will be backwards-compatible to the best of the Maintainers' abilities.
     * _Example: When adding support to the mount provider for special filesystem types that were previously unsupported._
     * _Example: Major version bump of a software dependency._
   * **PATCH** version releases (eg. 1.1.1 -> 1.1.2) will include backwards-compatible bug fixes.
@@ -139,7 +139,7 @@ Some Chef OSS projects will have very large sets of dependencies that are allowe
 Chef Software maintains three artifact channels: unstable, current, and stable.
 
   * unstable: Builds that have completed successfully and are awaiting additional automated testing.
-  * current: Builds that have passed all automated testing.
+  * current: Builds that have passed all automated testing but have not been promoted to stable.
   * stable: Builds that have been manually promoted from current and are considered "ready for production".
 
 #### Release Candidate
@@ -151,7 +151,7 @@ A "Release Candidate" is an artifact of a Chef OSS project that is available for
 The term "Stable Release" is used to identify a build of a Chef OSS product that is:
 
   * consumable on its own (eg. not shipped only as a part of another software artifact)
-  * deemed suitable for use in production environments
+  * recommended for use in production environments
 
 The term originated from Chef Software's process of promoting a build from the _current_ channel to the _stable_ channel. However, as not all Chef OSS is built and hosted by Chef Software, the announcement of a Stable Release may also refer to the selection of a version as the "recommended" version for use in production settings.
 
@@ -194,7 +194,7 @@ Notifications regarding Chef OSS will follow (roughly) the same notification pol
 
 A message about the promotion of a Stable Release for a Chef OSS artifact will include (at a minimum) the following information:
 
-  * The version of the artifact being release
+  * The version of the artifact being released
   * Release notes that highlight enhancements, bug fixes, or other changes included in the release
   * In the case of a critical regression or security vulnerability, details about the vulnerability including:
     * How to identify if you are affected
