@@ -29,6 +29,9 @@ This RFC describes the lifecycle and release policies of Chef Open Source Softwa
     I want to know what the lifecycle policy for software is,
     so I can can understand how the software I consume is managed.
 
+    As a Chef user,
+    I need Chef OSS version numbers to give me expectations about the extent of changes
+    so I can estimate my upgrade efforts.
 
 ## Specification
 
