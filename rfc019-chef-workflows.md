@@ -58,7 +58,7 @@ Rather than detail every step here, lets call out a couple of important principl
 1. The concept of [Progressive Disclosure](http://en.wikipedia.org/wiki/Progressive_disclosure) should always be kept in mind. Make more information available easily, but don't overwhelm users with every feature and possibility.
 1. The [Learn Chef](http://learn.getchef.com) site is the place for collaborating on early
 stage tutorial content. If a user needs to learn the basics, send them here.
-1. The [Fundamentals Webinar](http://learn.getchef.com/additional-resources/) is a series of video tutorials and attendant slide decks that can augement the Learn Chef content.
+1. The [Fundamentals Webinar](http://learn.getchef.com/additional-resources/) is a series of video tutorials and attendant slide decks that can augment the Learn Chef content.
 
 Regardless of the workflow you eventually settle in to, these rules and basics apply across the board.
 
