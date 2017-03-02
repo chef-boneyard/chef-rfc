@@ -43,9 +43,11 @@ vacations, ChefConf and Chef Summits.
 
 ## Cookbook Support
 
-The latest version of community cookbooks are required to support only the latest 6
-months of chef-client versions.  This window does not reset on a major version release
-so that the prior major version track is supported for a 6 month window.
+The latest version of Chef-managed community cookbooks should support at least the latest 6
+months of chef-client versions.  After 6 months, chef managed community cookbooks may
+elect to drop support for older chef-client versions.  This window does not reset on
+a major version release so that the prior major version track is supported for a 6 month
+window.  Non-Chef managed community cookbooks are encouraged to follow this policy.
 
 As an example, in May we will typically drop 14.1.0 and both 14.0 and 14.1 will be
 supported.  The version of 13 release 6 months prior should be 13.8 and will still
