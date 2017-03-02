@@ -49,7 +49,7 @@ elect to drop support for older chef-client versions.  This window does not rese
 a major version release so that the prior major version track is supported for a 6 month
 window.  Non-Chef managed community cookbooks are encouraged to follow this policy.
 
-As an example, in May we will typically drop 14.1.0 and both 14.0 and 14.1 will be
+As an example, in May we will typically release 14.1.0 and both 14.0 and 14.1 will be
 supported.  The version of 13 release 6 months prior should be 13.8 and will still
 be supported so that 6 versions will be considered current (13.8 through 13.11 plus
 14.0 and 14.1).  At that point community cookbooks may choose to start using 13.8
@@ -57,7 +57,7 @@ features and drop support for versions prior to 13.7
 
 ## Ruby Cadence
 
-Since the ruby language itself releases new minor versions over the Christmas holidays,
+Since the Ruby language itself releases new minor versions over the Christmas holidays,
 the April major release of Chef Client should include the minor revision of ruby which
 landed the prior Christmas.  Combined with the 6 month sliding window for cookbook
 support that also implies that when the prior major release of the client falls off
