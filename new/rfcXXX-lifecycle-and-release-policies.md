@@ -68,8 +68,7 @@ The following projects adhere to Cadence Release:
 
 Chef OSS that falls under Ad-hoc Release is actively developed by the community and Chef Software but not at such a velocity as to necessitate a cadence release. Instead, software releases will be made on an as-needed basis as determined by the maintainers for that software.
 
-Unlike Cadence Release software, maintainers may decide to release multiple **PATCH** artifacts as Stable Releases (eg. 1.2.3 and 1.2.5 may both be Stable Releases). Communication regarding these releases will still follow the standard Release Communication procedure.
-
+Unlike Cadence Release software, maintainers may decide to release multiple **PATCH** artifacts as Stable Releases (e.g. 1.2.3 and 1.2.5 may both be Stable Releases). Communication regarding these releases will still follow the standard Release Communication procedure.
 
 #### Maintenance Mode
 
@@ -85,20 +84,20 @@ Chef OSS follows a `MAJOR.MINOR.PATCH` versioning scheme based on [Semantic Vers
 
 Given a version number `MAJOR.MINOR.PATCH`:
 
-  * **MAJOR** version releases (eg. 1.x -> 2.x) will include breaking or backwards-incompatible changes.
+  * **MAJOR** version releases (e.g. 1.x -> 2.x) will include breaking or backwards-incompatible changes.
     * _Example: When changing the load order of any cookbook segments_
-  * **MINOR** version releases (eg. 1.1 -> 1.2) will include new features, bug fixes, and will be backwards-compatible to the best of the Maintainers' abilities.
+  * **MINOR** version releases (e.g. 1.1 -> 1.2) will include new features, bug fixes, and will be backwards-compatible to the best of the Maintainers' abilities.
     * _Example: When adding support to the mount provider for special filesystem types that were previously unsupported._
     * _Example: Major version bump of a software dependency._
-  * **PATCH** version releases (eg. 1.1.1 -> 1.1.2) will include backwards-compatible bug fixes.
+  * **PATCH** version releases (e.g. 1.1.1 -> 1.1.2) will include backwards-compatible bug fixes.
     * _Example: Automatically bumped for Chef OSS that is built automatically._
     * _Example: Minor version bump of a software dependency._
 
 When incrementing a Chef OSS version, the following conditions will apply:
 
-  * When **MAJOR** increases, **MINOR** and **PATCH** will be reset to zero (eg. 11.X.X -> 12.0.0)
+  * When **MAJOR** increases, **MINOR** and **PATCH** will be reset to zero (e.g. 11.X.X -> 12.0.0)
     * _Note: New features that did not exist in version 1.1.0 may be released in 2.0.0 without any intermediary releases._
-  * When **MINOR** increases, **PATCH** will be reset to zero (eg. 11.3.x -> 11.4.0)
+  * When **MINOR** increases, **PATCH** will be reset to zero (e.g. 11.3.x -> 11.4.0)
 
 Versions are always, with a few exceptions, displayed to the user in the `MAJOR.MINOR.PATCH` format.
 
@@ -116,7 +115,7 @@ When contextually appropriate, a version may be referred to by only the **MAJOR*
 
 ##### Auto-bumping PATCH versions
 
-For Chef OSS built using a Continuous Integration / Continuous Delivery (CI/CD) systems, the **PATCH** version of a software product may be increased automatically upon every PR merge by an OpsBot. As not all builds will make it successfully through the CI/CD pipeline, the versions available for public consumption might have gaps (eg. 1.2.1, 1.2.10, 1.2.11, 1.2.12, 1.2.20).
+For Chef OSS built using a Continuous Integration / Continuous Delivery (CI/CD) systems, the **PATCH** version of a software product may be increased automatically upon every PR merge by an OpsBot. As not all builds will make it successfully through the CI/CD pipeline, the versions available for public consumption might have gaps (e.g. 1.2.1, 1.2.10, 1.2.11, 1.2.12, 1.2.20).
 
 ##### Semantic Versioning Exceptions
 
@@ -130,13 +129,13 @@ In the case where Chef OSS that would otherwise fall under the scope of the docu
 
 Chef OSS artifacts available on [https://downloads.chef.io](https://downloads.chef.io) are built using Chef Software's internal CI/CD build system. Depending on the software project, additional artifacts such as Ruby Gems or Docker Images may also be compiled by ancillary build systems and published to their appropriate locations. Instructions for how to install those additional artifacts will be made available on the projects README.
 
-The commit used to generate an artifact will be tagged with the corresponding `MAJOR.MINOR.PATCH` version. The specific formatting of the tag can vary as long as the three version segments are present (eg. "v1.2.3", "1_2_3", or "1.2.3" are all valid) This will allow users, developers, and support personnel to easily navigate the source code associated with a particular build or release.
+The commit used to generate an artifact will be tagged with the corresponding `MAJOR.MINOR.PATCH` version. The specific formatting of the tag can vary as long as the three version segments are present (e.g. "v1.2.3", "1_2_3", or "1.2.3" are all valid) This will allow users, developers, and support personnel to easily navigate the source code associated with a particular build or release.
 
-Some Chef OSS artifacts (eg. ancillary gems) are built and published manually by their maintainers.
+Some Chef OSS artifacts (e.g. ancillary gems) are built and published manually by their maintainers.
 
 Some Chef OSS will be built following a Continuous Integration / Continuos Delivery (CI/CD) model. This means that every merge to master may result in a build and every successful build that passes functional testing is a candidate for a Stable Release and published for consumption by users. This is especially common for projects that are under Cadence Releases.
 
-Some Chef OSS projects will have very large sets of dependencies that are allowed to float (eg. ~> version constraint). Doing so allows other projects to consume them without having to match dependencies in lock-step, helping to prevent ecosystem failure when project upgrades before another. Because these dependencies are resolved at build-time, two builds of the same Chef OSS commit may result in slightly different packages. It is for this reason that we encourage users, when possible, to consume pre-compiled binaries through official channels (where this effect is minimized) rather than compiling them themselves.
+Some Chef OSS projects will have very large sets of dependencies that are allowed to float (e.g. ~> version constraint). Doing so allows other projects to consume them without having to match dependencies in lock-step, helping to prevent ecosystem failure when project upgrades before another. Because these dependencies are resolved at build-time, two builds of the same Chef OSS commit may result in slightly different packages. It is for this reason that we encourage users, when possible, to consume pre-compiled binaries through official channels (where this effect is minimized) rather than compiling them themselves.
 
 #### Build Channels
 
@@ -148,18 +147,18 @@ Chef Software maintains three artifact channels: unstable, current, and stable.
 
 #### Release Candidate
 
-A "Release Candidate" is an artifact of a Chef OSS project that is available for download (eg. available in the _current_ channel) that has been identified as a candidate for a Stable Release.
+A "Release Candidate" is an artifact of a Chef OSS project that is available for download (e.g. available in the _current_ channel) that has been identified as a candidate for a Stable Release.
 
 #### Stable Release
 
 The term "Stable Release" is used to identify a build of a Chef OSS product that is:
 
-  * consumable on its own (eg. not shipped only as a part of another software artifact)
+  * consumable on its own (e.g. not shipped only as a part of another software artifact)
   * recommended for use in production environments
 
 The term originated from Chef Software's process of promoting a build from the _current_ channel to the _stable_ channel. However, as not all Chef OSS is built and hosted by Chef Software, the announcement of a Stable Release may also refer to the selection of a version as the "recommended" version for use in production settings.
 
-The current Stable Release for a given software product will be reflected at the top README of the Github Repository using a badge (eg. [![Gem Version](https://badge.fury.io/rb/chef.svg)](https://badge.fury.io/rb/chef))
+The current Stable Release for a given software product will be reflected at the top README of the Github Repository using a badge (e.g. [![Gem Version](https://badge.fury.io/rb/chef.svg)](https://badge.fury.io/rb/chef))
 
 #### Hot Fix Releases
 
