@@ -44,10 +44,10 @@ vacations, ChefConf and Chef Summits.
 ## Cookbook Support
 
 The latest version of Chef-managed community cookbooks should support at least the latest 6
-months of chef-client versions.  After 6 months, chef managed community cookbooks may
-elect to drop support for older chef-client versions.  This window does not reset on
+months of Chef Client versions.  After 6 months, Chef-managed community cookbooks may
+elect to drop support for older Chef Client versions.  This window does not reset on
 a major version release so that the prior major version track is supported for a 6 month
-window.  Non-Chef managed community cookbooks are encouraged to follow this policy.
+window.  Non-Chef-managed community cookbooks are encouraged to follow this policy.
 
 As an example, in May we will typically release 14.1.0 and both 14.0 and 14.1 will be
 supported.  The version of 13 release 6 months prior should be 13.8 and will still
@@ -59,31 +59,40 @@ features and drop support for versions prior to 13.7
 
 This allows cookbook authors to drop support for old cookbook versions and use new
 features in new client versions.  It gets us out of the situation where cookbooks still
-need to support 28-month old versions of chef client versions and can't use any features
+need to support 28-month old versions of Chef Client versions and can't use any features
 added in the past 28-months of software development.
 
 ## Ruby Cadence
 
 Since the Ruby language itself releases new minor versions over the Christmas holidays,
-the April major release of Chef Client should include the minor revision of ruby which
+the April major release of Chef Client should include the minor revision of Ruby which
 landed the prior Christmas.  Combined with the 6 month sliding window for cookbook
 support that also implies that when the prior major release of the client falls off
-of community cookbook support that the prior minor release of ruby will also fall
+of community cookbook support that the prior minor release of Ruby will also fall
 off of community cookbook support (including the cookstyle gem and related tooling).
 
 The release of the new major version may be delayed if there are show stopping bugs
-in the released version of ruby (we assume that 4 months will be enough time for
+in the released version of Ruby (we assume that 4 months will be enough time for
 major regressions in the core language to be addressed, but that is an external
 dependency).
+
+If the Ruby language version released over Christmas has a show-stopper bug then the
+next major Chef Client version may be released without it.  It can then be included
+in a subsequent minor version bump.  This RFC deliberately uses 'should' instead of
+'must', and [RFC-034](https://github.com/chef/chef-rfc/blob/b7bd9c53bf96235f9334e65bb5848f7843c81fed/rfc034-ruby-193-eol.md#specification)
+allows for a minor version bump of Ruby with a minor version
+bump of Chef Client.  Show stoppers in Ruby itself will not hold up major releases
+of Chef Client, and missing the major release window will not hold up bumping the
+Ruby version.
 
 ## Rationale
 
 This also allows cookbook authors and the ecosystem to drop support for old versions of
-the ruby language, which itself only has a useful support window of about 24-months.  When
-we had to support 28-months old chef-client versions that themselves were shipping 12-24
-month old ruby platforms that meant that cookbooks and tooling had to support some 40-52
-month old ruby versions -- long after the ruby community had stopped support.  The combined
-sliding windows here means that the support windows for chef and ruby will be more
+the Ruby language, which itself only has a useful support window of about 24-months.  When
+we had to support 28-months old Chef Client versions that themselves were shipping 12-24
+month old Ruby platforms that meant that cookbooks and tooling had to support some 40-52
+month old Ruby versions -- long after the Ruby community had stopped support.  The combined
+sliding windows here means that the support windows for Chef and Ruby will be more
 synchronized.
 
 ## Copyright
