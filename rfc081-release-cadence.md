@@ -41,7 +41,7 @@ potential hot fixes or follow-up.
 Major releases in April avoids releasing during winter holidays, summer
 vacations, ChefConf and Chef Summits.
 
-## Cookbook Support
+## Cookbook and Ecosystem Tooling Support
 
 The latest version of Chef-managed community cookbooks should support at least the latest 6
 months of Chef Client versions.  After 6 months, Chef-managed community cookbooks may
@@ -54,6 +54,9 @@ supported.  The version of 13 release 6 months prior should be 13.8 and will sti
 be supported so that 6 versions will be considered current (13.8 through 13.11 plus
 14.0 and 14.1).  At that point community cookbooks may choose to start using 13.8
 features and drop support for versions prior to 13.7
+
+Tooling external to cookbooks (cookstyle, chefspec, stove, foodcritic, halite,
+poise-hoist, etc) is similarly encouraged to follow this policy.
 
 ## Rationale
 
