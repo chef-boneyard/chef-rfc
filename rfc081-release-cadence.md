@@ -55,6 +55,13 @@ be supported so that 6 versions will be considered current (13.8 through 13.11 p
 14.0 and 14.1).  At that point community cookbooks may choose to start using 13.8
 features and drop support for versions prior to 13.7
 
+## Rationale
+
+This allows cookbook authors to drop support for old cookbook versions and use new
+features in new client versions.  It gets us out of the situation where cookbooks still
+need to support 28-month old versions of chef client versions and can't use any features
+added in the past 28-months of software development.
+
 ## Ruby Cadence
 
 Since the Ruby language itself releases new minor versions over the Christmas holidays,
@@ -68,6 +75,16 @@ The release of the new major version may be delayed if there are show stopping b
 in the released version of ruby (we assume that 4 months will be enough time for
 major regressions in the core language to be addressed, but that is an external
 dependency).
+
+## Rationale
+
+This also allows cookbook authors and the ecosystem to drop support for old versions of
+the ruby language, which itself only has a useful support window of about 24-months.  When
+we had to support 28-months old chef-client versions that themselves were shipping 12-24
+month old ruby platforms that meant that cookbooks and tooling had to support some 40-52
+month old ruby versions -- long after the ruby community had stopped support.  The combined
+sliding windows here means that the support windows for chef and ruby will be more
+synchronized.
 
 ## Copyright
 
