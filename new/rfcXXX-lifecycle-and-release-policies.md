@@ -51,7 +51,7 @@ Each component that falls under the purview of the [Chef Maintainers](https://gi
 
 Chef OSS that falls under Cadence Release is under heavy development by the community and Chef Software and is released on a regular cadence. Cadence Releases help ensure that Chef Maintainers get new features and minor bug fixes out to users in a timeline fashion while not overloading the users with numerous releases and monotonically growing version numbers.
 
-Because of the high velocity of development, it is possible for many new features to be added during any given release cycle. To keep the version numbers of [Stable Releases](#stable-release) meaningful, the **MINOR** version will increment by one for each Stable Release. This means that many new features may be added between two Stable Releases, but the **MINOR** version will only increment by one. _Please Note: If a [Hot Fix Release](#hot-fix-release) is necessary, the `MINOR` version may bump by two between two scheduled releases._
+Because of the high velocity of development, it is possible for many new features to be added during any given release cycle. To keep the version numbers of [Stable Releases](#stable-release) meaningful, the **MINOR** version will increment by one for each Stable Release. This means that many new features may be added between two Stable Releases, but the **MINOR** version will only increment by one.
 
 Because so much can change from release to release, maintainers will select a `MAJOR.MINOR.PATCH` build as a [Release Candidate](#release-candidate). Maintainers will follow a slightly modified [Release Communication](#release-communication) procedure to make an announcement to the "chef-dev" [Discourse](https://discourse.chef.io) category, notifying users of the impending Stable Release. The maintainers will then wait a pre-determined amount of time to allow users for further testing. If no critical regressions or other release blockers are identified, the Stable Release will proceed as scheduled.
 
@@ -69,6 +69,7 @@ The following projects adhere to Cadence Release:
 Chef OSS that falls under Ad-hoc Release is actively developed by the community and Chef Software but not at such a velocity as to necessitate a cadence release. Instead, software releases will be made on an as-needed basis as determined by the maintainers for that software.
 
 Unlike Cadence Release software, maintainers may decide to release multiple **PATCH** artifacts as Stable Releases (eg. 1.2.3 and 1.2.5 may both be Stable Releases). Communication regarding these releases will still follow the standard Release Communication procedure.
+
 
 #### Maintenance Mode
 
@@ -166,7 +167,9 @@ Chef OSS maintainers will provide support for critical regressions and [Common V
 
 In the case a Hot Fix Release is required, a release will be fixed following the versioning cadence for a new Stable Release as outlined by the appropriate Lifecycle Policy. Should a fix for the regression be unidentified after an initial investigation period of roughly five hours, the affected versions will be revoked and be made unavailable for download.
 
-In either case, the Chef Maintainers will follow the Release Communication procedures to notify users.
+In a scenario where a Hot Fix Release is required, the maintainers will decide whether a new **MAJOR**, **MINOR**, or **PATCH** release is necessary based on the scope of the change and the timing of the Hot Fix Release in a Cadence Release cycle. This means that some Hot Fix Releases will result in a second Stable Release for a given **MAJOR.MINOR** version while others may result in a new **MAJOR.MINOR** release.
+
+In all cases, the Chef Maintainers will follow the Release Communication procedures to notify users of the impact and remediation instructions.
 
 ##### Example Scenarios
 
