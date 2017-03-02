@@ -98,6 +98,19 @@ month old Ruby versions -- long after the Ruby community had stopped support.  T
 sliding windows here means that the support windows for Chef and Ruby will be more
 synchronized.
 
+The combined sliding window of Chef Client support of Ruby and cookbook and ecosystem
+support of Chef Client needs to better match the Ruby language support window.  As
+external gem authors tend to drop support of Ruby versions that fall into security-only
+releases, we also plan on dropping support of Ruby versions once they fall into
+security-only releases.  For example, in Q1 of 2016 ruby-2.3.0 had been released,
+ruby 2.2.x was still being maintained and ruby-2.1.x fell into security-only releases,
+which caused many rubygems -- most notably rack-2.0 and activesupport-5.0 to later
+drop support for ruby-2.1.x.  This caused issues everywhere in the Chef ecosystem
+as Chef Client had stayed on ruby-2.1 until it became a crisis, and we were forced
+to work around supporting ruby versions that the rubygems community had dropped
+support for.  The Ruby, Cookbook and Ecosystem support cadence is design specifically
+to avoid this situation.
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
