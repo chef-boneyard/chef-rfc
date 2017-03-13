@@ -65,6 +65,7 @@ The DCO is an attestation attached to every contribution made by every developer
   * The bot must include instructions for how to edit commits adding a `Signed-off-by` line.
 * A blog post and mailing list announcement will be made before the cutover.
 * This will have *no* impact on [the "obvious fix" rule](https://docs.chef.io/community_contributions.html#the-obvious-fix-rule).  Contributions that meet these criteria will not need a DCO but should include "obvious fix" in the commit message as outlined in [the "obvious fix" policy](https://docs.chef.io/community_contributions.html#the-obvious-fix-rule).
+* DCO sign-off will not be required for contributions to documentation repositories (such as `chef/chef-web-docs`) or contributions that only affect documentation embedded within project repositories (such as the `docs` directory in `chef/inspec`).
 
 ## Copyright
 
