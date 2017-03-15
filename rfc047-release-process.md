@@ -3,8 +3,9 @@ RFC: 47
 Title: Chef Client Release Process
 Author: Jay Mundrawala <jmundrawala@chef.io>
 Author: Bryan McLellan <btm@chef.io>
-Status: Accepted
+Status: Replaced
 Type: Process
+Replaced-By: 86
 ---
 
 # Chef Client Release Process

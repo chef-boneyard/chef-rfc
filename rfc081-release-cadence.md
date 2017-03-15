@@ -3,8 +3,9 @@ RFC: 81
 Title: Chef Release Cadence
 Author: Tim Smith <tsmith@chef.io>
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Accepted
+Status: Replaced
 Type: Informational
+Replaced-By: 86
 ---
 
 # Chef Release Cadence

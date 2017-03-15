@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 86
 Title: Chef OSS Project Versioning and Release Policies
 Author: Tom Duffield <tom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Process
 Replaces: RFC047, RFC081
 ---
