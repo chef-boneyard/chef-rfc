@@ -47,7 +47,7 @@ Each component that falls under the purview of the [Chef Maintainers](https://gi
 
 #### Cadence Release
 
-[![](https://img.shields.io/badge/Release%20Policy-Cadence%20Release-brightgreen.svg)](https://github.com/chef/chef-rfc/blob/master/rfc086-versioning-and-release-policy.md#cadence-release)
+[![](https://img.shields.io/badge/Release%20Policy-Cadence%20Release-brightgreen.svg)](https://github.com/chef/chef-rfc/blob/master/rfc086-chef-oss-project-policies.md#cadence-release)
 
 Chef OSS projects that fall under Cadence Release are under heavy development by the community and Chef Software and are released on a regular cadence. Cadence Releases help ensure that Chef Maintainers get new features and minor bug fixes out to users in a timeline fashion while not overloading the users with numerous releases and monotonically growing version numbers.
 
@@ -64,7 +64,7 @@ The following projects adhere to Cadence Release:
 
 #### Ad-hoc Release
 
-[![](https://img.shields.io/badge/Release%20Policy-Ad--hoc%20Release-green.svg)](https://github.com/chef/chef-rfc/blob/master/rfc086-versioning-and-release-policy.md#ad-hoc-release)
+[![](https://img.shields.io/badge/Release%20Policy-Ad--hoc%20Release-green.svg)](https://github.com/chef/chef-rfc/blob/master/rfc086-chef-oss-project-policies.md#ad-hoc-release)
 
 Chef OSS projects that fall under Ad-hoc Release are actively developed by the community and Chef Software but not at such a velocity as to necessitate a cadence release. Instead, software releases will be made on an as-needed basis as determined by the maintainers for that software project.
 
@@ -72,7 +72,7 @@ Unlike Cadence Release projects, maintainers may decide to release multiple **PA
 
 #### Maintenance Mode
 
-[![](https://img.shields.io/badge/Release%20Policy-Maintenance%20Mode-lightgrey.svg)](https://github.com/chef/chef-rfc/blob/master/rfc086-versioning-and-release-policy.md#maintenance-mode)
+[![](https://img.shields.io/badge/Release%20Policy-Maintenance%20Mode-lightgrey.svg)](https://github.com/chef/chef-rfc/blob/master/rfc086-chef-oss-project-policies.md#maintenance-mode)
 
 Chef OSS projects that are in Maintenance Mode are no longer being actively developed but releases are still made in the case a bug fix is required. The details in terms of versioning and release processes are the same as Ad-hoc Releases.
 
