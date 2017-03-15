@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Chef OSS Project Versioning and Release Policies</h1>
+
+<p>This RFC describes the versioning and release policies of Chef Open Source Software (OSS) projects that fall under the purview of the <a href="https://github.com/chef/chef/blob/master/MAINTAINERS.md">Chef Maintainers</a>.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">maintainer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">need</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">established</span><span class="w"> </span><span class="vg">versioning</span><span class="w"> </span><span class="vg">policy</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">software</span><span class="w"> </span><span class="vg">consistently</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">maintainer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">need</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">established</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">process</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">consistent</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">maintainer</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">exact</span><span class="w"> </span><span class="vg">build</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">tested</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">do</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">need</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">additional</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">build</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">know</span><span class="w"> </span><span class="vg">what</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">lifecycle</span><span class="w"> </span><span class="vg">policy</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">software</span><span class="w"> </span><span class="vg">is</span><span class="p">,</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">understand</span><span class="w"> </span><span class="vg">how</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">software</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">consume</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">managed</span><span class="o">.</span>
+
+<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
+<span class="vg">I</span><span class="w"> </span><span class="vg">need</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">OSS</span><span class="w"> </span><span class="vg">project</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">numbers</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">give</span><span class="w"> </span><span class="vg">me</span><span class="w"> </span><span class="vg">expectations</span><span class="w"> </span><span class="vg">about</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">extent</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">changes</span>
+<span class="vg">so</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">estimate</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">upgrade</span><span class="w"> </span><span class="vg">efforts</span><span class="o">.</span>
+</pre></div>
+<h2>Specification</h2>
+
+<h3>Project Types</h3>
+
+<p>This RFC categorizes Chef OSS projects into one of three categories:</p>
+
+<ul>
+<li><a href="#cadence-release">Cadence Release</a></li>
+<li><a href="#ad-hoc-release">Ad-hoc Release</a></li>
+<li><a href="#maintenance-mode">Maintenance Mode</a></li>
+</ul>
+
+<p>Each component that falls under the purview of the <a href="https://github.com/chef/chef/blob/master/MAINTAINERS.md">Chef Maintainers</a> falls into one these categories. Which category software falls under will be reflected by the appropriate badge on the top of its <code>README.md</code> with a link back to this RFC.</p>
+
+<h4>Cadence Release</h4>
+
+<p><a href="https://github.com/chef/chef-rfc/blob/master/rfcXXX-versioning-and-release-policy.md#cadence-release"><img src="https://img.shields.io/badge/OSS%20project%20Lifecycle-Cadence%20Release-brightgreen.svg" alt=""></a></p>
+
+<p>Chef OSS projects that fall under Cadence Release are under heavy development by the community and Chef Software and are released on a regular cadence. Cadence Releases help ensure that Chef Maintainers get new features and minor bug fixes out to users in a timeline fashion while not overloading the users with numerous releases and monotonically growing version numbers.</p>
+
+<p>Because of the high velocity of development, it is possible for many new features to be added during any given release cycle. To keep the version numbers of <a href="#stable-release">Stable Releases</a> meaningful, the <strong>MINOR</strong> version will increment by one for each Stable Release. This means that many new features may be added between two Stable Releases, but the <strong>MINOR</strong> version will only increment by one.</p>
+
+<p>Because so much can change from release to release, maintainers will select a <code>MAJOR.MINOR.PATCH</code> build as a <a href="#release-candidate">Release Candidate</a>. Maintainers will follow a slightly modified <a href="#release-communication">Release Communication</a> procedure to make an announcement to the &quot;chef-dev&quot; <a href="https://discourse.chef.io">Discourse</a> category, notifying users of the impending Stable Release. The maintainers will then wait a pre-determined amount of time to allow user to perform further testing. If no critical regressions or other release blockers are identified, the Stable Release will proceed as scheduled.</p>
+
+<p>The following projects adhere to Cadence Release:</p>
+
+<p>| Chef OSS project | MAJOR Release Cadence | MINOR Release Cadence | Release Candidate Delay |
+|---|---|---|---|
+| Chef Client | Yearly (April)<a href="#footnotes"><sup>1</sup></a> | Monthly (2nd Week) | 3 business days |
+| ChefDK | Yearly (April) | Monthly (4th Week)<a href="#footnotes"><sup>2</sup></a> | 3 business days |</p>
+
+<h4>Ad-hoc Release</h4>
+
+<p><a href="https://github.com/chef/chef-rfc/blob/master/rfcXXX-versioning-and-release-policy.md#ad-hoc-release"><img src="https://img.shields.io/badge/OSS%20project%20Lifecycle-Ad--hoc%20Release-green.svg" alt=""></a></p>
+
+<p>Chef OSS projects that fall under Ad-hoc Release are actively developed by the community and Chef Software but not at such a velocity as to necessitate a cadence release. Instead, software releases will be made on an as-needed basis as determined by the maintainers for that software project.</p>
+
+<p>Unlike Cadence Release projects, maintainers may decide to release multiple <strong>PATCH</strong> artifacts as Stable Releases (e.g. 1.2.3 and 1.2.5 may both be Stable Releases). Communication regarding these releases will still follow the standard Release Communication procedure.</p>
+
+<h4>Maintenance Mode</h4>
+
+<p><a href="https://github.com/chef/chef-rfc/blob/master/rfcXXX-versioning-and-release-policy.md#maintenance-mode"><img src="https://img.shields.io/badge/OSS%20project%20Lifecycle-Maintenance%20Mode-lightgrey.svg" alt=""></a></p>
+
+<p>Chef OSS projects that are in Maintenance Mode are no longer being actively developed but releases are still made in the case a bug fix is required. The details in terms of versioning and release processes are the same as Ad-hoc Releases.</p>
+
+<h3>Supporting Policies and Procedures</h3>
+
+<h4>Versioning Scheme</h4>
+
+<p>Chef OSS projects follow a <code>MAJOR.MINOR.PATCH</code> versioning scheme based on <a href="https://semver.org">Semantic Versioning</a>. How those segments are incremented is based on the Project Type, but all Chef OSS projects adhere to the following criteria:</p>
+
+<p>Given a version number <code>MAJOR.MINOR.PATCH</code>:</p>
+
+<ul>
+<li><strong>MAJOR</strong> version releases (e.g. 1.x -&gt; 2.x) will include breaking or backwards-incompatible changes.
+
+<ul>
+<li><em>Example: When changing the load order of any cookbook segments</em></li>
+</ul></li>
+<li><strong>MINOR</strong> version releases (e.g. 1.1 -&gt; 1.2) will include new features, bug fixes, and will be backwards-compatible to the best of the Maintainers&#39; abilities.
+
+<ul>
+<li><em>Example: When adding support to the mount provider for special filesystem types that were previously unsupported.</em></li>
+<li><em>Example: Major version bump of a software dependency.</em></li>
+</ul></li>
+<li><strong>PATCH</strong> version releases (e.g. 1.1.1 -&gt; 1.1.2) will include backwards-compatible bug fixes.
+
+<ul>
+<li><em>Example: Automatically bumped for Chef OSS project that is built automatically.</em></li>
+<li><em>Example: Minor version bump of a software dependency.</em></li>
+</ul></li>
+</ul>
+
+<p>When incrementing a Chef OSS project version, the following conditions will apply:</p>
+
+<ul>
+<li>When <strong>MAJOR</strong> increases, <strong>MINOR</strong> and <strong>PATCH</strong> will be reset to zero (e.g. 11.X.X -&gt; 12.0.0)
+
+<ul>
+<li><em>Note: New features that did not exist in version 1.1.0 may be released in 2.0.0 without any intermediary releases.</em></li>
+</ul></li>
+<li>When <strong>MINOR</strong> increases, <strong>PATCH</strong> will be reset to zero (e.g. 11.3.x -&gt; 11.4.0)</li>
+</ul>
+
+<p>Versions are always, with a few exceptions, displayed to the user in the <code>MAJOR.MINOR.PATCH</code> format.</p>
+<div class="highlight"><pre><span class="nv">$ </span>chef --version
+Chef Development Kit Version: 1.2.20
+chef-client version: 12.18.31
+delivery version: master <span class="o">(</span>0b746cafed65a9ea1a79de3cc546e7922de9187c<span class="o">)</span>
+berks version: 5.5.0
+kitchen version: 1.15.0
+</pre></div>
+<p>When contextually appropriate, a version may be referred to by only the <strong>MAJOR</strong> or <strong>MAJOR.MINOR</strong> versions. For example:</p>
+
+<ul>
+<li>a breaking change: &quot;This behavior will change in Chef 13&quot; would refer to the first release in the <code>13.MINOR.PATCH</code> series.</li>
+<li>a future feature release:: &quot;We expect to release ChefDK 1.3 this month&quot; would refer to the <code>1.3.PATCH</code> build that was selected as the Stable Release.</li>
+</ul>
+
+<h5>Auto-bumping PATCH versions</h5>
+
+<p>For Chef OSS projects built using a Continuous Integration / Continuous Delivery (CI/CD) systems, the <strong>PATCH</strong> version of a software product may be increased automatically upon every PR merge by an OpsBot. As not all builds will make it successfully through the CI/CD pipeline, the versions available for public consumption might have gaps (e.g. 1.2.1, 1.2.10, 1.2.11, 1.2.12, 1.2.20).</p>
+
+<h5>Semantic Versioning Exceptions</h5>
+
+<p>In the case where a Chef OSS project that would otherwise fall under the scope of the document does not follow Semantic Versioning, the exceptions will be noted below with a description of the versioning scheme they follow.</p>
+
+<p>| Software | Reasoning |
+|---|---|
+| <a href="https://github.com/chef/delivery-cli">delivery CLI</a> | The delivery CLI is a Rust utility bundled with the ChefDK. When it is built, it is always built off of master. It&#39;s versioning scheme is based on the Git SHA that was compiled. |</p>
+
+<h4>Artifact Build</h4>
+
+<p>Chef OSS project artifacts available on <a href="https://downloads.chef.io">https://downloads.chef.io</a> are built using Chef Software&#39;s internal CI/CD build system. Depending on the software project, additional artifacts such as Ruby Gems or Docker Images may also be compiled by ancillary build systems and published to their appropriate locations. Instructions for how to install those additional artifacts will be made available on the projects README.</p>
+
+<p>The commit used to generate an artifact will be tagged with the corresponding <code>MAJOR.MINOR.PATCH</code> version. The specific formatting of the tag can vary as long as the three version segments are present (e.g. &quot;v1.2.3&quot;, &quot;1<em>2</em>3&quot;, or &quot;1.2.3&quot;). This will allow users, developers, and support personnel to easily navigate the source code associated with a particular build or release.</p>
+
+<p>Some Chef OSS project artifacts (e.g. ancillary gems) are built and published manually by their maintainers.</p>
+
+<p>Some Chef OSS projects will be built following a Continuous Integration / Continuos Delivery (CI/CD) model. This means that every merge to master may result in a build and every successful build that passes functional testing is a candidate for a Stable Release and published for consumption by users. This is especially common for projects that are under Cadence Releases.</p>
+
+<p>Some Chef OSS projects will have very large sets of dependencies that are allowed to float (e.g. ~&gt; version constraint). Doing so allows other projects to consume them without having to match dependencies in lock-step, helping to prevent ecosystem failure when project upgrades before another. Because these dependencies are resolved at build-time, two builds of the same Chef OSS project commit may result in slightly different packages. It is for this reason that we encourage users, when pOSS projectible, to consume pre-compiled binaries through official channels (where this effect is minimized) rather than compiling them themselves.</p>
+
+<h4>Build Channels</h4>
+
+<p>Chef Software maintains three artifact channels: unstable, current, and stable.</p>
+
+<ul>
+<li>unstable: Builds that have completed successfully and are awaiting additional automated testing.</li>
+<li>current: Builds that have passed all automated testing but have not been promoted to stable.</li>
+<li>stable: Builds that have been manually promoted from current and are considered &quot;ready for production&quot;.</li>
+</ul>
+
+<h4>Release Candidate</h4>
+
+<p>A &quot;Release Candidate&quot; is an artifact of a Chef OSS project that is available for download (e.g. available in the <em>current</em> channel) that has been identified as a candidate for a Stable Release.</p>
+
+<h4>Stable Release</h4>
+
+<p>The term &quot;Stable Release&quot; is used to identify a build of a Chef OSS project product that is:</p>
+
+<ul>
+<li>consumable on its own (e.g. not shipped only as a part of another software artifact)</li>
+<li>recommended for use in production environments</li>
+</ul>
+
+<p>The term originated from Chef Software&#39;s process of promoting a build from the <em>current</em> channel to the <em>stable</em> channel. However, as not all Chef OSS projects are built and hosted by Chef Software, the announcement of a Stable Release may also refer to the selection of a version as the &quot;recommended&quot; version for use in production settings.</p>
+
+<p>The current Stable Release for a given software product will be reflected at the top README of the Github Repository using a badge (e.g. <a href="https://badge.fury.io/rb/chef"><img src="https://badge.fury.io/rb/chef.svg" alt="Gem Version"></a>)</p>
+
+<h4>Hot Fix Releases</h4>
+
+<p>Chef OSS project maintainers will provide support for critical regressions and <a href="https://cve.mitre.org/">Common Vulnerabilities and Exposures</a> (CVEs) for the latest <code>MAJOR.MINOR</code> and <code>MAJOR-1.MINOR</code> Stable Releases.</p>
+
+<p>In the case a Hot Fix Release is required, a release will be fixed following the versioning cadence for a new Stable Release as outlined by the appropriate Lifecycle Policy. Should a fix for the regression be unidentified after an initial investigation period of roughly five hours, the affected versions will be revoked and be made unavailable for download.</p>
+
+<p>In a scenario where a Hot Fix Release is required, the maintainers will decide whether a new <strong>MAJOR</strong>, <strong>MINOR</strong>, or <strong>PATCH</strong> release is necessary based on the scope of the change and the timing of the Hot Fix Release in a Cadence Release cycle. This means that some Hot Fix Releases will result in a second Stable Release for a given <strong>MAJOR.MINOR</strong> version while others may result in a new <strong>MAJOR.MINOR</strong> release.</p>
+
+<p>In all cases, the Chef Maintainers will follow the Release Communication procedures to notify users of the impact and remediation instructions.</p>
+
+<h4>OpsBot</h4>
+
+<p>Chef OSS projects will frequently use bots to perform routine tasks such as DCO compliance checks and automatic version bumping. The specific usage may differ per project, but any commits made to the software project by the OpsBot will be clearly identifiable in the commit history.</p>
+
+<h4>Release Communication</h4>
+
+<p>Notifications regarding Chef OSS projects will follow (roughly) the same notification policy:</p>
+
+<ul>
+<li>A message will be posted to either the &quot;chef&quot;, &quot;chef-dev&quot;, or &quot;Release Announcement&quot; categories on <a href="https://discourse.chef.io">Discourse</a> as outlined in the Lifecycle Policies below.</li>
+<li>The Discourse post will be shared in the <a href="https://chefcommunity.slack.com/messages/announcements">#annoucements</a> channel on the <a href="https://communityslack.chef.io">Community Slack</a></li>
+</ul>
+
+<p>A message about the promotion of a Stable Release for a Chef OSS project artifact will include (at a minimum) the following information:</p>
+
+<ul>
+<li>The version of the artifact being released</li>
+<li>Release notes that highlight enhancements, bug fixes, or other changes included in the release</li>
+<li>In the case of a critical regression or security vulnerability, details about the vulnerability including:
+
+<ul>
+<li>How to identify if you are affected</li>
+<li>Immediate remediation steps (if available)</li>
+<li>Details about the status of a new release to address the issue long term</li>
+</ul></li>
+</ul>
+
+<h3>Footnotes</h3>
+
+<ol>
+<li>Major releases in April avoids releasing during winter holidays, summer vacations, ChefConf and Chef Summits.</li>
+<li>Offsetting the Chef and ChefDK releases allows the full attention of the Chef Software development teams on each of those releases and leaves time for any potential hot fixes or follow-up.</li>
+</ol>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
