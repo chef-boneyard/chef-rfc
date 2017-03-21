@@ -32,22 +32,36 @@ November 10, 2014.  At the time of the writing of this draft, the repository has
 maintainer was by [jamesonjlee](https://github.com/edelight/chef-mongodb/pull/356)
 on December 9, 2014.
 
-The Sous Chefs have been maintaining for [fork](https://github.com/sous-chefs/mongodb)
+The Sous Chefs have been maintaining a [fork](https://github.com/sous-chefs/mongodb)
 of the mongodb cookbook.  The fork's master branch is currently 90 commits ahead
 of the source repository for the cookbook. The Sous Chefs have been active on the issues
 on the origional repository and have worked to fix them in the maintained fork.
 
 Grant Ridder, on behalf of the Sous Chefs, has attempted on several ocasaions during
-November and December of 2016 to contact Markus Korn, the current ownwer on Supermarket,
+November and December of 2016 to contact Markus Korn, the current owner on Supermarket,
 as well as Jameson Lee, a contributor on Supermarket and last committer on GitHub.
 Both individuals were each contacted with 2 different methods without reponse.  At the
 time of the writing of this draft, the last evidence of activity for either user, in the
 context of the mongodb cookbook, is more than 2 years ago.
 
-The Sous Chefs would therefor request that the MongoDB cookbook be transfered to the
-[Sous Chefs](https://supermarket.chef.io/users/sous-chefs) on Supermarket under
-provisions layed out in the `When a Cookbook is NOT Up For Adoption` section of
-[RFC069](https://github.com/chef/chef-rfc/blob/master/rfc069-cookbook-adoption.md).
+The Sous Chefs would therefor request that the MongoDB cookbook on Supermarket be
+marked deprecated in favor of [sc-mongodb](https://github.com/sous-chefs/mongodb)
+on Supermarket under provisions layed out in the `When a Cookbook is NOT Up For Adoption`
+section of [RFC069](https://github.com/chef/chef-rfc/blob/master/rfc069-cookbook-adoption.md).
+
+### Deprecation Process for this RFC
+
+1. [@nathenharvey](https://github.com/nathenharvey) will reach out to
+   [@thekorn](https://github.com/thekorn) weekly asking for a decision on
+   the ownership of the cookbook.
+1. The Sous Chefs will publish their MongoDB cookbook to the Supermarket.
+1. On, or after, March 15, 2017 (3 months after this RFC was submitted),
+   a Supermarket Administrator will mark the current MongoDB cookbook
+   as deprecated and offer the Sous Chefs' cookbook as a suitable replacement.
+1. A message will be posted to the mailing list notifying of this change and our reasoning behind it.
+
+Note: As the current owner of the cookbook, [@thekorn](https://github.com/thekorn) can
+accelerate or stop this timeline at any time.
 
 ## Downstream Impact
 
