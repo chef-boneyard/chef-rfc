@@ -2,7 +2,7 @@
 RFC: 75
 Title: Multiple Policyfiles and Teams
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Accepted
+Status: On Hold
 Type: Standards Track
 ---
 
