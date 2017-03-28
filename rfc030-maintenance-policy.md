@@ -153,9 +153,9 @@ OR
 
 The broader Chef community gathers in a small number of designated places. Participants in these places should be considered as operating on their own opinion, and representing nothing further than their own point of view. While some members of the community may be participating via their employment at Chef Software, when in these spaces, their authority and voice is equal to any other participant based on the guidelines in this file.
 
-## IRC
+## Slack
 
-You can find a large set of community members in IRC, within the #chef channel on irc.freenode.net. Development updates and conversations also happen on #chef-hacking. In both channels, those with “ops” are the Maintainers, Lieutenants, the Project Lead, and Community Advocates. Those with “voice” are MVPs for Chef releases.
+You can find a large group of community members on the [Chef Community Slack](http://community-slack.chef.io/). Most discussion happens in the #general channel, with our weekly developer meetings occurring in the #developer-meetings channel. Many Chef contributors and maintainers are on Slack, across a number of time zones.
 
 ## Mailing Lists
 
