@@ -1,11 +1,10 @@
 ---
-RFC: unassigned
+RFC: 86
 Title: Chef Sugar Platform Matchers in Core Chef
 Author: Lamont Granquist <lamont@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
-Tracking:
-  - https://github.com/chef/chef/pulls/< FIXME: TBD VERY SOON >
+Tracking: TBD
 ---
 
 # Title
