@@ -22,7 +22,8 @@ converge the recipe.
 ## Rationale
 
 The motivation for this feature is to allow the operator of the Chef Server to
-enforce desired client-side configuration using Chef. Intended use cases include:
+enforce limited desired client-side configuration using Chef. Intended use
+cases include:
 
 * Allow cloud-based vendors to install an agent necessary for correct operation
   of the service
@@ -31,8 +32,17 @@ enforce desired client-side configuration using Chef. Intended use cases include
 * Allow organizations that operate as internal service providers to enforce
   standard configurations
 
-Currently the only way to achieve these goals with Chef is to enforce the
-inclusion of recipes on a node's run list, which is not feasible in many cases.
+This feature is targeted at expert level practitioners who are delivering
+isolated configuration changes to the target systems, such as self-contained
+agent software. Users who wish to deliver more comprehensive configuration
+changes should not use this mechanism to deliver those changes directly, but
+could configure an additional Chef Client identity (i.e., node name, client
+key, organization/server url) to deliver those changes via this feature.
+
+As this feature is intended to be used in a manner that is as unobtrusive as
+possible, and in cases where the Chef Server is administrated by a vendor on
+behalf of the user, existing approaches to enforcing client-side configuration
+are not sufficient.
 
 The enforced policy is limited to a single recipe instead of a full cookbook or
 secondary run list for several reasons:
@@ -43,6 +53,14 @@ secondary run list for several reasons:
 * Cookbooks have versions and dependencies, which have to be solved. There are
   several ways this could be addressed, but all options introduce unneeded
   complexity into the solution.
+* Attributes are not usable for the intended use case, since the author(s) of
+  the enforced recipe code may have no control over the node data, roles, JSON
+  files, or policyfiles used by the nodes being managed.
+* Other cookbook features, such as libraries and the various flavors of
+  resources and providers set ruby constants which could interfere with the
+  correct operation of the end user's cookbooks.
+* Templates and cookbook files would be useful, but expert practitioners will
+  be able to be effective without them.
 
 ## Motivation
 
@@ -91,6 +109,12 @@ One possible implementation is to add the recipe to the list of
 `specific_recipes` which is currently populated only via CLI arguments to
 `chef-client --local-mode`. In this case, enforced recipes would be evaluated
 and converged after the primary run list.
+
+### Documentation
+
+Documentation shall include the caveat that this feature is intended for expert
+users to address a narrow range of use cases and suggest alternatives for use
+cases that are not addressed by this feature.
 
 ## Downstream Impact
 
