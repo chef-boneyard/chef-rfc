@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 88
 Title: Transfer mongodb cookbook on Supermarket to Sous Chefs org
 Author: Grant Ridder <shortdudey123@gmail.com>
-Status: Draft
+Status: Accepted
 Type: Informational
 ---
 
