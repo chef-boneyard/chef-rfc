@@ -2,7 +2,7 @@
 RFC: 38
 Title: Token Authentication for Chef Server
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Accepted
+Status: On Hold
 Type: Standards Track
 ---
 

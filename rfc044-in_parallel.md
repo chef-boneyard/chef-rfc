@@ -2,7 +2,7 @@
 RFC: 44
 Title: Parallelization in Chef Recipes
 Author: John Keiser <jkeiser@chef.io>
-Status: Accepted
+Status: On Hold
 Type: Standards Track
 ---
 

@@ -2,7 +2,7 @@
 RFC: 013
 Author: Seth Vargo <sethvargo@gmail.com>
 Title: On Failure
-Status: Accepted
+Status: On Hold
 Type: Standards Track
 ---
 

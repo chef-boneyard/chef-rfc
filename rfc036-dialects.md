@@ -2,7 +2,7 @@
 RFC: 36
 Title: Dialects in Chef
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Accepted
+Status: On Hold
 Type: Standards Track
 ---
 
