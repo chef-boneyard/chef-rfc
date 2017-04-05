@@ -109,16 +109,16 @@ the original one should be marked as Replaced.
 ```
   +-------+        +----------+       +-------+
   |       |        |          |       |       |
-  | Draft +----+---> Accepted +---+---> Final |
-  |       |    |   |          |   |   |       |
-  +---+---+    |   +----------+   |   +---+---+
-      |        |                  |       |
-      |        |                  +-------+
-      |        |                          |
-      |        |                          |
-+-----v-----+  |   +----------+    +------v---+
-|           |  |   |          |    |          |
-| Withdrawn |  +---> Rejected |    | Replaced |
+  | Draft +--------> Accepted +---+---> Final |
+  |       |        |          |   |   |       |
+  +---+---+        +----+-----+   |   +---+---+
+      |                 |         |       |
+      |                 |         +-------+
+      |                 |                 |
+      |                 |                 |
++-----v-----+      +----v-----+    +------v---+
+|           |      |          |    |          |
+| Withdrawn |      | On Hold  |    | Replaced |
 |           |      |          |    |          |
 +-----------+      +----------+    +----------+
 ```
@@ -127,7 +127,7 @@ the original one should be marked as Replaced.
 
 * **Draft** – The RFC is under discussion by the community.
 * **Accepted** – The RFC is approved for implementation.
-* **Rejected** – The RFC is not approved.
+* **On Hold** – The RFC is approved but not currently under development.
 * **Withdrawn** – The RFC has been voluntarily withdrawn from consideration.
 * **Final** – The RFC has been implemented. *(Standards Track type only)*
 * **Replaced** – The RFC has been superseded by another RFC.
