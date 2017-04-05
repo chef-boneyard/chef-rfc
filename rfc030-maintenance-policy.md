@@ -171,4 +171,4 @@ If you would like to speak to, or understand the position of, someone at Chef So
 
 # The MAINTAINERS file in Chef
 
-The current [MAINTAINERS](https://github.com/chef/chef/blob/master/MAINTAINERS.md) file resides in the [Chef](https://github.com/chef/chef) repository on GitHub.
+The current [MAINTAINERS](https://github.com/chef/chef/blob/master/MAINTAINERS.toml) file resides in the [Chef](https://github.com/chef/chef) repository on GitHub.
