@@ -2,7 +2,7 @@
 RFC: 017
 Title: File Specificity Overhaul
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Accepted
+Status: Final
 Type: Standards Track
 Chef-Version: 12
 ---
