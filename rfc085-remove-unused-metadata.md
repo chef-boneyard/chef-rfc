@@ -2,7 +2,7 @@
 RFC: 85
 Title: Remove unused cookbook metadata
 Author: Thom May <thom@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 

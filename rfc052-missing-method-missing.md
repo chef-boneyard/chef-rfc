@@ -2,7 +2,7 @@
 RFC: 52
 Title: Remove magic from Chef::Resource lookup
 Author: John Keiser <john@johnkeiser.com>
-Status: Accepted
+Status: Final
 Type: Standards Track
 Tracking:
   - https://github.com/chef/chef/pull/3270

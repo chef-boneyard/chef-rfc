@@ -2,7 +2,7 @@
 RFC: 62
 Title: Chef-Client Exit Codes
 Author: Nicholas Carpenter <ncarpenter@ebsco.com>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 

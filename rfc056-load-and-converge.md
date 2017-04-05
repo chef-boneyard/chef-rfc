@@ -2,7 +2,7 @@
 RFC: 56
 Title: Easy Resource Load And Converge
 Author: John Keiser <john@johnkeiser.com>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 

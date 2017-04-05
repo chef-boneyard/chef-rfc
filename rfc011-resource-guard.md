@@ -2,7 +2,7 @@
 RFC: 011
 Author: Adam Edwards <adamed@chef.io>
 Title: Resource-based Guard Interpreters for Chef
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 

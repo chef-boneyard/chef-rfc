@@ -2,7 +2,7 @@
 RFC: 39
 Title: Recipe DSL method for event handler hooks
 Author: Ranjib Dey (ranjib@linux.com)
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 
