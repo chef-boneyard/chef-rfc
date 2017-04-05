@@ -74,13 +74,30 @@ The CBGB will have up to 12 members.
 
 Composition of CBGB:
 
-* (1) Project Lead:  Adam Jacob
+* (1) Project Lead:  
+
+Adam Jacob
 
 * (4) Users/Contributors
 
+Ranjib Dey
+Doug Ireton
+Noah Kantrowitz
+Charity Majors
+
 * (4) Corporate Contributors:
 
+Etsy - Katherine Daniels 
+Facebook - Phil Dibowitz 
+Nordstrom - Mark Ayers
+PagerDuty - Evan Gilman 
+
 * (3) Lieutenants:
+
+Jon Cowie
+Joshua Timberman
+Seth Vargo
+
 
 #### Membership Term
 
