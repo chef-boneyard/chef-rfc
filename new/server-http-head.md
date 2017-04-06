@@ -1,6 +1,6 @@
 ---
 RFC: unassigned
-Title: API HTTP HEAD support
+Title: Server HTTP HEAD
 Author: Jeremy Miller <jmiller@chef.io>
 Status: Draft
 Type: <Standards Track, Informational, Process>
@@ -9,7 +9,7 @@ Type: <Standards Track, Informational, Process>
 <  - https://github.com/chef/chef/issues/X>
 ---
 
-# API HTTP HEAD support
+# Server HTTP HEAD
 There is a greater resource cost than is necessary when querying the Server API named object endpoints for the existence of a single object.
 Currently, if checking for an object's existence, only HTTP `GET` requests are supported by the server. This means the entire object is fetched, consuming
 resources across the server, network and client. When viewed from a large scale perspective, this overhead can cause slow downs that can have
