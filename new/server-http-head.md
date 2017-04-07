@@ -29,8 +29,14 @@ The meta-information contained in the HTTP headers in response to a HEAD request
 information sent in response to a GET request.
 
 The HEAD HTTP verb will be added to oc_erchef and chef-zero named object endpoints such that a client http HEAD request for
-an object name will result in a http 200 response code if it exists, 404 if it does not and 401 if the requestor does not
-have read authorization on the object.
+an object name will result in the following standard http response codes (no different than a `GET`):
+
+Code | Reason
+--- | ---
+200 | object exists
+401 | request signature is invalid
+403 | requestor does not have READ on the object
+404 | object does not exist
 
 example named endpoint: /nodes/NAME
 
