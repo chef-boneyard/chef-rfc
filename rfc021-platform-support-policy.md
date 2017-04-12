@@ -33,7 +33,7 @@ If not specified, chef works with all versions of a given
 platform that the manufacturer supports.
 
 Platform | Versions | Architectures | Package Format
- ---- | --- | --- | --- | ---		
+ ---- | --- | --- | --- 	
 AIX | 6.1, 7.1, 7.2 | ppc64 | bff
 CentOS | 5, 6, 7 | i386, x86_64 | rpm
 Cisco IOS XR | 6 | x86_64 | rpm
@@ -48,11 +48,11 @@ Windows | 7, 8, 8.1, 2008, 2008R2, 2012, 2012R2 | x86, x86_64 | msi
 Ubuntu Linux | | x86, x86_64 | deb
 SUSE Linux Enterprise Server  | 11, 12 | x86_64
 Scientific Linux | 5.x, 6.x and 7.x | i386, x86_64		
-Fedora  | | x86_64
-OpenSUSE | 13.1/13.2/42.1 | x86_64
-OmniOS | | x86_64
-Gentoo Linux | | x86_64
-Arch Linux | | x86_64
+Fedora  | | x86_64 | 
+OpenSUSE | 13.1/13.2/42.1 | x86_64 | 
+OmniOS | | x86_64 | 
+Gentoo Linux | | x86_64 |
+Arch Linux | | x86_64 |
 
 ## Copyright
 
