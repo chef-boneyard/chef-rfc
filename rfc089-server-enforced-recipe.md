@@ -1,11 +1,9 @@
 ---
-RFC: unassigned
+RFC: 89
 Title: Server Enforced Recipe
 Author: Daniel DeLeo <dan@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
-<Tracking:>
-<  - https://github.com/chef/chef/issues/X>
 ---
 
 # Server Enforced Recipe
