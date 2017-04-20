@@ -2,7 +2,7 @@
 RFC: 43
 Title: Automatically manage Pull Requests
 Author: Thom May <tmay@chef.io>
-Status: Accepted
+Status: On Hold
 Type: Process
 ---
 

@@ -2,7 +2,7 @@
 RFC: 73
 Title: Enabling meetbot for Chef IRC Community meetings.
 Author: JJ Asghar <jj@chef.io>
-Status: Accepted
+Status: On Hold
 Type: Process
 ---
 

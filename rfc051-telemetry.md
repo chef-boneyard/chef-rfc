@@ -2,7 +2,7 @@
 RFC: 51
 Title: Chef Telemetry
 Author: Ranjib Dey <ranjib@linux.com>
-Status: Accepted
+Status: On Hold
 Type: Standards Track
 ---
 
