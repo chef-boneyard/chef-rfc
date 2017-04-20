@@ -2,7 +2,7 @@
 RFC: 24
 Title: Local Mode Default
 Author: John Keiser <jkeiser@getchef.com>
-Status: Accepted
+Status: Withdrawn
 Type: Standards Track
 Chef-Version: 12
 ---
