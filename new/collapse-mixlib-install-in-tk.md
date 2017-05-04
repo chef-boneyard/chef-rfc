@@ -1,12 +1,17 @@
 ---
 RFC: unassigned
-Title: Collapse Mixlib Install Code Paths in Test Kitchen
+Title: Deprecate Select Test Kitchen Provisioner Settings
 Author: Patrick Wright <patrick@chef.io>
 Status: Draft
 Type: Standards Track
 ---
 
-# Collapse Mixlib Install Code Paths in Test Kitchen
+# Deprecate Select Test Kitchen Provisioner Settings
+This RFC is aimed to improve the user experience for managing configuration files. Several settings are being recommended for deprecation and are to be replaced with new settings. This work coincides with the collapsing of the Mixlib Install code paths. This work is being completed in 3 phases described in below. See tables below for a list of settings to be deprecated and the new settings.
+
+__Once the final phase is complete the changes in Test Kitchen will not be backwards compatible.__
+
+## Collapse Mixlib Install Code Paths in Test Kitchen
 Test Kitchen currently supports two code paths for configuring, downloading and installing Chef and ChefDK on test instances. Both code paths use Mixlib Install but are implemented differently. In the past year, significant effort has been put into Mixlib Install's new API to establish a canonical mechanism for interacting with Chef Software Inc's release infrastructure and generating bootstrap installation scripts (install.sh and install.ps1).
 
 Mixlib Install's new API is currently used for downloads.chef.io and omnitruck.chef.io. It's also used for the chef-ingredient cookbook. Chef transparently implemented the new API and selected config options in Kitchen for testing purposes. It has proven valuable and easy to use. The feature set is limited at this time.
@@ -159,6 +164,17 @@ Distinct option names and code paths will be maintained separately for the curre
 
 As new options are added a markdown file in the Kitchen repo will be maintained with descriptions along with deprecation information.
 
+### Deprecate Settings
+| Setting Name | Reason |
+|--------------|--------|
+| chef_metadata_url | No longer used as this setting is hard coded |
+| chef_omnibus_install_options | Being replaced by product_name, product_version and channel settings |
+| chef_omnibus_root | No longer needed. This will be managed automatically |
+| chef_omnibus_url | No longer used as this setting is hard coded |
+| install_msi_url | Being replaced by download_url_override setting which will also support install.sh |
+| require_chef_omnibus | Being replaced by product_version and install_strategy settings |
+| ruby_bindir | No longer needed. This will be managed automatically |
+
 ### New Settings
 | New Setting Name | Description | Default | Current Setting Name |
 |------------------|-------------|---------|----------------------|
@@ -169,7 +185,7 @@ As new options are added a markdown file in the Kitchen repo will be maintained 
 | platform_version | override platform version| auto-detected | |
 | architecture | override platform architecture | auto-detected | |
 | install_strategy | install once, always or skip | once |require_chef_omnibus |
-| download_url_override | direct package url | | install_msi_url (not currently supported in bourne script) |
+| download_url_override | direct package url | | install_msi_url |
 
 ### Phase 2 Details
 The config option deprecations will be enabled. Users will start receiving deprecation warnings and begin resolving issues. At this phase we expect to be feature complete, however, there will likely be use cases or configuration combinations that are missed. Any detected deprecation warnings will also instruct the user to create issues if the resolutions don't work or don't meet their requirements. This phase is primarily focused on communication and quick turnarounds on issues. We can determine the best method for informing users at this time. (Chef blog, Community Slack, etc.)
