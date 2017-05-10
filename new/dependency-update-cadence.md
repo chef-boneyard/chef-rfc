@@ -1,7 +1,9 @@
 ---
 RFC: unassigned
 Title: Dependency Update Cadence
-Author: Jennifer Davis <sigje@chef.io>
+Author: 
+ - Lamont Granquist <lamont@chef.io> 
+ - Jennifer Davis <sigje@chef.io>
 Status: Draft
 Type: Process
 ---
@@ -28,7 +30,7 @@ This RFC describes the Ruby, Cookbook and Ecosystem support cadence as an addend
 
 ### Cookbook and Ecosystem Tooling Support
 
-Chef-managed community cookbooks should support at least the latest 6 months of [Chef Client](https://github.com/chef/chef/blob/master/CHANGELOG.md) versions. After 6 months, Chef-managed community cookbooks may
+Chef-managed community cookbooks should support at least the last 6 months of [Chef Client](https://github.com/chef/chef/blob/master/CHANGELOG.md) versions. After 6 months, Chef-managed community cookbooks may
 elect to drop support for older Chef Client versions. This window does not reset on
 a major version release so that the prior major version track is supported for a 6 month window. Non-Chef-managed community cookbooks are encouraged to follow this policy.
 
@@ -63,7 +65,7 @@ Ruby version.
 
 Each cookbook will define supported platforms along with version constraints through the use of the `supports` keyword in the metadata and README files within the cookbook. 
 
-Chef-managed community cookbooks may elect to drop support for platform versions that are no longer supported by the platform maintainers. 
+Chef-managed community cookbooks should drop support for platform versions that are no longer supported by the platform maintainers. 
 
 ## Copyright
 
