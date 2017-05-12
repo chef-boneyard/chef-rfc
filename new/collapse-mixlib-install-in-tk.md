@@ -158,7 +158,7 @@ Adding `install_strategy` to the install scripts moves all responsibility for de
 
 ----
 
-The experimental [branch](https://github.com/test-kitchen/test-kitchen/compare/master...wrightp:pw/config-deprecations) illustrates how other existing provisioning options could be deprecated. See examples for `chef_omnibus_install_options`, `chef_omnibus_url`, `chef_metadata_url`, `chef_omnibus_root`, and `ruby_bindir`.
+The experimental [branch](https://github.com/test-kitchen/test-kitchen/compare/master...wrightp:pw/config-deprecations) illustrates how other existing provisioning options could be deprecated. See examples for `chef_omnibus_install_options`, `chef_omnibus_url`, `chef_metadata_url`.
 
 Distinct option names and code paths will be maintained separately for the current functionality and the new. We will discuss any exceptions as they arise. `product_name` will act as the pivot point between which code path to follow (`ScriptGenerator` or the new API).
 
@@ -169,11 +169,9 @@ As new options are added a markdown file in the Kitchen repo will be maintained 
 |--------------|--------|
 | chef_metadata_url | No longer used as this setting is hard coded |
 | chef_omnibus_install_options | Being replaced by product_name, product_version and channel settings |
-| chef_omnibus_root | No longer needed. This will be managed automatically |
 | chef_omnibus_url | No longer used as this setting is hard coded |
 | install_msi_url | Being replaced by download_url_override setting which will also support install.sh |
 | require_chef_omnibus | Being replaced by product_version and install_strategy settings |
-| ruby_bindir | No longer needed. This will be managed automatically |
 
 ### New Settings
 | New Setting Name | Description | Default | Current Setting Name |
