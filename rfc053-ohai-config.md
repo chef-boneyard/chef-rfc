@@ -91,24 +91,29 @@ Note that the filename on disk does not always match the plugin name. In the cas
 
 ### Configuration Hash Nesting
 
-Rather than auto-vivify nested hashes, each plugin's configuration is limited to a single level.
+Plugin configuration hashes are auto-vivified. Auto-vivification can be
+implemented safely, without `method_missing`:
 
-`ohai[:plugin][:dmi][:all_ids] = true` is allowed
-`ohai[:plugin][:dmi][:ids][:cpu] = true` is not allowed
-
-Plugin authors are recommended to use underscores in variable names to manage multiple levels of configuration values. For example:
-
+```ruby
+Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
 ```
-ohai[:plugin][:dmi][:id_cpu] = true
-ohai[:plugin][:dmi][:id_memory] = true
-ohai[:plugin][:dmi][:id_disk] = false
+[Source](http://stackoverflow.com/questions/5878529/how-to-assign-hashab-c-if-hasha-doesnt-exist#comment6760520_5878626)
+
+Sub-keys of `Ohai.config[:plugin]` and `ohai.plugin` must be of type `Symbol`.
+Values can be of any type. If the value is a `Hash`, it will be forced to
+conform to the keys-are-Symbols rule. The following are disallowed:
+
+```ruby
+ohai.plugin[:plugin_name] = { "option" => true }
 ```
 
-Configuration values may be hashes, but a hash must be explicitly set.
-
+```ruby
+ohai.plugin[:plugin_name] = { :option => { "sub_option" => true } }
 ```
-ohai[:plugin][:dmi][:id] = { :cpu => true, :memory => true, :disk => false }
-Ohai.config[:plugin][:dmi][:id][:disk] => false
+
+```ruby
+ohai.plugin[:plugin_name][:option] = {}
+ohai.plugin[:plugin_name][:option]["sub_option"] = true
 ```
 
 ### Plugin configuration lookup DSL method
