@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Server Enforced Recipe</h1>
+
+<h2>Description</h2>
+
+<p>Chef Server will provide an endpoint that MAY serve a Chef recipe file. Chef
+Client will attempt to fetch the recipe during run context setup. If
+no user action is taken to configure the feature, the endpoint returns 404
+and Client behavior will be unaffected. When the feature is enabled, the
+endpoint returns the configured recipe file. Chef Client will evaluate and
+converge the recipe.</p>
+
+<h2>Rationale</h2>
+
+<p>The motivation for this feature is to allow the operator of the Chef Server to
+enforce limited desired client-side configuration using Chef. Intended use
+cases include:</p>
+
+<ul>
+<li>Allow cloud-based vendors to install an agent necessary for correct operation
+of the service</li>
+<li>Allow Chef Customer Development Partners to efficiently install experimental
+client-side software during feature development</li>
+<li>Allow organizations that operate as internal service providers to enforce
+standard configurations</li>
+</ul>
+
+<p>This feature is targeted at expert level practitioners who are delivering
+isolated configuration changes to the target systems, such as self-contained
+agent software. Users who wish to deliver more comprehensive configuration
+changes should not use this mechanism to deliver those changes directly, but
+could configure an additional Chef Client identity (i.e., node name, client
+key, organization/server url) to deliver those changes via this feature.</p>
+
+<p>As this feature is intended to be used in a manner that is as unobtrusive as
+possible, and in cases where the Chef Server is administrated by a vendor on
+behalf of the user, existing approaches to enforcing client-side configuration
+are not sufficient.</p>
+
+<p>The enforced policy is limited to a single recipe instead of a full cookbook or
+secondary run list for several reasons:</p>
+
+<ul>
+<li>Cookbooks are Chef Server objects that are organization-scoped and subject to
+authorization restrictions. Allowing some cookbooks to be global requires
+additional complexity which is not needed for the intended uses.</li>
+<li>Cookbooks have versions and dependencies, which have to be solved. There are
+several ways this could be addressed, but all options introduce unneeded
+complexity into the solution.</li>
+<li>Attributes are not usable for the intended use case, since the author(s) of
+the enforced recipe code may have no control over the node data, roles, JSON
+files, or policyfiles used by the nodes being managed.</li>
+<li>Other cookbook features, such as libraries and the various flavors of
+resources and providers set ruby constants which could interfere with the
+correct operation of the end user&#39;s cookbooks.</li>
+<li>Templates and cookbook files would be useful, but expert practitioners will
+be able to be effective without them.</li>
+</ul>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As a Chef Server Service Provider,
+I want to enforce a recipe to run on client systems,
+so that I can ensure client systems are correctly configured.
+</pre></div>
+<h2>Specification</h2>
+
+<h3>Enforced Recipe Endpoint</h3>
+
+<p>Chef Server shall expose an organization-scoped endpoint for the enforced
+recipe. If the feature has not been configured by the Chef Server
+administrator, the endpoint shall return a 404 response. If the feature is
+enabled by the Chef Server administrator, the endpoint shall return a 200
+response with the recipe content as the response body.</p>
+
+<p>The endpoint shall authenticate the request via Chef Server&#39;s usual
+authentication mechanism.</p>
+
+<p>No authorization mechanism is provided. Any user or client with API access to
+any organization on the Chef Server will have read-only access to the enforced
+recipe.</p>
+
+<p>The URL path of the endpoint relative to the organization base path will be
+determined at a future time.</p>
+
+<h3>Chef Server Configuration</h3>
+
+<p>The interface for configuring the feature is to be determined.</p>
+
+<p>Though the initial implementation will likely only support a standalone Chef
+Server deployment, the configuration interface will be written such that it can
+be extended to support tiered and HA configurations.</p>
+
+<h3>Chef Run</h3>
+
+<p>During the setup phase of the Chef Client run, Chef Client shall make a HTTP
+GET request to the enforced recipe endpoint. If the Chef Server returns a 404
+response, Chef Client will continue the Chef Client run normally. If the Chef
+Server returns a 200 response, Chef Client will store the recipe file in its
+cache directory. Chef Client will then evaluate and converge the recipe using a
+mechanism to be decided.</p>
+
+<p>One possible implementation is to add the recipe to the list of
+<code>specific_recipes</code> which is currently populated only via CLI arguments to
+<code>chef-client --local-mode</code>. In this case, enforced recipes would be evaluated
+and converged after the primary run list.</p>
+
+<h3>Documentation</h3>
+
+<p>Documentation shall include the caveat that this feature is intended for expert
+users to address a narrow range of use cases and suggest alternatives for use
+cases that are not addressed by this feature.</p>
+
+<h2>Downstream Impact</h2>
+
+<p>No downstream impacts are expected.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
