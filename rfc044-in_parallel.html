@@ -27,7 +27,7 @@
 <h3>resource_group</h3>
 
 <p>To run a group of resources in parallel, you write it this way:</p>
-<div class="highlight"><pre><span class="n">resource_group</span> <span class="ss">:parallel</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">resource_group</span> <span class="ss">:parallel</span> <span class="k">do</span>
   <span class="n">remote_file</span> <span class="s1">&#39;/tmp/bigfile.txt&#39;</span> <span class="k">do</span>
     <span class="n">source</span> <span class="s1">&#39;https://a.com/bigfile.txt&#39;</span>
   <span class="k">end</span>
@@ -57,28 +57,28 @@
 <p>When the entire group finishes, it is sometimes desirable to send a single notification.  The <code>subscribes</code> and <code>notifies</code> primitives work inside a <code>resource_group</code> (whether it is serial or parallel) and if <em>any</em> resource is changed, the group will send the notification.</p>
 
 <p>resource_groups can also be given names if a string is passed as the first parameter:</p>
-<div class="highlight"><pre><span class="vg">resource_group</span><span class="w"> </span><span class="c1">&#39;hi&#39; do</span>
-<span class="w">  </span><span class="o">...</span>
-<span class="vg">end</span>
-<span class="vg">file</span><span class="w"> </span><span class="c1">&#39;/x.txt&#39;</span>
-<span class="w">  </span><span class="vg">action</span><span class="w"> </span><span class="o">:</span><span class="vg">nothing</span>
-<span class="w">  </span><span class="vg">subscribes</span><span class="w"> </span><span class="c1">&#39;resource_group[hi]&#39;, :create</span>
-<span class="vg">end</span>
+<div class="highlight"><pre><span></span>resource_group &#39;hi&#39; do
+  ...
+end
+file &#39;/x.txt&#39;
+  action :nothing
+  subscribes &#39;resource_group[hi]&#39;, :create
+end
 </pre></div>
 <h3>Output formatting: groups</h3>
 
 <p>Groups are a form of nested resource (whose output would be similar to that of use<em>inline</em>resources).  Nested resources currently print something like this:</p>
-<div class="highlight"><pre><span class="nl">Recipe:</span><span class="w"> </span><span class="err">@</span><span class="nl">recipe_files:</span><span class="o">:/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">oc</span><span class="o">/</span><span class="vg">code</span><span class="o">/</span><span class="vg">opscode</span><span class="o">/</span><span class="vg">chef</span><span class="o">-</span><span class="vg">rfc</span><span class="o">/</span><span class="vg">blah</span><span class="o">.</span><span class="vg">rb</span>
-<span class="w">  </span><span class="o">*</span><span class="w"> </span><span class="vg">compound_resource</span><span class="p">[</span><span class="vg">a</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w">  </span><span class="o">*</span><span class="w"> </span><span class="vg">file</span><span class="p">[</span><span class="o">/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">x</span><span class="o">.</span><span class="vg">txt</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
-<span class="w">  </span><span class="o">*</span><span class="w"> </span><span class="vg">file</span><span class="p">[</span><span class="o">/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">y</span><span class="o">.</span><span class="vg">txt</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
-<span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>Recipe: @recipe_files::/Users/jkeiser/oc/code/opscode/chef-rfc/blah.rb
+  * compound_resource[a] action create  * file[/Users/jkeiser/x.txt] action create (up to date)
+  * file[/Users/jkeiser/y.txt] action create (up to date)
+ (up to date)
 </pre></div>
 <p>With this proposal, a resource_group or other compound resource would print like this:</p>
-<div class="highlight"><pre><span class="nl">Recipe:</span><span class="w"> </span><span class="err">@</span><span class="nl">recipe_files:</span><span class="o">:/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">oc</span><span class="o">/</span><span class="vg">code</span><span class="o">/</span><span class="vg">opscode</span><span class="o">/</span><span class="vg">chef</span><span class="o">-</span><span class="vg">rfc</span><span class="o">/</span><span class="vg">blah</span><span class="o">.</span><span class="vg">rb</span>
-<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="vg">compound_resource</span><span class="p">[</span><span class="vg">a</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span>
-<span class="w">   </span><span class="o">*</span><span class="w"> </span><span class="vg">file</span><span class="p">[</span><span class="o">/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">x</span><span class="o">.</span><span class="vg">txt</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
-<span class="w">   </span><span class="o">*</span><span class="w"> </span><span class="vg">file</span><span class="p">[</span><span class="o">/</span><span class="vg">Users</span><span class="o">/</span><span class="vg">jkeiser</span><span class="o">/</span><span class="vg">y</span><span class="o">.</span><span class="vg">txt</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
-<span class="w">   </span><span class="vg">compound_resource</span><span class="p">[</span><span class="vg">a</span><span class="p">]</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="p">(</span><span class="vg">up</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">date</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>Recipe: @recipe_files::/Users/jkeiser/oc/code/opscode/chef-rfc/blah.rb
+ * compound_resource[a] action create
+   * file[/Users/jkeiser/x.txt] action create (up to date)
+   * file[/Users/jkeiser/y.txt] action create (up to date)
+   compound_resource[a] action create (up to date)
 </pre></div>
 <h3>Output formatting: parallelism and batch</h3>
 
@@ -91,14 +91,14 @@
 <h3>Thread pool configuration</h3>
 
 <p>The <code>Chef::Config.concurrency</code> parameter, and <code>--concurrency</code> argument to <code>chef-client</code>, limits the number of concurrent parallel resources globally.  To limit them specifically, you add parameters to the <code>in_parallel</code> directive like so:</p>
-<div class="highlight"><pre><span class="n">resource_group</span> <span class="ss">:parallel</span><span class="p">,</span> <span class="ss">:concurrency</span> <span class="o">=&gt;</span> <span class="mi">10</span> <span class="k">do</span>
-  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<div class="highlight"><pre><span></span><span class="n">resource_group</span> <span class="ss">:parallel</span><span class="p">,</span> <span class="ss">:concurrency</span> <span class="o">=&gt;</span> <span class="mi">10</span> <span class="k">do</span>
+  <span class="o">...</span>
 <span class="k">end</span>
 </pre></div>
 <h3>in_serial</h3>
 
 <p>To run a group of actions serially, but inside a parallel grouping, you write this:</p>
-<div class="highlight"><pre><span class="n">resource_group</span> <span class="ss">:parallel</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">resource_group</span> <span class="ss">:parallel</span> <span class="k">do</span>
   <span class="n">resource_group</span> <span class="k">do</span>
     <span class="n">directory</span> <span class="s1">&#39;/dir1&#39;</span>
     <span class="n">file</span> <span class="s1">&#39;/dir1/blah.txt&#39;</span> <span class="k">do</span>

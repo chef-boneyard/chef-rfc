@@ -58,7 +58,7 @@ GC.stat, captured during the chef run milestones.</p></li>
 during these milestones (like total chef client process memory consumption from /proc/PID),
 This will be offered via Chef class DSL. This will also be the recommended way to implement platform
 specific metrics. Example:</p>
-<div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;sys/proctable&#39;</span>
+<div class="highlight"><pre><span></span><span class="nb">require</span> <span class="s1">&#39;sys/proctable&#39;</span>
 
 <span class="no">Chef</span><span class="o">.</span><span class="n">telemetry</span> <span class="k">do</span> <span class="o">|</span><span class="n">telemetry</span><span class="o">|</span>
   <span class="n">telemetry</span><span class="o">.</span><span class="n">add_metric</span> <span class="s1">&#39;vsize&#39;</span> <span class="k">do</span>
@@ -75,7 +75,7 @@ They are
 <p>Telemetry system can be configured via the standard chef config file or using a dedicated
 CLI flag for chef-client and chef-solo. It will be disabled by default.
 Following is an example of configuring the telemetry subsystem</p>
-<div class="highlight"><pre><span class="n">enable_telemetry</span> <span class="kp">true</span>
+<div class="highlight"><pre><span></span><span class="n">enable_telemetry</span> <span class="kp">true</span>
 
 <span class="n">config_context</span><span class="p">(</span><span class="ss">:telemetry</span><span class="p">)</span> <span class="k">do</span>
   <span class="n">resource</span> <span class="kp">true</span> <span class="c1"># captures per resource execution time taken</span>
@@ -90,7 +90,7 @@ Following is an example of configuring the telemetry subsystem</p>
 <span class="k">end</span>
 </pre></div>
 <p>Example of enabling telemetry using the CLI flag</p>
-<div class="highlight"><pre>chef-client --enable-telemetry
+<div class="highlight"><pre><span></span>chef-client --enable-telemetry
 chef-solo --enable-telemetry
 </pre></div>
 <p>Telemetry publishing API will be a single method named #publish that accept a hash that

@@ -45,21 +45,21 @@ Deprecations section).</li>
 of these have deprecation warnings enabled for Chef 12 (see Deprecations section).</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">declared</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">own</span><span class="w"> </span><span class="vg">namespace</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">recipe</span><span class="w"> </span><span class="vg">DSL</span><span class="w"> </span><span class="vg">automatically</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to write the name of the resource twice.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want resources declared in my own namespace to be in recipe DSL automatically,
+so that I don&#39;t have to write the name of the resource twice.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">declare</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">own</span><span class="w"> </span><span class="vg">namespace</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">get</span><span class="w"> </span><span class="vg">better</span><span class="w"> </span><span class="vg">error</span><span class="w"> </span><span class="vg">messages</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">there</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">conflict</span><span class="o">.</span>
+As a Chef user,
+I want to declare resources in my own namespace,
+So that I get better error messages when there is a resource conflict.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">meaningful</span><span class="w"> </span><span class="vg">names</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">stack</span><span class="w"> </span><span class="vg">traces</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">methods</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">actually</span><span class="w"> </span><span class="vg">read</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">debug</span><span class="w"> </span><span class="vg">output</span><span class="o">.</span>
+As a Chef developer,
+I want meaningful names in stack traces for methods,
+So that I can actually read the debug output.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">less</span><span class="w"> </span><span class="vg">if</span><span class="w"> </span><span class="vg">statements</span><span class="p">,</span><span class="w"> </span><span class="vg">case</span><span class="w"> </span><span class="vg">statements</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">metaprogramming</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">DSL</span><span class="w"> </span><span class="vg">method</span><span class="w"> </span><span class="vg">calls</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">debug</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">follow</span><span class="w"> </span><span class="vg">logic</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">easily</span><span class="o">.</span>
+As a Chef developer,
+I want less if statements, case statements and metaprogramming in DSL method calls,
+So that I can debug and follow logic more easily.
 </pre></div>
 <h2>Specification</h2>
 
@@ -80,7 +80,7 @@ automatically when the user declares resources and definitions.</p>
 <p>Presently, when you create a class under <code>Chef::Resource</code>, a magical Chef DSL
 based on the class name (<code>my_resource</code>) will automatically work.  Now you will
 need to use <code>provides</code> to explicitly mark the DSL you provide:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyPackage</span><span class="o">::</span><span class="no">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyPackage</span><span class="o">::</span><span class="no">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="n">provides</span> <span class="ss">:shazam</span>
 <span class="k">end</span>
 <span class="c1"># Now `shazam` will work fine in a recipe, but `my_resource` will not.</span>
@@ -144,7 +144,7 @@ actual method instead or use public</em>send(), and remove it come Chef 13.</p>
 
 <p>If someone creates a resource class with a custom <code>provides?</code> method, they can
 currently</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="k">def</span> <span class="nf">provides?</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">name</span><span class="p">)</span>
     <span class="nb">name</span> <span class="o">==</span> <span class="ss">:blah</span>
   <span class="k">end</span>
@@ -153,7 +153,7 @@ currently</p>
 <p>The implications of this are that we have to scan every single resource when
 you type <code>blah</code> in a recipe, just so we can catch this one.  In Chef 12 we will
 issue a deprecation warning and tell you to do this instead:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="n">provides</span> <span class="ss">:blah</span>
 <span class="k">end</span>
 </pre></div>

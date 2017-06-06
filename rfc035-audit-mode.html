@@ -26,13 +26,13 @@ to ensure nodes fall into existing &quot;known states&quot; categories even befo
 converges, and to validate your infrastructure after Chef converges.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">inheritor</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">non</span><span class="o">-</span><span class="vg">Chef</span><span class="o">-</span><span class="vg">managed</span><span class="w"> </span><span class="vg">infrastructure</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">run</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">collect</span><span class="w"> </span><span class="vg">data</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">each</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">converging</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">determine</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">existing</span><span class="w"> </span><span class="vg">state</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">inherited</span><span class="w"> </span><span class="vg">infrastructure</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As an inheritor of a non-Chef-managed infrastructure
+I want to run chef-client and collect data on each node without converging
+so that I can determine the existing state of the inherited infrastructure.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">maintainer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="o">-</span><span class="vg">managed</span><span class="w"> </span><span class="vg">infrastructure</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">custom</span><span class="w"> </span><span class="vg">rules</span><span class="w"> </span><span class="vg">defining</span><span class="w"> </span><span class="vg">expected</span><span class="w"> </span><span class="vg">state</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">validate</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">infrastructure</span><span class="o">.</span>
+As a maintainer of a Chef-managed infrastructure
+I want to write custom rules defining expected state
+so that I can validate my infrastructure.
 </pre></div>
 <h2>Specification</h2>
 

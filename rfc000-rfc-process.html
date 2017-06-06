@@ -128,27 +128,27 @@ once the feature is implemented in a released version of the relevant software
 the RFC is marked as Final, indicating discussion of further changes to the
 feature should take place in a new RFC. If an RFC is superseded by a later RFC,
 the original one should be marked as Replaced.</p>
-<div class="highlight"><pre><span class="w">  </span><span class="o">+-------+</span><span class="w">        </span><span class="o">+----------+</span><span class="w">       </span><span class="o">+-------+</span>
-<span class="w">  </span><span class="o">|</span><span class="w">       </span><span class="o">|</span><span class="w">        </span><span class="o">|</span><span class="w">          </span><span class="o">|</span><span class="w">       </span><span class="o">|</span><span class="w">       </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="vg">Draft</span><span class="w"> </span><span class="o">+----+---&gt;</span><span class="w"> </span><span class="vg">Accepted</span><span class="w"> </span><span class="o">+---+---&gt;</span><span class="w"> </span><span class="vg">Final</span><span class="w"> </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|</span><span class="w">       </span><span class="o">|</span><span class="w">    </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w">          </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w">       </span><span class="o">|</span>
-<span class="w">  </span><span class="o">+---+---+</span><span class="w">    </span><span class="o">|</span><span class="w">   </span><span class="o">+----------+</span><span class="w">   </span><span class="o">|</span><span class="w">   </span><span class="o">+---+---+</span>
-<span class="w">      </span><span class="o">|</span><span class="w">        </span><span class="o">|</span><span class="w">                  </span><span class="o">|</span><span class="w">       </span><span class="o">|</span>
-<span class="w">      </span><span class="o">|</span><span class="w">        </span><span class="o">|</span><span class="w">                  </span><span class="o">+-------+</span>
-<span class="w">      </span><span class="o">|</span><span class="w">        </span><span class="o">|</span><span class="w">                          </span><span class="o">|</span>
-<span class="w">      </span><span class="o">|</span><span class="w">        </span><span class="o">|</span><span class="w">                          </span><span class="o">|</span>
-<span class="o">+-----</span><span class="vg">v</span><span class="o">-----+</span><span class="w">  </span><span class="o">|</span><span class="w">   </span><span class="o">+----------+</span><span class="w">    </span><span class="o">+------</span><span class="vg">v</span><span class="o">---+</span>
-<span class="o">|</span><span class="w">           </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w">          </span><span class="o">|</span><span class="w">    </span><span class="o">|</span><span class="w">          </span><span class="o">|</span>
-<span class="o">|</span><span class="w"> </span><span class="vg">Withdrawn</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="o">+---&gt;</span><span class="w"> </span><span class="vg">Rejected</span><span class="w"> </span><span class="o">|</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="vg">Replaced</span><span class="w"> </span><span class="o">|</span>
-<span class="o">|</span><span class="w">           </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w">          </span><span class="o">|</span><span class="w">    </span><span class="o">|</span><span class="w">          </span><span class="o">|</span>
-<span class="o">+-----------+</span><span class="w">      </span><span class="o">+----------+</span><span class="w">    </span><span class="o">+----------+</span>
+<div class="highlight"><pre><span></span>  +-------+        +----------+       +-------+
+  |       |        |          |       |       |
+  | Draft +--------&gt; Accepted +---+---&gt; Final |
+  |       |        |          |   |   |       |
+  +---+---+        +----+-----+   |   +---+---+
+      |                 |         |       |
+      |                 |         +-------+
+      |                 |                 |
+      |                 |                 |
++-----v-----+      +----v-----+    +------v---+
+|           |      |          |    |          |
+| Withdrawn |      | On Hold  |    | Replaced |
+|           |      |          |    |          |
++-----------+      +----------+    +----------+
 </pre></div>
 <h3>RFC Status Reference</h3>
 
 <ul>
 <li><strong>Draft</strong> – The RFC is under discussion by the community.</li>
 <li><strong>Accepted</strong> – The RFC is approved for implementation.</li>
-<li><strong>Rejected</strong> – The RFC is not approved.</li>
+<li><strong>On Hold</strong> – The RFC is approved but not currently under development.</li>
 <li><strong>Withdrawn</strong> – The RFC has been voluntarily withdrawn from consideration.</li>
 <li><strong>Final</strong> – The RFC has been implemented. <em>(Standards Track type only)</em></li>
 <li><strong>Replaced</strong> – The RFC has been superseded by another RFC.</li>
@@ -169,7 +169,7 @@ metadata of the new RFC. Once Accepted, the replaced RFC with have its status
 updated to Replaced by an Editor.</p>
 
 <h2>RFC Template</h2>
-<div class="highlight"><pre>---
+<div class="highlight"><pre><span></span>---
 RFC: unassigned
 Title: Title Goes Here
 Author: Alan Smithee &lt;asmithee@example.com&gt;

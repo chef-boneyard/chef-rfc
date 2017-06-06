@@ -31,14 +31,14 @@ Test Kitchen is not normally covered by the Chef RFC process, but given both
 the scope and importance of the feature, an exception is being made.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">operations</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">test</span><span class="w"> </span><span class="vg">multi</span><span class="o">-</span><span class="vg">server</span><span class="w"> </span><span class="vg">interactions</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">confidence</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">cluster</span><span class="o">-</span><span class="vg">oriented</span><span class="w"> </span><span class="vg">CM</span><span class="w"> </span><span class="vg">code</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As an operations developer,
+I want to test multi-server interactions,
+so that I have confidence in cluster-oriented CM code.
 </pre></div>
 <p>And a more specific use case that is also rolled in here:</p>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">test</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">upgrades</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">idempotence</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">confidence</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">code</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want to test cookbook upgrades and idempotence,
+so that I have confidence in my Chef code.
 </pre></div>
 <h2>The Problems</h2>
 
@@ -66,23 +66,23 @@ and tell me. maybe &quot;multisuite&quot;?]</p>
 
 <p>The core of the new system is a configuration section called &quot;supersuites&quot;. Each
 supersuite contains a set of steps to be run in a particular order. For example:</p>
-<div class="highlight"><pre><span class="l-Scalar-Plain">platforms</span><span class="p-Indicator">:</span>
-<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">centos-7</span>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">platforms</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">centos-7</span>
 
-<span class="l-Scalar-Plain">suites</span><span class="p-Indicator">:</span>
-<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">web1</span>
-  <span class="l-Scalar-Plain">run_list</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">role[web]</span>
-<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">web2</span>
-  <span class="l-Scalar-Plain">run_list</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">role[web]</span>
+<span class="l l-Scalar l-Scalar-Plain">suites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web1</span>
+  <span class="l l-Scalar l-Scalar-Plain">run_list</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">role[web]</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web2</span>
+  <span class="l l-Scalar l-Scalar-Plain">run_list</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">role[web]</span>
 
-<span class="l-Scalar-Plain">supersuites</span><span class="p-Indicator">:</span>
-<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">web</span>
-  <span class="l-Scalar-Plain">steps</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">converge web1</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">converge web2</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">verify web1</span>
+<span class="l l-Scalar l-Scalar-Plain">supersuites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web</span>
+  <span class="l l-Scalar l-Scalar-Plain">steps</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web2</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">verify web1</span>
 </pre></div>
 <p>When you run <code>kitchen test web-centos-7</code> on this configuration, it will run the
 steps in the order listed, aborting if any step fails.</p>
@@ -140,20 +140,20 @@ error.</p>
 options this is equivalent to running <code>kitchen converge &lt;instance_name&gt;</code>.
 Additional configuration options can be specified in the step and will be merged
 in to the instance configuration for only that <code>converge</code> action. For example:</p>
-<div class="highlight"><pre><span class="l-Scalar-Plain">supersuites</span><span class="p-Indicator">:</span>
-<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">web</span>
-  <span class="l-Scalar-Plain">steps</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">converge web1</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">step</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">converge web1</span>
-    <span class="l-Scalar-Plain">attributes</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">2</span>
-    <span class="l-Scalar-Plain">run_list</span><span class="p-Indicator">:</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">recipe[other]</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">step</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">converge web1</span>
-    <span class="l-Scalar-Plain">provisioner_config</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">shell</span>
-      <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">init.sh</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">verify web1</span>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">supersuites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web</span>
+  <span class="l l-Scalar l-Scalar-Plain">steps</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">step</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+    <span class="l l-Scalar l-Scalar-Plain">attributes</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="l l-Scalar l-Scalar-Plain">run_list</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">recipe[other]</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">step</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+    <span class="l l-Scalar l-Scalar-Plain">provisioner_config</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">shell</span>
+      <span class="l l-Scalar l-Scalar-Plain">script</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">init.sh</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">verify web1</span>
 </pre></div>
 <p>Driver configuration cannot be set like this as <code>create</code> runs in its own phase
 outside of the <code>converge</code>.</p>
@@ -169,12 +169,12 @@ be run for any instance not already in that state.</p>
 
 <p>By default the supersuite name will be used in place of the suite name for
 finding the test files, but this can be overridden by a configuration option:</p>
-<div class="highlight"><pre><span class="l-Scalar-Plain">supersuites</span><span class="p-Indicator">:</span>
-<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">web</span>
-  <span class="l-Scalar-Plain">steps</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">converge web1</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">step</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">verify web1</span>
-    <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">other</span>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">supersuites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web</span>
+  <span class="l l-Scalar l-Scalar-Plain">steps</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">step</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">verify web1</span>
+    <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">other</span>
 </pre></div>
 <h3><code>destroy</code></h3>
 
@@ -270,13 +270,13 @@ as normal.</p>
 supported for the foreseeable future. Executing multiple steps within a single
 supersuite concurrently may be added, but not in the first version. A suggested
 syntax for this is:</p>
-<div class="highlight"><pre><span class="l-Scalar-Plain">supersuites</span><span class="p-Indicator">:</span>
-<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">web</span>
-  <span class="l-Scalar-Plain">steps</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">concurrent</span><span class="p-Indicator">:</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">converge web1</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">converge web2</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">verify web1</span>
+<div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">supersuites</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">web</span>
+  <span class="l l-Scalar l-Scalar-Plain">steps</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">concurrent</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web1</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">converge web2</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">verify web1</span>
 </pre></div>
 <p>Further exploration of the completed feature will be required to assess the
 impact of concurrent execution on the multi-server model, but it should be

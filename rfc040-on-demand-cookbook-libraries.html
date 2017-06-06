@@ -21,26 +21,26 @@
 <h1>On-Demand Cookbook Libraries</h1>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">nested</span><span class="w"> </span><span class="vg">directories</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">organize</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">code</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">readable</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a library cookbook writer,
+I want to have nested directories,
+So that I can organize my code and make it more readable.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">control</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">load</span><span class="w"> </span><span class="vg">order</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">library</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">code</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">one</span><span class="w"> </span><span class="vg">file</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">refers</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">code</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">another</span><span class="w"> </span><span class="vg">file</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">constraining</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">filenames</span><span class="o">.</span>
+As a library cookbook writer,
+I want to control the load order of my library,
+So that I can have code in one file that refers to code in another file without constraining the filenames.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="err">`</span><span class="vg">require</span><span class="err">`</span><span class="w"> </span><span class="vg">files</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to deal with the pitfalls of `require_relative` (particularly that it loads things multiple times).</span>
+As a library cookbook writer,
+I want to be able to `require` files in my library cookbook,
+So that I don&#39;t have to deal with the pitfalls of `require_relative` (particularly that it loads things multiple times).
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="err">`</span><span class="vg">require</span><span class="err">`</span><span class="w"> </span><span class="vg">files</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">library</span><span class="w"> </span><span class="vg">cookbooks</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">use</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">pick</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">choose</span><span class="w"> </span><span class="vg">what</span><span class="w"> </span><span class="vg">functionality</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">load</span><span class="o">.</span>
+As a library cookbook user,
+I want to be able to `require` files in the library cookbooks I use,
+So that I can pick and choose what functionality I want to load.
 </pre></div>
 <h2>Specification</h2>
 
 <p>When a user creates a cookbook, they can add the following directive to the metadata:</p>
-<div class="highlight"><pre><span class="c1"># metadata.rb</span>
+<div class="highlight"><pre><span></span><span class="c1"># metadata.rb</span>
 <span class="nb">name</span> <span class="s2">&quot;mylibrary&quot;</span>
 <span class="n">version</span> <span class="s2">&quot;0.0.1&quot;</span>
 <span class="n">eager_load_libraries</span> <span class="kp">false</span>

@@ -23,9 +23,9 @@
 <p>Signal outside tools of specific Chef-Client run status.  Ability to determine results of a Chef-Client run.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">determine</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">run</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">rebooting</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">node</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">Test</span><span class="o">-</span><span class="vg">Kitchen</span><span class="o">/</span><span class="vg">Vagrant</span><span class="o">/</span><span class="vg">any</span><span class="w"> </span><span class="vg">outside</span><span class="w"> </span><span class="vg">tool</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">wait</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">node</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">reboot</span><span class="p">,</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">continue</span><span class="w"> </span><span class="vg">converging</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want to be able to determine when a chef-client run is rebooting the node,
+so that Test-Kitchen/Vagrant/any outside tool can wait for node to reboot, and continue converging.
 </pre></div>
 <h2>Specification</h2>
 
@@ -38,7 +38,7 @@
 
 <ul>
 <li>Windows- <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681381(v=vs.85).aspx">Link</a></li>
-<li>Linux - <a href="http://www.freebsd.org/cgi/man.cgi?query=sysexits&amp;apropos=0&amp;sektion=0&amp;manpath=FreeBSD+4.3-RELEASE&amp;format=html">Sysexits</a>, <a href="http://tldp.org/LDP/abs/html/exitcodes.html">Bash Scripting</a></li>
+<li>Linux - <a href="http://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+4.3-RELEASE&format=html">Sysexits</a>, <a href="http://tldp.org/LDP/abs/html/exitcodes.html">Bash Scripting</a></li>
 </ul>
 
 <h3>Remaining Available Exit Codes</h3>

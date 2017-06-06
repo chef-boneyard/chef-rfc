@@ -23,20 +23,20 @@
 <p>This RFC addresses some longstanding issues with <code>default</code> values on properties (attributes), and addresses how we will move core Chef resources over to use defaults and properties.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">core</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="err">`</span><span class="vg">property</span><span class="err">`</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">people</span><span class="w"> </span><span class="vg">are</span><span class="w"> </span><span class="vg">cribbing</span><span class="w"> </span><span class="vg">off</span><span class="w"> </span><span class="vg">good</span><span class="w"> </span><span class="vg">examples</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef developer,
+I want the core resources to use `property`,
+So that people are cribbing off good examples.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">core</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">actually</span><span class="w"> </span><span class="vg">change</span><span class="w"> </span><span class="vg">behavior</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">rely</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">things</span><span class="w"> </span><span class="vg">I</span><span class="c1">&#39;ve built on top of them.</span>
+As a Chef user,
+I want the core resources not to actually change behavior,
+So that I can rely on things I&#39;ve built on top of them.
 </pre></div>
 <h2>Specification</h2>
 
 <h3>Non-Sticky Defaults</h3>
 
 <p>Defaults are presently <em>sticky</em>, in that the first time a property is accessed, it is stored in the instance variable:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
   <span class="n">resource_name</span> <span class="ss">:x</span>
   <span class="n">attribute</span> <span class="ss">:foo</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="n">lazy</span> <span class="p">{</span> <span class="no">Random</span><span class="o">.</span><span class="n">rand</span> <span class="p">}</span>
 <span class="k">end</span>
@@ -53,7 +53,7 @@
 <h4>Frozen constants</h4>
 
 <p>Sticky defaults create a serious issue for literals (non-lazy default values): <em>every instance</em> of a resource gets the same value.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
   <span class="n">resource_name</span> <span class="ss">:x</span>
   <span class="n">attribute</span> <span class="ss">:foo</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="o">[]</span>
 <span class="k">end</span>
@@ -73,7 +73,7 @@
 <h4>Backcompat break: writing to constant defaults</h4>
 
 <p>Users may rely on this behavior to <em>write</em> to <code>myprop</code>, like this:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Foo</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
   <span class="n">resource_name</span> <span class="ss">:foo</span>
   <span class="n">attribute</span> <span class="ss">:myhash</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="p">{}</span>
   <span class="n">attribute</span> <span class="ss">:mylist</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="o">[]</span>
@@ -94,7 +94,7 @@
 <h4>Backcompat</h4>
 
 <p>Defaults are presently validated inconsistently: they would be validated or not validated based on the order of declaration in the property information. To wit:</p>
-<div class="highlight"><pre><span class="c1"># This currently does not validate, even though 10 is not a string</span>
+<div class="highlight"><pre><span></span><span class="c1"># This currently does not validate, even though 10 is not a string</span>
 <span class="n">property</span> <span class="ss">:a</span><span class="p">,</span> <span class="ss">kind_of</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mi">10</span>
 <span class="c1"># This currently validates correctly</span>
 <span class="n">property</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="ss">kind_of</span><span class="p">:</span> <span class="nb">String</span>

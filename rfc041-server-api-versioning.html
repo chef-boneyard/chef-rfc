@@ -55,17 +55,17 @@ However when you upgrade Chef Server 13.0 you will need to upgrade the client to
 the behaviors introduced or changes in API Version 1 and 2 at minimum.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">consumer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Server</span><span class="w"> </span><span class="vg">API</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">consume</span><span class="w"> </span><span class="vg">significant</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">own</span><span class="w"> </span><span class="vg">pace</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">they</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t break my usage of the API.</span>
+<div class="highlight"><pre><span></span>As a consumer of the Chef Server API,
+I want to be able to consume significant changes at my own pace
+so that they don&#39;t break my usage of the API.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">supported</span><span class="w"> </span><span class="vg">version</span><span class="w"> </span><span class="vg">level</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">ensure</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">server</span><span class="w"> </span><span class="vg">API</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t affect me until I&#39;m ready to upgrade</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">all</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">nodes</span><span class="w"> </span><span class="vg">continue</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">converge</span><span class="w"> </span><span class="vg">even</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Server</span><span class="w"> </span><span class="vg">API</span><span class="w"> </span><span class="vg">continues</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">mature</span><span class="o">.</span>
+As a user of chef-client at a supported version level,
+I want to ensure that changes to the server API don&#39;t affect me until I&#39;m ready to upgrade
+so that all my nodes continue to converge even as Chef Server API continues to mature.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">developer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Server</span><span class="w"> </span><span class="vg">API</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">add</span><span class="w"> </span><span class="vg">potentially</span><span class="w"> </span><span class="vg">breaking</span><span class="w"> </span><span class="vg">features</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">breaking</span><span class="w"> </span><span class="vg">customers</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">supported</span><span class="w"> </span><span class="vg">versions</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">state</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Server</span><span class="w"> </span><span class="vg">API</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">continue</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">advance</span><span class="o">.</span>
+As a developer of the Chef Server API,
+I want to be able to add potentially breaking features without breaking customers on supported versions
+so that the state of the Server API can continue to advance.
 </pre></div>
 <h2>Specification</h2>
 
@@ -258,12 +258,12 @@ and the body specified below.</li>
 <h4>Response Header</h4>
 
 <p>In the response header, <code>X-Ops-Server-API-Version</code> will return json of the format:</p>
-<div class="highlight"><pre><span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;min_version&quot;</span><span class="o">:</span><span class="s2">&quot;&lt;non-negative integer&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;max_version&quot;</span><span class="o">:</span><span class="s2">&quot;&lt;non-negative integer&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;request_version&quot;</span><span class="o">:</span><span class="s2">&quot;&lt;integer&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;response_version&quot;</span><span class="o">:</span><span class="s2">&quot;&lt;integer&gt;&quot;</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span>{
+  &quot;min_version&quot;:&quot;&lt;non-negative integer&gt;&quot;,
+  &quot;max_version&quot;:&quot;&lt;non-negative integer&gt;&quot;,
+  &quot;request_version&quot;:&quot;&lt;integer&gt;&quot;,
+  &quot;response_version&quot;:&quot;&lt;integer&gt;&quot;
+}
 </pre></div>
 <p>Where:
 + <code>min_version</code> is the minimum API version the server supports.
@@ -284,10 +284,10 @@ and to distinguish between servers that have implemented this RFC and servers th
 
 <p>When the server provides a 406 response due to unsupported API version, the response body
 will be of type <code>application/json</code> and MUST look as follows:</p>
-<div class="highlight"><pre><span class="p">{</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="w">           </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;invalid-x-ops-server-api-version&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;message&quot;</span><span class="w">         </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Specified version $version not supported&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;min_api_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">x</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;max_api_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">y</span><span class="w"> </span><span class="p">}</span>
+<div class="highlight"><pre><span></span>{ &quot;error&quot;           : &quot;invalid-x-ops-server-api-version&quot;,
+  &quot;message&quot;         : &quot;Specified version $version not supported&quot;,
+  &quot;min_api_version&quot; : $x,
+  &quot;max_api_version&quot; : $y }
 </pre></div>
 <p><code>$version</code> indicates the requested version. <code>$x</code> and <code>$y</code> are the current minimum and
 maximum supported versions, respectively.</p>
@@ -365,8 +365,8 @@ versions for each endpoint that implements support of versioning.</p>
 Any other method MUST respond with a 405.</p>
 
 <p>The <code>GET</code> response body MUST look as follows:</p>
-<div class="highlight"><pre><span class="p">{</span><span class="w"> </span><span class="s2">&quot;min_api_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">x</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;max_api_version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">y</span><span class="w"> </span><span class="p">}</span>
+<div class="highlight"><pre><span></span>{ &quot;min_api_version&quot; : $x,
+  &quot;max_api_version&quot; : $y }
 </pre></div>
 <p><code>$x</code> and <code>$y</code> refer to the current minimum and maximum supported versions, respectively.</p>
 
@@ -377,11 +377,11 @@ Any other method MUST respond with a 405.</p>
 
 <p>If this endpoint is implemented, the <code>GET</code> response body contains supported API version data
 for each endpoint that has implemented versioning, and MUST look as follows:</p>
-<div class="highlight"><pre><span class="p">{</span><span class="w"> </span><span class="s2">&quot;endpoints&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$relative_url&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="o">:</span>
-<span class="w">                      </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">method</span><span class="p">,</span>
-<span class="w">                          </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">version</span>
-<span class="w">                          </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="vg">status</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<div class="highlight"><pre><span></span>{ &quot;endpoints&quot; : [ { &quot;name&quot; : &quot;$relative_url&quot;,
+                    &quot;versions&quot; :
+                      [ { &quot;method&quot; : $method,
+                          &quot;version&quot; : $version
+                          &quot;status&quot; : $status }, ... ] } ] }
 </pre></div>
 <ul>
 <li><code>$relative_url</code> is a URL relative to the server root and will not include server name
@@ -404,16 +404,16 @@ used with <code>version</code> : <code>next</code>, but it is possible to have <
 </ul>
 
 <p>Sample output:</p>
-<div class="highlight"><pre><span class="p">{</span><span class="w"> </span><span class="s2">&quot;endpoints&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/organizations/:orgname/clients/:client&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="o">:</span>
-<span class="w">                      </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deprecated&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                        </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="p">},</span>
-<span class="w">                        </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;next&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unstable&quot;</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/users/:user&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="o">:</span>
-<span class="w">                      </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deprecated&quot;</span><span class="p">},</span>
-<span class="w">                        </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
-<span class="w">                 </span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<div class="highlight"><pre><span></span>{ &quot;endpoints&quot; : [ { &quot;name&quot; : &quot;/organizations/:orgname/clients/:client&quot;,
+                    &quot;versions&quot; :
+                      [ { &quot;method&quot; : &quot;GET&quot;, &quot;version&quot; : 0, &quot;status&quot; : &quot;deprecated&quot; },
+                        { &quot;method&quot; : &quot;GET&quot;, &quot;version&quot; : 1, &quot;status&quot; : &quot;active&quot;},
+                        { &quot;method&quot; : &quot;GET&quot;, &quot;version&quot; : &quot;next&quot;, &quot;status&quot; : &quot;unstable&quot; }] },
+                  { &quot;name&quot; : &quot;/users/:user&quot;,
+                    &quot;versions&quot; :
+                      [ { &quot;method&quot; : &quot;GET&quot;, &quot;version&quot; : 0, &quot;status&quot; : &quot;deprecated&quot;},
+                        { &quot;method&quot; : &quot;GET&quot;, &quot;version&quot; : 1, &quot;status&quot; : &quot;active&quot; } ] }
+                 ] }
 </pre></div>
 <p>This endpoint MAY be extended to include information about endpoints that do not
 explicitly implement versioning.  The response MUST be in the same form.</p>
@@ -429,10 +429,10 @@ or 404 if there is no such endpoint.</p>
 <p><code>GET /server_api_version/extended/GET/organizations/:orgname/clients/:client</code></p>
 
 <p>Would receive the response:</p>
-<div class="highlight"><pre><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/organizations/:orgname/clients/:client&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deprecated&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="il">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">                  </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;method&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;next&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;status&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unstable&quot;</span><span class="p">}]</span><span class="w"> </span><span class="p">},</span>
+<div class="highlight"><pre><span></span> { &quot;name&quot; : &quot;/organizations/:orgname/clients/:client&quot;,
+   &quot;versions&quot; : [ { &quot;method&quot; : &quot;GET&quot;, &quot;version&quot; : 0, &quot;status&quot; : &quot;deprecated&quot; },
+                  { &quot;method&quot; : &quot;GET&quot;, &quot;version&quot; : 1, &quot;status&quot; : &quot;active&quot; },
+                  { &quot;method&quot; : &quot;GET&quot;, &quot;version&quot; : &quot;next&quot;, &quot;status&quot; : &quot;unstable&quot;}] },
 </pre></div>
 <h2>Rationale</h2>
 

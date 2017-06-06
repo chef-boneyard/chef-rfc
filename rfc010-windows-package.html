@@ -59,22 +59,22 @@ This will be renamed to returns to match other existing core providers</li>
 <h3>Platform specific resources</h3>
 
 <p>Utilizing the platform-specific resource functionality introduced in <a href="https://tickets.opscode.com/browse/CHEF-2698">CHEF-2698</a>, add a new package resource with windows specific attributes </p>
-<div class="highlight"><pre><span class="vg">class</span><span class="w"> </span><span class="vg">Chef</span>
-<span class="w">  </span><span class="vg">class</span><span class="w"> </span><span class="vg">Resource</span>
-<span class="w">    </span><span class="vg">class</span><span class="w"> </span><span class="vg">WindowsPackage</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nl">Chef:</span><span class="o">:</span><span class="nl">Resource:</span><span class="o">:</span><span class="vg">Package</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="n">Chef</span>
+  <span class="k">class</span> <span class="n">Resource</span>
+    <span class="k">class</span> <span class="n">WindowsPackage</span> &lt; <span class="n">Chef::Resource::Package</span>
 
-<span class="w">      </span><span class="vg">provides</span><span class="w"> </span><span class="o">:</span><span class="vg">package</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="vg">on_platforms</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;windows&quot;</span><span class="p">]</span>
+      <span class="n">provides</span> :<span class="n">package</span>, :<span class="n">on_platforms</span> =&gt; [<span class="s">&quot;windows&quot;</span>]
 
-<span class="w">      </span><span class="vg">def</span><span class="w"> </span><span class="vg">initialize</span><span class="p">(</span><span class="vg">name</span><span class="p">,</span><span class="w"> </span><span class="vg">run_context</span><span class="o">=</span><span class="vg">nil</span><span class="p">)</span>
-<span class="w">        </span><span class="vg">super</span>
-<span class="w">        </span><span class="err">@</span><span class="vg">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">:</span><span class="vg">install</span>
-<span class="w">        </span><span class="err">@</span><span class="vg">allowed_actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="o">:</span><span class="vg">install</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="vg">remove</span><span class="w"> </span><span class="p">]</span>
-<span class="w">        </span><span class="err">@</span><span class="vg">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nl">Chef:</span><span class="o">:</span><span class="nl">Provider:</span><span class="o">:</span><span class="nl">Package:</span><span class="o">:</span><span class="vg">Windows</span>
-<span class="w">        </span><span class="err">@</span><span class="vg">resource_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">:</span><span class="vg">windows_package</span>
-<span class="w">        </span><span class="err">@</span><span class="vg">installer_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">nil</span>
-<span class="w">        </span><span class="err">@</span><span class="vg">checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">nil</span>
-<span class="w">        </span><span class="err">@</span><span class="vg">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="il">600</span>
-<span class="w">        </span><span class="err">@</span><span class="vg">success_codes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="il">0</span><span class="p">,</span><span class="w"> </span><span class="il">42</span><span class="p">,</span><span class="w"> </span><span class="il">127</span><span class="p">]</span>
+      <span class="n">def</span> <span class="n">initialize</span>(<span class="nb">name</span>, <span class="n">run_context</span>=<span class="n">nil</span>)
+        <span class="n">super</span>
+        <span class="nv">@action</span> = :<span class="n">install</span>
+        <span class="nv">@allowed_actions</span> = [ :<span class="n">install</span>, :<span class="n">remove</span> ]
+        <span class="nv">@provider</span> = <span class="n">Chef::Provider::Package::Windows</span>
+        <span class="nv">@resource_name</span> = :<span class="n">windows_package</span>
+        <span class="nv">@installer_type</span> = <span class="n">nil</span>
+        <span class="nv">@checksum</span> = <span class="n">nil</span>
+        <span class="nv">@timeout</span> = <span class="mi">600</span>
+        <span class="nv">@success_codes</span> = [<span class="mi">0</span>, <span class="mi">42</span>, <span class="mi">127</span>]
 </pre></div>
 <h3>Chef::Provider::Package::Windows</h3>
 
@@ -100,10 +100,10 @@ This will be renamed to returns to match other existing core providers</li>
 </ul>
 
 <h4>Example</h4>
-<div class="highlight"><pre><span class="vg">windows_package</span><span class="w"> </span><span class="c1">&#39;7-Zip 9.20 (x64 edition)&#39; do</span>
-<span class="w">  </span><span class="vg">source</span><span class="w"> </span><span class="c1">&#39;http://downloads.sourceforge.net/sevenzip/7z920-x64.msi&#39;</span>
-<span class="w">  </span><span class="vg">action</span><span class="w"> </span><span class="o">:</span><span class="vg">install</span>
-<span class="vg">end</span>
+<div class="highlight"><pre><span></span>windows_package &#39;7-Zip 9.20 (x64 edition)&#39; do
+  source &#39;http://downloads.sourceforge.net/sevenzip/7z920-x64.msi&#39;
+  action :install
+end
 </pre></div>
 <h4>Future work</h4>
 

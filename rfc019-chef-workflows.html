@@ -99,9 +99,9 @@ stage tutorial content. If a user needs to learn the basics, send them here.</li
 <h3>Setup</h3>
 
 <p>To get started with this workflow, execute the following:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef generate repo chef-repo
-<span class="nv">$ </span>git add .
-<span class="nv">$ </span>git commit -a -m <span class="s2">&quot;First commit&quot;</span>
+<div class="highlight"><pre><span></span>$ chef generate repo chef-repo
+$ git add .
+$ git commit -a -m <span class="s2">&quot;First commit&quot;</span>
 </pre></div>
 <p><em>Note: This creates a chef-repo exactly like the one you would clone from github today.</em></p>
 
@@ -110,50 +110,50 @@ stage tutorial content. If a user needs to learn the basics, send them here.</li
 <h3>How to create your Chef cookbooks</h3>
 
 <p>To create a new cookbook, from the top of your chef-repo:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef generate cookbook snazzy
+<div class="highlight"><pre><span></span>$ chef generate cookbook snazzy
 </pre></div>
 <p><em>Note: We should make the generators smarter about knowing you are in a monolithic repo, and we should tune the generator to do the right things. Also, the options that exist in knife cookbook create need to be fully supported. For example, it should auto-detect the cookbooks directory is the right place.</em></p>
 
 <p>When you are done writing your cookbook, add it to your git repository:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git add snazzy
-<span class="nv">$ </span>git commit -a -m <span class="s2">&quot;One snazzy cookbook&quot;</span>
+<div class="highlight"><pre><span></span>$ git add snazzy
+$ git commit -a -m <span class="s2">&quot;One snazzy cookbook&quot;</span>
 </pre></div>
 <h3>How to create your Chef policy (everything that isn&#39;t a cookbook)</h3>
 
 <p>To create a new type of policy document, from the top of your chef-repo:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef generate THING name
+<div class="highlight"><pre><span></span>$ chef generate THING name
 </pre></div>
 <p><em>Note: None of these generators exist yet. They should subsume the functionality of the attendent knife X commands, and be intelligent about which workflow we&#39;ve chosen.</em></p>
 
 <p>This will result in a blank, JSON formatted policy document created in the appropriate
 subdirectory of your repository. Edit it to your satisfaction, and then:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git add .
-<span class="nv">$ </span>git commit -a -m <span class="s2">&quot;Super dope policy&quot;</span>
+<div class="highlight"><pre><span></span>$ git add .
+$ git commit -a -m <span class="s2">&quot;Super dope policy&quot;</span>
 </pre></div>
 <h3>How to manage external dependencies</h3>
 
 <p>In this workflow, all external dependencies are tracked within the same source code repository as your custom-built source code. To install, for example, a 3rd party cookbook called &quot;apache2&quot; from the <a href="http://supermarket.getchef.com">supermarket</a>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef vendor dependencies
+<div class="highlight"><pre><span></span>$ chef vendor dependencies
 </pre></div>
 <p><em>Note: this command should approximate the &#39;knife cookbook site install&#39; commands behavior, which is to fetch the cookbook and its dependencies from supermarket, and create vendor branches for each of them. Unlike cookbook site install, it should inspect all the metadata for every cookbook in the repository, and dynamically attempt to fetch any dependency it doesn&#39;t have. It should be version agnostic.</em></p>
 
 <p>If you have a top level dependency, you can specify the cookbook name:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef vendor dependencies apache2
+<div class="highlight"><pre><span></span>$ chef vendor dependencies apache2
 </pre></div>
 <h3>How to test your cookbooks and policy</h3>
 
 <p>When testing your cookbooks with <a href="https://github.com/sethvargo/chefspec">ChefSpec</a> or <a href="https://github.com/test-kitchen/test-kitchen">Test Kitchen</a>, all your cookbook dependencies should have been resolved with <code>chef vendor dependencies</code> above. You can then run your unit tests with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef <span class="nb">test </span>unit
+<div class="highlight"><pre><span></span>$ chef <span class="nb">test</span> unit
 </pre></div>
 <p>And your integration tests with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef <span class="nb">test </span>integration
+<div class="highlight"><pre><span></span>$ chef <span class="nb">test</span> integration
 </pre></div>
 <p><em>Note: We will need to have the generators for each of these tools drop off a standard file for dependency resolution that states we should exlusively look at the directory above us for our content. Also - should this really be chef test unit/chef test integration?</em></p>
 
 <h3>How to publish your cookbooks and policy</h3>
 
 <p>To publish your cookbooks and policy to a Chef Server:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef upload
+<div class="highlight"><pre><span></span>$ chef upload
 </pre></div>
 <p><em>Note: This is currently a knife command, that should be ported to the chef DK, so we can
 abstract it against multiple workflows.</em></p>
@@ -170,37 +170,37 @@ abstract it against multiple workflows.</em></p>
 <h3>Setup</h3>
 
 <p>To get started with this workflow, create a directory for your (multiple) source repositories.</p>
-<div class="highlight"><pre><span class="nv">$ </span>mkdir ~/src/chef
+<div class="highlight"><pre><span></span>$ mkdir ~/src/chef
 </pre></div>
 <h3>How to create your Chef cookbooks</h3>
 
 <p>To create a new cookbook, from the top of your source directory:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef generate cookbook snazzy
+<div class="highlight"><pre><span></span>$ chef generate cookbook snazzy
 </pre></div>
 <p><em>Note: We should recognize that we are in the independent software projects workflow, and adjust accordingly.</em></p>
 
 <p>The cookbook will be automatically initialized as a git project - so when you are done with your first pass, commit it.</p>
-<div class="highlight"><pre><span class="nv">$ </span>git commit -a -m <span class="s2">&quot;One snazzy cookbook&quot;</span>
+<div class="highlight"><pre><span></span>$ git commit -a -m <span class="s2">&quot;One snazzy cookbook&quot;</span>
 </pre></div>
 <h3>How to create your Chef policy (everything that isn&#39;t a cookbook)</h3>
 
 <p>Create a policy-only repository:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef generate repo chef-policy --policy-only
+<div class="highlight"><pre><span></span>$ chef generate repo chef-policy --policy-only
 </pre></div>
 <p><em>Note: this should create a chef-repo minus the cookbooks directory</em></p>
 
 <p>To create a new type of policy document, from the top of your chef-policy directory:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef generate THING name
+<div class="highlight"><pre><span></span>$ chef generate THING name
 </pre></div>
 <p>One exception to this structure are data bags:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef generate data-bag BAG_NAME ITEM_NAME
+<div class="highlight"><pre><span></span>$ chef generate data-bag BAG_NAME ITEM_NAME
 </pre></div>
 <p><em>Note: None of these generators exist yet. They should subsume the functionality of the attendent knife X commands, and be intelligent about which workflow we&#39;ve chosen.</em></p>
 
 <p>This will result in a blank, JSON formatted policy document created in the appropriate
 subdirectory of your repository. Edit it to your satisfaction, and then:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git add .
-<span class="nv">$ </span>git commit -a -m <span class="s2">&quot;Super dope policy&quot;</span>
+<div class="highlight"><pre><span></span>$ git add .
+$ git commit -a -m <span class="s2">&quot;Super dope policy&quot;</span>
 </pre></div>
 <h3>How to manage external dependencies</h3>
 
@@ -209,22 +209,22 @@ subdirectory of your repository. Edit it to your satisfaction, and then:</p>
 <h3>How to test your cookbooks and policy</h3>
 
 <p>When testing your cookbooks with <a href="https://github.com/sethvargo/chefspec">ChefSpec</a> or <a href="https://github.com/test-kitchen/test-kitchen">Test Kitchen</a>, your dependencies will be automatically resolved.</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef <span class="nb">test </span>unit
+<div class="highlight"><pre><span></span>$ chef <span class="nb">test</span> unit
 </pre></div>
 <p>And your integration tests with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef <span class="nb">test </span>integration
+<div class="highlight"><pre><span></span>$ chef <span class="nb">test</span> integration
 </pre></div>
 <p><em>Note: We will need to have the generators for each of these tools drop off a standard file for dependency resolution that states we should exlusively look at the directory above us for our content. Also - should this really be chef test unit/chef test integration?</em></p>
 
 <h3>How to publish your cookbooks and policy</h3>
 
 <p>To publish your cookbooks and policy to a chef server:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef upload
+<div class="highlight"><pre><span></span>$ chef upload
 </pre></div>
 <p><em>Note: This is currently a knife command, that should be ported to the chef DK, so we can abstract it against multiple workflows.</em></p>
 
 <p>To publish your cookbooks for use with chef-zero:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef package / --policy<span class="o">=</span>~/src/chef-policy
+<div class="highlight"><pre><span></span>$ chef package / --policy<span class="o">=</span>~/src/chef-policy
 </pre></div>
 <p><em>Note: This command should package up all your cookbooks and extra policy as a Chef Solo tarball.</em></p>
     </div>

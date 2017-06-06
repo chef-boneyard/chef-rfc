@@ -30,44 +30,44 @@
 <li>DSC configuration block includes in-built and custom DSC resources.</li>
 <li>Example:</li>
 </ul>
-<div class="highlight"><pre><span class="vg">Configuration</span><span class="w"> </span><span class="vg">MyWebConfig</span>
-<span class="p">{</span>
-<span class="w">   </span><span class="err">#</span><span class="w"> </span><span class="vg">A</span><span class="w"> </span><span class="vg">Configuration</span><span class="w"> </span><span class="vg">block</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">zero</span><span class="w"> </span><span class="vg">or</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">Node</span><span class="w"> </span><span class="vg">blocks</span>
-<span class="w">   </span><span class="vg">Node</span><span class="w"> </span><span class="s2">&quot;Server001&quot;</span>
-<span class="w">   </span><span class="p">{</span>
-<span class="w">      </span><span class="err">#</span><span class="w"> </span><span class="vg">Next</span><span class="p">,</span><span class="w"> </span><span class="vg">specify</span><span class="w"> </span><span class="vg">one</span><span class="w"> </span><span class="vg">or</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">blocks</span>
-<span class="w">      </span><span class="err">#</span><span class="w"> </span><span class="vg">File</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">built</span><span class="o">-</span><span class="vg">in</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">you</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">manage</span><span class="w"> </span><span class="vg">files</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">directories</span>
-<span class="w">      </span><span class="err">#</span><span class="w"> </span><span class="vg">This</span><span class="w"> </span><span class="vg">example</span><span class="w"> </span><span class="vg">ensures</span><span class="w"> </span><span class="vg">files</span><span class="w"> </span><span class="vg">from</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">source</span><span class="w"> </span><span class="vg">directory</span><span class="w"> </span><span class="vg">are</span><span class="w"> </span><span class="vg">present</span>
-<span class="w">      </span><span class="vg">File</span><span class="w"> </span><span class="vg">MyFileExample</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">         </span><span class="err">#</span><span class="w"> </span><span class="vg">You</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">also</span><span class="w"> </span><span class="vg">set</span><span class="w"> </span><span class="vg">Ensure</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="s2">&quot;Absent&quot;</span>
-<span class="w">         </span><span class="vg">Ensure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Present&quot;</span>
-<span class="w">         </span><span class="err">#</span><span class="w"> </span><span class="vg">Default</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="err">“</span><span class="vg">File</span><span class="err">”</span>
-<span class="w">         </span><span class="vg">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Directory&quot;</span>
-<span class="w">         </span><span class="vg">Recurse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="vg">true</span>
-<span class="w">         </span><span class="vg">SourcePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="vg">WebsiteFilePath</span>
-<span class="w">         </span><span class="vg">DestinationPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;C:\inetpub\wwwroot&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">   </span><span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span>Configuration MyWebConfig
+{
+   # A Configuration block can have zero or more Node blocks
+   Node &quot;Server001&quot;
+   {
+      # Next, specify one or more resource blocks
+      # File is a built-in resource you can use to manage files and directories
+      # This example ensures files from the source directory are present
+      File MyFileExample
+      {
+         # You can also set Ensure to &quot;Absent&quot;
+         Ensure = &quot;Present&quot;
+         # Default is “File”
+         Type = &quot;Directory&quot;
+         Recurse = $true
+         SourcePath = $WebsiteFilePath
+         DestinationPath = &quot;C:\inetpub\wwwroot&quot;
+      }
+   }
+}
 </pre></div>
 <ul>
 <li>The Desired State Configuration (DSC) resource is a PowerShell module that is used to model one or more entities that you want to be in a specific, desired state.</li>
 <li>There are certain rules which must be followed by custom DSC resource.</li>
 <li>All DSC resources should be deployed in the following folder hierarchy:</li>
 </ul>
-<div class="highlight"><pre><span class="err">$</span><span class="nl">env:</span><span class="w"> </span><span class="vg">psmodulepath</span><span class="w"> </span><span class="p">(</span><span class="vg">folder</span><span class="p">)</span>
-<span class="w">  </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">ModuleName</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">folder</span><span class="p">)</span>
-<span class="w">    </span><span class="o">|-</span><span class="w">  </span><span class="o">&lt;</span><span class="vg">ModuleName</span><span class="o">.</span><span class="vg">psd1</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">file</span><span class="p">,</span><span class="vg">required</span><span class="p">)</span>
-<span class="w">    </span><span class="o">|-</span><span class="w"> </span><span class="vg">DSCResources</span><span class="w"> </span><span class="p">(</span><span class="vg">folder</span><span class="p">)</span>
-<span class="w">      </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">DSCResourceName1</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">folder</span><span class="p">)</span>
-<span class="w">        </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">DSCResourceName1</span><span class="o">.</span><span class="vg">psd1</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">file</span><span class="p">,</span><span class="w"> </span><span class="vg">optional</span><span class="p">)</span>
-<span class="w">        </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">DSCResourceName1</span><span class="o">.</span><span class="vg">psm1</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">file</span><span class="p">,</span><span class="w"> </span><span class="vg">required</span><span class="p">)</span>
-<span class="w">        </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">DSCResourceName1</span><span class="o">.</span><span class="vg">schema</span><span class="o">.</span><span class="vg">mof</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">file</span><span class="p">,</span><span class="w"> </span><span class="vg">required</span><span class="p">)</span>
-<span class="w">      </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">DSCResourceName2</span><span class="o">&gt;</span><span class="p">(</span><span class="vg">folder</span><span class="p">)</span>
-<span class="w">        </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">DSCResourceName2</span><span class="o">.</span><span class="vg">psd1</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">file</span><span class="p">,</span><span class="w"> </span><span class="vg">optional</span><span class="p">)</span>
-<span class="w">        </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">DSCResourceName2</span><span class="o">.</span><span class="vg">psm1</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">file</span><span class="p">,</span><span class="w"> </span><span class="vg">required</span><span class="p">)</span>
-<span class="w">        </span><span class="o">|-</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">DSCResourceName2</span><span class="o">.</span><span class="vg">schema</span><span class="o">.</span><span class="vg">mof</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="vg">file</span><span class="p">,</span><span class="w"> </span><span class="vg">required</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>$env: psmodulepath (folder)
+  |- &lt;ModuleName&gt; (folder)
+    |-  &lt;ModuleName.psd1&gt; (file,required)
+    |- DSCResources (folder)
+      |- &lt;DSCResourceName1&gt; (folder)
+        |- &lt;DSCResourceName1.psd1&gt; (file, optional)
+        |- &lt;DSCResourceName1.psm1&gt; (file, required)
+        |- &lt;DSCResourceName1.schema.mof&gt; (file, required)
+      |- &lt;DSCResourceName2&gt;(folder)
+        |- &lt;DSCResourceName2.psd1&gt; (file, optional)
+        |- &lt;DSCResourceName2.psm1&gt; (file, required)
+        |- &lt;DSCResourceName2.schema.mof&gt; (file, required)
 </pre></div>
 <ul>
 <li>DSC introduced Import-DscResource dynamic keyword to import custom DSC resources. This keyword is only available inside configuration block.</li>
@@ -101,7 +101,7 @@
 </ul>
 
 <h2>Example</h2>
-<div class="highlight"><pre><span class="n">powershell_dsc_module</span> <span class="s2">&quot;test_module&quot;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">powershell_dsc_module</span> <span class="s2">&quot;test_module&quot;</span> <span class="k">do</span>
   <span class="n">module_name</span> <span class="s2">&quot;test_module&quot;</span>
   <span class="n">remote_url</span> <span class="s2">&quot;https://s3.aws.com/test_module.zip&quot;</span>
   <span class="n">action</span> <span class="ss">:install</span>

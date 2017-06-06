@@ -70,7 +70,7 @@ features it provides.</p>
 
 <p>The latter goal is addressed by adding support for an explicit lookup path by
 giving an array for the source attribute:</p>
-<div class="highlight"><pre><span class="n">template</span> <span class="s1">&#39;/test&#39;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">template</span> <span class="s1">&#39;/test&#39;</span> <span class="k">do</span>
   <span class="n">source</span> <span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">node</span><span class="o">.</span><span class="n">chef_environment</span><span class="si">}</span><span class="s2">.erb&quot;</span><span class="p">,</span> <span class="s1">&#39;default.erb&#39;</span><span class="o">]</span>
 <span class="k">end</span>
 </pre></div>
@@ -78,7 +78,7 @@ giving an array for the source attribute:</p>
 of the default lookup path.</p>
 
 <p>The default lookup path can be emulated explicitly:</p>
-<div class="highlight"><pre><span class="n">template</span> <span class="s1">&#39;/test&#39;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">template</span> <span class="s1">&#39;/test&#39;</span> <span class="k">do</span>
   <span class="n">source</span> <span class="sx">%W{</span>
 <span class="sx">    host-</span><span class="si">#{</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;fqdn&#39;</span><span class="o">]</span><span class="si">}</span><span class="sx">/test.erb</span>
 <span class="sx">    </span><span class="si">#{</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;platform&#39;</span><span class="o">]</span><span class="si">}</span><span class="sx">-</span><span class="si">#{</span><span class="n">node</span><span class="o">[</span><span class="s1">&#39;platform_version&#39;</span><span class="o">]</span><span class="si">}</span><span class="sx">/test.erb</span>

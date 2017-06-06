@@ -29,7 +29,7 @@
 <h3>Signing Protocol v1.0</h3>
 
 <p>Signing protocol v1.0 signs the following message:</p>
-<div class="highlight"><pre><span class="n">Method</span><span class="o">:</span><span class="n">HTTP_METHOD</span>
+<div class="highlight"><pre><span></span><span class="n">Method</span><span class="o">:</span><span class="n">HTTP_METHOD</span>
 <span class="n">Hashed</span> <span class="n">Path</span><span class="o">:</span><span class="n">HASHED_PATH</span>
 <span class="n">X</span><span class="o">-</span><span class="n">Ops</span><span class="o">-</span><span class="n">Content</span><span class="o">-</span><span class="n">Hash</span><span class="o">:</span><span class="n">HASHED_BODY</span>
 <span class="n">X</span><span class="o">-</span><span class="n">Ops</span><span class="o">-</span><span class="n">Timestamp</span><span class="o">:</span><span class="n">TIME</span>
@@ -65,7 +65,7 @@
 <h3>v1.3 Message Format</h3>
 
 <p>Following is the message to be signed by the v1.3 protocol.</p>
-<div class="highlight"><pre><span class="n">Method</span><span class="o">:</span><span class="n">HTTP_METHOD</span>
+<div class="highlight"><pre><span></span><span class="n">Method</span><span class="o">:</span><span class="n">HTTP_METHOD</span>
 <span class="n">Path</span><span class="o">:</span><span class="n">PATH</span>
 <span class="n">X</span><span class="o">-</span><span class="n">Ops</span><span class="o">-</span><span class="n">Content</span><span class="o">-</span><span class="n">Hash</span><span class="o">:</span><span class="n">HASHED_BODY</span>
 <span class="n">X</span><span class="o">-</span><span class="n">Ops</span><span class="o">-</span><span class="n">Sign</span><span class="o">:</span><span class="n">version</span><span class="o">=</span><span class="mf">1.3</span>
@@ -93,33 +93,33 @@
 <h3>Example</h3>
 
 <p>The following is an example of how to go from the information required to make a signature to the actual signature. First, an RSA key (private_key.pem):</p>
-<div class="highlight"><pre><span class="o">-----</span><span class="vg">BEGIN</span><span class="w"> </span><span class="vg">RSA</span><span class="w"> </span><span class="vg">PRIVATE</span><span class="w"> </span><span class="kr">KEY</span><span class="o">-----</span>
-<span class="vg">MIIEpAIBAAKCAQEA0ueqo76MXuP6XqZBILFziH</span><span class="o">/</span><span class="il">9</span><span class="vg">AI7C6PaN5W0dSvkr9yInyGHS</span>
-<span class="vg">z</span><span class="o">/</span><span class="vg">IR1</span><span class="o">+</span><span class="il">4</span><span class="vg">tqvP2qlfKVKI4CP6BFH251Ft9qMUBuAsnlAVQ1z0exDtIFFOyQCdR7iXm</span>
-<span class="vg">jBIWMSS4buBwRQXwDK7id1OxtU23qVJv</span><span class="o">+</span><span class="vg">xwEV0IzaaSJmaGLIbvRBD</span><span class="o">+</span><span class="vg">qatfUuQJB</span>
-<span class="vg">MU</span><span class="o">/</span><span class="il">04</span><span class="vg">DdJIwvLtZBYdC2219m5dUBQaa4bimL</span><span class="o">+</span><span class="vg">YN9EcsDzD9h9UxQo5ReK7b3cNMzJ</span>
-<span class="vg">BKJWLzFBcJuePMzAnLFktr</span><span class="o">/</span><span class="vg">RufX4wpXe6XJxoVPaHo72GorLkwnQ0HYMTY8rehT4</span>
-<span class="vg">mDi1FI969LHCFFaFHSAaRnwdXaQkJmSfcxzCYQIDAQABAoIBAQCW3I4sKN5B9jOe</span>
-<span class="vg">xq</span><span class="o">/</span><span class="vg">pkeWBq4OvhW8Ys1yW0zFT8t6nHbB1XrwscQygd8gE9BPqj3e0iIEqtdphbPmj</span>
-<span class="vg">VHqTYbC0FI6QDClifV7noTwTBjeIOlgZ0NSUN0</span><span class="o">/</span><span class="vg">WgVzIOxUz2mZ2vBZUovKILPqG</span>
-<span class="vg">TOi7J7RXMoySMdcXpP1f</span><span class="o">+</span><span class="vg">PgvYNcnKsT72UcWaSXEV8</span><span class="o">/</span><span class="vg">zo</span><span class="o">+</span><span class="vg">Zm</span><span class="o">/</span><span class="vg">qdGPVWwJonri5Mp</span>
-<span class="vg">DVm5EQSENBiRyt028rU6ElXORNmoQpVjDVqZ1gipzXkifdjGyENw2rt4V</span><span class="o">/</span><span class="vg">iKYD7V</span>
-<span class="nl">5</span><span class="vg">iqXOsvP6Cemf4gbrjunAgDG08S00kiUgvVWcdXW</span><span class="o">+</span><span class="vg">dlsR2nCvH4DOEe3AYYh</span><span class="o">/</span><span class="vg">aH8</span>
-<span class="vg">DxEE7FbtAoGBAPcNO8fJ56mNw0ow4Qg38C</span><span class="o">+</span><span class="vg">Zss</span><span class="o">/</span><span class="vg">afhBOCfX4O</span><span class="o">/</span><span class="vg">SZKv</span><span class="o">/</span><span class="vg">roRn5</span><span class="o">+</span><span class="vg">gRM</span>
-<span class="vg">KRJYSVXNnsjPI1plzqR4OCyOrjAhtuvL4a0DinDzf1</span><span class="o">+</span><span class="vg">fiztyNohwYsW1vYmqn3ti</span>
-<span class="vg">EN0GhSgE7ppZjqvLQ3f3LUTxynhA0U</span><span class="o">+</span><span class="vg">k9wflb4irIlViTUlCsOPkrNJDAoGBANqL</span>
-<span class="vg">Q</span><span class="o">+</span><span class="vg">vvuGSsmRLU</span><span class="o">/</span><span class="vg">Cenjy</span><span class="o">+</span><span class="vg">Mjj6</span><span class="o">+</span><span class="vg">QENg51dz34o8JKuVKIPKU8pNnyeLa5fat0qD2MHm</span>
-<span class="vg">OB9opeQOcw0dStodxr6DB3wi83bpjeU6BWUGITNiWEaZEBrQ0aiqNJJKrrHm8fAZ</span>
-<span class="nl">9</span><span class="vg">o4l4oHc4hI0kYVYYDuxtKuVJrzZiEapTwoOcYiLAoGBAI</span><span class="o">/</span><span class="vg">EWbeIHZIj9zOjgjEA</span>
-<span class="vg">LHvm25HtulLOtyk2jd1njQhlHNk7CW2azIPqcLLH99EwCYi</span><span class="o">/</span><span class="vg">miNH</span><span class="o">+</span><span class="vg">pijZ2aHGCXb</span>
-<span class="o">/</span><span class="vg">bZrSxM0ADmrZKDxdB6uGCyp</span><span class="o">+</span><span class="vg">GS2sBxjEyEsfCyvwhJ8b3Q100tqwiNO</span><span class="o">+</span><span class="vg">d5FCglp</span>
-<span class="vg">HICx2dgUjuRVUliBwOK93nx1AoGAUI8RhIEjOYkeDAESyhNMBr0LGjnLOosX</span><span class="o">+/</span><span class="vg">as</span>
-<span class="vg">qiotYkpjWuFULbibOFp</span><span class="o">+</span><span class="vg">WMW41vDvD9qrSXir3fstkeIAW5KqVkO6mJnRoT3Knnra</span>
-<span class="vg">zjiKOITCAZQeiaP8BO5o3pxE9TMqb9VCO3ffnPstIoTaN4syPg7tiGo8k1SklVeH</span>
-<span class="nl">2</span><span class="vg">S8lzq0CgYAKG2fljIYWQvGH628rp4ZcXS4hWmYohOxsnl1YrszbJ</span><span class="o">+</span><span class="vg">hzR</span><span class="o">+</span><span class="vg">IQOhGl</span>
-<span class="vg">YlkUQYXhy9JixmUUKtH</span><span class="o">+</span><span class="vg">NXkKX7Lyc8XYw5ETr7JBT3ifs</span><span class="o">+</span><span class="vg">G7HruDjVG78EJVojbd</span>
-<span class="nl">8</span><span class="vg">uLA</span><span class="o">+</span><span class="vg">DdQm5mg4vd1GTiSK65q</span><span class="o">/</span><span class="il">3</span><span class="vg">EeoBlUaVor3HhLFki</span><span class="o">+</span><span class="vg">i9qpT8CBsg</span><span class="o">==</span>
-<span class="o">-----</span><span class="kr">END</span><span class="w"> </span><span class="vg">RSA</span><span class="w"> </span><span class="vg">PRIVATE</span><span class="w"> </span><span class="kr">KEY</span><span class="o">-----</span>
+<div class="highlight"><pre><span></span>-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA0ueqo76MXuP6XqZBILFziH/9AI7C6PaN5W0dSvkr9yInyGHS
+z/IR1+4tqvP2qlfKVKI4CP6BFH251Ft9qMUBuAsnlAVQ1z0exDtIFFOyQCdR7iXm
+jBIWMSS4buBwRQXwDK7id1OxtU23qVJv+xwEV0IzaaSJmaGLIbvRBD+qatfUuQJB
+MU/04DdJIwvLtZBYdC2219m5dUBQaa4bimL+YN9EcsDzD9h9UxQo5ReK7b3cNMzJ
+BKJWLzFBcJuePMzAnLFktr/RufX4wpXe6XJxoVPaHo72GorLkwnQ0HYMTY8rehT4
+mDi1FI969LHCFFaFHSAaRnwdXaQkJmSfcxzCYQIDAQABAoIBAQCW3I4sKN5B9jOe
+xq/pkeWBq4OvhW8Ys1yW0zFT8t6nHbB1XrwscQygd8gE9BPqj3e0iIEqtdphbPmj
+VHqTYbC0FI6QDClifV7noTwTBjeIOlgZ0NSUN0/WgVzIOxUz2mZ2vBZUovKILPqG
+TOi7J7RXMoySMdcXpP1f+PgvYNcnKsT72UcWaSXEV8/zo+Zm/qdGPVWwJonri5Mp
+DVm5EQSENBiRyt028rU6ElXORNmoQpVjDVqZ1gipzXkifdjGyENw2rt4V/iKYD7V
+5iqXOsvP6Cemf4gbrjunAgDG08S00kiUgvVWcdXW+dlsR2nCvH4DOEe3AYYh/aH8
+DxEE7FbtAoGBAPcNO8fJ56mNw0ow4Qg38C+Zss/afhBOCfX4O/SZKv/roRn5+gRM
+KRJYSVXNnsjPI1plzqR4OCyOrjAhtuvL4a0DinDzf1+fiztyNohwYsW1vYmqn3ti
+EN0GhSgE7ppZjqvLQ3f3LUTxynhA0U+k9wflb4irIlViTUlCsOPkrNJDAoGBANqL
+Q+vvuGSsmRLU/Cenjy+Mjj6+QENg51dz34o8JKuVKIPKU8pNnyeLa5fat0qD2MHm
+OB9opeQOcw0dStodxr6DB3wi83bpjeU6BWUGITNiWEaZEBrQ0aiqNJJKrrHm8fAZ
+9o4l4oHc4hI0kYVYYDuxtKuVJrzZiEapTwoOcYiLAoGBAI/EWbeIHZIj9zOjgjEA
+LHvm25HtulLOtyk2jd1njQhlHNk7CW2azIPqcLLH99EwCYi/miNH+pijZ2aHGCXb
+/bZrSxM0ADmrZKDxdB6uGCyp+GS2sBxjEyEsfCyvwhJ8b3Q100tqwiNO+d5FCglp
+HICx2dgUjuRVUliBwOK93nx1AoGAUI8RhIEjOYkeDAESyhNMBr0LGjnLOosX+/as
+qiotYkpjWuFULbibOFp+WMW41vDvD9qrSXir3fstkeIAW5KqVkO6mJnRoT3Knnra
+zjiKOITCAZQeiaP8BO5o3pxE9TMqb9VCO3ffnPstIoTaN4syPg7tiGo8k1SklVeH
+2S8lzq0CgYAKG2fljIYWQvGH628rp4ZcXS4hWmYohOxsnl1YrszbJ+hzR+IQOhGl
+YlkUQYXhy9JixmUUKtH+NXkKX7Lyc8XYw5ETr7JBT3ifs+G7HruDjVG78EJVojbd
+8uLA+DdQm5mg4vd1GTiSK65q/3EeoBlUaVor3HhLFki+i9qpT8CBsg==
+-----END RSA PRIVATE KEY-----
 </pre></div>
 <p>For this example, assume the following intent:</p>
 
@@ -134,7 +134,7 @@
 | Sign Protocol      | v1.3                   |</p>
 
 <p>Using this information, we can generate the following message:</p>
-<div class="highlight"><pre><span class="n">Method</span><span class="o">:</span><span class="n">POST</span>
+<div class="highlight"><pre><span></span><span class="n">Method</span><span class="o">:</span><span class="n">POST</span>
 <span class="n">Path</span><span class="o">:/</span><span class="n">organizations</span><span class="o">/</span><span class="n">clownco</span>
 <span class="n">X</span><span class="o">-</span><span class="n">Ops</span><span class="o">-</span><span class="n">Content</span><span class="o">-</span><span class="n">Hash</span><span class="o">:</span><span class="n">hDlKNZhIhgso3Fs0S0pZwJ0xyBWtR1RBaeHs1DrzOho</span><span class="o">=</span>
 <span class="n">X</span><span class="o">-</span><span class="n">Ops</span><span class="o">-</span><span class="n">Sign</span><span class="o">:</span><span class="n">version</span><span class="o">=</span><span class="mf">1.3</span>
@@ -145,12 +145,12 @@
 <p>Note the line endings are <code>\n</code>, and there is no newline character after <code>X-Ops-Server-API-Version:1</code>.</p>
 
 <p>This message can now be signed, with the expected Base64 representation being:</p>
-<div class="highlight"><pre><span class="vg">FZOmXAyOBAZQV</span><span class="o">/</span><span class="vg">uw188iBljBJXOm</span><span class="o">+</span><span class="vg">m8xQ</span><span class="o">/</span><span class="il">8</span><span class="vg">KTGLkgGwZNcRFxk1m953XjE3W</span>
-<span class="vg">VGy1dFT76KeaNWmPCNtDmprfH2na5UZFtfLIKrPv7xm80V</span><span class="o">+</span><span class="vg">lzEzTd9WBwsfP</span>
-<span class="nl">42</span><span class="vg">dZ9N</span><span class="o">+</span><span class="vg">V9I5SVfcL</span><span class="o">/</span><span class="vg">lWrrlpdybfceJC5jOcP5tzfJXWUITwb6Z3Erg3DU3Uh</span>
-<span class="vg">H9h9E0qWlYGqmiNCVrBnpe6Si1gU</span><span class="o">/</span><span class="vg">Jl</span><span class="o">+</span><span class="vg">rXlRSNbLJ4GlArAPuL976iTYJTzE</span>
-<span class="vg">MmbLUIm3JRYi00Yb01IUCCKdI90vUq1HHNtlTEu93YZfQaJwRxXlGkCNwIJe</span>
-<span class="vg">fy49QzaCIEu1XiOx5Jn</span><span class="o">+</span><span class="il">4</span><span class="vg">GmkrZch</span><span class="o">/</span><span class="vg">RrK9VzQWXgs</span><span class="o">+</span><span class="vg">w</span><span class="o">==</span>
+<div class="highlight"><pre><span></span>FZOmXAyOBAZQV/uw188iBljBJXOm+m8xQ/8KTGLkgGwZNcRFxk1m953XjE3W
+VGy1dFT76KeaNWmPCNtDmprfH2na5UZFtfLIKrPv7xm80V+lzEzTd9WBwsfP
+42dZ9N+V9I5SVfcL/lWrrlpdybfceJC5jOcP5tzfJXWUITwb6Z3Erg3DU3Uh
+H9h9E0qWlYGqmiNCVrBnpe6Si1gU/Jl+rXlRSNbLJ4GlArAPuL976iTYJTzE
+MmbLUIm3JRYi00Yb01IUCCKdI90vUq1HHNtlTEu93YZfQaJwRxXlGkCNwIJe
+fy49QzaCIEu1XiOx5Jn+4GmkrZch/RrK9VzQWXgs+w==
 </pre></div>
 <p>The Chef server should expect the following headers to be passed along:</p>
 

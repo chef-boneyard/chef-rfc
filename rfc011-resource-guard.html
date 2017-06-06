@@ -172,7 +172,7 @@ interpreters.
 Concepts such as inheritance are introduced in the examples which are explained in subsequent sections.</p>
 
 <h3>Custom interpreter for script resources</h3>
-<div class="highlight"><pre><span class="c1"># This resource will run without errors because the guard uses</span>
+<div class="highlight"><pre><span></span><span class="c1"># This resource will run without errors because the guard uses</span>
 <span class="c1"># the bash interpreter; if we had passed the same string</span>
 <span class="c1"># directly to the only_if, this would have failed the</span>
 <span class="c1"># Chef run since that string is not valid for /bin/sh</span>
@@ -183,7 +183,7 @@ Concepts such as inheritance are introduced in the examples which are explained 
 <span class="k">end</span>
 </pre></div>
 <h3>Inheritance is your friend</h3>
-<div class="highlight"><pre><span class="c1"># This resource will run because the cwd of the guard</span>
+<div class="highlight"><pre><span></span><span class="c1"># This resource will run because the cwd of the guard</span>
 <span class="c1"># is the same as that of the parent resource</span>
 <span class="n">bash</span> <span class="s2">&quot;My cwd gets inherited&quot;</span> <span class="k">do</span>
   <span class="n">guard_interpreter</span> <span class="ss">:bash</span>
@@ -193,7 +193,7 @@ Concepts such as inheritance are introduced in the examples which are explained 
 <span class="k">end</span>
 </pre></div>
 <h3>Setting guard parameters</h3>
-<div class="highlight"><pre><span class="c1"># The normal command string syntax for guards lets you</span>
+<div class="highlight"><pre><span></span><span class="c1"># The normal command string syntax for guards lets you</span>
 <span class="c1"># specify parameters like cwd, etc. -- you can do the same</span>
 <span class="c1"># here by specifying those parameters in the guard expression</span>
 <span class="n">bash</span> <span class="s2">&quot;Override my guard attributes&quot;</span> <span class="k">do</span>
@@ -209,7 +209,7 @@ Concepts such as inheritance are introduced in the examples which are explained 
 advantage of guard interpreter resource support.</p>
 
 <h4><code>powershell_script</code> guard interpeter default example</h4>
-<div class="highlight"><pre><span class="c1"># Here is the fix for CHEF-4553 -- use guard_interpreter to</span>
+<div class="highlight"><pre><span></span><span class="c1"># Here is the fix for CHEF-4553 -- use guard_interpreter to</span>
 <span class="c1"># execute the script with powershell, not cmd</span>
 <span class="n">powershell_script</span> <span class="s2">&quot;defaultguard&quot;</span> <span class="k">do</span>
   <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
@@ -218,7 +218,7 @@ advantage of guard interpreter resource support.</p>
 <span class="k">end</span>
 </pre></div>
 <h4><code>powershell_script</code> Boolean behavior</h4>
-<div class="highlight"><pre><span class="c1"># What if guards evaluated powershell script code that powershell</span>
+<div class="highlight"><pre><span></span><span class="c1"># What if guards evaluated powershell script code that powershell</span>
 <span class="c1"># evaluates as a boolean type as the actual boolean value of the guard</span>
 <span class="c1"># itself? You can avoid extra script code to translate the boolean into</span>
 <span class="c1"># a process exit code that results in the right true / false behavior </span>
@@ -230,7 +230,7 @@ advantage of guard interpreter resource support.</p>
 <span class="k">end</span>
 </pre></div>
 <h4><code>powershell_script</code> architecture inheritance</h4>
-<div class="highlight"><pre><span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="k">do</span>
 <span class="c1"># And look, the not_if will run as an :i386 process because of the</span>
 <span class="c1"># architecture attribute for the parent resource which powershell_script</span>
 <span class="c1"># guard interpreter resources will inherit from the enclosing resource</span>
@@ -322,7 +322,7 @@ script languages that may be used in guard expressions.</p>
 <code>guard_interpreter</code>, a user of the <code>powershell_script</code> resource who would like to use the same PowerShell
 language in the expression passed to the guard resource to the following
 cumbersome solution:</p>
-<div class="highlight"><pre><span class="c1"># Yuk. Let me look up all the right cli args to powershell.exe.</span>
+<div class="highlight"><pre><span></span><span class="c1"># Yuk. Let me look up all the right cli args to powershell.exe.</span>
 <span class="c1"># Oh, do I have to quote my cmd -- what kind of quotes again?</span>
 <span class="c1"># So much fun for me. This is CHEF-4553.</span>
 <span class="n">powershell_script</span> <span class="s2">&quot;oldguard&quot;</span> <span class="k">do</span>
@@ -333,7 +333,7 @@ cumbersome solution:</p>
 <p>With the <code>guard_interpreter</code> attribute, we have
 the following more concise, less cumbersome, and less error-prone expression
 for the same <code>powershell_script</code> use case given above:</p>
-<div class="highlight"><pre><span class="c1"># So PowerShell. Such short.</span>
+<div class="highlight"><pre><span></span><span class="c1"># So PowerShell. Such short.</span>
 <span class="n">powershell_script</span> <span class="s2">&quot;newguard&quot;</span> <span class="k">do</span>
   <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
   <span class="n">code</span> <span class="s1">&#39;new-smbshare systemshare $env:systemdrive&#39;</span>
@@ -379,7 +379,7 @@ through the Chef DSL.</p>
 <h3>Simplification through attribute inheritance</h3>
 
 <p>Consider the following example:</p>
-<div class="highlight"><pre><span class="n">script</span> <span class="s2">&quot;javatooling&quot;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">script</span> <span class="s2">&quot;javatooling&quot;</span> <span class="k">do</span>
   <span class="n">environment</span> <span class="p">{</span><span class="s2">&quot;JAVA_HOME&quot;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/usr/lib/java/jdk1.7/home&#39;</span><span class="p">}</span>
   <span class="n">code</span> <span class="s1">&#39;java-based-daemon-ctl.sh -start&#39;</span>
   <span class="n">not_if</span> <span class="s1">&#39;java-based-daemon-ctl.sh -test-started&#39;</span><span class="p">,</span> <span class="ss">:environment</span> <span class="o">=&gt;</span>
@@ -391,7 +391,7 @@ the resource must also be specified for the guard, both of which use a shell scr
 to that relies on the <code>JAVA_HOME</code> environment variable. With inheritance,
 the second environment variable specification (along with the possibility of
 an incorrect specification) can be eliminated with this simplified version:</p>
-<div class="highlight"><pre><span class="n">script</span> <span class="s2">&quot;javatooling&quot;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">script</span> <span class="s2">&quot;javatooling&quot;</span> <span class="k">do</span>
   <span class="n">guard_interpreter</span> <span class="ss">:csh</span>
   <span class="n">environment</span> <span class="p">{</span><span class="s2">&quot;JAVA_HOME&quot;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/usr/lib/java/jdk1.7/home&#39;</span><span class="p">}</span>
   <span class="n">code</span> <span class="s1">&#39;java-based-daemon-ctl.sh -start&#39;</span>
@@ -419,7 +419,7 @@ to the situation without inheritance for string arguments. For example,
 without allowing the architecture attribute to be inherited with a string
 guard, here is the recipe fragment we&#39;d need to set the PowerShell execution
 policy for the x86 PowerShell interpreter:</p>
-<div class="highlight"><pre><span class="c1"># This is what we&#39;d write if we couldn&#39;t inherit the architecture</span>
+<div class="highlight"><pre><span></span><span class="c1"># This is what we&#39;d write if we couldn&#39;t inherit the architecture</span>
 <span class="c1"># attribute when a string is passed to a guard -- we&#39;d repeat</span>
 <span class="c1"># the architecture attribute twice.</span>
 <span class="n">powershell_script</span> <span class="s2">&quot;set i386 execution policy&quot;</span> <span class="k">do</span>
@@ -431,7 +431,7 @@ policy for the x86 PowerShell interpreter:</p>
 </pre></div>
 <p>By allowing inheritance, the expression is more compact, requires less
 up-front consideration of options, and provides the least surprising behavior:</p>
-<div class="highlight"><pre><span class="c1"># Much more concise -- architecture attribute is inherited by the guard</span>
+<div class="highlight"><pre><span></span><span class="c1"># Much more concise -- architecture attribute is inherited by the guard</span>
 <span class="n">powershell_script</span> <span class="s2">&quot;set i386 execution policy&quot;</span> <span class="k">do</span>
   <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
   <span class="n">architecture</span> <span class="ss">:i386</span>
@@ -444,7 +444,7 @@ up-front consideration of options, and provides the least surprising behavior:</
 <p>Boolean result code interpretation allows guards that make use of the
 <code>powershell_script</code> resource to treat PowerShell Boolean expressions as if they
 were Ruby boolean expressions as in the code below:</p>
-<div class="highlight"><pre><span class="n">powershell_script</span> <span class="s2">&quot;backup-dc&quot;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">powershell_script</span> <span class="s2">&quot;backup-dc&quot;</span> <span class="k">do</span>
   <span class="n">guard_interpreter</span> <span class="ss">:powershell_script</span>
   <span class="n">code</span> <span class="s2">&quot;backup-domain-controller.ps1&quot;</span>
   <span class="n">only_if</span> <span class="s2">&quot;[Security.Principal.WindowsIdentity]::GetCurrent().IsSystem()&quot;</span>
@@ -531,7 +531,7 @@ native descriptive and functional capabilities.</p>
 
 <p>Consider the Chef DSL fragment below where a string passed to an <code>only_if</code> guard performs a
 Boolean test using the sh &quot;[&quot; command:</p>
-<div class="highlight"><pre><span class="n">bash</span> <span class="s2">&quot;systemrestart&quot;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">bash</span> <span class="s2">&quot;systemrestart&quot;</span> <span class="k">do</span>
   <span class="n">code</span> <span class="s1">&#39;~/rebootnow.sh&#39;</span>
   <span class="n">only_if</span> <span class="s1">&#39;[ &quot;$USER&quot; == &quot;root&quot; ]&#39;</span>
 <span class="k">end</span>
@@ -548,7 +548,7 @@ executed with cmd.exe. However, the behavior shown on Unix guards that
 interpret script strings is actually present in the script resources
 themselves when the same Boolean-like code is executed as part of the <code>code</code>
 attribute. Here&#39;s an example:</p>
-<div class="highlight"><pre><span class="n">bash</span> <span class="s2">&quot;myfail&quot;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">bash</span> <span class="s2">&quot;myfail&quot;</span> <span class="k">do</span>
   <span class="n">code</span> <span class="s1">&#39;[ &quot;$USER&quot; == &quot;root&quot; ]&#39;</span>
 <span class="k">end</span>
 </pre></div>
@@ -579,11 +579,11 @@ the PowerShell language can be used directly within a guard expression with no
 need to try to generate a process exit code that Chef will interpret as a true
 or false value. For example, the true or false value of a PowerShell
 expression like </p>
-<div class="highlight"><pre><span class="p">([</span><span class="vg">Security</span><span class="o">.</span><span class="vg">Principal</span><span class="o">.</span><span class="vg">WindowsPrincipal</span><span class="p">][</span><span class="vg">Security</span><span class="o">.</span><span class="vg">Principal</span><span class="o">.</span><span class="vg">WindowsIdentity</span><span class="p">]</span><span class="o">::</span><span class="vg">GetCurrent</span><span class="p">())</span><span class="o">.</span>
-<span class="w">  </span><span class="vg">IsInRole</span><span class="p">([</span><span class="vg">Security</span><span class="o">.</span><span class="vg">Principal</span><span class="o">.</span><span class="vg">WindowsBuiltInRole</span><span class="p">]</span><span class="w"> </span><span class="s2">&quot;Administrator&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span>([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).
+  IsInRole([Security.Principal.WindowsBuiltInRole] &quot;Administrator&quot;)
 </pre></div>
 <p>or</p>
-<div class="highlight"><pre><span class="p">(</span><span class="vg">gi</span><span class="w"> </span><span class="nl">WSMan:</span><span class="o">\</span><span class="vg">localhost</span><span class="o">\</span><span class="vg">Shell</span><span class="o">\</span><span class="vg">MaxMemoryPerShellMB</span><span class="p">)</span><span class="o">.</span><span class="vg">value</span><span class="w"> </span><span class="o">-</span><span class="vg">ge</span><span class="w"> </span><span class="il">300</span>
+<div class="highlight"><pre><span></span>(gi WSMan:\localhost\Shell\MaxMemoryPerShellMB).value -ge 300
 </pre></div>
 <p>can be passed directly to Ruby and evaluated as true or false by the guard
 without specifying any additional PowerShell code. This interpolation of

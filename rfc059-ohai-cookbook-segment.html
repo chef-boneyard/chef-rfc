@@ -24,21 +24,21 @@
 Ohai plugins in all synchronized cookbooks after cookbook synchronization.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">User</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">custom</span><span class="w"> </span><span class="vg">Ohai</span><span class="w"> </span><span class="vg">plugins</span><span class="w"> </span><span class="vg">loaded</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">first</span><span class="w"> </span><span class="vg">bootstrap</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to run chef twice.</span>
+<div class="highlight"><pre><span></span>As a Chef User,
+I want to have my custom Ohai plugins loaded on first bootstrap,
+So I don&#39;t have to run chef twice.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">User</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">Ohai</span><span class="w"> </span><span class="vg">plugins</span><span class="w"> </span><span class="vg">loaded</span><span class="w"> </span><span class="vg">before</span><span class="w"> </span><span class="vg">attributes</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">compile</span><span class="o">/</span><span class="vg">converge</span><span class="w"> </span><span class="vg">mode</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">them</span><span class="w"> </span><span class="vg">without</span><span class="w"> </span><span class="vg">worrying</span><span class="w"> </span><span class="vg">about</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">execution</span><span class="w"> </span><span class="vg">ordering</span><span class="o">.</span>
+As a Chef User,
+I want my Ohai plugins loaded before attributes and compile/converge mode,
+So I can use them without worrying about cookbook execution ordering.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">User</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">Ohai</span><span class="w"> </span><span class="vg">plugins</span><span class="w"> </span><span class="vg">synchronized</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">cookbooks</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t incure more unavoidable round-trips to the Chef Server.</span>
+As a Chef User,
+I want my Ohai plugins synchronized with my cookbooks,
+So that I don&#39;t incure more unavoidable round-trips to the Chef Server.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Developer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">Ohai</span><span class="w"> </span><span class="vg">plugins</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">first</span><span class="o">-</span><span class="vg">class</span><span class="w"> </span><span class="vg">object</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to compile recipes to discover templates that drop plugins.</span>
+As a Chef Developer,
+I want Ohai plugins as a first-class object,
+So that I don&#39;t have to compile recipes to discover templates that drop plugins.
 </pre></div>
 <h2>Specification</h2>
 

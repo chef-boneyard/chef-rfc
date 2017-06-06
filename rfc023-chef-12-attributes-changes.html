@@ -53,9 +53,9 @@ entire nested value of a key at that precedence level, ala Chef 10.</p>
 <h3>To be able to assign with overwrite</h3>
 
 <p>As a side-effect of the changes in Chef 11, this code:</p>
-<div class="highlight"><pre><span class="vg">node</span><span class="o">.</span><span class="vg">default</span><span class="p">[</span><span class="c1">&#39;foo&#39;][&#39;bar&#39;][&#39;baz&#39;] = 12</span>
-<span class="vg">node</span><span class="o">.</span><span class="vg">role_default</span><span class="p">[</span><span class="c1">&#39;foo&#39;][&#39;bar&#39;][&#39;baz&#39;] = 52</span>
-<span class="vg">node</span><span class="o">.</span><span class="vg">default</span><span class="p">[</span><span class="c1">&#39;foo&#39;][&#39;bar&#39;] = {&#39;thing&#39; =&gt; &#39;stuff&#39;}</span>
+<div class="highlight"><pre><span></span>node.default[&#39;foo&#39;][&#39;bar&#39;][&#39;baz&#39;] = 12
+node.role_default[&#39;foo&#39;][&#39;bar&#39;][&#39;baz&#39;] = 52
+node.default[&#39;foo&#39;][&#39;bar&#39;] = {&#39;thing&#39; =&gt; &#39;stuff&#39;}
 </pre></div>
 <p>No longer overwrites the &#39;bar&#39; key with a new hash-like structure, but instead merges these new entries into the existing Attribute. While this is desired for a variety of use-cases, having a way to fully assign the value of a key is important.</p>
 
@@ -66,7 +66,7 @@ entire nested value of a key at that precedence level, ala Chef 10.</p>
 <h3>Precedence Level Removals</h3>
 
 <h4>Syntax</h4>
-<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
 <span class="n">node</span><span class="o">.</span><span class="n">rm_normal</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
 <span class="n">node</span><span class="o">.</span><span class="n">rm_override</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
 </pre></div>
@@ -78,7 +78,7 @@ specified precedence level.</p>
 <h4>Examples</h4>
 
 <p>Delete a default value when only defaults exist</p>
-<div class="highlight"><pre><span class="c1"># Given this structure under &#39;foo&#39;</span>
+<div class="highlight"><pre><span></span><span class="c1"># Given this structure under &#39;foo&#39;</span>
 <span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
   <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
@@ -103,7 +103,7 @@ specified precedence level.</p>
 <span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bat&#39; =&gt; { &#39;things&#39; =&gt; [5,6] } }</span>
 </pre></div>
 <p>Delete a default value when higher precedences exists, doesn&#39;t touch them</p>
-<div class="highlight"><pre><span class="c1"># Given the same structure as before:</span>
+<div class="highlight"><pre><span></span><span class="c1"># Given the same structure as before:</span>
 <span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
   <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
@@ -132,7 +132,7 @@ specified precedence level.</p>
 <span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; { &#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 99}, &#39;bat&#39; =&gt; { &#39;things&#39; =&gt; [5,6] }</span>
 </pre></div>
 <p>Deletes an override when lower-precedence exists without touching them</p>
-<div class="highlight"><pre><span class="c1"># Given the same structure as before - but as an override</span>
+<div class="highlight"><pre><span></span><span class="c1"># Given the same structure as before - but as an override</span>
 <span class="n">node</span><span class="o">.</span><span class="n">override</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
   <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
@@ -157,13 +157,13 @@ specified precedence level.</p>
 <span class="n">node</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">combined_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; { &#39;bar&#39; =&gt; {&#39;baz&#39; =&gt; 55} }</span>
 </pre></div>
 <p>Non-existent key deletes return nil:</p>
-<div class="highlight"><pre><span class="c1"># Delete Non-Existent Key</span>
+<div class="highlight"><pre><span></span><span class="c1"># Delete Non-Existent Key</span>
 <span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;such&quot;</span><span class="p">,</span> <span class="s2">&quot;thing&quot;</span><span class="p">)</span> <span class="c1">#=&gt; nil</span>
 </pre></div>
 <h3>Global Level Removals</h3>
 
 <h4>Syntax</h4>
-<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">node</span><span class="o">.</span><span class="n">rm</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
 </pre></div>
 <p>This will be aliased as <code>node.remove</code> and <code>node.delete</code>.</p>
 
@@ -171,7 +171,7 @@ specified precedence level.</p>
 the new API.</p>
 
 <h4>Examples</h4>
-<div class="highlight"><pre><span class="c1"># Given a similar structure to before</span>
+<div class="highlight"><pre><span></span><span class="c1"># Given a similar structure to before</span>
 <span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
   <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>
@@ -192,7 +192,7 @@ the new API.</p>
 <span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bat&#39; =&gt; { &#39;things&#39; =&gt; [5,6] } }</span>
 </pre></div>
 <p>Deleting a non-existent key returns nil</p>
-<div class="highlight"><pre><span class="c1"># Delete Non-Existent Key</span>
+<div class="highlight"><pre><span></span><span class="c1"># Delete Non-Existent Key</span>
 <span class="n">node</span><span class="o">.</span><span class="n">rm_default</span><span class="p">(</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;such&quot;</span><span class="p">,</span> <span class="s2">&quot;thing&quot;</span><span class="p">)</span> <span class="c1">#=&gt; nil</span>
 </pre></div>
 <h3>Full Assignment</h3>
@@ -205,11 +205,11 @@ the key for that precedent for all &quot;components&quot; that merge earlier tha
 then complete the write.</p>
 
 <h4>Syntax</h4>
-<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
-<span class="n">node</span><span class="o">.</span><span class="n">force_default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
-<span class="n">node</span><span class="o">.</span><span class="n">normal!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
-<span class="n">node</span><span class="o">.</span><span class="n">override!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
-<span class="n">node</span><span class="o">.</span><span class="n">force_override!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="n">node</span><span class="o">.</span><span class="n">default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">normal!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">override!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">node</span><span class="o">.</span><span class="n">force_override!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
 </pre></div>
 <p>Since <code>node.role_default</code>, <code>node.env_default</code>, and their override equivalents
 are considered private APIs, the <code>!</code> syntax will not be implemented for them,
@@ -221,14 +221,14 @@ but not force_default.</p>
 <h4>Examples</h4>
 
 <p>Example 1: Just one component</p>
-<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
 <span class="n">node</span><span class="o">.</span><span class="n">default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;d&#39;</span><span class="p">}</span>
 
 <span class="c1"># The &#39;!&#39; caused the entire &#39;bar&#39; key to be overwritten</span>
 <span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;c&#39; =&gt; &#39;d&#39;}</span>
 </pre></div>
 <p>Example 2: Multiple components; one &quot;after&quot; us:</p>
-<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
 <span class="c1"># Please don&#39;t ever do this in real code :)</span>
 <span class="n">node</span><span class="o">.</span><span class="n">role_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;d&#39;</span><span class="p">}</span>
 <span class="n">node</span><span class="o">.</span><span class="n">default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;d&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;e&#39;</span><span class="p">}</span>
@@ -238,7 +238,7 @@ but not force_default.</p>
 <span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;c&#39; =&gt; &#39;d&#39;, &#39;d&#39; =&gt; &#39;e&#39;}</span>
 </pre></div>
 <p>Example 3: Multiple components; all &quot;before&quot; us:</p>
-<div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
 <span class="c1"># Please don&#39;t ever do this in real code :)</span>
 <span class="n">node</span><span class="o">.</span><span class="n">role_default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;d&#39;</span><span class="p">}</span>
 <span class="n">node</span><span class="o">.</span><span class="n">force_default!</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">][</span><span class="s1">&#39;bar&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;d&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;e&#39;</span><span class="p">}</span>
@@ -248,7 +248,7 @@ but not force_default.</p>
 <span class="n">node</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="c1">#=&gt; {&#39;bar&#39; =&gt; {&#39;d&#39; =&gt; &#39;e&#39;}</span>
 </pre></div>
 <p>Example 4: With multiple precedences</p>
-<div class="highlight"><pre><span class="c1"># Given a similar structure to before</span>
+<div class="highlight"><pre><span></span><span class="c1"># Given a similar structure to before</span>
 <span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="s1">&#39;foo&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span>
   <span class="s1">&#39;bar&#39;</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="s1">&#39;baz&#39;</span> <span class="o">=&gt;</span> <span class="mi">52</span><span class="p">,</span>

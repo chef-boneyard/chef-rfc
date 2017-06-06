@@ -21,9 +21,9 @@
 <h1>Cookbook Segment Deprecation</h1>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">User</span><span class="o">/</span><span class="vg">Developer</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">extend</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">structure</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">cookbooks</span><span class="w"> </span><span class="vg">easily</span><span class="p">,</span>
-<span class="vg">in</span><span class="w"> </span><span class="vg">order</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">quickly</span><span class="w"> </span><span class="vg">adapt</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">automation</span><span class="w"> </span><span class="vg">needs</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef User/Developer
+I want to be able to extend the structure of cookbooks easily,
+in order to quickly adapt to new automation needs.
 </pre></div>
 <h2>Specification</h2>
 
@@ -57,147 +57,147 @@ config parameter.</p>
 <h2>Request/Response Format</h2>
 
 <p>The old format of GET/PUT requests to coobooks/NAME/VERSION looks like:</p>
-<div class="highlight"><pre><span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;definitions&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unicorn_config.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;c92b659171552e896074caa58dada0c2&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;definitions/unicorn_config.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unicorn-0.1.2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;attributes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="s2">&quot;files&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="s2">&quot;json_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Chef::CookbookVersion&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;providers&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;dependencies&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;ruby&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="s2">&quot;rubygems&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[]},</span>
-<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unicorn&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;maintainer_email&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ops@opscode.com&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;attributes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;license&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Apache 2.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;suggestions&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;platforms&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;maintainer&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Opscode, Inc&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;long_description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;= LICENSE AND AUTHOR:\n\nAuthor:: Adam Jacob...&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;recommendations&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;version&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;0.1.2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;conflicting&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;recipes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;unicorn&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Installs unicorn rubygem&quot;</span><span class="p">},</span>
-<span class="w">    </span><span class="s2">&quot;groupings&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;replacing&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Installs/Configures unicorn&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;providing&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="s2">&quot;libraries&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="s2">&quot;templates&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unicorn.rb.erb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;36a1cc1b225708db96d48026c3f624b2&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;templates/default/unicorn.rb.erb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="s2">&quot;resources&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="s2">&quot;cookbook_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unicorn&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;version&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;0.1.2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;recipes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ba0dadcbca26710a521e0e3160cc5e20&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;recipes/default.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="s2">&quot;root_files&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;README.rdoc&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;d18c630c8a68ffa4852d13214d0525a6&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;README.rdoc&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;967087a09f48f234028d3aa27a094882&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata.json&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;45b27c78955f6a738d2d42d88056c57c&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata.json&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="s2">&quot;chef_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;cookbook_version&quot;</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span>{
+  &quot;definitions&quot;: [
+    {
+      &quot;name&quot;: &quot;unicorn_config.rb&quot;,
+      &quot;checksum&quot;: &quot;c92b659171552e896074caa58dada0c2&quot;,
+      &quot;path&quot;: &quot;definitions/unicorn_config.rb&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    }
+  ],
+  &quot;name&quot;: &quot;unicorn-0.1.2&quot;,
+  &quot;attributes&quot;: [],
+  &quot;files&quot;: [],
+  &quot;json_class&quot;: &quot;Chef::CookbookVersion&quot;,
+  &quot;providers&quot;: [],
+  &quot;metadata&quot;: {
+    &quot;dependencies&quot;: {&quot;ruby&quot;: [], &quot;rubygems&quot;: []},
+    &quot;name&quot;: &quot;unicorn&quot;,
+    &quot;maintainer_email&quot;: &quot;ops@opscode.com&quot;,
+    &quot;attributes&quot;: {},
+    &quot;license&quot;: &quot;Apache 2.0&quot;,
+    &quot;suggestions&quot;: {},
+    &quot;platforms&quot;: {},
+    &quot;maintainer&quot;: &quot;Opscode, Inc&quot;,
+    &quot;long_description&quot;: &quot;= LICENSE AND AUTHOR:\n\nAuthor:: Adam Jacob...&quot;,
+    &quot;recommendations&quot;: {},
+    &quot;version&quot;: &quot;0.1.2&quot;,
+    &quot;conflicting&quot;: {},
+    &quot;recipes&quot;: {&quot;unicorn&quot;: &quot;Installs unicorn rubygem&quot;},
+    &quot;groupings&quot;: {},
+    &quot;replacing&quot;: {},
+    &quot;description&quot;: &quot;Installs/Configures unicorn&quot;,
+    &quot;providing&quot;: {}
+  },
+  &quot;libraries&quot;: [],
+  &quot;templates&quot;: [
+    {
+      &quot;name&quot;: &quot;unicorn.rb.erb&quot;,
+      &quot;checksum&quot;: &quot;36a1cc1b225708db96d48026c3f624b2&quot;,
+      &quot;path&quot;: &quot;templates/default/unicorn.rb.erb&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    }
+  ],
+  &quot;resources&quot;: [],
+  &quot;cookbook_name&quot;: &quot;unicorn&quot;,
+  &quot;version&quot;: &quot;0.1.2&quot;,
+  &quot;recipes&quot;: [
+    {
+      &quot;name&quot;: &quot;default.rb&quot;,
+      &quot;checksum&quot;: &quot;ba0dadcbca26710a521e0e3160cc5e20&quot;,
+      &quot;path&quot;: &quot;recipes/default.rb&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    }
+  ],
+  &quot;root_files&quot;: [
+    {
+      &quot;name&quot;: &quot;README.rdoc&quot;,
+      &quot;checksum&quot;: &quot;d18c630c8a68ffa4852d13214d0525a6&quot;,
+      &quot;path&quot;: &quot;README.rdoc&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    },
+    {
+      &quot;name&quot;: &quot;metadata.rb&quot;,
+      &quot;checksum&quot;: &quot;967087a09f48f234028d3aa27a094882&quot;,
+      &quot;path&quot;: &quot;metadata.rb&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    },
+    {
+      &quot;name&quot;: &quot;metadata.json&quot;,
+      &quot;checksum&quot;: &quot;45b27c78955f6a738d2d42d88056c57c&quot;,
+      &quot;path&quot;: &quot;metadata.json&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    }
+  ],
+  &quot;chef_type&quot;: &quot;cookbook_version&quot;
+}
 </pre></div>
 <p>That same request with the new format would look like:</p>
-<div class="highlight"><pre><span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unicorn-0.1.2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;json_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Chef::CookbookVersion&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;dependencies&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;ruby&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="s2">&quot;rubygems&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[]},</span>
-<span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unicorn&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;maintainer_email&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ops@opscode.com&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;attributes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;license&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Apache 2.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;suggestions&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;platforms&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;maintainer&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Opscode, Inc&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;long_description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;= LICENSE AND AUTHOR:\n\nAuthor:: Adam Jacob...&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;recommendations&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;version&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;0.1.2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;conflicting&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;recipes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;unicorn&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Installs unicorn rubygem&quot;</span><span class="p">},</span>
-<span class="w">    </span><span class="s2">&quot;groupings&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;replacing&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">    </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Installs/Configures unicorn&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;providing&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="s2">&quot;cookbook_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;unicorn&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;version&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;0.1.2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;all_files&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;README.rdoc&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;d18c630c8a68ffa4852d13214d0525a6&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;README.rdoc&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;967087a09f48f234028d3aa27a094882&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata.json&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;45b27c78955f6a738d2d42d88056c57c&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata.json&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;recipes/default.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ba0dadcbca26710a521e0e3160cc5e20&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;recipes/default.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;templates/unicorn.rb.erb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;36a1cc1b225708db96d48026c3f624b2&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;templates/default/unicorn.rb.erb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;definitions/unicorn_config.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;checksum&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;c92b659171552e896074caa58dada0c2&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;definitions/unicorn_config.rb&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;specificity&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="s2">&quot;chef_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;cookbook_version&quot;</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span>{
+  &quot;name&quot;: &quot;unicorn-0.1.2&quot;,
+  &quot;json_class&quot;: &quot;Chef::CookbookVersion&quot;,
+  &quot;metadata&quot;: {
+    &quot;dependencies&quot;: {&quot;ruby&quot;: [], &quot;rubygems&quot;: []},
+    &quot;name&quot;: &quot;unicorn&quot;,
+    &quot;maintainer_email&quot;: &quot;ops@opscode.com&quot;,
+    &quot;attributes&quot;: {},
+    &quot;license&quot;: &quot;Apache 2.0&quot;,
+    &quot;suggestions&quot;: {},
+    &quot;platforms&quot;: {},
+    &quot;maintainer&quot;: &quot;Opscode, Inc&quot;,
+    &quot;long_description&quot;: &quot;= LICENSE AND AUTHOR:\n\nAuthor:: Adam Jacob...&quot;,
+    &quot;recommendations&quot;: {},
+    &quot;version&quot;: &quot;0.1.2&quot;,
+    &quot;conflicting&quot;: {},
+    &quot;recipes&quot;: {&quot;unicorn&quot;: &quot;Installs unicorn rubygem&quot;},
+    &quot;groupings&quot;: {},
+    &quot;replacing&quot;: {},
+    &quot;description&quot;: &quot;Installs/Configures unicorn&quot;,
+    &quot;providing&quot;: {}
+  },
+  &quot;cookbook_name&quot;: &quot;unicorn&quot;,
+  &quot;version&quot;: &quot;0.1.2&quot;,
+  &quot;all_files&quot;: [
+    {
+      &quot;name&quot;: &quot;README.rdoc&quot;,
+      &quot;checksum&quot;: &quot;d18c630c8a68ffa4852d13214d0525a6&quot;,
+      &quot;path&quot;: &quot;README.rdoc&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    },
+    {
+      &quot;name&quot;: &quot;metadata.rb&quot;,
+      &quot;checksum&quot;: &quot;967087a09f48f234028d3aa27a094882&quot;,
+      &quot;path&quot;: &quot;metadata.rb&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    },
+    {
+      &quot;name&quot;: &quot;metadata.json&quot;,
+      &quot;checksum&quot;: &quot;45b27c78955f6a738d2d42d88056c57c&quot;,
+      &quot;path&quot;: &quot;metadata.json&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    },
+    {
+      &quot;name&quot;: &quot;recipes/default.rb&quot;,
+      &quot;checksum&quot;: &quot;ba0dadcbca26710a521e0e3160cc5e20&quot;,
+      &quot;path&quot;: &quot;recipes/default.rb&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    },
+    {
+      &quot;name&quot;: &quot;templates/unicorn.rb.erb&quot;,
+      &quot;checksum&quot;: &quot;36a1cc1b225708db96d48026c3f624b2&quot;,
+      &quot;path&quot;: &quot;templates/default/unicorn.rb.erb&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    },
+    {
+      &quot;name&quot;: &quot;definitions/unicorn_config.rb&quot;,
+      &quot;checksum&quot;: &quot;c92b659171552e896074caa58dada0c2&quot;,
+      &quot;path&quot;: &quot;definitions/unicorn_config.rb&quot;,
+      &quot;specificity&quot;: &quot;default&quot;
+    }
+  ],
+  &quot;chef_type&quot;: &quot;cookbook_version&quot;
+}
 </pre></div>
 <h2>Copyright</h2>
 

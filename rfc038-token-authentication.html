@@ -30,17 +30,17 @@ existing user or client.</p>
 <h2>Motivation</h2>
 
 <p>This proposal covers two, unrelated use cases.</p>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">web</span><span class="w"> </span><span class="vg">interface</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">simpler</span><span class="w"> </span><span class="vg">web</span><span class="w"> </span><span class="vg">application</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">maintenance</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">easier</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a web interface developer,
+I want to have a simpler web application,
+so that maintenance is easier.
 </pre></div>
 <p>Adding a token authentication system will allow most of the requests to go
 directly to the Chef Server (once CORS support is handled). This will
 drastically reduce the number of API endpoints needed for the web UI, most of
 which are currently just proxies for the relevant Chef Server functionality.</p>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">security</span><span class="w"> </span><span class="vg">engineer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">accept</span><span class="w"> </span><span class="vg">secure</span><span class="w"> </span><span class="vg">identity</span><span class="w"> </span><span class="vg">assertions</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">implement</span><span class="w"> </span><span class="vg">object</span><span class="o">-</span><span class="vg">capability</span><span class="w"> </span><span class="vg">systems</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a security engineer,
+I want to accept secure identity assertions,
+so that I can implement object-capability systems.
 </pre></div>
 <p>Token authentication provides a simple way to prove your identity to an
 external system. This is the basic building block of an object-capability
@@ -52,15 +52,15 @@ system.</p>
 
 <p>Token authentication allows passing an opaque string token as a header in
 Chef Server API requests.</p>
-<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">path</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
-<span class="nl">Authorization:</span><span class="w"> </span><span class="vg">Bearer</span><span class="w"> </span><span class="o">&lt;</span><span class="vg">token</span><span class="o">&gt;</span>
+<div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/path</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer &lt;token&gt;</span>
 </pre></div>
 <p>The token can also be passed as a query parameter, however this is discouraged
 due to the risk of inadvertently logging or otherwise exposing the token. The
 Chef Server itself will not log the token, but HTTP proxies could.</p>
-<div class="highlight"><pre><span class="kr">GET</span><span class="w"> </span><span class="o">/</span><span class="vg">path</span><span class="o">?</span><span class="vg">access_token</span><span class="o">=&lt;</span><span class="vg">token</span><span class="o">&gt;</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
+<div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/path?access_token=&lt;token&gt;</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
 </pre></div>
 <p>In either case, this is equivalent to key-based authentication from the client
 or user associated with the token. If the token is invalid or expired, the
@@ -72,14 +72,14 @@ avoid timing attacks.</p>
 <h3>Generating a token</h3>
 
 <p>A new token can generated using the token API:</p>
-<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
-<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+<div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/tokens</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
+<span class="na">X-Ops-...</span><span class="o">:</span> <span class="l">...</span>
 
-<span class="p">{}</span>
-</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+{}
+</pre></div><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
 
-<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;created_at&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+{&quot;token&quot;: &quot;&lt;token&gt;&quot;, &quot;created_at&quot;: &quot;1970-01-01T00:00:00Z&quot;}
 </pre></div>
 <p>This new token is associated with the client or user that issued the request to
 create it.</p>
@@ -89,26 +89,26 @@ create it.</p>
 <p>A new token can also be created for a user using their username and password.
 This API will be limited to the webui key as it is now. This will allow a web
 interface to entirely avoid using the impersonation key behavior as it does now.</p>
-<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">authenticate_user</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
-<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+<div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/authenticate_user</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
+<span class="na">X-Ops-...</span><span class="o">:</span> <span class="l">...</span>
 
-<span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;username&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;password&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="vg">true</span><span class="p">}</span>
-</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+{&quot;username&quot;: &quot;&lt;username&gt;&quot;, &quot;password&quot;: &quot;&lt;password&gt;&quot;, &quot;token&quot;: true}
+</pre></div><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
 
-<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;linked&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;username&gt;&quot;</span><span class="p">}</span>
+{&quot;token&quot;: &quot;&lt;token&gt;&quot;, &quot;linked&quot;: &quot;&lt;username&gt;&quot;}
 </pre></div>
 <p>There is no support for making a token for a different client.</p>
 
 <p>Tokens can optionally have a description attached to them:</p>
-<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
-<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+<div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/tokens</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
+<span class="na">X-Ops-...</span><span class="o">:</span> <span class="l">...</span>
 
-<span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;objcap&quot;</span><span class="p">}</span>
-</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+{&quot;description&quot;: &quot;objcap&quot;}
+</pre></div><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
 
-<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;objcap&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;created_at&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+{&quot;token&quot;: &quot;&lt;token&gt;&quot;, &quot;description&quot;: &quot;objcap&quot;, &quot;created_at&quot;: &quot;1970-01-01T00:00:00Z&quot;}
 </pre></div>
 <h3>Other token operations</h3>
 
@@ -117,12 +117,12 @@ immutable so no support for update operations is required. This may be revised
 in the future.</p>
 
 <h4>List</h4>
-<div class="highlight"><pre><span class="kr">GET</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
-<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
-</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+<div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/tokens</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
+<span class="na">X-Ops-...</span><span class="o">:</span> <span class="l">...</span>
+</pre></div><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
 
-<span class="p">{</span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://chef.example.com/tokens/&lt;token&gt;&quot;</span><span class="p">}</span>
+{&quot;&lt;token&gt;&quot;: &quot;https://chef.example.com/tokens/&lt;token&gt;&quot;}
 </pre></div>
 <p>This API must be restricted such that only tokens belonging to the current
 user or client are visible. This does potentially present an escalation
@@ -130,31 +130,31 @@ vulnerability whereby one compromised token could steal other tokens for the
 same user. This could be mitigated through per-token permissions detailed below.</p>
 
 <h4>Read</h4>
-<div class="highlight"><pre><span class="kr">GET</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="o">/&lt;</span><span class="vg">token</span><span class="o">&gt;</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
-<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
-</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+<div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/tokens/&lt;token&gt;</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
+<span class="na">X-Ops-...</span><span class="o">:</span> <span class="l">...</span>
+</pre></div><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
 
-<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;description&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;objcap&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;created_at&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+{&quot;token&quot;: &quot;&lt;token&gt;&quot;, &quot;description&quot;: &quot;objcap&quot;, &quot;created_at&quot;: &quot;1970-01-01T00:00:00Z&quot;}
 </pre></div>
 <h4>Delete</h4>
-<div class="highlight"><pre><span class="vg">DELETE</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="o">/&lt;</span><span class="vg">token</span><span class="o">&gt;</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
-<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
-</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+<div class="highlight"><pre><span></span><span class="nf">DELETE</span> <span class="nn">/tokens/&lt;token&gt;</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
+<span class="na">X-Ops-...</span><span class="o">:</span> <span class="l">...</span>
+</pre></div><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
 </pre></div>
 <h3>Token expiration</h3>
 
 <p>A token can have an expiration timestamp after which is cannot be used. This is
 set during token creation.</p>
-<div class="highlight"><pre><span class="vg">POST</span><span class="w"> </span><span class="o">/</span><span class="vg">tokens</span><span class="w"> </span><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-<span class="nl">Host:</span><span class="w"> </span><span class="vg">chef</span><span class="o">.</span><span class="vg">example</span><span class="o">.</span><span class="vg">com</span>
-<span class="vg">X</span><span class="o">-</span><span class="vg">Ops</span><span class="o">-...:</span><span class="w"> </span><span class="o">...</span>
+<div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/tokens</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">chef.example.com</span>
+<span class="na">X-Ops-...</span><span class="o">:</span> <span class="l">...</span>
 
-<span class="p">{</span><span class="s2">&quot;expires&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
-</pre></div><div class="highlight"><pre><span class="vg">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="il">200</span><span class="w"> </span><span class="vg">OK</span>
+{&quot;expires&quot;: &quot;1970-01-01T00:00:00Z&quot;}
+</pre></div><div class="highlight"><pre><span></span>HTTP/1.1 200 OK
 
-<span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&lt;token&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;expires&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">}</span>
+{&quot;token&quot;: &quot;&lt;token&gt;&quot;, &quot;expires&quot;: &quot;1970-01-01T00:00:00Z&quot;}
 </pre></div>
 <p>After a token&#39;s expiration is passed, using it will return an error message.</p>
 

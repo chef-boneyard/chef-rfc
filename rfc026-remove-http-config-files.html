@@ -23,13 +23,13 @@
 <p>Remove the ability to specify HTTP config files with <code>chef-client -c http://blah.com/client.rb</code>.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">directly</span><span class="w"> </span><span class="vg">find</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">fix</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">unknown</span><span class="w"> </span><span class="vg">number</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">bugs</span><span class="w"> </span><span class="vg">where</span><span class="w"> </span><span class="vg">we</span><span class="w"> </span><span class="vg">assume</span><span class="w"> </span><span class="vg">config_file</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">path</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">features</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">instead</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef developer,
+I want to not have to directly find and fix the unknown number of bugs where we assume config_file is a path,
+so that I can write new features for Chef instead.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">am</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">using</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">ability</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">download</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">config</span><span class="w"> </span><span class="vg">file</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">URL</span><span class="p">,</span>
-<span class="vg">And</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">am</span><span class="w"> </span><span class="vg">much</span><span class="w"> </span><span class="vg">more</span><span class="w"> </span><span class="vg">interested</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developers</span><span class="w"> </span><span class="vg">writing</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">features</span><span class="w"> </span><span class="vg">instead</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">fixing</span><span class="w"> </span><span class="vg">bugs</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">it</span><span class="o">.</span>
+As a Chef user,
+I am not using the ability to download a config file as a URL,
+And I am much more interested in the Chef developers writing new features instead of fixing bugs in it.
 </pre></div>
 <h2>Specification</h2>
 
@@ -49,7 +49,7 @@
 <p>I suspect the number of people this will affect is somewhere between 0 and 0.  No Chef-written servers export config directly and there are very real security concerns around it.  If those people exist, there are real bugs in the client that those people are hitting because of it, as well (see the <code>config_dir</code> issue in Rationale).  Hence this RFC, so we can discuss it.</p>
 
 <p>Users who <em>are</em> doing this can restore the original effect by doing the following in <code>/etc/chef/client.rb</code>:</p>
-<div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
+<div class="highlight"><pre><span></span><span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
 <span class="nb">instance_eval</span><span class="p">(</span><span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;blah.com&#39;</span><span class="p">,</span> <span class="s1">&#39;/client.rb&#39;</span><span class="p">))</span>
 </pre></div>
 <h2>Copyright</h2>

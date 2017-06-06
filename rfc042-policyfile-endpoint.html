@@ -40,11 +40,11 @@ relational queries, and documents are indexed for search as data bag items.</p>
 issues.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">Policyfiles</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">dedicated</span><span class="w"> </span><span class="vg">HTTP</span><span class="w"> </span><span class="vg">Resource</span><span class="w"> </span><span class="vg">API</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">Policyfiles</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">validated</span><span class="w"> </span><span class="vg">upon</span><span class="w"> </span><span class="vg">upload</span>
-<span class="vg">and</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">query</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">relationships</span><span class="w"> </span><span class="vg">between</span><span class="w"> </span><span class="vg">Policyfiles</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">objects</span><span class="p">,</span>
-<span class="vg">and</span><span class="w"> </span><span class="vg">Policyfiles</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">indexed</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">incorrect</span><span class="w"> </span><span class="vg">data</span><span class="w"> </span><span class="vg">type</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want Policyfiles to have a dedicated HTTP Resource API,
+so that Policyfiles will be validated upon upload
+and I can query the relationships between Policyfiles and other objects,
+and Policyfiles will not be indexed as an incorrect data type.
 </pre></div>
 <h2>Specification</h2>
 
@@ -60,7 +60,7 @@ only be a member of one policy group.</p>
 <h3>Policyfile Lock</h3>
 
 <p>A Policyfile lock is a JSON document that has the following structure:</p>
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;revision_id&quot;</span><span class="p">:</span> <span class="s2">&quot;edd40c30c4e0ebb3658abde4620597597d2e9c17&quot;</span><span class="p">,</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;some_policy_name&quot;</span><span class="p">,</span>
   <span class="nt">&quot;run_list&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -126,7 +126,7 @@ stored on a server that does not support the arbitrary cookbook identifier API
 described in Chef RFC022.</p>
 
 <p>Example cookbook locks including optional fields:</p>
-<div class="highlight"><pre>    <span class="s2">&quot;policyfile_demo&quot;</span><span class="err">:</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span>    <span class="s2">&quot;policyfile_demo&quot;</span><span class="err">:</span> <span class="p">{</span>
       <span class="nt">&quot;revision_id&quot;</span><span class="p">:</span> <span class="s2">&quot;edd40c30c4e0ebb3658abde4620597597d2e9c17&quot;</span><span class="p">,</span>
       <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
       <span class="nt">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;f04cc40faf628253fe7d9566d66a1733fb1afbe9&quot;</span><span class="p">,</span>
@@ -178,7 +178,7 @@ be in fully qualified recipe form, and roles are not accepted.</p>
 underscores, the dot character and the colon character. In regular expression
 form: <code>/^[\-[:alnum:]_\.\:]+$/</code>. It must be a least one character long and
 cannot exceed 255 characters.</p>
-<div class="highlight"><pre>  <span class="s2">&quot;named_run_lists&quot;</span><span class="err">:</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span>  <span class="s2">&quot;named_run_lists&quot;</span><span class="err">:</span> <span class="p">{</span>
     <span class="nt">&quot;update_jenkins&quot;</span><span class="p">:</span> <span class="p">[</span>
       <span class="s2">&quot;recipe[jenkins::master]&quot;</span><span class="p">,</span>
       <span class="s2">&quot;recipe[policyfile_demo::default]&quot;</span>
@@ -190,7 +190,7 @@ cannot exceed 255 characters.</p>
 <p>A Policyfile lock may contain default and override attributes. Chef Client will
 treat these attributes the same as it currently treats role attributes. Default
 and override attributes are stored in separate top-level keys:</p>
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;default_attributes&quot;</span><span class="p">:</span> <span class="p">{},</span>
   <span class="nt">&quot;override_attributes&quot;</span><span class="p">:</span> <span class="p">{}</span>
 <span class="p">}</span>
@@ -251,7 +251,7 @@ to the value given in the POST body. The revision must already exist on the
 server. For example, to set the active revision of the &#39;appserver&#39; policy in
 the &#39;qa&#39; policy group, you would POST to
 <code>/policy_groups/qa/policies/appserver</code>, with a POST body like the following:</p>
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;revision_id&quot;</span><span class="p">:</span> <span class="s2">&quot;bfec256f76a52ff707ca72e71b464a41c410b229&quot;</span>
 <span class="p">}</span>
 </pre></div>
@@ -315,7 +315,7 @@ deployment cycle with a single API call.</p>
 <p>Returns the policy group configuration for <code>:policy_group_name</code>. The document
 will contain the name of the next policy group in the deployment cycle. Exact
 format is TBD, but it could look like:</p>
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;development&quot;</span><span class="p">,</span>
   <span class="nt">&quot;next_group_name&quot;</span><span class="p">:</span> <span class="s2">&quot;qa&quot;</span>
 <span class="p">}</span>

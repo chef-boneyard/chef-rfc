@@ -23,24 +23,24 @@
 <p>In this proposal, we allow actions to be specified as recipes, directly in resources.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">actions</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">resources</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to learn and reason about `Provider`s (less friction).</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want to be able to write actions in resources,
+so that I don&#39;t have to learn and reason about `Provider`s (less friction).
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">actions</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">resources</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to switch contexts to understand what resources do.</span>
+As a Chef user,
+I want to be able to write actions in resources,
+so that I don&#39;t have to switch contexts to understand what resources do.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">actions</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">specified</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">recipes</span><span class="w"> </span><span class="vg">by</span><span class="w"> </span><span class="vg">default</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">use</span><span class="w"> </span><span class="vg">concepts</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">already</span><span class="w"> </span><span class="vg">know</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">create</span><span class="w"> </span><span class="vg">good</span><span class="w"> </span><span class="vg">test</span><span class="o">-</span><span class="vg">and</span><span class="o">-</span><span class="vg">set</span><span class="w"> </span><span class="vg">resources</span><span class="o">.</span>
+As a Chef user,
+I want actions to be specified as recipes by default,
+so that I can use concepts I already know to create good test-and-set resources.
 </pre></div>
 <h2>Specification</h2>
 
 <p>To create an action on a resource, users specify <code>action &lt;action&gt; do ... end</code>.
 The recipe in between the do ... end block will be run when the action is
 performed.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyResource</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">LWRPBase</span>
   <span class="n">attribute</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
   <span class="n">attribute</span> <span class="ss">:content</span>
   <span class="n">attribute</span> <span class="ss">:mode</span>
@@ -88,7 +88,7 @@ keep them orthogonal as much as possible.</p>
 
 <p>If the parent class&#39;s action is defined using <code>action</code>, you may call <code>super()</code>
 to call the parent class&#39;s version of the current action.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyFile</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">File</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyFile</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span><span class="o">::</span><span class="no">File</span>
   <span class="n">action</span> <span class="ss">:create</span> <span class="k">do</span>
     <span class="nb">puts</span> <span class="s2">&quot;I am a file yo&quot;</span>
     <span class="k">super</span><span class="p">()</span>

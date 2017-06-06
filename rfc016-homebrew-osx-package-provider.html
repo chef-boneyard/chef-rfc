@@ -25,7 +25,7 @@
 <h2>Specification</h2>
 
 <p><code>Chef::Provider::Package::Macports</code> is the default for platforms <code>mac_os_x</code> and <code>mac_os_x_server</code> in Chef&#39;s <a href="https://github.com/opscode/chef/blob/master/lib/chef/platform/provider_mapping.rb">platform provider mapping</a>.</p>
-<div class="highlight"><pre><span class="ss">:mac_os_x</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="ss">:mac_os_x</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="ss">:package</span> <span class="o">=&gt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Provider</span><span class="o">::</span><span class="no">Package</span><span class="o">::</span><span class="no">Macports</span><span class="p">,</span>
   <span class="p">}</span>
@@ -37,7 +37,7 @@
 <span class="p">}</span>
 </pre></div>
 <p>This RFC proposes to change this to:</p>
-<div class="highlight"><pre><span class="ss">:mac_os_x</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="ss">:mac_os_x</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="ss">:package</span> <span class="o">=&gt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Provider</span><span class="o">::</span><span class="no">Package</span><span class="o">::</span><span class="no">Homebrew</span><span class="p">,</span>
   <span class="p">}</span>

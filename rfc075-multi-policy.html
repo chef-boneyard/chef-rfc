@@ -47,9 +47,9 @@ and then notify the DBA team that they should run a roll-out. Neither of these
 are wonderful options.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">maintainer</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">core</span><span class="p">,</span><span class="w"> </span><span class="vg">company</span><span class="o">-</span><span class="vg">level</span><span class="w"> </span><span class="vg">cookbooks</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">release</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">updates</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">deploy</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">quickly</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a maintainer of core, company-level cookbooks,
+I want to release cookbook updates,
+so that I can deploy changes quickly.
 </pre></div>
 <p>With that said, a more specific case that isn&#39;t currently handled well:</p>
 
@@ -79,11 +79,11 @@ frustrating to manage.</p>
 
 <p>This could be done more directly by allowing the <code>policy_name</code> on a node to be
 set to an array, running each policy in isolation in order:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chef-client --policy-name one,two
+<div class="highlight"><pre><span></span>$ chef-client --policy-name one,two
 Converge policy one
-<span class="c"># ...</span>
+<span class="c1"># ...</span>
 Converge policy two
-<span class="c"># ...</span>
+<span class="c1"># ...</span>
 </pre></div>
 <p>Any data that is server-resident could be shared between runs (eg. node
 attributes), but everything else (resource collection, cookbook collection)

@@ -21,17 +21,17 @@
 <h1>Let users trigger another resource prior to an action happening.</h1>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">one</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">precondition</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">another</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">when</span><span class="w"> </span><span class="vg">two</span><span class="w"> </span><span class="vg">resources</span><span class="w"> </span><span class="vg">depend</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">each</span><span class="w"> </span><span class="vg">other</span><span class="p">,</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">make</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">update</span><span class="w"> </span><span class="vg">succeed</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want to make one resource action a precondition for another,
+So that when two resources depend on each other, I can make an update succeed.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">this</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">only</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">happen</span><span class="w"> </span><span class="vg">if</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">other</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="o">*</span><span class="vg">does</span><span class="o">*</span><span class="w"> </span><span class="vg">update</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t unnecessarily run my preconditions on every single Chef run.</span>
+As a Chef user,
+I want this action only to happen if the other resource *does* update,
+So that I don&#39;t unnecessarily run my preconditions on every single Chef run.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">run</span><span class="w"> </span><span class="vg">me</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">action</span><span class="w"> </span><span class="vg">if</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">updates</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to implement the resource test logic in my recipe.</span>
+As a Chef user,
+I want Chef to run me an action if a resource updates,
+So that I don&#39;t have to implement the resource test logic in my recipe.
 </pre></div>
 <h2>Specification</h2>
 
@@ -46,7 +46,7 @@ this event does not fire.</p>
 <li>:immediately - after the resource updates, but <em>only</em> if an update occurred.</li>
 <li>:delayed - after the resource updates, at the end of the run.</li>
 </ul>
-<div class="highlight"><pre><span class="n">package</span> <span class="s2">&quot;foo&quot;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">package</span> <span class="s2">&quot;foo&quot;</span> <span class="k">do</span>
   <span class="n">action</span> <span class="ss">:upgrade</span>
   <span class="c1"># The package upgrade will fail if we try to upgrade while it runs!!!</span>
   <span class="n">notifies</span> <span class="ss">:stop</span><span class="p">,</span> <span class="s2">&quot;service[blah]&quot;</span><span class="p">,</span> <span class="ss">:before</span>
@@ -73,7 +73,7 @@ of extra thinking.</p>
 <p>To get around this without breaking the model, we propose that resources with an
 <code>:before</code> action run a why-run test of the action and trigger off of
 that, before running the action for real. The flow of this resource:</p>
-<div class="highlight"><pre><span class="n">package</span> <span class="s2">&quot;foo&quot;</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">package</span> <span class="s2">&quot;foo&quot;</span> <span class="k">do</span>
   <span class="n">action</span> <span class="ss">:upgrade</span>
   <span class="n">notifies</span> <span class="ss">:stop</span><span class="p">,</span> <span class="s2">&quot;service[blah]&quot;</span><span class="p">,</span> <span class="ss">:before</span>
 <span class="k">end</span>

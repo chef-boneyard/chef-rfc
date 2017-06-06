@@ -38,15 +38,15 @@ first run, your settings do not take effect until the second chef-client
 run.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">configure</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">with</span><span class="w"> </span><span class="vg">options</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">aren</span><span class="c1">&#39;t supported by knife bootstrap,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">do</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">maintain</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">fork</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">bootstrap</span><span class="w"> </span><span class="vg">template</span><span class="p">,</span>
-<span class="vg">or</span><span class="w"> </span><span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">do</span><span class="w"> </span><span class="vg">not</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">learn</span><span class="w"> </span><span class="vg">about</span><span class="w"> </span><span class="vg">bootstrap</span><span class="w"> </span><span class="vg">templates</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">all</span><span class="p">,</span>
-<span class="vg">or</span><span class="w"> </span><span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to make two chef-client runs on bootstrap to apply and use my configuration file.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want to be able to configure chef-client with options that aren&#39;t supported by knife bootstrap,
+so that I do not have to maintain a fork of the bootstrap template,
+or so that I do not have to learn about bootstrap templates at all,
+or so that I don&#39;t have to make two chef-client runs on bootstrap to apply and use my configuration file.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">developer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">have</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">generic</span><span class="w"> </span><span class="vg">way</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">pass</span><span class="w"> </span><span class="vg">custom</span><span class="w"> </span><span class="vg">client</span><span class="w"> </span><span class="vg">configuration</span><span class="w"> </span><span class="vg">file</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have the maintenance cost of additional bootstrap arguments for new features</span>
+As a Chef developer,
+I want the user to have a generic way to pass custom client configuration file,
+so that I don&#39;t have the maintenance cost of additional bootstrap arguments for new features
 </pre></div>
 <h2>Specification</h2>
 
@@ -60,7 +60,7 @@ the chef repo under <code>bootstrap</code>, optionally overwritable with a
 will be loaded in alphabetical order. Knife will still sync all files
 under <code>client.d</code>, however only top-level files will the automatically
 loaded. The block to do this would look something like:</p>
-<div class="highlight"><pre><span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/etc/chef/client.d/*.rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+<div class="highlight"><pre><span></span><span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/etc/chef/client.d/*.rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
   <span class="no">Chef</span><span class="o">::</span><span class="no">Config</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
 <span class="k">end</span>
 </pre></div>
@@ -72,19 +72,19 @@ assigned to the node we are bootstraping, so it needs to be correct on
 the first run.</p>
 
 <p>We store the <code>ohai_config.rb</code> file in the Chef repo on our workstation:</p>
-<div class="highlight"><pre><span class="c1"># chef-repo/bootstrap/client.d/ohai_config.rb</span>
+<div class="highlight"><pre><span></span><span class="c1"># chef-repo/bootstrap/client.d/ohai_config.rb</span>
 
 <span class="n">ohai</span><span class="o">.</span><span class="n">plugin</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">][</span><span class="ss">:fqdn_using</span><span class="o">]</span> <span class="o">=</span> <span class="o">[</span> <span class="ss">:hostname</span><span class="p">,</span> <span class="ss">:nis</span><span class="p">,</span> <span class="ss">:dns</span> <span class="o">]</span>
-</pre></div><div class="highlight"><pre><span class="c1"># chef-repo/bootstrap/client.d/ohai_plugins/custom_plugin.rb</span>
+</pre></div><div class="highlight"><pre><span></span><span class="c1"># chef-repo/bootstrap/client.d/ohai_plugins/custom_plugin.rb</span>
 
 <span class="c1"># My custom ohai plugin</span>
 </pre></div>
 <p>Next we bootstrap the node:</p>
-<div class="highlight"><pre><span class="vg">knife</span><span class="w"> </span><span class="vg">bootstrap</span><span class="w"> </span><span class="mf">10.0.0.100</span><span class="w"> </span><span class="o">-</span><span class="vg">x</span><span class="w"> </span><span class="vg">chefuser</span><span class="w"> </span><span class="o">-</span><span class="vg">P</span><span class="w"> </span><span class="vg">oneofus</span>
+<div class="highlight"><pre><span></span>knife bootstrap 10.0.0.100 -x chefuser -P oneofus
 </pre></div>
 <p>This generates the following <code>client.rb</code> and copies it to the box,
 along with all the contents in our chef repo&#39;s <code>client.d</code> directory:</p>
-<div class="highlight"><pre><span class="c1"># /etc/chef/client.rb</span>
+<div class="highlight"><pre><span></span><span class="c1"># /etc/chef/client.rb</span>
 
 <span class="n">log_level</span>        <span class="ss">:info</span>
 <span class="n">log_location</span>     <span class="no">STDOUT</span>
@@ -94,10 +94,10 @@ along with all the contents in our chef repo&#39;s <code>client.d</code> directo
 <span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/etc/chef/client.d/*.rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
   <span class="no">Chef</span><span class="o">::</span><span class="no">Config</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
 <span class="k">end</span>
-</pre></div><div class="highlight"><pre><span class="c1"># /etc/chef/client.d/ohai_config.rb</span>
+</pre></div><div class="highlight"><pre><span></span><span class="c1"># /etc/chef/client.d/ohai_config.rb</span>
 
 <span class="n">ohai</span><span class="o">.</span><span class="n">plugin</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">][</span><span class="ss">:fqdn_using</span><span class="o">]</span> <span class="o">=</span> <span class="o">[</span> <span class="ss">:hostname</span><span class="p">,</span> <span class="ss">:nis</span><span class="p">,</span> <span class="ss">:dns</span> <span class="o">]</span>
-</pre></div><div class="highlight"><pre><span class="c1"># /etc/chef/client.d/ohai_plugins/custom_plugin.rb</span>
+</pre></div><div class="highlight"><pre><span></span><span class="c1"># /etc/chef/client.d/ohai_plugins/custom_plugin.rb</span>
 
 <span class="c1"># My custom ohai plugin</span>
 </pre></div>
@@ -106,18 +106,18 @@ Ohai&#39;s hostname plugin will be loaded before Ohai runs, allowing
 the first Chef run to get the correct hostname.</p>
 
 <p>Taking a look under <code>/etc/chef</code>, we should see something like:</p>
-<div class="highlight"><pre><span class="cp">[</span><span class="nx">vagrant</span><span class="p">@</span><span class="nx">localhost</span> <span class="err">~</span><span class="cp">]</span><span class="x">$ tree /etc/chef/</span>
-<span class="x">/etc/chef/</span>
-<span class="x">├── client.d</span>
-<span class="x">│   ├── ohai_config.rb</span>
-<span class="x">│   └── ohai_plugins</span>
-<span class="x">│       └── custom_plugin.rb</span>
-<span class="x">├── client.pem</span>
-<span class="x">├── client.rb</span>
-<span class="x">├── first-boot.json</span>
-<span class="x">├── trusted_certs</span>
-<span class="x">│   └── localhost.crt</span>
-<span class="x">└── validation.pem</span>
+<div class="highlight"><pre><span></span>[vagrant@localhost ~]$ tree /etc/chef/
+/etc/chef/
+├── client.d
+│   ├── ohai_config.rb
+│   └── ohai_plugins
+│       └── custom_plugin.rb
+├── client.pem
+├── client.rb
+├── first-boot.json
+├── trusted_certs
+│   └── localhost.crt
+└── validation.pem
 </pre></div>
 <h2>Copyright</h2>
 

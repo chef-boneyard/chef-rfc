@@ -23,13 +23,13 @@
 <p>Provides a standard for passing configuration settings to Ohai to configure its behavior as well as that of plugins.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">easily</span><span class="w"> </span><span class="vg">configure</span><span class="w"> </span><span class="vg">Ohai</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">behaves</span><span class="w"> </span><span class="vg">optimally</span><span class="w"> </span><span class="vg">on</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">infrastructure</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want to easily configure Ohai,
+so that it behaves optimally on my infrastructure.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">Ohai</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">Ohai</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">load</span><span class="w"> </span><span class="vg">configuration</span><span class="w"> </span><span class="vg">settings</span><span class="w"> </span><span class="vg">from</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">client</span><span class="o">.</span><span class="vg">rb</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">behaves</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">same</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">does</span><span class="w"> </span><span class="vg">during</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">chef</span><span class="o">-</span><span class="vg">client</span><span class="w"> </span><span class="vg">run</span><span class="o">.</span>
+As an Ohai user,
+I want Ohai to load configuration settings from my client.rb,
+so that it behaves the same as it does during a chef-client run.
 </pre></div>
 <h2>Current State</h2>
 
@@ -48,7 +48,7 @@
 <h2>Specification</h2>
 
 <p>The <code>Ohai::Config</code> Ruby class will use the new ChefConfig library that is currently bundled with the Chef client source but shipped separately. Configuration will be set in a configuration file using a <code>Mixlib::Config</code> config_context named &#39;ohai&#39;. Here is an example &#39;client.rb&#39; file that would configure both the client and Ohai.</p>
-<div class="highlight"><pre><span class="n">log_level</span>        <span class="o">:</span><span class="n">info</span>
+<div class="highlight"><pre><span></span><span class="n">log_level</span>        <span class="o">:</span><span class="n">info</span>
 <span class="n">log_location</span>     <span class="n">STDOUT</span>
 <span class="n">chef_server_url</span>  <span class="s2">&quot;https://api.chef.io/organizations/oneofus&quot;</span>
 <span class="n">ohai</span><span class="o">.</span><span class="na">plugin_path</span> <span class="o">=</span> <span class="s2">&quot;/etc/chef/ohai/plugins.local&quot;</span>
@@ -59,9 +59,9 @@
 <p>For convenience, a config method will be added to the <code>Ohai</code> class to access <code>Ohai::Config.ohai</code>, allowing the use of <code>Ohai.config[:plugin_path]</code> instead of <code>Ohai::Config.ohai[:plugin_path]</code> throughout the code. All existing uses of <code>Ohai::Config</code> in Ohai will need to be updated accordingly.</p>
 
 <p>Example accessing the disabled_plugins configuration setting:</p>
-<div class="highlight"><pre><span class="nl">Ohai:</span><span class="o">:</span><span class="vg">Config</span><span class="p">[</span><span class="o">:</span><span class="vg">disabled_plugins</span><span class="p">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="vg">Current</span><span class="w"> </span><span class="vg">pattern</span>
-<span class="nl">Ohai:</span><span class="o">:</span><span class="vg">Config</span><span class="o">.</span><span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">disabled_plugins</span><span class="p">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="vg">Proposed</span><span class="w"> </span><span class="vg">pattern</span>
-<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">disabled_plugins</span><span class="p">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="vg">Proposed</span><span class="w"> </span><span class="vg">shortcut</span>
+<div class="highlight"><pre><span></span>Ohai::Config[:disabled_plugins] # Current pattern
+Ohai::Config.ohai[:disabled_plugins] # Proposed pattern
+Ohai.config[:disabled_plugins] # Proposed shortcut
 </pre></div>
 <h3>Configuration Files</h3>
 
@@ -74,16 +74,16 @@
 <p>To reduce the risk of built-in and custom plugins using the same configuration setting for conflicting purposes, it is recommended that all plugins prefix their configuration settings with <code>[:plugin]</code> and the snake-case name of the plugin consuming the setting, as set in the plugin itself. The exposed overlap is intended, to facilitate passing a configuration option to the same plugin for multiple platforms but only specifying it once.</p>
 
 <p>For example, configuration file settings would look like:</p>
-<div class="highlight"><pre><span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">memory</span><span class="p">][</span><span class="o">:</span><span class="vg">unit</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mb&quot;</span>
-<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">all_ids</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">true</span>
-<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">ec2</span><span class="p">][</span><span class="o">:</span><span class="vg">silly_magic_arp</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;de:ad:de:ad:de:ad&quot;</span>
-<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">platform</span><span class="p">][</span><span class="o">:</span><span class="vg">amazon_is_amazon</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">true</span>
+<div class="highlight"><pre><span></span>ohai[:plugin][:memory][:unit] = &quot;mb&quot;
+ohai[:plugin][:dmi][:all_ids] = true
+ohai[:plugin][:ec2][:silly_magic_arp] = &quot;de:ad:de:ad:de:ad&quot;
+ohai[:plugin][:platform][:amazon_is_amazon] = true
 </pre></div>
 <p>Settings would be read in code as:</p>
-<div class="highlight"><pre><span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">memory</span><span class="p">][</span><span class="o">:</span><span class="vg">unit</span><span class="p">]</span>
-<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">all_ids</span><span class="p">]</span>
-<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">ec2</span><span class="p">][</span><span class="o">:</span><span class="vg">silly_magic_arp</span><span class="p">]</span>
-<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">platform</span><span class="p">][</span><span class="o">:</span><span class="vg">amazon_is_amazon</span><span class="p">]</span>
+<div class="highlight"><pre><span></span>Ohai.config[:plugin][:memory][:unit]
+Ohai.config[:plugin][:dmi][:all_ids]
+Ohai.config[:plugin][:ec2][:silly_magic_arp]
+Ohai.config[:plugin][:platform][:amazon_is_amazon]
 </pre></div>
 <p>Note that the filename on disk does not always match the plugin name. In the case of the &#39;darwin/system_profiler.rb&#39; file, the plugin name is &#39;SystemProfile&#39;, and the correct plugin namespace would be <code>Ohai::Config.ohai[:plugin][:system_profile]</code>.</p>
 
@@ -95,13 +95,13 @@
 <code>ohai[:plugin][:dmi][:ids][:cpu] = true</code> is not allowed</p>
 
 <p>Plugin authors are recommended to use underscores in variable names to manage multiple levels of configuration values. For example:</p>
-<div class="highlight"><pre><span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id_cpu</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">true</span>
-<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id_memory</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">true</span>
-<span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id_disk</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vg">false</span>
+<div class="highlight"><pre><span></span>ohai[:plugin][:dmi][:id_cpu] = true
+ohai[:plugin][:dmi][:id_memory] = true
+ohai[:plugin][:dmi][:id_disk] = false
 </pre></div>
 <p>Configuration values may be hashes, but a hash must be explicitly set.</p>
-<div class="highlight"><pre><span class="vg">ohai</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">:</span><span class="vg">cpu</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="vg">true</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="vg">memory</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="vg">true</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="vg">disk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="vg">false</span><span class="w"> </span><span class="p">}</span>
-<span class="vg">Ohai</span><span class="o">.</span><span class="vg">config</span><span class="p">[</span><span class="o">:</span><span class="vg">plugin</span><span class="p">][</span><span class="o">:</span><span class="vg">dmi</span><span class="p">][</span><span class="o">:</span><span class="vg">id</span><span class="p">][</span><span class="o">:</span><span class="vg">disk</span><span class="p">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="vg">false</span>
+<div class="highlight"><pre><span></span>ohai[:plugin][:dmi][:id] = { :cpu =&gt; true, :memory =&gt; true, :disk =&gt; false }
+Ohai.config[:plugin][:dmi][:id][:disk] =&gt; false
 </pre></div>
 <h3>Plugin configuration lookup DSL method</h3>
 
@@ -110,7 +110,7 @@ added to the plugin DSL: <code>configuration</code>. The <code>configuration</co
 accepts as parameter the configuration option to fetch (as a Symbol).</p>
 
 <p>For example, a plugin author may write</p>
-<div class="highlight"><pre><span class="no">Ohai</span><span class="o">.</span><span class="n">plugin</span><span class="p">(</span><span class="ss">:Foo</span><span class="p">)</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="no">Ohai</span><span class="o">.</span><span class="n">plugin</span><span class="p">(</span><span class="ss">:Foo</span><span class="p">)</span> <span class="k">do</span>
   <span class="n">provides</span> <span class="s1">&#39;foo&#39;</span>
 
   <span class="n">collect_data</span> <span class="k">do</span>
@@ -121,7 +121,7 @@ accepts as parameter the configuration option to fetch (as a Symbol).</p>
 <span class="k">end</span>
 </pre></div>
 <p>A user would configure</p>
-<div class="highlight"><pre><span class="n">ohai</span><span class="o">.</span><span class="n">plugin</span><span class="o">[</span><span class="ss">:foo</span><span class="o">][</span><span class="ss">:foo_option</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
+<div class="highlight"><pre><span></span><span class="n">ohai</span><span class="o">.</span><span class="n">plugin</span><span class="o">[</span><span class="ss">:foo</span><span class="o">][</span><span class="ss">:foo_option</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
 </pre></div>
 <p>The <code>configuration</code> method is intended only to be used to access top-level
 configuration options. If the plugin author chooses to require plugin configuration

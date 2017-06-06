@@ -30,14 +30,14 @@ implemented in Chef core.</p>
 <h2>Motivation</h2>
 
 <p>The overall motivation can be summed up as:</p>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">variety</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">formats</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">cookbook</span><span class="w"> </span><span class="vg">maintenance</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">easier</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want to write in a variety of formats,
+so that cookbook maintenance is easier.
 </pre></div>
 <p>A specific version of that which deserves extra mention is:</p>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">variety</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">formats</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">don</span><span class="c1">&#39;t have to learn Ruby.</span>
+<div class="highlight"><pre><span></span>As a new Chef user,
+I want to write in a variety of formats,
+so that I don&#39;t have to learn Ruby.
 </pre></div>
 <h2>Specification</h2>
 
@@ -81,7 +81,7 @@ way to accomplish this is to place the dialect class in
 <code>lib/chef/knife/dialect_&lt;name&gt;.rb</code>.</p>
 
 <p>An example dialect which creates a role from a text file:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Chef</span><span class="o">::</span><span class="no">Dialect</span><span class="o">::</span><span class="no">Example</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Dialect</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Chef</span><span class="o">::</span><span class="no">Dialect</span><span class="o">::</span><span class="no">Example</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Dialect</span>
   <span class="n">register_dialect</span> <span class="s1">&#39;.txt&#39;</span>
 
   <span class="k">def</span> <span class="nf">compile_role</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -96,7 +96,7 @@ way to accomplish this is to place the dialect class in
 cookbook. Dialect code should be placed under <code>libraries/</code> so it is loaded
 before other cookbook files. This also means dialect cookbooks can be listed as
 a dependency if you want to use one in your own cookbook.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Chef</span><span class="o">::</span><span class="no">Dialect</span><span class="o">::</span><span class="no">Example</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Dialect</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Chef</span><span class="o">::</span><span class="no">Dialect</span><span class="o">::</span><span class="no">Example</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Dialect</span>
   <span class="n">register_dialect</span> <span class="s1">&#39;.txt&#39;</span>
 
   <span class="k">def</span> <span class="nf">compile_recipe</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>

@@ -23,9 +23,9 @@
 <p>In order to provide increased clarity into a user&#39;s fleet operations, and to support Chef deployments that do not necessarily include the use of a Chef Server, this change aims to provide an easy and consistent way for the Chef Client to report run statistics to a data collection system. The initial statistics we look to collect include node state, converge start/end times, and converge details.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="w"> </span><span class="vg">who</span><span class="w"> </span><span class="vg">uses</span><span class="w"> </span><span class="vg">both</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Client</span><span class="w"> </span><span class="vg">Mode</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Solo</span><span class="w"> </span><span class="vg">Mode</span><span class="w"> </span><span class="p">(</span><span class="vg">including</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">mode</span><span class="w"> </span><span class="vg">commonly</span><span class="w"> </span><span class="vg">known</span><span class="w"> </span><span class="vg">as</span><span class="w"> </span><span class="s2">&quot;Chef Client Local Mode&quot;</span><span class="p">),</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">collect</span><span class="w"> </span><span class="vg">data</span><span class="w"> </span><span class="vg">about</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">entire</span><span class="w"> </span><span class="vg">fleet</span><span class="w"> </span><span class="vg">regardless</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">their</span><span class="w"> </span><span class="vg">client</span><span class="w"> </span><span class="vg">operation</span><span class="w"> </span><span class="vg">type</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">may</span><span class="w"> </span><span class="vg">better</span><span class="w"> </span><span class="vg">understand</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">impacts</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">changes</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">may</span><span class="w"> </span><span class="vg">better</span><span class="w"> </span><span class="vg">detect</span><span class="w"> </span><span class="vg">failures</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef user who uses both Chef Client Mode and Chef Solo Mode (including the mode commonly known as &quot;Chef Client Local Mode&quot;),
+I want to be able to collect data about my entire fleet regardless of their client operation type,
+so that I may better understand the impacts of my changes and may better detect failures.
 </pre></div>
 <h2>Definitions</h2>
 
@@ -76,7 +76,7 @@
 <h4>Action Schema</h4>
 
 <p>The Action Schema is used to notify when a Chef object changes. In our case, the primary use will be to update the Data Collector server with the current node object.</p>
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
   <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Data Collector - action schema&quot;</span><span class="p">,</span>
   <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -200,7 +200,7 @@
 <h4>Run Start Schema</h4>
 
 <p>The Run Start Schema will be used by Chef to notify the data collection server at the start of the Chef run.</p>
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
   <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Data Collector - Runs run_start schema&quot;</span><span class="p">,</span>
   <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -273,7 +273,7 @@
 <h4>Run End Schema</h4>
 
 <p>The Run End Schema will be used by Chef Client to notify the data collection server at the completion of the Chef Client&#39;s converge phase and report data on the Chef Client run, including resources changed and any errors encountered.</p>
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span><span class="p">,</span>
     <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Data Collector - Runs run_converge schema&quot;</span><span class="p">,</span>
     <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>

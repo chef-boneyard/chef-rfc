@@ -26,15 +26,15 @@ to make actions that call each other clearer.</p>
 <p>This is a backcompat break and requires a major version bump.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">user</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">recipes</span><span class="w"> </span><span class="vg">defined</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">actions</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">execute</span><span class="w"> </span><span class="vg">in</span><span class="w"> </span><span class="vg">order</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">predict</span><span class="w"> </span><span class="vg">what</span><span class="w"> </span><span class="vg">will</span><span class="w"> </span><span class="vg">happen</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want recipes defined in my actions to execute in order,
+So that I can predict what will happen.
 </pre></div>
 <h2>Specification</h2>
 
 <p>At present, when inline_resources is on and one action calls another,
 the inner action is converged immediately:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">X</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="n">resource_name</span> <span class="ss">:x</span>
   <span class="n">action</span> <span class="ss">:outer</span> <span class="k">do</span>
     <span class="n">execute</span> <span class="s1">&#39;echo before inner&#39;</span>
@@ -49,7 +49,7 @@ the inner action is converged immediately:</p>
 <span class="n">x</span> <span class="s1">&#39;hi&#39;</span>
 </pre></div>
 <p>In Chef 12, the resources execute in this order:</p>
-<div class="highlight"><pre><span class="nl">Recipe</span><span class="p">:</span> <span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">cookbook</span><span class="p">)</span><span class="o">::</span><span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">recipe</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nl">Recipe</span><span class="p">:</span> <span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">cookbook</span><span class="p">)</span><span class="o">::</span><span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">recipe</span><span class="p">)</span>
   <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">hi</span><span class="p">]</span> <span class="n">action</span> <span class="n">outer</span>
     <span class="o">*</span> <span class="n">execute</span><span class="p">[</span><span class="n">echo</span> <span class="n">inner</span><span class="p">]</span> <span class="n">action</span> <span class="n">run</span>
       <span class="o">-</span> <span class="n">execute</span> <span class="n">echo</span> <span class="n">inner</span>
@@ -63,7 +63,7 @@ the inner action is converged immediately:</p>
 <p>We suggest that the inner action simply become part of the compile phase of the outer action, and the entire resource collection is only converged once.</p>
 
 <p>When this RFC is implemented, the order of execution will be:</p>
-<div class="highlight"><pre><span class="nl">Recipe</span><span class="p">:</span> <span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">cookbook</span><span class="p">)</span><span class="o">::</span><span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">recipe</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nl">Recipe</span><span class="p">:</span> <span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">cookbook</span><span class="p">)</span><span class="o">::</span><span class="p">(</span><span class="n">chef</span><span class="o">-</span><span class="n">apply</span> <span class="n">recipe</span><span class="p">)</span>
   <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">hi</span><span class="p">]</span> <span class="n">action</span> <span class="n">outer</span>
     <span class="o">*</span> <span class="n">execute</span><span class="p">[</span><span class="n">echo</span> <span class="n">before</span> <span class="n">inner</span><span class="p">]</span> <span class="n">action</span> <span class="n">run</span>
       <span class="o">-</span> <span class="n">execute</span> <span class="n">echo</span> <span class="n">before</span> <span class="n">inner</span>
@@ -93,7 +93,7 @@ will have the potential to be affected.</p>
 
 <p>Sometimes you depend on the effects of called action converging immediately.
    These cases can break:</p>
-<div class="highlight"><pre>   <span class="n">action</span> <span class="ss">:recreate</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span>   <span class="n">action</span> <span class="ss">:recreate</span> <span class="k">do</span>
      <span class="n">action_delete</span>
      <span class="k">if</span> <span class="o">!</span><span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="s1">&#39;/the_file&#39;</span><span class="p">)</span>
        <span class="c1"># Do something</span>
@@ -118,7 +118,7 @@ will have the potential to be affected.</p>
 <p>Sometimes one action is an alias of another or sets a flag before calling
    another action. In these cases, the calling action does not depend at all
    on when the called action executes, so there&#39;s no issue:</p>
-<div class="highlight"><pre>   <span class="n">action</span> <span class="ss">:purge</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span>   <span class="n">action</span> <span class="ss">:purge</span> <span class="k">do</span>
      <span class="vi">@purge</span> <span class="o">=</span> <span class="kp">true</span>
      <span class="n">action_clean</span>
    <span class="k">end</span>
@@ -132,7 +132,7 @@ will have the potential to be affected.</p>
 <p>Some resources cannot be updated and need to be recreated. It is common to
    do this by calling a cleanup action before doing the rest of the job, and
    this will be unaffected as well:</p>
-<div class="highlight"><pre>   <span class="n">action</span> <span class="ss">:recreate</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span>   <span class="n">action</span> <span class="ss">:recreate</span> <span class="k">do</span>
      <span class="n">action_delete</span>
      <span class="n">file</span> <span class="s1">&#39;/create_the_thing&#39;</span>
    <span class="k">end</span>

@@ -25,13 +25,13 @@ make it easier to tell when an RFC is implemented or withdrawn, or what its
 implementation status is.</p>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Contributor</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">know</span><span class="w"> </span><span class="vg">whether</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">RFC</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">actually</span><span class="w"> </span><span class="vg">being</span><span class="w"> </span><span class="vg">worked</span><span class="w"> </span><span class="vg">on</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">decide</span><span class="w"> </span><span class="vg">whether</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">wait</span><span class="p">,</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">myself</span><span class="p">,</span><span class="w"> </span><span class="vg">or</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">replacement</span><span class="w"> </span><span class="vg">RFC</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef Contributor,
+I want to know whether an RFC is actually being worked on,
+so that I can decide whether to wait, write it myself, or write a replacement RFC.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">Contributor</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">know</span><span class="w"> </span><span class="vg">whether</span><span class="w"> </span><span class="vg">an</span><span class="w"> </span><span class="vg">RFC</span><span class="w"> </span><span class="vg">has</span><span class="w"> </span><span class="vg">become</span><span class="w"> </span><span class="vg">withdrawn</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">I</span><span class="w"> </span><span class="vg">can</span><span class="w"> </span><span class="vg">decide</span><span class="w"> </span><span class="vg">whether</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">find</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">new</span><span class="w"> </span><span class="vg">owner</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">subject</span><span class="o">.</span>
+As a Chef Contributor,
+I want to know whether an RFC has become withdrawn,
+So that I can decide whether to find a new owner for the subject.
 </pre></div>
 <h2>Specification</h2>
 
@@ -40,14 +40,14 @@ implementation status is.</p>
 <p>RFCs will now include a metadata field called Tracking, which will be a list of URLs to github issues on the relevant repositories where the feature is tracked.</p>
 
 <p>For example, metadata might look like this:</p>
-<div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">RFC</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">XXX</span>
-<span class="l-Scalar-Plain">Author</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Daniel DeLeo &lt;dan@getchef.com&gt;</span>
-<span class="l-Scalar-Plain">Status</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Final</span>
-<span class="l-Scalar-Plain">Type</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Standards Track</span>
-<span class="l-Scalar-Plain">Chef-Version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">12.0</span>
-<span class="l-Scalar-Plain">Tracking</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">https://github.com/chef/chef/issues/12345</span>
+<div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">RFC</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">XXX</span>
+<span class="l l-Scalar l-Scalar-Plain">Author</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Daniel DeLeo &lt;dan@getchef.com&gt;</span>
+<span class="l l-Scalar l-Scalar-Plain">Status</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Final</span>
+<span class="l l-Scalar l-Scalar-Plain">Type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Standards Track</span>
+<span class="l l-Scalar l-Scalar-Plain">Chef-Version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">12.0</span>
+<span class="l l-Scalar l-Scalar-Plain">Tracking</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/chef/chef/issues/12345</span>
 <span class="nn">---</span>
 </pre></div>
 <p>ALL accepted Standards Track RFCs will have:</p>

@@ -31,13 +31,13 @@ values and prints green text</li>
 </ul>
 
 <h2>Motivation</h2>
-<div class="highlight"><pre><span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">be</span><span class="w"> </span><span class="vg">able</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">read</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">value</span><span class="w"> </span><span class="vg">of</span><span class="w"> </span><span class="vg">my</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">at</span><span class="w"> </span><span class="vg">converge</span><span class="w"> </span><span class="vg">time</span><span class="p">,</span>
-<span class="vg">so</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">it</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">easy</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">tell</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">difference</span><span class="w"> </span><span class="vg">between</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">desired</span><span class="w"> </span><span class="vg">value</span><span class="o">.</span>
+<div class="highlight"><pre><span></span>As a Chef resource writer,
+I want to be able to read the current value of my resource at converge time,
+so that it is easy to tell the difference between current and desired value.
 
-<span class="vg">As</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">Chef</span><span class="w"> </span><span class="vg">resource</span><span class="w"> </span><span class="vg">writer</span><span class="p">,</span>
-<span class="vg">I</span><span class="w"> </span><span class="vg">want</span><span class="w"> </span><span class="vg">a</span><span class="w"> </span><span class="vg">converge</span><span class="w"> </span><span class="vg">model</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">compares</span><span class="w"> </span><span class="vg">current</span><span class="w"> </span><span class="vg">and</span><span class="w"> </span><span class="vg">desired</span><span class="w"> </span><span class="vg">values</span><span class="w"> </span><span class="vg">for</span><span class="w"> </span><span class="vg">me</span><span class="p">,</span>
-<span class="vg">So</span><span class="w"> </span><span class="vg">that</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">easiest</span><span class="w"> </span><span class="vg">converge</span><span class="w"> </span><span class="vg">to</span><span class="w"> </span><span class="vg">write</span><span class="w"> </span><span class="vg">is</span><span class="w"> </span><span class="vg">the</span><span class="w"> </span><span class="vg">most</span><span class="w"> </span><span class="vg">correct</span><span class="w"> </span><span class="vg">one</span><span class="o">.</span>
+As a Chef resource writer,
+I want a converge model that compares current and desired values for me,
+So that the easiest converge to write is the most correct one.
 </pre></div>
 <h2>Specification</h2>
 
@@ -52,7 +52,7 @@ values and prints green text</li>
 <li>Copy all non-desired-state values from the desired resource into the new instance.</li>
 <li>Call <code>load_current_value</code> on the new instance.</li>
 </ol>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
   <span class="n">property</span> <span class="ss">:mode</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mo">0666</span>
   <span class="n">property</span> <span class="ss">:content</span>
@@ -82,7 +82,7 @@ values and prints green text</li>
 <p>To appropriately handle actual value loading, the user needs a way to specify that the actual value legitimately does not exist (rather than simply not filling in the object and getting <code>nil</code>s in it). If <code>load_current_value</code> raises <code>Chef::Exceptions::ActualValueDoesNotExist</code>, the new resource will be discarded and <code>current_resource</code> becomes <code>nil</code>. The <code>current_value_does_not_exist!</code> method can be called to raise this.</p>
 
 <p>NOTE: The alternative was to have users return <code>false</code> if the resource does not exist; but I didn&#39;t want users to be forced into the ceremony of a trailing <code>true</code> line.</p>
-<div class="highlight"><pre>  <span class="n">load_current_value</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span>  <span class="n">load_current_value</span> <span class="k">do</span>
     <span class="c1"># Check for existence before doing anything else.</span>
     <span class="n">current_value_does_not_exist!</span> <span class="k">if</span> <span class="o">!</span><span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
@@ -99,7 +99,7 @@ values and prints green text</li>
 <h4>Handling Multi-Key Resources</h4>
 
 <p>The new resource is created with all properties copied over <em>except</em> desired state properties (properties in <code>ResourceClass.state_properties</code>). This means <code>name</code>, and properties with <code>identity: true</code> or <code>desired_state: false</code> are copied over.  Normal <code>property</code> and <code>attribute</code> are not.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">DataBagItem</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DataBagItem</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="c1"># Copied</span>
   <span class="n">attribute</span> <span class="ss">:item_name</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
   <span class="n">attribute</span> <span class="ss">:data_bag_name</span><span class="p">,</span> <span class="ss">identity</span><span class="p">:</span> <span class="kp">true</span>
@@ -121,7 +121,7 @@ value is different from the current value.</li>
 <li>If any attributes are different, prints appropriate green text.</li>
 <li>Honors why-run (and does not call the <code>converge_if_changed</code> block if why-run is enabled).</li>
 </ul>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
   <span class="n">property</span> <span class="ss">:content</span>
 
@@ -140,7 +140,7 @@ value is different from the current value.</li>
 <h4>Side-by-side: new and old</h4>
 
 <p>Here is a sample <code>converge_if_changed</code> statement from a hypothetical FooBarBaz resource with properties <code>foo</code>, <code>bar</code> and <code>baz</code>:</p>
-<div class="highlight"><pre><span class="n">converge_if_changed</span> <span class="k">do</span>
+<div class="highlight"><pre><span></span><span class="n">converge_if_changed</span> <span class="k">do</span>
   <span class="k">if</span> <span class="n">current_resource</span>
     <span class="no">FooBarBaz</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">baz</span><span class="p">)</span>
   <span class="k">else</span>
@@ -149,7 +149,7 @@ value is different from the current value.</li>
 <span class="k">end</span>
 </pre></div>
 <p>This is what you would have to write to do the equivalent:</p>
-<div class="highlight"><pre><span class="k">if</span> <span class="n">current_resource</span>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">current_resource</span>
   <span class="c1"># We&#39;re updating; look for properties that the user wants to change (do the &quot;test&quot; part of test-and-set)</span>
   <span class="n">differences</span> <span class="o">=</span> <span class="o">[]</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">new_resource</span><span class="o">.</span><span class="n">property_is_set?</span><span class="p">(</span><span class="ss">:foo</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">foo</span> <span class="o">!=</span> <span class="n">current_resource</span><span class="o">.</span><span class="n">foo</span><span class="p">)</span>
@@ -184,7 +184,7 @@ value is different from the current value.</li>
 <p>There is a subtle pitfall when updating a resource, where the user has set <em>some</em> values, but not all. One can easily end up writing a resource which will overwrite perfectly good system properties with their defaults, which can cause instability. If the user does not specify a property, it is generally preferable to preserve its existing value rather than overwrite it.</p>
 
 <p>To prevent this, referencing the bare property in an <code>action</code> will now yield the <em>actual</em> value if load<em>current</em>value succeeded, and the <em>default</em> value if we are creating a new resource (if <code>load_current_value</code> raised <code>ActualValueDoesNotExist</code>).</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
   <span class="n">property</span> <span class="ss">:mode</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="mo">0666</span>
   <span class="n">property</span> <span class="ss">:content</span>
@@ -216,7 +216,7 @@ value is different from the current value.</li>
 <h4>Compound Resource Convergence</h4>
 
 <p>Some resources perform several different (possibly expensive) operations depending on what is set. <code>converge_if_changed :attribute1, :attribute2, ... do</code> allows the user to target different groups of changes based on exactly which attributes have changed:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">File</span> <span class="o">&lt;</span> <span class="no">Chef</span><span class="o">::</span><span class="no">Resource</span>
   <span class="n">property</span> <span class="ss">:path</span><span class="p">,</span> <span class="ss">name_attribute</span><span class="p">:</span> <span class="kp">true</span>
   <span class="n">property</span> <span class="ss">:mode</span>
   <span class="n">property</span> <span class="ss">:content</span>
