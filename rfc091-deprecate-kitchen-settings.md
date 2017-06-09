@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 91
 Title: Deprecate Select Test Kitchen Provisioner Settings
 Author: Patrick Wright <patrick@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
