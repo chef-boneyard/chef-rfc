@@ -1,10 +1,10 @@
 ---
-RFC: unassigned
+RFC: 92
 Title: Dependency Update Cadence
 Author: 
  - Lamont Granquist <lamont@chef.io> 
  - Jennifer Davis <sigje@chef.io>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
