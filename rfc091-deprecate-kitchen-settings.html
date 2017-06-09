@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Deprecate Select Test Kitchen Provisioner Settings</h1>
+
+<p>This RFC is aimed to improve the user experience for managing configuration files. Several settings are being recommended for deprecation and are to be replaced with new settings. This work coincides with the collapsing of the Mixlib Install code paths. This work is being completed in 3 phases described in below. See tables below for a list of settings to be deprecated and the new settings.</p>
+
+<p><strong>Once the final phase is complete the changes in Test Kitchen will not be backwards compatible.</strong></p>
+
+<h2>Collapse Mixlib Install Code Paths in Test Kitchen</h2>
+
+<p>Test Kitchen currently supports two code paths for configuring, downloading and installing Chef and ChefDK on test instances. Both code paths use Mixlib Install but are implemented differently. In the past year, significant effort has been put into Mixlib Install&#39;s new API to establish a canonical mechanism for interacting with Chef Software Inc&#39;s release infrastructure and generating bootstrap installation scripts (install.sh and install.ps1).</p>
+
+<p>Mixlib Install&#39;s new API is currently used for downloads.chef.io and omnitruck.chef.io. It&#39;s also used for the chef-ingredient cookbook. Chef transparently implemented the new API and selected config options in Kitchen for testing purposes. It has proven valuable and easy to use. The feature set is limited at this time.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As a Kitchen User, 
+I want to separate which product version to install from how the product is installed, 
+so that I can easily control how an instance is bootstrapped with a specified product version.
+
+As a Kitchen User,
+I want to use options for selecting which product from a specified channel to install,
+so that I can bootstrap an instance with Chef or ChefDK from a supported channel without using script argument syntax.
+
+As a Kitchen User,
+I want the application to manage settings automatically where applicable,
+so that I can focus on only setting pertinent options.
+
+As a Kitchen Developer,
+I want to maintain a single Mixlib Install code path,
+so that I can benefit from the latest API changes and consolidate support efforts.
+</pre></div>
+<p>The current Mixlib Install code path used in Kitchen was developed specifically for Kitchen and is tightly coupled with Kitchen&#39;s provisioner options. It&#39;s referred to as the <code>ScriptGenerator</code>. The new API was developed to be used by any project that needs to query Chef product meta-data or generate an installation script. The new API takes into account the specifics of interacting with Chef Software Inc&#39;s release infrastructure (packages.chef.io).</p>
+
+<h2>Specification</h2>
+
+<p>This work is separated into 3 phases.</p>
+
+<h5>Phase 1 - Incrementally add new transparent configuration options</h5>
+
+<ul>
+<li>All existing configuration options behave as expected</li>
+<li>Build feature parity with the new options to match existing functionality</li>
+<li>Setting <code>product_name</code> will trigger the new options use cases</li>
+<li>Maintain both Mixlib Install code paths</li>
+<li>Document new options in the Kitchen repo</li>
+</ul>
+
+<h5>Phase 2 - Provide option deprecation warnings and &quot;how-tos&quot;</h5>
+
+<ul>
+<li>All existing configuration options still behave as expected</li>
+<li>User is clearly warned when using options that will be deprecated</li>
+<li>Deprecation warnings include explanations and resolution instructions</li>
+<li>Inform the community of the upcoming Kitchen changes and reasoning (Chef blog, Community Slack)</li>
+</ul>
+
+<h5>Phase 3 - Make the switch</h5>
+
+<ul>
+<li>Raise errors along with instructions when using deprecated options </li>
+<li><code>ScriptGenerator</code> code path removed from Kitchen</li>
+<li>docs.chef.io and kitchen.ci documentation updates</li>
+<li>Inform the community when Kitchen is released</li>
+</ul>
+
+<h3>Phase 1 Details</h3>
+
+<p>The following describes our proposal to replace <code>require_chef_omnibus</code> with the new options <code>product_version</code> and <code>install_strategy</code>. It outlines requirements to maintain feature parity with Kitchen&#39;s current configuration options. Since <code>require_chef_omnibus</code> is a complex option it warranted this level of detail.</p>
+
+<h4>Provisioner setting require<em>chef</em>omnibus use cases</h4>
+
+<p>These are the current values for <code>require_chef_omnibus</code> and their intent.
+* <code>true</code>: If &quot;chef&quot; is installed don&#39;t install anything, otherwise install latest
+* <code>false</code>: Don&#39;t install anything
+* <code>latest</code>: Always install latest version
+* <code>&lt;version&gt;</code>: If &quot;chef&quot; is installed don&#39;t install anything, otherwise install specified version. Accepts partial versions.</p>
+
+<h4>Replacement settings for feature parity</h4>
+
+<p>To improve the user experience and align more closely with the new mixlib-install API I am proposing we replace <code>require_chef_omnibus</code> with two new settings: <code>product_version</code> and <code>install_strategy</code>. <code>product_version</code> has already been implemented along with <code>product_name</code> and <code>channel</code>.</p>
+
+<h5>New Settings</h5>
+
+<ul>
+<li><code>product_version</code>: Manage <code>latest</code> and <code>&lt;version&gt;</code> values.  Supports partial versions.</li>
+<li><code>install_strategy</code>: <code>once</code>, <code>skip</code>, <code>always</code>. Default: <code>once</code>
+
+<ul>
+<li><code>once</code>: Behaves similar to true. Install <code>product_name</code> <code>product_version</code> once. Don&#39;t install <code>product_name</code> if detected.</li>
+<li><code>skip</code>: Behaves similar to false. Do not install <code>product_name</code>.</li>
+<li><code>always</code>: Behaves similar to latest. Always install specified/latest <code>product_name</code> <code>product_version</code>.</li>
+</ul></li>
+</ul>
+
+<h6>Examples</h6>
+<div class="highlight"><pre><span></span><span class="n">require_chef_omnibus</span><span class="o">:</span> <span class="kc">true</span>
+</pre></div>
+<p>equivalent to:
+<code>
+product_version: latest
+install_strategy: once
+</code>
+<em>Default settings</em></p>
+
+<hr>
+<div class="highlight"><pre><span></span><span class="n">require_chef_omnibus</span><span class="o">:</span> <span class="kc">false</span>
+</pre></div>
+<p>equivalent to:
+<code>
+install_strategy: skip
+</code></p>
+
+<hr>
+<div class="highlight"><pre><span></span><span class="n">require_chef_omnibus</span><span class="o">:</span> <span class="n">latest</span>
+</pre></div>
+<p>equivalent to:
+<code>
+product_version: latest
+install_strategy: always
+</code></p>
+
+<hr>
+<div class="highlight"><pre><span></span><span class="n">require_chef_omnibus</span><span class="o">:</span> <span class="mi">12</span>
+</pre></div>
+<p>equivalent to:
+<code>
+product_version: 12
+install_strategy: once
+</code></p>
+
+<h6>Additional Flexibility</h6>
+<div class="highlight"><pre><span></span><span class="n">product_version</span><span class="o">:</span> <span class="mi">12</span>
+<span class="n">install_strategy</span><span class="o">:</span> <span class="n">always</span>
+</pre></div>
+<h5>Future</h5>
+
+<p>We could add an upgrade install strategy which only installs the package if a newer package is available.</p>
+
+<h6>Examples</h6>
+<div class="highlight"><pre><span></span><span class="n">product_version</span><span class="o">:</span> <span class="n">latest</span>
+<span class="n">install_strategy</span><span class="o">:</span> <span class="n">upgrade</span>
+</pre></div>
+<hr>
+<div class="highlight"><pre><span></span><span class="n">product_version</span><span class="o">:</span> <span class="mf">12.19</span>
+<span class="n">install_strategy</span><span class="o">:</span> <span class="n">upgrade</span>
+</pre></div>
+<h4>Opportunity for improvement</h4>
+
+<p>Although adding <code>install_strategy</code> will provide feature parity, we should consider what features we really need in Kitchen moving forward. We may not need this option if we come up with the use cases we feel Kitchen should support moving forward.
+Does Kitchen need to support the same <code>require_chef_omnibus</code> configurability with the new API?</p>
+
+<p>By simplifying the use cases, can we automate the install and upgrade paths without introducing a new setting?</p>
+
+<p>Note, this is not a requirement for this work, but definitely something to think about.</p>
+
+<h4>Mixlib Install changes</h4>
+
+<p>A new script param, <code>install_strategy</code>, will be added to <code>install.sh</code> and <code>install.ps1</code>. The option will determine how the install functions will install the package. TThe default params will be set to maintain the current behavior of always installing the specified package.</p>
+
+<p>Adding <code>install_strategy</code> to the install scripts moves all responsibility for determining how to install packages to a canonical source. This also decouples the logic in Kitchen for determining installs and upgrades from Mixlib Install&#39;s ScriptGenerator.</p>
+
+<hr>
+
+<p>The experimental <a href="https://github.com/test-kitchen/test-kitchen/compare/master...wrightp:pw/config-deprecations">branch</a> illustrates how other existing provisioning options could be deprecated. See examples for <code>chef_omnibus_install_options</code>, <code>chef_omnibus_url</code>, <code>chef_metadata_url</code>.</p>
+
+<p>Distinct option names and code paths will be maintained separately for the current functionality and the new. We will discuss any exceptions as they arise. <code>product_name</code> will act as the pivot point between which code path to follow (<code>ScriptGenerator</code> or the new API).</p>
+
+<p>As new options are added a markdown file in the Kitchen repo will be maintained with descriptions along with deprecation information.</p>
+
+<h3>Deprecate Settings</h3>
+
+<p>| Setting Name | Reason |
+|--------------|--------|
+| chef<em>metadata</em>url | No longer used as this setting is hard coded |
+| chef<em>omnibus</em>install<em>options | Being replaced by product</em>name, product<em>version and channel settings |
+| chef</em>omnibus<em>url | No longer used as this setting is hard coded |
+| install</em>msi<em>url | Being replaced by download</em>url<em>override setting which will also support install.sh |
+| require</em>chef<em>omnibus | Being replaced by product</em>version and install_strategy settings |</p>
+
+<h3>New Settings</h3>
+
+<p>| New Setting Name | Description | Default | Current Setting Name |
+|------------------|-------------|---------|----------------------|
+| product<em>name | bootstrap Chef or ChefDK | chef | chef</em>omnibus<em>install</em>options |
+| product<em>version | version number | latest |require</em>chef<em>omnibus |
+| channel | repository stable, current or unstable | stable | chef</em>omnibus<em>install</em>options |
+| platform | override platform | auto-detected | |
+| platform<em>version | override platform version| auto-detected | |
+| architecture | override platform architecture | auto-detected | |
+| install</em>strategy | install once, always or skip | once |require<em>chef</em>omnibus |
+| download<em>url</em>override | direct package url | | install<em>msi</em>url |</p>
+
+<h3>Phase 2 Details</h3>
+
+<p>The config option deprecations will be enabled. Users will start receiving deprecation warnings and begin resolving issues. At this phase we expect to be feature complete, however, there will likely be use cases or configuration combinations that are missed. Any detected deprecation warnings will also instruct the user to create issues if the resolutions don&#39;t work or don&#39;t meet their requirements. This phase is primarily focused on communication and quick turnarounds on issues. We can determine the best method for informing users at this time. (Chef blog, Community Slack, etc.)</p>
+
+<h3>Phase 3 Details</h3>
+
+<p>The deprecation warnings will be updated to raise errors. The code will be cleaned up of the old code paths. This phase is technically the most simple. Again, communication, availability, and responsiveness are the keys to this phase. Before releasing, all documentation sources will need to be prepared and ready to be published. The Kitchen major version release will coincide with all documentation publishing.</p>
+
+<h2>Documentation</h2>
+
+<p>Sources that will require updates:
+* docs.chef.io
+* kitchen.ci
+* github.com/test-kitchen</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
