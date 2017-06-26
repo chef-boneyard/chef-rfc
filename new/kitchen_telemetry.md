@@ -20,6 +20,14 @@ telemetry RFC, as yet unumbered>, as required in that RFC.
  * If a chef provisioner is used, which chef versions are installed?
  * Which commands are used?
 
+## Implementation
+
+The bulk of this RFC is the description of the events, below. We
+envisage that a single client library will be built for all chef
+projects, and Kitchen will consume that to send events. That library
+would ensure events are sent in a non-blocking manner, and would deal
+with retries, session handling and opt-out.
+
 ## Events
 
 Let's examine a typical user interacting with kitchen in an existing cookbook,
@@ -36,12 +44,13 @@ This results in the following events:
 ```json
 { 
     "product": "test-kitchen",
+    "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {
         "event": "command-line",
-        "anonymousID": "504ec380-5a75-458c-9f56-afa3c47b8705",
         "properties": {
             "action": "test",
             "platform": "windows-10-x64"
+            "version": "1.16"
         }
     }
 }
@@ -54,11 +63,12 @@ Lastly, the instance is destroyed again.
 ```json
 { 
     "product": "test-kitchen",
+    "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {
         "event": "destroy",
-        "anonymousID": "504ec380-5a75-458c-9f56-afa3c47b8705",
         "properties": {
-            "platform": "windows-10-x64"
+            "platform": "windows-10-x64",
+            "version": "1.16"
         }
     }
 }
@@ -67,15 +77,16 @@ Lastly, the instance is destroyed again.
 ```json
 { 
     "product": "test-kitchen",
+    "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {
         "event": "create",
-        "anonymousID": "504ec380-5a75-458c-9f56-afa3c47b8705",
         "properties": {
-            
             "target": "bento/debian-9.0-amd64",
             "driver": "kitchen-hyperv",
+            "driver_version": "1.2.3",
             "transport": "ssh",
-            "platform": "windows-10-x64"
+            "platform": "windows-10-x64",
+            "version": "1.16"
         }
     }
 }
@@ -87,17 +98,17 @@ chef client `13`, using the new style configuration. They're using Policyfiles:
 ```json
 {
     "product": "test-kitchen",
+    "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {
         "event": "converge",
-        "anonymousID": "504ec380-5a75-458c-9f56-afa3c47b8705",
         "properties": {
-            
             "product": "chef",
             "product_version": "13",
             "channel": "stable",
             "provisioner": "chef-zero",
             "resolver": "policyfile",
-            "platform": "windows-10-x64"
+            "platform": "windows-10-x64",
+            "version": "1.16"
         }
     }
 }
@@ -109,12 +120,14 @@ We now proceed to verifying the instance:
 ```json
 { 
     "product": "test-kitchen",
+    "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {
         "event": "verify",
-        "anonymousID": "504ec380-5a75-458c-9f56-afa3c47b8705",
         "properties": {
             "verifier": "kitchen-inspec",
-            "platform": "windows-10-x64"
+            "verifier_version": "1.2.3",
+            "platform": "windows-10-x64",
+            "version": "1.16"
         }
     }
 }
