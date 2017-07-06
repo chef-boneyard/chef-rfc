@@ -32,7 +32,9 @@ with retries, session handling and opt-out.
 
 Let's examine a typical user interacting with kitchen in an existing cookbook,
 and enumerate the events and information that's sent. We'll elide the fields
-from the payload that are common to all chef telemetry systems.
+from the payload that are common to all chef telemetry systems. To ensure
+that we don't leak private information, drivers will only report provisioning
+targets when they are not specified explicitly by the user.
 
 The user performs a full test run on a Debian instance:
 
@@ -58,7 +60,6 @@ This results in the following events:
 
 Running test first destroys the instance, and then creates, converges and verifies a new instance.
 Lastly, the instance is destroyed again.
-
 
 ```json
 { 
@@ -115,7 +116,6 @@ chef client `13`, using the new style configuration. They're using Policyfiles:
 ```
 
 We now proceed to verifying the instance:
-
 
 ```json
 { 
