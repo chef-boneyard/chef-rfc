@@ -11,7 +11,7 @@ Type: <Standards Track, Informational, Process>
 
 # Stats Endpoint for Chef Server
 
-Minoitoring Chef Server is an involved task. There are several services that make
+Monitoring Chef Server is an involved task. There are several services that make
 up a Chef Server, all of which need to be monitored. These services each have their
 own set of metrics, and each has it's own way obtaining those metrics. The Chef Server
 component itself has 2 ways that provide a different set of metrics: pushing to statsd 
@@ -44,7 +44,7 @@ a description for any metrics which are provided.
 ### Supported Metric Primitives
 The endpoints can provide metrics of following types, as defined by [Prometheus](https://prometheus.io/docs/concepts/metric_types/):
 - Counter - Monotonic cumulative metric. For example, number of requests served.
-- Guage - Numeric measurement at a given point in time. For example, number of inflight requests.
+- Gauge - Numeric measurement at a given point in time. For example, number of inflight requests.
 - Histogram - Distributes values into buckets. For example, response times.
 - Summary - Provides summary statistics for a value in a sliding window.
 
@@ -88,6 +88,13 @@ Example response:
 
 Each one of these services must be serviceable by `_stats/$service`, for example `_stats/solr`.
 
+## Yet Another Way to Get Metrics
+This introduces yet another way to get metrics for the Chef Server. All metrics that were previously
+available through statsd or Folsom will be available from the stats endpoint. This means that other
+methods should be deprecated and removed in the next major version bump of Chef Server. Those who
+wish to push to Graphite may still do so by polling. Doing the same for statsd may no longer make sense
+as the stats endpoint will have already aggregated the metric data. That being said, those who wish to
+still use statsd can get the data from the request logs.
 
 ## Unanswered Questions
 
