@@ -36,9 +36,9 @@ for Chef Server and all its co-located services.
 
 This RFC adds a series of `/_stats/$service` endpoints to Chef Server. Each service
 colocated on the box will be provided an endpoint, and with respond to GET requests.
-The response format will be a text format which is specified by 
-[Prometheus 0.0.4](https://prometheus.io/docs/instrumenting/exposition_formats/#text-format-details).
-This gives us the ability to use a few metrics types specified below along with the ability to give
+
+The response format is the one defined by [Prometheus 0.0.4](https://prometheus.io/docs/instrumenting/exposition_formats). The endpoints must respond to both content types, `text/plain; version=0.0.4` and `application/vnd.google.protobuf; proto=io.prometheus.client.MetricFamily; encoding=delimited`.
+Using this gives us the ability to use a few metrics types specified below along with the ability to give
 a description for any metrics which are provided.
 
 ### Supported Metric Primitives
