@@ -67,8 +67,7 @@ could just as well create a JSON specification with information such as type, de
 At a minimum, the Chef Server frontend service would need to provide stats. For example, `bookshelf`, `oc-id`,
 `oc_bifrost`, and `erchef` should provide metrics as those are always colocated. Since these run together, these could also be grouped into a single metrics endpoint(`_stats/chef-server`) to reduce the number of calls needed to gather the metrics.
 
-If Chef Server is configured to provide services such as RabbitMQ, Solr, Elasticsearch, and PostgreSQL, an
-endpoint should be provided for each service.
+If Chef Server is configured to provide services such as RabbitMQ, Solr, Elasticsearch, PostgreSQL, Manage, Reporting, etc, an endpoint should be provided for each service.
 
 #### Service List
 Since different implementations or configurations of Chef Server could have different dependencies, 
