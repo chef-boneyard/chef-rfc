@@ -34,8 +34,9 @@ for Chef Server and all its co-located services.
 
 ## Specification
 
-This RFC adds a series of `/_stats/$service` endpoints to Chef Server. Each service
-colocated on the box will be provided an endpoint which responds to GET requests.
+This RFC adds a `/_stats` endpoint to Chef Server. This endpoint will respond with
+statistics about the Chef Server instance, along with any services that are both required
+by Chef Server and colocated with that instance.
 
 The response format is the one defined by [Prometheus 0.0.4](https://prometheus.io/docs/instrumenting/exposition_formats). The endpoints must respond to both content types, `text/plain; version=0.0.4` and `application/vnd.google.protobuf; proto=io.prometheus.client.MetricFamily; encoding=delimited`.
 Using this gives us the ability to use a few metrics types specified below along with the ability to give
@@ -62,30 +63,13 @@ services such as PostgreSQL, RabbitMQ, and Solr.
 This would introduce an inconsistency in that the current API uses JSON and this one route would not. We
 could just as well create a JSON specification with information such as type, description, metric name, etc.
 
-
-### Services
-At a minimum, the Chef Server frontend service would need to provide stats. For example, `bookshelf`, `oc-id`,
-`oc_bifrost`, and `erchef` should provide metrics as those are always colocated. Since these run together, these could also be grouped into a single metrics endpoint(`_stats/chef-server`) to reduce the number of calls needed to gather the metrics.
-
-If Chef Server is configured to provide services such as RabbitMQ, Solr, Elasticsearch, PostgreSQL, Manage, Reporting, etc, an endpoint should be provided for each service.
-
-#### Service List
-Since different implementations or configurations of Chef Server could have different dependencies, 
-`GET /_stats` will provide a list of services.
-
-Example response:
-
-```
-{
-  "services": [
-    "chef-server",
-    "solr",
-    "rabbitmq"
-  ]
-}
-```
-
-Each one of these services must be serviceable by `_stats/$service`, for example `_stats/solr`.
+## Authentication
+The `_stats` endpoint could potentially provide information useful in compromising aspects of the Chef
+Server. For this reason, there should be an option to protect this endpoint with basic access authentication
+for operators who do not want this endpoint accessible to all. A username and password will be generated if
+it not provided. By using basic authentication, we provide some level of access control to this endpoint
+while still making usuable to metrics systems, as most will provide a way to access endpoints that have
+basic auth.
 
 ## Yet Another Way to Get Metrics
 This introduces yet another way to get metrics for the Chef Server. All metrics that were previously
@@ -94,13 +78,6 @@ methods should be deprecated and removed in the next major version bump of Chef 
 wish to push to Graphite may still do so by polling. Doing the same for statsd may no longer make sense
 as the stats endpoint will have already aggregated the metric data. That being said, those who wish to
 still use statsd can get the data from the request logs.
-
-## Unanswered Questions
-
-- What about chef-backend?
-- Do we need or should we have authn/authz?
-- Versioning
-- Should we provide an endpoint that lists all the metrics such as `_stats/_all`?
 
 ## Copyright
 
