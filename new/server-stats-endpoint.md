@@ -38,10 +38,6 @@ This RFC adds a `/_stats` endpoint to Chef Server. This endpoint will respond wi
 statistics about the Chef Server instance, along with any services that are both required
 by Chef Server and colocated with that instance.
 
-The response format is the one defined by [Prometheus 0.0.4](https://prometheus.io/docs/instrumenting/exposition_formats). The endpoints must respond to both content types, `text/plain; version=0.0.4` and `application/vnd.google.protobuf; proto=io.prometheus.client.MetricFamily; encoding=delimited`.
-Using this gives us the ability to use a few metrics types specified below along with the ability to give
-a description for any metrics which are provided.
-
 ### Supported Metric Primitives
 The endpoints can provide metrics of following types, as defined by [Prometheus](https://prometheus.io/docs/concepts/metric_types/):
 - Counter - Monotonic cumulative metric. For example, number of requests served.
@@ -50,6 +46,152 @@ The endpoints can provide metrics of following types, as defined by [Prometheus]
 - Summary - Provides summary statistics for a value in a sliding window.
 
 ### Response Format
+Below are two possible response formats we can use. We should pick one.
+
+#### Option 1: Prometheus
+The response format is the one defined by
+[Prometheus 0.0.4](https://prometheus.io/docs/instrumenting/exposition_formats). The endpoints must respond
+to both content types, `text/plain; version=0.0.4` and
+`application/vnd.google.protobuf; proto=io.prometheus.client.MetricFamily; encoding=delimited`.
+Using this gives us the ability to use a few metrics types specified below along with the ability to give
+a description for any metrics which are provided.
+
+#### Option 2: JSON
+The response format will be based on that defined by
+[Prometheus 0.0.4](https://prometheus.io/docs/instrumenting/exposition_formats), but modified to fit a
+JSON serialization format. We will return a list of metrics families, each with a name,
+type, help doc string, and a list of metrics. Each individual metric in the family will have a set of
+labels, and optionally a label. Other data will be based on the type of metric. All numbers will be formated as strings so that
+we may represent things like NaN and infinity. This format will be based on
+[prom2json](https://github.com/prometheus/prom2json). Below is an example of taking metrics from the
+prometheus text format to JSON:
+
+```
+# HELP http_requests_total The total number of HTTP requests.
+# TYPE http_requests_total counter
+http_requests_total{method="post",code="200"} 1027 1395066363000
+http_requests_total{method="post",code="400"}    3 1395066363000
+
+# A weird metric from before the epoch:
+something_weird{problem="division by zero"} +Inf -3982045
+
+# A histogram, which has a pretty complex representation in the text format:
+# HELP http_request_duration_seconds A histogram of the request duration.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le="0.05"} 24054
+http_request_duration_seconds_bucket{le="0.1"} 33444
+http_request_duration_seconds_bucket{le="0.2"} 100392
+http_request_duration_seconds_bucket{le="0.5"} 129389
+http_request_duration_seconds_bucket{le="1"} 133988
+http_request_duration_seconds_bucket{le="+Inf"} 144320
+http_request_duration_seconds_sum 53423
+http_request_duration_seconds_count 144320
+
+# Finally a summary, which has a complex representation, too:
+# HELP rpc_duration_seconds A summary of the RPC duration in seconds.
+# TYPE rpc_duration_seconds summary
+rpc_duration_seconds{quantile="0.01"} 3102
+rpc_duration_seconds{quantile="0.05"} 3272
+rpc_duration_seconds{quantile="0.5"} 4773
+rpc_duration_seconds{quantile="0.9"} 9001
+rpc_duration_seconds{quantile="0.99"} 76656
+rpc_duration_seconds_sum 1.7560473e+07
+rpc_duration_seconds_count 2693
+
+# HELP available_workers The number of available workers
+# TYPE available_workers gauge
+available_workers 10
+```
+
+```
+[
+  {
+    "help": "A summary of the RPC duration in seconds.",
+    "metrics": [
+      {
+        "count": "2693",
+        "quantiles": {
+          "0.01": "3102",
+          "0.05": "3272",
+          "0.5": "4773",
+          "0.9": "9001",
+          "0.99": "76656"
+        },
+        "sum": "1.7560473e+07"
+      }
+    ],
+    "name": "rpc_duration_seconds",
+    "type": "SUMMARY"
+  },
+  {
+    "help": "The number of available workers",
+    "metrics": [
+      {
+        "value": "10"
+      }
+    ],
+    "name": "available_workers",
+    "type": "GAUGE"
+  },
+  {
+    "help": "The total number of HTTP requests.",
+    "metrics": [
+      {
+        "labels": {
+          "code": "200",
+          "method": "post"
+        },
+        "timestamp": "1395066363000",
+        "value": "1027"
+      },
+      {
+        "labels": {
+          "code": "400",
+          "method": "post"
+        },
+        "timestamp": "1395066363000",
+        "value": "3"
+      }
+    ],
+    "name": "http_requests_total",
+    "type": "COUNTER"
+  },
+  {
+    "help": "",
+    "metrics": [
+      {
+        "labels": {
+          "problem": "division by zero"
+        },
+        "timestamp": "-3982045",
+        "value": "+Inf"
+      }
+    ],
+    "name": "something_weird",
+    "type": "UNTYPED"
+  },
+  {
+    "help": "A histogram of the request duration.",
+    "metrics": [
+      {
+        "buckets": {
+          "+Inf": "144320",
+          "0.05": "24054",
+          "0.1": "33444",
+          "0.2": "100392",
+          "0.5": "129389",
+          "1": "133988"
+        },
+        "count": "144320",
+        "sum": "0"
+      }
+    ],
+    "name": "http_request_duration_seconds",
+    "type": "HISTOGRAM"
+  }
+]
+```
+
 #### Why Use the Prometheus Format?
 The format is already defined and provides metric types that are known to work with at least
 one monitoring system. This format also gives us the ability to describe each metric presented,
@@ -60,8 +202,8 @@ Using this format directly also could allow us to use metric exporters already w
 services such as PostgreSQL, RabbitMQ, and Solr.
 
 #### Why Not?
-This would introduce an inconsistency in that the current API uses JSON and this one route would not. We
-could just as well create a JSON specification with information such as type, description, metric name, etc.
+This would introduce an inconsistency in that the current API responses are all JSON and this one route
+would return something else.
 
 ## Authentication
 The `_stats` endpoint could potentially provide information useful in compromising aspects of the Chef
