@@ -36,7 +36,8 @@ for Chef Server and all its co-located services.
 
 This RFC adds a `/_stats` endpoint to Chef Server. This endpoint will respond with
 statistics about the Chef Server instance, along with any services that are both required
-by Chef Server and colocated with that instance.
+by Chef Server and colocated with that instance. It takes one optional parameter `format`,
+which is assumed to be `json` by default. There may be other formats supported in the future.
 
 ### Supported Metric Primitives
 The endpoints can provide metrics of following types, as defined by [Prometheus](https://prometheus.io/docs/concepts/metric_types/):
@@ -45,19 +46,11 @@ The endpoints can provide metrics of following types, as defined by [Prometheus]
 - Histogram - Distributes values into buckets. For example, response times.
 - Summary - Provides summary statistics for a value in a sliding window.
 
-### Response Format
-Below are two possible response formats we can use. We should pick one.
+### JSON Response Format
+The stats endpoint must respond to `format=json`. The schema is defined below.
 
-#### Option 1: Prometheus
-The response format is the one defined by
-[Prometheus 0.0.4](https://prometheus.io/docs/instrumenting/exposition_formats). The endpoints must respond
-to both content types, `text/plain; version=0.0.4` and
-`application/vnd.google.protobuf; proto=io.prometheus.client.MetricFamily; encoding=delimited`.
-Using this gives us the ability to use a few metrics types specified below along with the ability to give
-a description for any metrics which are provided.
-
-#### Option 2: JSON
-The response format will be based on that defined by
+#### JSON
+The JSON response schema will be based on that defined by
 [Prometheus 0.0.4](https://prometheus.io/docs/instrumenting/exposition_formats), but modified to fit a
 JSON serialization format. We will return a list of metrics families, each with a name,
 type, help doc string, and a list of metrics. Each individual metric in the family will have a set of
@@ -191,19 +184,6 @@ available_workers 10
   }
 ]
 ```
-
-#### Why Use the Prometheus Format?
-The format is already defined and provides metric types that are known to work with at least
-one monitoring system. This format also gives us the ability to describe each metric presented,
-so the end user would know what it means. The format itself is human readable and easy to parse,
-making it easy to both get started with and write tooling around.
-
-Using this format directly also could allow us to use metric exporters already written for other co-located
-services such as PostgreSQL, RabbitMQ, and Solr.
-
-#### Why Not?
-This would introduce an inconsistency in that the current API responses are all JSON and this one route
-would return something else.
 
 ## Authentication
 The `_stats` endpoint could potentially provide information useful in compromising aspects of the Chef
