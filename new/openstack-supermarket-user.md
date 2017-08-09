@@ -68,8 +68,17 @@ OpenStack's public presence on Supermarket.
 
 ## Downstream Impact
 
-Since there is no evidence of activity on Supermarket, no downstream impact is
-expected.
+Hosted Chef and Supermarket admins have determined the openstack user:
+
+* on Supermarket
+   * owns 0 cookbooks
+   * collaborates on 0 cookbooks
+   * follows 0 cookbooks
+* on Hosted Chef
+   * is a member of only one organization
+   * is the only member of the one organization
+   * is associated with 0 clients and nodes (no running infrastructure)
+   * has uploaded > 1 cookbook
 
 ## Copyright
 
