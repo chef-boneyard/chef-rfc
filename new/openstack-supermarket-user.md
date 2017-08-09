@@ -52,12 +52,19 @@ OpenStack's public presence on Supermarket.
 
 ### Deprecation Process for this RFC
 
-1. A Supermarket administrator with sufficient access will assess and reassign
-   the openstack user on Supermarket, either through peaceful negotiations or
-   policy, to the Chef OpenStack team.
-1. The Chef OpenStack team will publish their OpenStack cookbooks to Supermarket.
-1. A message will be posted to the mailing list notifying of this change and
-   our reasoning behind it.
+1. Hosted Chef and Supermarket administrators record that the openstack user is not
+   associated with any running infrastructure or published cookbooks.
+   Hosted Chef administrators remove the openstack user from its existing
+   organization.
+1. Hosted Chef administrators change the email address on the openstack user to an
+   address of the Chef OpenStack team's choosing.
+   Supermarket administrators announce this change on the Chef mailing list.
+1. The Chef OpenStack team receives access to Hosted Chef openstack account via
+   password reset over email.
+1. The Chef OpenStack team creates a new key pair for the openstack user and logs
+   in to Supermarket to update account information and key cached there.
+1. The Chef OpenStack team begins publishing their OpenStack cookbooks to
+   Supermarket.
 
 ## Downstream Impact
 
