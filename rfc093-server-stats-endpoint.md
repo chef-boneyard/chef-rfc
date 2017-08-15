@@ -1,12 +1,9 @@
 ---
-RFC: unassigned
+RFC: 93
 Title: Stats Endpoint for Chef Server
 Author: Jay Mundrawala <jmundrawala@chef.io>
-Status: Draft
-Type: <Standards Track, Informational, Process>
-<Replaces: RFCxxx>
-<Tracking:>
-<  - https://github.com/chef/chef/issues/X>
+Status: Accepted
+Type: Standards Track
 ---
 
 # Stats Endpoint for Chef Server
@@ -201,13 +198,13 @@ wish to push to Graphite may still do so by polling. Doing the same for statsd m
 as the stats endpoint will have already aggregated the metric data. That being said, those who wish to
 still use statsd can get the data from the request logs.
 
+## Resources
+ * https://getchef.zendesk.com/hc/en-us/articles/207577106-Monitoring-Your-Chef-Server
+ * https://github.com/facebook/chef-utils/blob/master/chef-server-stats/chef-server-stats
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this,
 this work is available under CC0. To the extent possible under law, the person
 who associated CC0 with this work has waived all copyright and related or
 neighboring rights to this work.
-
-## Resources
-https://getchef.zendesk.com/hc/en-us/articles/207577106-Monitoring-Your-Chef-Server
-https://github.com/facebook/chef-utils/blob/master/chef-server-stats/chef-server-stats
