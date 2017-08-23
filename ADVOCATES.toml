@@ -50,7 +50,9 @@ More information can be found in the [Chef Community Guidelines](https://github.
         "miketheman",
         "nshamrell",
         "robbkidd",
-        "cwebberops"
+        "cwebberops",
+        "adamleff",
+        "cheeseplus"
       ]
     [Org.Advocates.GitHub]
       title = "GitHub"
@@ -140,6 +142,18 @@ More information can be found in the [Chef Community Guidelines](https://github.
     GitHub = "cwebberops"
     Twitter = "cwebber"
     email = "cwebber@chef.io"
+
+  [people.adamleff]
+    Name = "Adam Leff"
+    GitHub = "adamleff"
+    Twitter = "adamleff"
+    email = "adamleff@chef.io"
+
+  [people.cheeseplus]
+    Name = "Seth Thomas"
+    GitHub = "cheeseplus"
+    Twitter = "cheeseplus"
+    email = "cheeseplus@chef.io"
 
   [people.vacant]
     Name = "Vacant - Submit a PR to become a Chef Community Advocate"

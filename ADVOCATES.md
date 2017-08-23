@@ -60,6 +60,12 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [Chris Webber](https://github.com/cwebberops)
   * [@cwebber](https://twitter.com/cwebber)
   * [cwebber@chef.io](mailto:cwebber@chef.io)
+* [Adam Leff](https://github.com/adamleff)
+  * [@adamleff](https://twitter.com/adamleff)
+  * [adamleff@chef.io](mailto:adamleff@chef.io)
+* [Seth Thomas](https://github.com/cheeseplus)
+  * [@cheeseplus](https://twitter.com/cheeseplus)
+  * [cheeseplus@chef.io](mailto:cheeseplus@chef.io)
 
 #### GitHub
 * Vacant - Submit a PR to become a Chef Community Advocate
@@ -76,4 +82,5 @@ More information can be found in the [Chef Community Guidelines](https://github.
 
 #### Chef_Opscode Reddit ([https://www.reddit.com/r/chef_opscode/](https://www.reddit.com/r/chef_opscode/))
 * [JJ Asghar](https://github.com/jjasghar)
-  * [jjasghar](https://www.reddit.com/user/jjasghar/)
+  * [@jjasghar](https://twitter.com/jjasghar)
+  * [jjasghar@chef.io](mailto:jjasghar@chef.io)
