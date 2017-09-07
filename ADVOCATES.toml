@@ -40,14 +40,12 @@ More information can be found in the [Chef Community Guidelines](https://github.
     [Org.Advocates.Serverfault]
       title = "Server Fault"
       advocates = [
-        "miketheman"
       ]
     [Org.Advocates.ChefMailingList]
       title = "Chef Mailing List"
       advocates = [
         "coderanger",
         "jjasghar",
-        "miketheman",
         "nshamrell",
         "robbkidd",
         "cwebberops",
