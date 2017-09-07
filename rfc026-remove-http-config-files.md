@@ -2,7 +2,7 @@
 RFC: 26
 Title: Remove HTTP Config Files
 Author: John Keiser <jkeiser@getchef.com>
-Status: Accepted
+Status: Final
 Type: Standards Track
 Chef-Version: 12
 ---

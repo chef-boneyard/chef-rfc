@@ -2,7 +2,7 @@
 RFC: 55
 Title: Property Default Value Improvements
 Author: John Keiser <jkeiser@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 

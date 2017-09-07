@@ -2,7 +2,7 @@
 RFC: 60
 Title: Enable gem dependencies in cookbook metadata
 Author: Lamont Granquist <lamont@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 

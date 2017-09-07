@@ -2,7 +2,7 @@
 RFC: 27
 Title: File Content Verification
 Author: Steven Danna <steve@getchef.com>
-Status: Accepted
+Status: Final
 Type: Standards Track
 Chef-Version: 12
 ---

@@ -2,7 +2,7 @@
 RFC: 64
 Title: Chef code should have a consistent style
 Author: Thom May <thom@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
 Tracking:
  - https://github.com/chef/chefstyle

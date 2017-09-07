@@ -5,7 +5,7 @@ Author:
 - John Keiser <jkeiser@chef.io>
 - Joe Nuspl <nuspl@nvwls.com>
 - Wade Peacock <wade.peacock@visioncritical.com>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 

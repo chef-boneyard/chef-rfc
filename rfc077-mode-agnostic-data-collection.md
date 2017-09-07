@@ -2,7 +2,7 @@
 RFC: 77
 Title: Mode-Agnostic Run Data Collection
 Author: Adam Leff <adamleff@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 

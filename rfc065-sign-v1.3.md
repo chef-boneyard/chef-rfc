@@ -2,7 +2,7 @@
 RFC: 65
 Title: Chef Authentication Signing Protocol v1.3
 Author: Jay Mundrawala <jdm@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
 Tracking:
  - https://github.com/chef/chef_authn/pull/23
