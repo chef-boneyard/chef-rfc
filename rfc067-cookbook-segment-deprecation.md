@@ -2,7 +2,7 @@
 RFC: 67
 Title: Cookbook Segment Deprecation
 Author: Lamont Granquist <lamont@chef.io>
-Status: Final
+Status: Accepted
 Type: Standards Track
 ---
 
