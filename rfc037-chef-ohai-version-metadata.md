@@ -1,7 +1,7 @@
 ---
 RFC: 37
 Title: Add chef and ohai versions to Cookbook metadata
-Author: Jon Cowie (jcowie@etsy.com)
+Author: Jon Cowie (jcowie@chef.io)
 Status: Final
 Type: Standards Track
 Tracking:
