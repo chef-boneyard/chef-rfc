@@ -36,7 +36,7 @@ request against this document that adds your name to the list. The existing
 editors will vote on the request, with the Decider retaining veto power. The
 current editors are:
   * Noah Kantrowitz \<noah@coderanger.net\>
-  * Jon Cowie \<jcowie@etsy.com\>
+  * Jon Cowie \<jcowie@chef.io\>
   * Bryan McLellan \<btm@loftninjas.org\>
   * Adam Leff \<adam@leff.co\>
   * Thom May \<tmay@chef.io\>
