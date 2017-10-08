@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 94
 Title: Anonymous user behaviour data collection
 Author: Thom May <thom@chef.io>, Charles Johnson <charles@chef.io>
-Status: Draft
+Status: Accepted
 Type: Informational
 ---
 
