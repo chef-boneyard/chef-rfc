@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 95
 Title: Use of telemetry in Test Kitchen
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
