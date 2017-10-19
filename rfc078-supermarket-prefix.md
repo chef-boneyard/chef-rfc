@@ -66,7 +66,8 @@ your prefix and the person or organization that will be responsible for it.
 * `poise` - [coderanger](https://github.com/coderanger)
 * `sbp` - [Schuberg Philis](https://github.com/sbp-cookbooks)
 * `sc` - [Sous Chefs](https://github.com/sous-chefs)
-* `sigsci` - [signalsciences] (https://github.com/signalsciences)
+* `sigsci` - [signalsciences](https://github.com/signalsciences)
+* `snu` - [Socrata](https://github.com/socrata-cookbooks)
 
 ## Copyright
 
