@@ -82,7 +82,7 @@ The ```include_policy``` directive will support three sources for policies:
 * ```server```, with the following paramater being set to a Chef server URL, a policy_name paramter and a policy_revision_id parameter.
 * ```local```, with the following parameter being a path to a file on disk.
 
-When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, any cookbook locks from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed.
+When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, any cookbook locks, attributes and runlists from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed. Please see the "Merges and Conflicts" section for how duplicate or conflicting items in any of these categories are handled.
 
 When included policies come from a ```git``` source, the SHA of the commit at the time the included lockfile was first pulled into the parent will be stored in the parent lockfile and used when the included Lockfile must be reprocessed. This ensures that only the policyfile for which the update command was called has changed. Similarly, when included policies come from a ```server``` source, the revision id of the included lockfile will be stored in the parent lockfile. In the event of policy files being included from a ```local``` source, this guarantee cannot be given and the latest Lockfile for the included policy will be used.
 
@@ -93,10 +93,35 @@ Essentially what this means is that the parent .lock file is computed from the m
 
 The single fused lockfile produced by the above would then be uploaded to the Chef server as normal, and would function as a single Policy.
 
-
 ## Problems
 
-The principal potential issue with this approach is that because we are pulling cookbook locks from a number of included cookbooks, it is necessary for all included policy Lockfiles to be re-scanned upon regeneration of the parent Policyfile, so that the full set of cookbook locks and constraints can be examined and merged. Although using the ```git``` source to include Policies will mean that the same commit SHA is used every time to rescan the included Lockfile and the ```server``` source will always ensure the same revision ID is used, when the ```local``` source is used we have to use whatever the current Lockfile present on disk is. This means that we cannot guarantee it has not changed since the last time it was scanned.
+The principal potential issue with this approach is that because we are pulling Policyfile elements from a number of included cookbooks, it is necessary for all included policy Lockfiles to be re-scanned upon regeneration of the parent Policyfile, so that the full set of Policyfile elements can be examined and merged. Although using the ```git``` source to include Policies will mean that the same commit SHA is used every time to rescan the included Lockfile and the ```server``` source will always ensure the same revision ID is used, when the ```local``` source is used we have to use whatever the current Lockfile present on disk is. This means that we cannot guarantee it has not changed since the last time it was scanned.
+
+A secondary problem with this approach is the question of how to handle conflicting cookbook locks, runlists or attributes, and the merging of non-conflicting items with the same name. The approach taken to solving this problem is detailed in the next section "Merges and Conflicts".
+
+## Merges and Conflicts
+
+Because the approach taken in this RFC permits one of more levels of policy includes, we must expliclty address the behaviour to be implemented in two cases:
+
+* Merge - When a Policyfile element must be merged with another but *no* conflict is present
+* Conflict - When a Policyfile element must be merged with another but a conflict *is* present.
+
+In approaching this problem, I have  taken from the original intent of Policyfiles, which is very much that what you specify in a policyfile is what you should expect to get on your node.
+
+For that reason, this RFC recommends a very simple approach to merging policyfile elements and resolving conflicts.
+
+If the necessary elements (for example several runlists from a base policy and policies that it includes) can be merged without any conflicts occuring, the merge will be done additively starting from the furthest "branch" policy. Ie, all elements of a particular type in included policies will be merged with elements of the same time in the base policy which includes them.
+
+In the event of any conflicts occuring, this RFC makes it explicitly clear that we will *not* attempt to resolve them. When a conflict occurs, this will be surfaced as an error at Policyfile compilation time, and an error message showing the conflicting elements and their locations will be shown.
+
+There are several foreseeable conflicts I will highlight here explicitly where we will not attempt to resolve the conflict, but will rather return an error (please note, this list is illustrative and not exclusive):
+
+* Conflicting dependant cookbook versions (ie one Policyfile depends on version 1.2.4 and another on 1.2.5)
+* Conflicting values for Policyfile attributes
+
+Essentially, we will only merge elements from Policyfiles where we can be sure that we are not overriding something specified in another Policyfile (ie we can safely combine two sets of cookbook locks if the dependencies do not clash). My approach to this RFC is that you should never have to be surprised by the effect of including another Policy, and it should not be able to change the behavior of a Policyfile which includes it.
+
+In an ideal world, "Base" policies which include other policies would be absolutely minimal and only contain ``include_policy`` statements, but in the event that this is not the case, the principle of least surprise should still apply. 
 
 ## Downstream Impact
 
