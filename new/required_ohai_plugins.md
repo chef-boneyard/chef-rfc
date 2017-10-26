@@ -30,16 +30,19 @@ This RFC proposes the addition of two fields to cookbook metadata:
  * `required_ohai_plugins`: A list of ohai plugins that are critical to
    the operation of the cookbook. If any of the listed plugins are not
    available or fail to run, the chef client run is aborted.
- * `suggested_ohai_plugins`: A list of ohai plugins that enhance the
-   cookbook. Absence or failure of these plugins do not cause the chef
-   client run to fail.
 
-These fields are additive to any site wide configuration of critical
+This field is additive to any site wide configuration of critical
 ohai plugins.
 
-The chef client run would be altered to use a minimal set of ohai
-plugins by default, supplemented by the set of plugins requested by
-cookbooks and site wide configuration.
+Currently, the chef client runs ohai twice - once before and once after
+cookbook syncing, so that ohai plugins that are loaded from cookbooks
+get properly used. This proposal would tweak that process by ensuring
+the first run uses only the minimal ohai plugin set. Any plugins
+in the minimal set should be treated as critical.
+
+The second run would then be subject to the full set of ohai
+configuration options, which would include the full set of critical
+plugins.
 
 ## Copyright
 
