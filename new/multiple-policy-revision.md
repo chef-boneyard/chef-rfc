@@ -112,14 +112,18 @@ For that reason, this RFC recommends a very simple approach to merging policyfil
 
 If the necessary elements (for example several runlists from a base policy and policies that it includes) can be merged without any conflicts occuring, the merge will be done additively starting from the furthest "branch" policy. Ie, all elements of a particular type in included policies will be merged with elements of the same time in the base policy which includes them.
 
+In the event that merging runlists from multiple Policyfiles results in duplicate entries, these will be left in place and deduplicated by Chef client as is currently the case with runlists from other sources such as roles.
+
 In the event of any conflicts occuring, this RFC makes it explicitly clear that we will *not* attempt to resolve them. When a conflict occurs, this will be surfaced as an error at Policyfile compilation time, and an error message showing the conflicting elements and their locations will be shown.
 
-There are several foreseeable conflicts I will highlight here explicitly where we will not attempt to resolve the conflict, but will rather return an error (please note, this list is illustrative and not exclusive):
+There are several foreseeable potential conflicts I will highlight here explicitly where we will not attempt to resolve the conflict, but will rather return an error (please note, this list is illustrative and not exclusive):
 
 * Conflicting dependant cookbook versions (ie one Policyfile depends on version 1.2.4 and another on 1.2.5)
 * Conflicting values for Policyfile attributes
+* In the case of Policyfile attributes which have an array as their value, we will *not* merge the arrays when the policies are merged, but rather generate an error.
 
 Essentially, we will only merge elements from Policyfiles where we can be sure that we are not overriding something specified in another Policyfile (ie we can safely combine two sets of cookbook locks if the dependencies do not clash). My approach to this RFC is that you should never have to be surprised by the effect of including another Policy, and it should not be able to change the behavior of a Policyfile which includes it.
+ 
 
 In an ideal world, "Base" policies which include other policies would be absolutely minimal and only contain ``include_policy`` statements, but in the event that this is not the case, the principle of least surprise should still apply. 
 
