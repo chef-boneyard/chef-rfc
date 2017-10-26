@@ -10,8 +10,8 @@ Type: Standards Track
 
 Presently, the only way to debug a failing chef run is to enable debug
 logging, which is intended more for the maintainers of Chef than for a
-systems engineer. We would like to introduce several levels of enhanced
-logging, enabling more appropriate output for various roles.
+systems engineer. We would like to move to a structured metadata model
+that allows us to slice and dice log messages.
 
 ## Motivation
 
@@ -30,20 +30,18 @@ logging, enabling more appropriate output for various roles.
 
 ## Specification
 
-We propose the addition of a number of addition log levels. `debug`
-level, since it is widely documented and used, would become the level
-appropriate for users of Chef to gain better understanding of why a chef
-client run is failing. This would include the output from system
-commands, ohai timing data, and some details from exceptions.
-`author` log level would include all `debug` output, as well as full
-details from exceptions.
-`maintainer` log level would include all of the above, as well as full
-output from Ohai plugins, debug logging of HTTP requests, and so on.
+We propose to move the chef client, and related libraries, to a
+structured logging format. This would allow us to tag individual log
+messages with extended metadata, such as the resource/subsystem, the
+cookbook we're running in, the log level and so on.
+We would then update the logging commands to allow the user to specify a
+set of tags that they're interested in, allowing a user to only get log
+output from the resources associated with a single cookbook.
 
 ## Downstream Impact
 
 Any libraries that Chef includes (such as Ohai, mixlib-authentication
-and so on) would need to be updated to use appropriate log levels.
+and so on) would need to be updated to use structured logging.
 
 ## Copyright
 
