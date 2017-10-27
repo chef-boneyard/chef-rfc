@@ -123,10 +123,168 @@ There are several foreseeable potential conflicts I will highlight here explicit
 * In the case of Policyfile attributes which have an array as their value, the arrays will not be merged but rather one array will overwrite the other (whichever was included last will win, essentially)
 * An include loop where a policy includes a second policy which in turn includes the first policy.
 
-Essentially, we will only merge elements from Policyfiles where we can be sure that we are not overriding something specified in another Policyfile (ie we can safely combine two sets of cookbook locks if the dependencies do not clash). My approach to this RFC is that you should never have to be surprised by the effect of including another Policy, and it should not be able to change the behavior of a Policyfile which includes it.
+Essentially, we will only merge elements from Policyfiles where we can be sure that we are not overriding something specified in another Policyfile (ie we can safely combine two sets of cookbook locks if the dependencies do not clash). My approach to this RFC is that you should never have to be surprised by the effect of including another Policy, and it should not be able to change the behavior of a Policyfile which includes it. Please see the "Example" section following this one for an example of a policy including another, and the resulting merged policy.
  
-
 In an ideal world, "Base" policies which include other policies would be absolutely minimal and only contain ``include_policy`` statements, but in the event that this is not the case, the principle of least surprise should still apply. 
+
+## Example
+
+This section demonstrates a base Policyfile which includes another simple Policyfile, and shows the resulting merged lockfile.
+
+Here we have our base policy, Myapp.rb, where we're using an internal supermarket to specify that we want one cookbook called ```mycookbook``` in our runlist, we're specifying an attribute, and we're including a policy called ```base```
+```ruby
+name "myapp"
+
+default_source :supermarket, "https://mysupermarket.mycompany.com"
+
+run_list "mycookbook::default"
+
+cookbook "mycookbook"
+
+default["mycookbook"]["version"] = '1.7.0'
+
+include_policy "base", git: "github.com/myorg/policies.git", path: "policies/base.lock.json"
+```
+
+Next, here we have the ```base.lock.json``` file we're including with the ```include_policy``` directive above. This policy has one cookbook, called ```base``` in its runlist, which in then depends on the ```users``` and ```sudo``` cookbooks. It also specifies some attributes.:
+
+```
+{
+  "revision_id": "abc1234abc1234abc1234abc1234abc1234abc1234abc1234",
+  "name": "base",
+  "run_list": [
+    "recipe[base::default]"
+  ],
+  "cookbook_locks": {
+    "base": {
+      "version": "0.1.0",
+      "identifier": "abc1234",
+      "dotted_decimal_identifier": "1234.1234.1234.1234",
+      "cache_key": "base-0.1.0-mysupermarket.mycompany.com",
+       "origin": "https://mysupermarket.mycompany.com:443/api/v1/cookbooks/base/versions/0.1.0/download",
+       "source_options": {
+          "artifactserver": "https://mysupermarket.mycompany.com:443/api/v1/cookbooks/base/versions/0.1.0/download",
+          "version": "0.1.s"
+        }
+      }
+    }   
+  },
+  "default_attributes": {
+    "base_config": {
+      "config_a": "12345",
+      "config_b": "abc123"
+    }
+  },
+  "override_attributes": {
+
+  },
+  "solution_dependencies": {
+    "Policyfile": [
+      [
+        "base",
+        "= 0.1.0"
+      ],
+      [
+        "sudo",
+        "= 3.5.3"
+      ],
+      [
+        "users",
+        "= 5.1.0"
+      ],
+      "base (0.1.0)": [
+        [
+          "users",
+          ">= 0.0.0"
+        ],
+        [
+          "sudo",
+          ">= 0.0.0"
+        ]
+      ]
+    }
+  }
+}
+```
+
+Finally, after we've run ```chef update Myapp.rb```, here is the resulting merged ```Myapp.json.lock``` that would be uploaded to the Chef server:
+
+```
+{
+  "revision_id": "xyz12345xyz12345xyz12345xyz12345xyz12345xyz12345",
+  "name": "myapp",
+  "run_list": [
+    "recipe[base::default,cookbook::default]"
+  ],
+  "cookbook_locks": {
+    "base": {
+      "version": "0.1.0",
+      "identifier": "abc1234",
+      "dotted_decimal_identifier": "1234.1234.1234.1234",
+      "cache_key": "base-0.1.0-mysupermarket.mycompany.com",
+       "origin": "https://mysupermarket.mycompany.com:443/api/v1/cookbooks/base/versions/0.1.0/download",
+       "source_options": {
+          "artifactserver": "https://mysupermarket.mycompany.com:443/api/v1/cookbooks/base/versions/0.1.0/download",
+          "version": "0.1.0"
+        }
+      }
+    },
+    "mycookbook": {
+      "version": "1.7.0",
+      "identifier": "qrst5678",
+      "dotted_decimal_identifier": "5678.5678.5678.5678",
+      "cache_key": "mycookbook-1.7.0-mysupermarket.mycompany.com",
+       "origin": "https://mysupermarket.mycompany.com:443/api/v1/cookbooks/mycookbook/versions/1.7.0/download",
+       "source_options": {
+          "artifactserver": "https://mysupermarket.mycompany.com:443/api/v1/cookbooks/mycookbook/versions/1.7.0/download",
+          "version": "1.7.0"
+        }
+      }
+    }   
+  },
+  "default_attributes": {
+    "base_config": {
+      "config_a": "12345",
+      "config_b": "abc123"
+    },
+    "mycookbook": {
+      "version": "1.7.0"
+    }
+  },
+  "override_attributes": {
+
+  },
+  "solution_dependencies": {
+    "Policyfile": [
+      [
+        "base",
+        "= 0.1.0"
+      ],
+	  [
+	    "sudo",
+	    "= 3.5.3"
+	  ],
+	  [
+	    "users",
+	    "= 5.1.0"
+	  ],
+      "base (0.1.0)": [
+        [
+          "users",
+          ">= 0.0.0"
+        ],
+        [
+          "sudo",
+          ">= 0.0.0"
+        ]
+      ],
+	  "mycookbook (1.7.0)": [
+
+	  ],
+    }
+  }
+}
+```
 
 ## Downstream Impact
 
