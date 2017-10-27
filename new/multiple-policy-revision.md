@@ -120,7 +120,8 @@ There are several foreseeable potential conflicts I will highlight here explicit
 
 * Conflicting dependant cookbook versions (ie one Policyfile depends on version 1.2.4 and another on 1.2.5)
 * Conflicting values for Policyfile attributes
-* In the case of Policyfile attributes which have an array as their value, we will *not* merge the arrays when the policies are merged, but rather generate an error.
+* In the case of Policyfile attributes which have an array as their value, the arrays will not be merged but rather one array will overwrite the other (whichever was included last will win, essentially)
+* An include loop where a policy includes a second policy which in turn includes the first policy.
 
 Essentially, we will only merge elements from Policyfiles where we can be sure that we are not overriding something specified in another Policyfile (ie we can safely combine two sets of cookbook locks if the dependencies do not clash). My approach to this RFC is that you should never have to be surprised by the effect of including another Policy, and it should not be able to change the behavior of a Policyfile which includes it.
  
