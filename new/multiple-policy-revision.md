@@ -214,7 +214,7 @@ Finally, after we've run ```chef update Myapp.rb```, here is the resulting merge
   "revision_id": "xyz12345xyz12345xyz12345xyz12345xyz12345xyz12345",
   "name": "myapp",
   "run_list": [
-    "recipe[base::default,cookbook::default]"
+    "recipe[base::default]", "recipe[mycookbook::default]"
   ],
   "cookbook_locks": {
     "base": {
