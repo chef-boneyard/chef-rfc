@@ -278,9 +278,9 @@ Finally, after we've run ```chef update Myapp.rb```, here is the resulting merge
           ">= 0.0.0"
         ]
       ],
-	  "mycookbook (1.7.0)": [
+      "mycookbook (1.7.0)": [
 
-	  ],
+      ],
     }
   }
 }
