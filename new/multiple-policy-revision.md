@@ -1,17 +1,14 @@
 ---
 RFC: unassigned
-Title: Multiple Policyfiles and Teams - New Proposal
+Title: Policyfile Includes
 Author: Jon Cowie <jcowie@chef.io>
 Status: Draft
 Type: Standards Track
-Replaces: RFC075
 ---
 
-# Multiple Policyfiles and Teams - New Proposal
+# Policyfile Includes
 
-This RFC proposal aims to replace RFC075 (Multiple Policyfiles and Teams) with a new RFC which solves some of the blocking issues encountered with the original RFC.
-
-The underlying motivation of this proposal will be identical to RFC075 (and full credit goes to Noah Kantrowitz for those), but the proposed implementation and functionality will differ significantly.
+The underlying motivation of this proposal will be based on to RFC075 (and full credit goes to Noah Kantrowitz for those), but the proposed implementation and functionality will differ significantly.
 
 
 Policyfiles allow powerful new workflows around cookbook management, but one
