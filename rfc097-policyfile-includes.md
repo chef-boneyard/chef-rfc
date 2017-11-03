@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 97
 Title: Policyfile Includes
 Author: Jon Cowie <jcowie@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
