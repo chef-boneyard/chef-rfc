@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 96
 Title: Improved Log Levels
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
@@ -34,6 +34,7 @@ We propose to move the chef client, and related libraries, to a
 structured logging format. This would allow us to tag individual log
 messages with extended metadata, such as the resource/subsystem, the
 cookbook we're running in, the log level and so on.
+
 We would then update the logging commands to allow the user to specify a
 set of tags that they're interested in, allowing a user to only get log
 output from the resources associated with a single cookbook.
