@@ -73,11 +73,36 @@ This could be done with the addition of a ```include_policy``` directive, an exa
 include_policy "base", git: "github.com/myorg/policies.git", path: "foo/bar/baz.lock.json"
 ```
 
-The ```include_policy``` directive will support three sources for policies: 
+The ```include_policy``` directive will support three sources for policies: git, chef server, and a local path.
 
-* ```git```, with the following parameter being the URL to a Git repository and a path parameter specifying the location of the file within the repository
-* ```server```, with the following paramater being set to a Chef server URL, a policy_name paramter and a policy_revision_id parameter.
-* ```local```, with the following parameter being a path to a file on disk.
+To use a locked policy from a local path:
+```
+include_policy "policy_name", path: "./foo/bar"
+``` 
+
+To use a locked policy from a chef server with a specific revision id:
+
+```
+include_policy "policy_name", policy_revision_id: "abcdabcdabcd", server: "http://example.com"
+
+```
+
+or if the policy name on the chef server differs from the policyfile:
+
+```
+include_policy "policy_name", policy_revision_id: "abcdabcdabcd", policy_name: "specific_policy_name", server: "http://example.com"
+```
+
+When using a chef server as the source, it's also possible to specify a policy group instead of a revision. When doing this, the revision of the included policy at the time the lock is created will become part of the lock data:
+
+```
+include_policy "policy_name", policy_group: "prod", policy_name: "specific_policy_name", server: "http://example.com"
+```
+
+To use a locked policy from git:
+```
+include_policy "policy_name", git: "github.com/chef/policy_example", path: "./foo/bar"
+``` 
 
 When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, any cookbook locks, attributes and runlists from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed. Please see the "Merges and Conflicts" section for how duplicate or conflicting items in any of these categories are handled.
 
