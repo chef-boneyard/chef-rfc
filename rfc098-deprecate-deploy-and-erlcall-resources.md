@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 98
 Title: Deprecate deploy and erl_call
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
