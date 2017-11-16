@@ -62,6 +62,10 @@ The following projects adhere to Cadence Release:
 | Chef Client | Yearly (April)[<sup>1</sup>](#footnotes) | Monthly (2nd Week) | 3 business days |
 | ChefDK | Yearly (April) | Monthly (4th Week)[<sup>2</sup>](#footnotes) | 3 business days |
 
+For projects following the cadence release cycle, no new deprecations will be
+added sooner than two months before release. This would mean the end of January
+for Chef and ChefDK.
+
 #### Ad-hoc Release
 
 [![](https://img.shields.io/badge/Release%20Policy-Ad--hoc%20Release-green.svg)](https://github.com/chef/chef-rfc/blob/master/rfc086-chef-oss-project-policies.md#ad-hoc-release)
