@@ -40,7 +40,7 @@ client_key = "barney_rubble.pem"
 chef_server_url = "https://api.chef.io/organisations/bedrock"
 
 [dev]
-node_name = "admin"
+client_name = "admin"
 client_key = "admin.pem"
 validator_key = "test-validator.pem"
 chef_server_url = "https://api.chef-server.dev/organizations/test"
@@ -49,12 +49,32 @@ chef_server_url = "https://api.chef-server.dev/organizations/test"
 File paths, such as `client_key` or `validator_key`, will be relative to
 `~/.chef` unless absolute.
 
+Clients can be identified with either `node_name` or `client_name`, with
+`client_name` being preferred.
+
+Keys can be specified inline using TOML multiline strings.
+
 The profile is selected using the `CHEF_PROFILE` environment variable, which
-client libraries MUST support. Optionally, tools can also provide a
-`--profile` option, which would override the environment variable.
+client libraries which implement credential handling MUST support.
+Optionally, tools can also provide a `--profile` option, which would
+override the environment variable.
+
+To allow the user to specify statefully which profile they wish to
+use, we will introduce another new file, `~/.chef/context`, which would
+contain only the name of the profile to be used.
 
 It is expected that the credentials file will be parsed first, allowing
 the user's `knife.rb`/`config.rb` to continue to function as previously.
+
+To select the profile to use, libraries should follow the following
+order:
+
+ 1. If an argument is passed with a command line flag, use that.
+ 2. Otherwise, check for the `CHEF_PROFILE` environment variable, and
+    use the value of that.
+ 3. Otherwise, check for the context file, and read the profile name
+    from that.
+ 4. Otherwise, select the default profile.
 
 ## Downstream Impact
 
