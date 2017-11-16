@@ -66,6 +66,9 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [Seth Thomas](https://github.com/cheeseplus)
   * [@cheeseplus](https://twitter.com/cheeseplus)
   * [cheeseplus@chef.io](mailto:cheeseplus@chef.io)
+* [Ian Henry](https://github.com/eeyun)
+  * [@eeyun___](https://twitter.com/eeyun___)
+  * [ian@habitat.sh](mailto:ian@habitat.sh)
 
 #### GitHub
 * Vacant - Submit a PR to become a Chef Community Advocate

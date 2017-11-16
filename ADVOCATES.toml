@@ -50,7 +50,8 @@ More information can be found in the [Chef Community Guidelines](https://github.
         "robbkidd",
         "cwebberops",
         "adamleff",
-        "cheeseplus"
+        "cheeseplus",
+        "eeyun"
       ]
     [Org.Advocates.GitHub]
       title = "GitHub"
@@ -152,6 +153,12 @@ More information can be found in the [Chef Community Guidelines](https://github.
     GitHub = "cheeseplus"
     Twitter = "cheeseplus"
     email = "cheeseplus@chef.io"
+
+  [people.eeyun]
+    Name = "Ian Henry"
+    GitHub = "eeyun"
+    Twitter = "eeyun___"
+    email = "ian@habitat.sh"
 
   [people.vacant]
     Name = "Vacant - Submit a PR to become a Chef Community Advocate"
