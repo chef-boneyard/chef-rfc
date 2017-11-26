@@ -29,7 +29,7 @@ Signal outside tools of specific Chef-Client run status.  Ability to determine r
 
 ### Remaining Available Exit Codes
 
-All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be idential across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are 59 exit codes that are available on both platforms.
+All exit codes defined should be usable on all supported Chef Platforms.  Also the exit codes used should be identical across platforms.  That limits the total range from 1-255.  Exit codes not explicitly used by Linux/Windows are listed below.  There are 59 exit codes that are available on both platforms.
  * Any numbers below that have a strike-through are used below in the **Exit Codes in Use** section
  * Exit Codes Available for Chef use :
      * ~~35,37,40,41,42~~,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97

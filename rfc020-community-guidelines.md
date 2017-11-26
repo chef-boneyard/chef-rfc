@@ -132,7 +132,7 @@ When an advocate notices someone behaving in a way that is outside of our guidel
 
 The advocate should take the following steps if the behavior is not brought inline with our guidelines or the incident is not resolved.
 
-* Consult with another community advocate to make a judgement call about what reasonable corrective actions are warranted.
+* Consult with another community advocate to make a judgment call about what reasonable corrective actions are warranted.
 * Apply the corrective action.
 * Document the incident.
 

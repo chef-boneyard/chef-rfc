@@ -35,7 +35,7 @@ after the `converge` phase completes.
 An audit handler will be introduced to allow cookbooks to register for
 the audit phase.
 
-The current, serverspec based audit mode will be migrated to a cookbook
+The current, Serverspec based audit mode will be migrated to a cookbook
 and removed from the chef-client.
 
 A cookbook may depend on other gems in the usual manner to provide

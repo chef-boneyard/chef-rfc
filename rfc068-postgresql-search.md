@@ -18,7 +18,7 @@ An information specification of goiardi's PostgreSQL backed search.
 
     As a chef user,
     I want different means of searching available,
-    so that I don't have to deal with installing and maintaing Solr.
+    so that I don't have to deal with installing and maintaining Solr.
 
 ## Specification
 

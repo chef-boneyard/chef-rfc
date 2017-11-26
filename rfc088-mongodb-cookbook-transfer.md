@@ -35,12 +35,12 @@ on December 9, 2014.
 The Sous Chefs have been maintaining a [fork](https://github.com/sous-chefs/mongodb)
 of the mongodb cookbook.  The fork's master branch is currently 90 commits ahead
 of the source repository for the cookbook. The Sous Chefs have been active on the issues
-on the origional repository and have worked to fix them in the maintained fork.
+on the original repository and have worked to fix them in the maintained fork.
 
-Grant Ridder, on behalf of the Sous Chefs, has attempted on several ocasaions during
+Grant Ridder, on behalf of the Sous Chefs, has attempted on several occasions during
 November and December of 2016 to contact Markus Korn, the current owner on Supermarket,
 as well as Jameson Lee, a contributor on Supermarket and last committer on GitHub.
-Both individuals were each contacted with 2 different methods without reponse.  At the
+Both individuals were each contacted with 2 different methods without response.  At the
 time of the writing of this draft, the last evidence of activity for either user, in the
 context of the mongodb cookbook, is more than 2 years ago.
 
@@ -65,7 +65,7 @@ accelerate or stop this timeline at any time.
 
 ## Downstream Impact
 
-Since the Sous Chef's fork is compatable with the existing cookbook on Supermarket,
+Since the Sous Chef's fork is compatible with the existing cookbook on Supermarket,
 no downstream impact is expected.
 
 ## Copyright

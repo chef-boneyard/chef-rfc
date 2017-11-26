@@ -50,7 +50,7 @@ Commands for Everyone:
 An example of the [executive summary is here][executive_summary].
 
 This will require Chef Inc, to host the IRC bot someplace so it can track our meetings,
-but there is no reason why we couldn't export the logs to Github after the fact
+but there is no reason why we couldn't export the logs to GitHub after the fact
 and have it consistent with the previous meetings. This will allow for the least
 amount of friction for adoption.
 

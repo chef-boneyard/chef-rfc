@@ -132,15 +132,15 @@ In approaching this problem, I have  taken from the original intent of Policyfil
 
 For that reason, this RFC recommends a very simple approach to merging policyfile elements and resolving conflicts.
 
-If the necessary elements (for example several runlists from a base policy and policies that it includes) can be merged without any conflicts occuring, the merge will be done additively starting from the furthest "branch" policy. Ie, all elements of a particular type in included policies will be merged with elements of the same time in the base policy which includes them.
+If the necessary elements (for example several runlists from a base policy and policies that it includes) can be merged without any conflicts occurring, the merge will be done additively starting from the furthest "branch" policy. Ie, all elements of a particular type in included policies will be merged with elements of the same time in the base policy which includes them.
 
 In the event that merging runlists from multiple Policyfiles results in duplicate entries, these will be left in place and deduplicated by Chef client as is currently the case with runlists from other sources such as roles.
 
-In the event of any conflicts occuring, this RFC makes it explicitly clear that we will *not* attempt to resolve them. When a conflict occurs, this will be surfaced as an error at Policyfile compilation time, and an error message showing the conflicting elements and their locations will be shown.
+In the event of any conflicts occurring, this RFC makes it explicitly clear that we will *not* attempt to resolve them. When a conflict occurs, this will be surfaced as an error at Policyfile compilation time, and an error message showing the conflicting elements and their locations will be shown.
 
 There are several foreseeable potential conflicts I will highlight here explicitly where we will not attempt to resolve the conflict, but will rather return an error (please note, this list is illustrative and not exclusive):
 
-* Conflicting dependant cookbook versions (ie one Policyfile depends on version 1.2.4 and another on 1.2.5)
+* Conflicting dependent cookbook versions (ie one Policyfile depends on version 1.2.4 and another on 1.2.5)
 * Conflicting values for Policyfile attributes - if the same attribute is set in two places at different levels (ie one in a base policy, one in a branch), no merge of their values will be attempted.
 * An include loop where a policy includes a second policy which in turn includes the first policy.
 

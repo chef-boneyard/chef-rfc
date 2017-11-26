@@ -195,7 +195,7 @@ end
 The examples below are changes to the `powershell_script` resource that take
 advantage of guard interpreter resource support.
 
-#### `powershell_script` guard interpeter default example
+#### `powershell_script` guard interpreter default example
 
 ```ruby
 
