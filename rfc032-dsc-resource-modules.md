@@ -86,7 +86,6 @@ It will remove DSC module by deleting DSC resource module dir from $psmodulepath
 * remote_url - The remote url for *.zip DSC module file. Its mandatory attribute. The zip file should have the same folder structure required for DSC module (see Quick overview of DSC resource module section).
 * version - DSC module may have multiple versions. Optional.
 
-
 ## Example
 
 ```ruby

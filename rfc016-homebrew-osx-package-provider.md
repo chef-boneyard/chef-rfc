@@ -53,7 +53,7 @@ The motivation for this change is to modernize the "sane defaults" that Chef pro
 
 ## Rationale
 
-Issue #28 was opened to briefly propose this change and within a week received an overwhelming ":+1" from respondants. So far I haven't found many people that are still using Macports instead of Homebrew, and no one has mentioned anything in the issue or on the mailing list.
+Issue #28 was opened to briefly propose this change and within a week received an overwhelming ":+1" from respondents. So far I haven't found many people that are still using Macports instead of Homebrew, and no one has mentioned anything in the issue or on the mailing list.
 
 ## Compatibility
 

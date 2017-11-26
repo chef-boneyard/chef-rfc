@@ -137,7 +137,7 @@ The commit used to generate an artifact will be tagged with the corresponding `M
 
 Some Chef OSS project artifacts (e.g. ancillary gems) are built and published manually by their maintainers.
 
-Some Chef OSS projects will be built following a Continuous Integration / Continuos Delivery (CI/CD) model. This means that every merge to master may result in a build and every successful build that passes functional testing is a candidate for a Stable Release and published for consumption by users. This is especially common for projects that are under Cadence Releases.
+Some Chef OSS projects will be built following a Continuous Integration / Continuous Delivery (CI/CD) model. This means that every merge to master may result in a build and every successful build that passes functional testing is a candidate for a Stable Release and published for consumption by users. This is especially common for projects that are under Cadence Releases.
 
 Some Chef OSS projects will have very large sets of dependencies that are allowed to float (e.g. ~> version constraint). Doing so allows other projects to consume them without having to match dependencies in lock-step, helping to prevent ecosystem failure when project upgrades before another. Because these dependencies are resolved at build-time, two builds of the same Chef OSS project commit may result in slightly different packages. It is for this reason that we encourage users, when pOSS projectible, to consume pre-compiled binaries through official channels (where this effect is minimized) rather than compiling them themselves.
 

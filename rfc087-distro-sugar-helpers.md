@@ -158,7 +158,7 @@ Generally these helpers are designed to fit actual needs, not theoretical needs.
 arch-based systems but ohai does not support any of those other than the parent distro, so we do not define those helpers.
 
 While `mac_os_x` historically derives from BSD systems, including it in the `bsd_based?` helper has no utility to anyone, so it is not
-included.  In general, these APIs are not derived from solely historical arguments (and explicitly do not match their wikipedia definitions).
+included.  In general, these APIs are not derived from solely historical arguments (and explicitly do not match their Wikipedia definitions).
 
 The `fedora_derived?` helper might be more usefully defined as RPM-based-distros-that-aren't-SuSE which is a useful category for systems
 management, but not application management.  For the actual historical overarching set of distros there is `rpm_based?` and for the more

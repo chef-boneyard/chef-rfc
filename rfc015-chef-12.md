@@ -85,7 +85,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
 * **Breaks Backwards Compatibility? (Workstation):** No
 * **Breaks Backwards Compatibility? (Cookbooks):**  Yes
 * **User Benefit:** Medium
-  * Short description of the benefit: Guard expressions for batch will execute as 64-bit, which is almost always the right thing. Without this change, users have to discover why things don’t work as exepcted (because we run 32-bit guards which can see a different view of the OS) and use some workaround, either set guard_interpreter explicitly or use the “sysnative” path trick, which must be substituted on 32-bit systems. The current behavior is a common gotcha, particularly for new Chef users or those not used to the Windows platform.
+  * Short description of the benefit: Guard expressions for batch will execute as 64-bit, which is almost always the right thing. Without this change, users have to discover why things don’t work as expected (because we run 32-bit guards which can see a different view of the OS) and use some workaround, either set guard_interpreter explicitly or use the “sysnative” path trick, which must be substituted on 32-bit systems. The current behavior is a common gotcha, particularly for new Chef users or those not used to the Windows platform.
 * **Impact:** Low
   * Short description of the impact: Guard expressions for the batch resource will run as 64-bit, which could cause different behaviors for an expression that was either intentionally or unintentionally running as 32-bit. It’s unlikely that people will hit this case, largely because if they didn’t do the workaround to use 64-bit, that’s probably a case where running as 32-bit is harmless (or they would have caught the problem). If they were working around it with guard_interpreter or sysnative, there will be no impact.
 
@@ -159,4 +159,4 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
 
 ### Bug Fixes
 
-We are keeping track of the minor things that need to be fixed or included in Chef 12 on [Github Issues](https://github.com/opscode/chef/issues) with `Milestone: Chef 12`. Feel free to check them out or file a new issue there.
+We are keeping track of the minor things that need to be fixed or included in Chef 12 on [GitHub Issues](https://github.com/opscode/chef/issues) with `Milestone: Chef 12`. Feel free to check them out or file a new issue there.

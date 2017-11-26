@@ -24,7 +24,7 @@ entire nested value of a key at that precedence level, ala Chef 10.
 ## Motivation
 
 ### Precedence Key Deletion
-Due to the fact that a precedence levels in Chef 11 are made up of multiple components, simple deletes no longer work as they once did. However, it is important to be able to delete a key at a given precendence level as one once could. One may be doing a safety check and realize an entry in a hash is dangerous or bad.
+Due to the fact that a precedence levels in Chef 11 are made up of multiple components, simple deletes no longer work as they once did. However, it is important to be able to delete a key at a given precedence level as one once could. One may be doing a safety check and realize an entry in a hash is dangerous or bad.
 
 #### What's wrong?
 

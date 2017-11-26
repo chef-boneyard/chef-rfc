@@ -79,7 +79,7 @@ Instance ID                           Name                 Public IP      Privat
 
 #### Proposal
 
-The various permutations of "knife CLOUD server list" all have 'Public IP' and 'Private IP' as column headers (in various capitalizations and spacings). Standardizing this under knife-cloud and making an additional argument of `--network [NAMES_OR_IDS]` that defaulted to `public,private` would allow for overriding to show different networks without requiring the display of every potential network. An additional option of `--network-filter [NAMES_OR_IDS]` could be used to only show the nodes on those networks. Because this information may be easier to pull from the Chef node than from Fog (depending on the particular cloud provider), knife-cloud shold also provide the associated node's name as a column, a frequently mentioned feature request.
+The various permutations of "knife CLOUD server list" all have 'Public IP' and 'Private IP' as column headers (in various capitalizations and spacings). Standardizing this under knife-cloud and making an additional argument of `--network [NAMES_OR_IDS]` that defaulted to `public,private` would allow for overriding to show different networks without requiring the display of every potential network. An additional option of `--network-filter [NAMES_OR_IDS]` could be used to only show the nodes on those networks. Because this information may be easier to pull from the Chef node than from Fog (depending on the particular cloud provider), knife-cloud should also provide the associated node's name as a column, a frequently mentioned feature request.
 
 This will be part of a future knife-cloud-based release.
 

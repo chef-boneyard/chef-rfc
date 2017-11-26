@@ -24,7 +24,7 @@ _Note: This RFC is written in active voice, but much of what it documents is not
 
 ## What is a supported workflow?
 
-Chef has lots of moving parts, and as a tool, it is broadly un-opinonated about how you use them. That has real benefits when it comes to solving your day-to-day problems (for example, there is nothing about Chef you can't customize from a cookbook, which is awesome) - but it makes life difficult when you try and bring on new folks, or decide for yourself how to approach a problem.
+Chef has lots of moving parts, and as a tool, it is broadly un-opinionated about how you use them. That has real benefits when it comes to solving your day-to-day problems (for example, there is nothing about Chef you can't customize from a cookbook, which is awesome) - but it makes life difficult when you try and bring on new folks, or decide for yourself how to approach a problem.
 
 The workflows in this document are "supported" for three reasons:
 
@@ -44,7 +44,7 @@ We have long supported `knife` as a catch-all for workflow with Chef. Knife bega
 
 1. It provides us a blank slate for implementation of new workflow super-powers
 1. It ensures we won't break existing knife based workflows while we consolidate
-1. It makes more sense from a 'come in alone' perspective - the tool you use to do 'chef' stuff as a developer is, unsuprisingly.. called 'chef'.
+1. It makes more sense from a 'come in alone' perspective - the tool you use to do 'chef' stuff as a developer is, unsurprisingly.. called 'chef'.
 
 So this document talks primarily about the `chef` command, and not `knife`.
 
@@ -84,7 +84,7 @@ $ chef generate repo chef-repo
 $ git add .
 $ git commit -a -m "First commit"
 ```
-_Note: This creates a chef-repo exactly like the one you would clone from github today._
+_Note: This creates a chef-repo exactly like the one you would clone from GitHub today._
 
 You now have a fresh Chef repository, ready for your content.
 
@@ -111,7 +111,7 @@ To create a new type of policy document, from the top of your chef-repo:
 ```
 $ chef generate THING name
 ```
-_Note: None of these generators exist yet. They should subsume the functionality of the attendent knife X commands, and be intelligent about which workflow we've chosen._
+_Note: None of these generators exist yet. They should subsume the functionality of the attendant knife X commands, and be intelligent about which workflow we've chosen._
 
 This will result in a blank, JSON formatted policy document created in the appropriate
 subdirectory of your repository. Edit it to your satisfaction, and then:
@@ -150,7 +150,7 @@ And your integration tests with:
 $ chef test integration
 ```
 
-_Note: We will need to have the generators for each of these tools drop off a standard file for dependency resolution that states we should exlusively look at the directory above us for our content. Also - should this really be chef test unit/chef test integration?_
+_Note: We will need to have the generators for each of these tools drop off a standard file for dependency resolution that states we should exclusively look at the directory above us for our content. Also - should this really be chef test unit/chef test integration?_
 
 ### How to publish your cookbooks and policy
 

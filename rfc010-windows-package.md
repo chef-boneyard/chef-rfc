@@ -8,7 +8,7 @@ Type: Standards Track
 
 # Windows Package Resource and Providers
 
-Proposal for moving windows\_package LWRP from the windows cookbook into core Chef.
+Proposal for moving windows_package LWRP from the windows cookbook into core Chef.
 
 Chef internal PBI: [OC-5114](https://tickets.corp.opscode.com/browse/OC-5114)
 
@@ -35,7 +35,7 @@ This would be the default package provider on windows, so you would use the 'pac
 Deprecated attributes:  
 
 * checksum  
-The existing cookbook allows source to be a URL, we'd rather use remote_file to download packages unless we're passing the URL directly to the installer to avoid code duplication and maintain 'primatives.'
+The existing cookbook allows source to be a URL, we'd rather use remote_file to download packages unless we're passing the URL directly to the installer to avoid code duplication and maintain 'primitives.'
 * success_codes  
 This will be renamed to returns to match other existing core providers
 

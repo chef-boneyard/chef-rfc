@@ -34,7 +34,7 @@ Deprecations, also known as breaking changes, will be reserved for the yearly ma
 
 In order to schedule future deprecations Chef developers will complete the following steps:
 
-1. Open a PR against the Chef github repository for the proposed deprecation.
+1. Open a PR against the Chef GitHub repository for the proposed deprecation.
 
   - Add a deprecation notice to the release notes of the upcoming release. This follows the example format shown below.
   - If technically feasible, add deprecation messaging in the client so that users will be notified of code changes they need to make during the client runtime. This follows the example format shown below.
@@ -65,7 +65,7 @@ node.set is deprecated and will be removed in Chef 13.0 scheduled for release 04
 
 ### Sample Deprecation Release Notes Notice
 
-This notice would appear in the release notes of the chef Github repository as well as the Chef release announcements post to Discourse.
+This notice would appear in the release notes of the chef GitHub repository as well as the Chef release announcements post to Discourse.
 
 #### Future Deprecation of node.set
 

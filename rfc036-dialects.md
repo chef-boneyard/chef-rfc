@@ -132,7 +132,7 @@ the current state of Chef:
 * Environments: `.rb` and `.json`
 * Nodes: `.rb` and `.json`
 
-The only allow externally visible changes are in unifiying the loading behavior
+The only allow externally visible changes are in unifying the loading behavior
 between Chef and chef_fs.
 
 ## Copyright
