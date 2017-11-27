@@ -76,7 +76,7 @@ so that I can quickly get up and running.
 
 <p><em>Multitenant root URL support</em>: The <code>chef_server_root</code> is a new concept.  There are already resources (in Cheffish) that modify /organizations and /users, and <code>knife upload</code> and <code>knife download</code> can be modified to do it as well (allowing <code>knife ec backup</code> to become a central concept).  The addition of root url as a top level concept is worth it because of the scenarios it enables (just varying <code>organization</code>) as well as the fact that tools which manipulate the root won&#39;t have to guess that the top level is <code>&lt;chef_server_url&gt;/../..</code>.</p>
 
-<p>We <em>could</em> just repurpose <code>chef_server_url</code> for this, but chef<em>server</em>url is so universally used that we would have no end of support calls if we changed its meaning.</p>
+<p>We <em>could</em> just re-purpose <code>chef_server_url</code> for this, but chef<em>server</em>url is so universally used that we would have no end of support calls if we changed its meaning.</p>
 
 <p><em>Local multitenant support by default</em>: chef-zero already supports this, and turning it on will have the effect of adding ACLs, groups, containers, members, invites and organization data.</p>
 

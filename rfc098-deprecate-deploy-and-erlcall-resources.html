@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Deprecate <code>deploy</code> and <code>erl_call</code></h1>
+
+<p>Two resources in Chef core that cause a lot of user confusion and issues are
+the <code>deploy</code> and <code>erl_call</code> resources.</p>
+
+<p>With the <code>deploy</code> resource, the confusion is mostly inherent in the very large
+number of moving pieces in the resource. The Capistrano-style deployment logic
+makes sense when a deployment tool is expecting to co-exist with manual management,
+but this is not usually the case with Chef recipes. Most users would be better
+served by a simpler <code>git</code> resource for deployment.</p>
+
+<p><code>erl_call</code> is more debatable, it doesn&#39;t tend to cause a lot of user confusion
+and the maintenance burden isn&#39;t really a problem, but if we&#39;re already doing
+some cleanups we kind of might as well. The use case for this resource is so
+vanishingly small that it doesn&#39;t make much sense to keep in Chef core.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As a Chef user,
+I want Chef core resources to match my expectations,
+so that using Chef is easier.
+</pre></div>
+<h2>Specification</h2>
+
+<p>The deprecation phase would start from now until Chef 14 in April 2018. The
+resources would emit a deprecation warning if used.</p>
+
+<p>Because the <code>deploy</code> resource has been around for so long, we recognize that
+even 6 months of deprecation warnings may not be sufficient time to port off it.
+As an aid to migration, we will copy the code for the <code>deploy</code> resource to a
+cookbook which can be included for backwards compatibility even after the release
+of Chef 14. This does not obligate us to continue supporting this resource or
+cookbook beyond basic compatibility fixes (i.e. this should not be construed as
+a permanent thing, nor should any improvements be counted upon beyond what
+already exists in Chef).</p>
+
+<p>With Chef 14, both resources would be removed from Chef.</p>
+
+<h2>Downstream Impact</h2>
+
+<p>Any cookbook using <code>deploy</code> would have either have to migrate to another file
+deployment solution (probably a simple <code>git</code> resource) or use the compatibility
+cookbook. Any cookbook using <code>erl_call</code> will be broken, however we are unable
+to find any public cookbooks at this time, and if there is community demand,
+someone could make a compatibility cookbook as with <code>deploy</code>.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>

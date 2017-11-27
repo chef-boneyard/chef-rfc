@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Stats Endpoint for Chef Server</h1>
+
+<p>Monitoring Chef Server is an involved task. There are several services that make
+up a Chef Server, all of which need to be monitored. These services each have their
+own set of metrics, and each has it&#39;s own way obtaining those metrics. The Chef Server
+component itself has 2 ways that provide a different set of metrics: pushing to statsd 
+and through Folsom, which can be set up to push to Graphite.</p>
+
+<p>This RFC introduces a stats endpoint to Chef Server which is capable of providing metrics
+for Chef Server and all its co-located services.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As a Chef Server operator,
+I want to have a consistent way to get important Chef Server metrics,
+so that I can easily monitor the health of my Chef Server out of the box.
+
+As a Chef Server operator,
+I want to understand the metrics I&#39;m given,
+so that I can easily monitor the health of my Chef Server.
+</pre></div>
+<h2>Specification</h2>
+
+<p>This RFC adds a <code>/_stats</code> endpoint to Chef Server. This endpoint will respond with
+statistics about the Chef Server instance, along with any services that are both required
+by Chef Server and colocated with that instance. It takes one optional parameter <code>format</code>,
+which is assumed to be <code>json</code> by default. There may be other formats supported in the future.</p>
+
+<h3>Supported Metric Primitives</h3>
+
+<p>The endpoints can provide metrics of following types, as defined by <a href="https://prometheus.io/docs/concepts/metric_types/">Prometheus</a>:
+- Counter - Monotonic cumulative metric. For example, number of requests served.
+- Gauge - Numeric measurement at a given point in time. For example, number of inflight requests.
+- Histogram - Distributes values into buckets. For example, response times.
+- Summary - Provides summary statistics for a value in a sliding window.</p>
+
+<h3>JSON Response Format</h3>
+
+<p>The stats endpoint must respond to <code>format=json</code>. The schema is defined below.</p>
+
+<h4>JSON</h4>
+
+<p>The JSON response schema will be based on that defined by
+<a href="https://prometheus.io/docs/instrumenting/exposition_formats">Prometheus 0.0.4</a>, but modified to fit a
+JSON serialization format. We will return a list of metrics families, each with a name,
+type, help doc string, and a list of metrics. Each individual metric in the family will have a set of
+labels, and optionally a label. Other data will be based on the type of metric. All numbers will be formated as strings so that
+we may represent things like NaN and infinity. This format will be based on
+<a href="https://github.com/prometheus/prom2json">prom2json</a>. Below is an example of taking metrics from the
+prometheus text format to JSON:</p>
+<div class="highlight"><pre><span></span># HELP http_requests_total The total number of HTTP requests.
+# TYPE http_requests_total counter
+http_requests_total{method=&quot;post&quot;,code=&quot;200&quot;} 1027 1395066363000
+http_requests_total{method=&quot;post&quot;,code=&quot;400&quot;}    3 1395066363000
+
+# A weird metric from before the epoch:
+something_weird{problem=&quot;division by zero&quot;} +Inf -3982045
+
+# A histogram, which has a pretty complex representation in the text format:
+# HELP http_request_duration_seconds A histogram of the request duration.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le=&quot;0.05&quot;} 24054
+http_request_duration_seconds_bucket{le=&quot;0.1&quot;} 33444
+http_request_duration_seconds_bucket{le=&quot;0.2&quot;} 100392
+http_request_duration_seconds_bucket{le=&quot;0.5&quot;} 129389
+http_request_duration_seconds_bucket{le=&quot;1&quot;} 133988
+http_request_duration_seconds_bucket{le=&quot;+Inf&quot;} 144320
+http_request_duration_seconds_sum 53423
+http_request_duration_seconds_count 144320
+
+# Finally a summary, which has a complex representation, too:
+# HELP rpc_duration_seconds A summary of the RPC duration in seconds.
+# TYPE rpc_duration_seconds summary
+rpc_duration_seconds{quantile=&quot;0.01&quot;} 3102
+rpc_duration_seconds{quantile=&quot;0.05&quot;} 3272
+rpc_duration_seconds{quantile=&quot;0.5&quot;} 4773
+rpc_duration_seconds{quantile=&quot;0.9&quot;} 9001
+rpc_duration_seconds{quantile=&quot;0.99&quot;} 76656
+rpc_duration_seconds_sum 1.7560473e+07
+rpc_duration_seconds_count 2693
+
+# HELP available_workers The number of available workers
+# TYPE available_workers gauge
+available_workers 10
+</pre></div><div class="highlight"><pre><span></span>[
+  {
+    &quot;help&quot;: &quot;A summary of the RPC duration in seconds.&quot;,
+    &quot;metrics&quot;: [
+      {
+        &quot;count&quot;: &quot;2693&quot;,
+        &quot;quantiles&quot;: {
+          &quot;0.01&quot;: &quot;3102&quot;,
+          &quot;0.05&quot;: &quot;3272&quot;,
+          &quot;0.5&quot;: &quot;4773&quot;,
+          &quot;0.9&quot;: &quot;9001&quot;,
+          &quot;0.99&quot;: &quot;76656&quot;
+        },
+        &quot;sum&quot;: &quot;1.7560473e+07&quot;
+      }
+    ],
+    &quot;name&quot;: &quot;rpc_duration_seconds&quot;,
+    &quot;type&quot;: &quot;SUMMARY&quot;
+  },
+  {
+    &quot;help&quot;: &quot;The number of available workers&quot;,
+    &quot;metrics&quot;: [
+      {
+        &quot;value&quot;: &quot;10&quot;
+      }
+    ],
+    &quot;name&quot;: &quot;available_workers&quot;,
+    &quot;type&quot;: &quot;GAUGE&quot;
+  },
+  {
+    &quot;help&quot;: &quot;The total number of HTTP requests.&quot;,
+    &quot;metrics&quot;: [
+      {
+        &quot;labels&quot;: {
+          &quot;code&quot;: &quot;200&quot;,
+          &quot;method&quot;: &quot;post&quot;
+        },
+        &quot;timestamp&quot;: &quot;1395066363000&quot;,
+        &quot;value&quot;: &quot;1027&quot;
+      },
+      {
+        &quot;labels&quot;: {
+          &quot;code&quot;: &quot;400&quot;,
+          &quot;method&quot;: &quot;post&quot;
+        },
+        &quot;timestamp&quot;: &quot;1395066363000&quot;,
+        &quot;value&quot;: &quot;3&quot;
+      }
+    ],
+    &quot;name&quot;: &quot;http_requests_total&quot;,
+    &quot;type&quot;: &quot;COUNTER&quot;
+  },
+  {
+    &quot;help&quot;: &quot;&quot;,
+    &quot;metrics&quot;: [
+      {
+        &quot;labels&quot;: {
+          &quot;problem&quot;: &quot;division by zero&quot;
+        },
+        &quot;timestamp&quot;: &quot;-3982045&quot;,
+        &quot;value&quot;: &quot;+Inf&quot;
+      }
+    ],
+    &quot;name&quot;: &quot;something_weird&quot;,
+    &quot;type&quot;: &quot;UNTYPED&quot;
+  },
+  {
+    &quot;help&quot;: &quot;A histogram of the request duration.&quot;,
+    &quot;metrics&quot;: [
+      {
+        &quot;buckets&quot;: {
+          &quot;+Inf&quot;: &quot;144320&quot;,
+          &quot;0.05&quot;: &quot;24054&quot;,
+          &quot;0.1&quot;: &quot;33444&quot;,
+          &quot;0.2&quot;: &quot;100392&quot;,
+          &quot;0.5&quot;: &quot;129389&quot;,
+          &quot;1&quot;: &quot;133988&quot;
+        },
+        &quot;count&quot;: &quot;144320&quot;,
+        &quot;sum&quot;: &quot;0&quot;
+      }
+    ],
+    &quot;name&quot;: &quot;http_request_duration_seconds&quot;,
+    &quot;type&quot;: &quot;HISTOGRAM&quot;
+  }
+]
+</pre></div>
+<h2>Authentication</h2>
+
+<p>The <code>_stats</code> endpoint could potentially provide information useful in compromising aspects of the Chef
+Server. For this reason, there should be an option to protect this endpoint with basic access authentication
+for operators who do not want this endpoint accessible to all. A username and password will be generated if
+it not provided. By using basic authentication, we provide some level of access control to this endpoint
+while still making usuable to metrics systems, as most will provide a way to access endpoints that have
+basic auth.</p>
+
+<h2>Yet Another Way to Get Metrics</h2>
+
+<p>This introduces yet another way to get metrics for the Chef Server. All metrics that were previously
+available through statsd or Folsom will be available from the stats endpoint. This means that other
+methods should be deprecated and removed in the next major version bump of Chef Server. Those who
+wish to push to Graphite may still do so by polling. Doing the same for statsd may no longer make sense
+as the stats endpoint will have already aggregated the metric data. That being said, those who wish to
+still use statsd can get the data from the request logs.</p>
+
+<h2>Resources</h2>
+
+<ul>
+<li>https://getchef.zendesk.com/hc/en-us/articles/207577106-Monitoring-Your-Chef-Server</li>
+<li>https://github.com/facebook/chef-utils/blob/master/chef-server-stats/chef-server-stats</li>
+</ul>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>

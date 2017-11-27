@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Use of telemetry in Test Kitchen</h1>
+
+<p>This RFC is a description of Test Kitchen&#39;s implementation of <the
+telemetry RFC, as yet unumbered>, as required in that RFC.</p>
+
+<h2>What questions do we hope to answer?</h2>
+
+<ul>
+<li>What platforms do our users run kitchen on?</li>
+<li>Which plugins are used by kitchen users?</li>
+<li>Which bento boxes are used?</li>
+<li>Which provisioners are used?</li>
+<li>If a chef provisioner is used, which chef versions are installed?</li>
+<li>Which commands are used?</li>
+</ul>
+
+<h2>Implementation</h2>
+
+<p>The bulk of this RFC is the description of the events, below. We
+envisage that a single client library will be built for all chef
+projects, and Kitchen will consume that to send events. That library
+would ensure events are sent in a non-blocking manner, and would deal
+with retries, session handling and opt-out.</p>
+
+<h2>Events</h2>
+
+<p>Let&#39;s examine a typical user interacting with kitchen in an existing cookbook,
+and enumerate the events and information that&#39;s sent. We&#39;ll elide the fields
+from the payload that are common to all chef telemetry systems. To ensure
+that we don&#39;t leak private information, drivers will only report provisioning
+targets when they are not specified explicitly by the user.</p>
+
+<p>The user performs a full test run on a Debian instance:</p>
+
+<p><code>kitchen test default-debian-9</code></p>
+
+<p>using the <code>kitchen-hyperv</code> driver on Windows 10, and the <code>debian-9-amd64</code> bento box.
+This results in the following events:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span> 
+    <span class="nt">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;test-kitchen&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;session_id&quot;</span><span class="p">:</span> <span class="s2">&quot;504ec380-5a75-458c-9f56-afa3c47b8705&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;payload&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;command-line&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;platform&quot;</span><span class="p">:</span> <span class="s2">&quot;windows-10-x64&quot;</span>
+            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.16&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>Running test first destroys the instance, and then creates, converges and verifies a new instance.
+Lastly, the instance is destroyed again.</p>
+<div class="highlight"><pre><span></span><span class="p">{</span> 
+    <span class="nt">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;test-kitchen&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;session_id&quot;</span><span class="p">:</span> <span class="s2">&quot;504ec380-5a75-458c-9f56-afa3c47b8705&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;payload&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;destroy&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;platform&quot;</span><span class="p">:</span> <span class="s2">&quot;windows-10-x64&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.16&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div><div class="highlight"><pre><span></span><span class="p">{</span> 
+    <span class="nt">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;test-kitchen&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;session_id&quot;</span><span class="p">:</span> <span class="s2">&quot;504ec380-5a75-458c-9f56-afa3c47b8705&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;payload&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;target&quot;</span><span class="p">:</span> <span class="s2">&quot;bento/debian-9.0-amd64&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;driver&quot;</span><span class="p">:</span> <span class="s2">&quot;kitchen-hyperv&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;driver_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;transport&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;platform&quot;</span><span class="p">:</span> <span class="s2">&quot;windows-10-x64&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.16&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>when the instance is ready, the user has configured the <code>chef-zero</code> provisioner, and requested
+chef client <code>13</code>, using the new style configuration. They&#39;re using Policyfiles:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;test-kitchen&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;session_id&quot;</span><span class="p">:</span> <span class="s2">&quot;504ec380-5a75-458c-9f56-afa3c47b8705&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;payload&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;converge&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;chef&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;product_version&quot;</span><span class="p">:</span> <span class="s2">&quot;13&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;channel&quot;</span><span class="p">:</span> <span class="s2">&quot;stable&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;provisioner&quot;</span><span class="p">:</span> <span class="s2">&quot;chef-zero&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;resolver&quot;</span><span class="p">:</span> <span class="s2">&quot;policyfile&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;platform&quot;</span><span class="p">:</span> <span class="s2">&quot;windows-10-x64&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.16&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>We now proceed to verifying the instance:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span> 
+    <span class="nt">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;test-kitchen&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;session_id&quot;</span><span class="p">:</span> <span class="s2">&quot;504ec380-5a75-458c-9f56-afa3c47b8705&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;payload&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;verify&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;verifier&quot;</span><span class="p">:</span> <span class="s2">&quot;kitchen-inspec&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;verifier_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;platform&quot;</span><span class="p">:</span> <span class="s2">&quot;windows-10-x64&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.16&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>Before deleting it again (see above).</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>

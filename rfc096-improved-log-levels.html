@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Improved Log Levels</h1>
+
+<p>Presently, the only way to debug a failing chef run is to enable debug
+logging, which is intended more for the maintainers of Chef than for a
+systems engineer. We would like to move to a structured metadata model
+that allows us to slice and dice log messages.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As a Chef maintainer,
+I want to know exactly what chef is doing,
+so that I can maintain and develop chef.
+
+As a cookbook author,
+I want to ensure that my cookbook is interacting with the system as
+I expect,
+so that I can write cookbooks efficiently.
+
+As a systems engineer,
+I want to see the output of running commands,
+so that I can debug chef failures.
+</pre></div>
+<h2>Specification</h2>
+
+<p>We propose to move the chef client, and related libraries, to a
+structured logging format. This would allow us to tag individual log
+messages with extended metadata, such as the resource/subsystem, the
+cookbook we&#39;re running in, the log level and so on.</p>
+
+<p>We would then update the logging commands to allow the user to specify a
+set of tags that they&#39;re interested in, allowing a user to only get log
+output from the resources associated with a single cookbook.</p>
+
+<h2>Downstream Impact</h2>
+
+<p>Any libraries that Chef includes (such as Ohai, mixlib-authentication
+and so on) would need to be updated to use structured logging.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>

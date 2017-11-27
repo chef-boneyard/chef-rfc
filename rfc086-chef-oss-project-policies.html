@@ -74,6 +74,10 @@ so I can estimate my upgrade efforts.
 | Chef Client | Yearly (April)<a href="#footnotes"><sup>1</sup></a> | Monthly (2nd Week) | 3 business days |
 | ChefDK | Yearly (April) | Monthly (4th Week)<a href="#footnotes"><sup>2</sup></a> | 3 business days |</p>
 
+<p>For projects following the cadence release cycle, no new deprecations will be
+added sooner than two months before release. This would mean the end of January
+for Chef and ChefDK.</p>
+
 <h4>Ad-hoc Release</h4>
 
 <p><a href="https://github.com/chef/chef-rfc/blob/master/rfc086-chef-oss-project-policies.md#ad-hoc-release"><img src="https://img.shields.io/badge/Release%20Policy-Ad--hoc%20Release-green.svg" alt=""></a></p>
@@ -162,7 +166,7 @@ kitchen version: <span class="m">1</span>.15.0
 
 <p>Some Chef OSS project artifacts (e.g. ancillary gems) are built and published manually by their maintainers.</p>
 
-<p>Some Chef OSS projects will be built following a Continuous Integration / Continuos Delivery (CI/CD) model. This means that every merge to master may result in a build and every successful build that passes functional testing is a candidate for a Stable Release and published for consumption by users. This is especially common for projects that are under Cadence Releases.</p>
+<p>Some Chef OSS projects will be built following a Continuous Integration / Continuous Delivery (CI/CD) model. This means that every merge to master may result in a build and every successful build that passes functional testing is a candidate for a Stable Release and published for consumption by users. This is especially common for projects that are under Cadence Releases.</p>
 
 <p>Some Chef OSS projects will have very large sets of dependencies that are allowed to float (e.g. ~&gt; version constraint). Doing so allows other projects to consume them without having to match dependencies in lock-step, helping to prevent ecosystem failure when project upgrades before another. Because these dependencies are resolved at build-time, two builds of the same Chef OSS project commit may result in slightly different packages. It is for this reason that we encourage users, when pOSS projectible, to consume pre-compiled binaries through official channels (where this effect is minimized) rather than compiling them themselves.</p>
 

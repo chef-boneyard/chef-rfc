@@ -51,7 +51,7 @@
 
 <ul>
 <li>checksum<br>
-The existing cookbook allows source to be a URL, we&#39;d rather use remote_file to download packages unless we&#39;re passing the URL directly to the installer to avoid code duplication and maintain &#39;primatives.&#39;</li>
+The existing cookbook allows source to be a URL, we&#39;d rather use remote_file to download packages unless we&#39;re passing the URL directly to the installer to avoid code duplication and maintain &#39;primitives.&#39;</li>
 <li>success_codes<br>
 This will be renamed to returns to match other existing core providers</li>
 </ul>
@@ -59,22 +59,22 @@ This will be renamed to returns to match other existing core providers</li>
 <h3>Platform specific resources</h3>
 
 <p>Utilizing the platform-specific resource functionality introduced in <a href="https://tickets.opscode.com/browse/CHEF-2698">CHEF-2698</a>, add a new package resource with windows specific attributes </p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="n">Chef</span>
-  <span class="k">class</span> <span class="n">Resource</span>
-    <span class="k">class</span> <span class="n">WindowsPackage</span> &lt; <span class="n">Chef::Resource::Package</span>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">Chef</span>
+  <span class="kr">class</span> <span class="nx">Resource</span>
+    <span class="kr">class</span> <span class="nx">WindowsPackage</span> <span class="o">&lt;</span> <span class="nx">Chef</span><span class="o">::</span><span class="nx">Resource</span><span class="o">::</span><span class="nx">Package</span>
 
-      <span class="n">provides</span> :<span class="n">package</span>, :<span class="n">on_platforms</span> =&gt; [<span class="s">&quot;windows&quot;</span>]
+      <span class="nx">provides</span> :<span class="kt">package</span><span class="p">,</span> <span class="o">:</span><span class="nx">on_platforms</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s2">&quot;windows&quot;</span><span class="p">]</span>
 
-      <span class="n">def</span> <span class="n">initialize</span>(<span class="nb">name</span>, <span class="n">run_context</span>=<span class="n">nil</span>)
-        <span class="n">super</span>
-        <span class="nv">@action</span> = :<span class="n">install</span>
-        <span class="nv">@allowed_actions</span> = [ :<span class="n">install</span>, :<span class="n">remove</span> ]
-        <span class="nv">@provider</span> = <span class="n">Chef::Provider::Package::Windows</span>
-        <span class="nv">@resource_name</span> = :<span class="n">windows_package</span>
-        <span class="nv">@installer_type</span> = <span class="n">nil</span>
-        <span class="nv">@checksum</span> = <span class="n">nil</span>
-        <span class="nv">@timeout</span> = <span class="mi">600</span>
-        <span class="nv">@success_codes</span> = [<span class="mi">0</span>, <span class="mi">42</span>, <span class="mi">127</span>]
+      <span class="nx">def</span> <span class="nx">initialize</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">run_context</span><span class="o">=</span><span class="nx">nil</span><span class="p">)</span>
+        <span class="kr">super</span>
+        <span class="kd">@action</span> <span class="o">=</span> <span class="o">:</span><span class="nx">install</span>
+        <span class="kd">@allowed_actions</span> <span class="o">=</span> <span class="p">[</span> <span class="o">:</span><span class="nx">install</span><span class="p">,</span> <span class="o">:</span><span class="nx">remove</span> <span class="p">]</span>
+        <span class="kd">@provider</span> <span class="o">=</span> <span class="nx">Chef</span><span class="o">::</span><span class="nx">Provider</span><span class="o">::</span><span class="nx">Package</span><span class="o">::</span><span class="nx">Windows</span>
+        <span class="kd">@resource_name</span> <span class="o">=</span> <span class="o">:</span><span class="nx">windows_package</span>
+        <span class="kd">@installer_type</span> <span class="o">=</span> <span class="nx">nil</span>
+        <span class="kd">@checksum</span> <span class="o">=</span> <span class="nx">nil</span>
+        <span class="kd">@timeout</span> <span class="o">=</span> <span class="mi">600</span>
+        <span class="kd">@success_codes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">127</span><span class="p">]</span>
 </pre></div>
 <h3>Chef::Provider::Package::Windows</h3>
 

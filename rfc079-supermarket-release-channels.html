@@ -38,7 +38,7 @@ build phase, so that it may be retrieved by other systems during acceptance
 testing. In the current implementation, publishing the artifact makes it
 available to all users of the Supermarket service. For example, a berkshelf
 user developing a cookbook may retrieve this artifact when installing
-dependencies. This is undesireable because the artifact has not yet passed
+dependencies. This is undesirable because the artifact has not yet passed
 acceptance testing and therefore may contain flaws. Additionally, in the case
 of Chef Automate, there is a manual release gate that occurs later in the
 pipeline; it would be preferable that users only access artifacts that have
@@ -83,7 +83,7 @@ remain available after a newer version is promoted to that channel.</p>
 
 <p>There are some use cases where it is desirable to only allow one version of an
 artifact in a channel. Users of Chef Automate, for example, are encouraged to
-only use one version of an artifact in a given environment. Thefore, the
+only use one version of an artifact in a given environment. Therefore, the
 user may specify that an artifact is <em>exclusive.</em> When this option
 is active, promoting a version of an artifact to a channel removes all other
 versions from that channel. The exact mechanism by which this happens, e.g.,

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Policyfile Includes</h1>
+
+<p>The underlying motivation of this proposal will be based on to RFC075 (and full credit goes to Noah Kantrowitz for those), but the proposed implementation and functionality will differ significantly.</p>
+
+<p>Policyfiles allow powerful new workflows around cookbook management, but one
+area they are currently lacking is in dealing with multi-team organizations.</p>
+
+<p>Currently each node can be attached to exactly one policy and one policy group.
+The organizational manifestation of this is generally that there needs to be a
+single &quot;owner&quot; for the policy of that node. This might be a CI tool like Jenkins
+or Chef Delivery, but in a lot of cases in the current workflow this will be the
+team within the company that uses the machine most.</p>
+
+<p>This works great for the &quot;owner&quot; team, they can use all the power and
+flexibility of the Policyfile workflow to its fullest. For other groups
+managing software on the node, the picture is less clear. As an example, take a
+database server owned by an application team. On this server we have a mix of
+software, the MySQL install and configuration is manage by the DBA team while
+ntpd and rsyslog are managed by a core infrastructure team. These live in
+different cookbooks so for the most part things are copacetic. When the DBA
+team wants to roll out a new MySQL configuration entry they update the cookbook,
+recompile the policyfile, <code>chef push</code> that compiled policy to the QA policy
+group, and then follow the usual Policyfile roll-out procedure. For the core
+team, things are more complex. They could follow the same process, but this
+would require careful coordination with the DBA team to ensure they don&#39;t have
+a roll-out in progress (see https://yolover.poise.io/#21). They could also
+release their cookbook changes either to a git branch or Supermarket server,
+and then notify the DBA team that they should run a roll-out. Neither of these
+are wonderful options.</p>
+
+<h2>Motivation</h2>
+
+<p>As a maintainer of core, company-level cookbooks,
+    I want to release cookbook updates,
+    so that I can deploy changes quickly.</p>
+
+<p>With that said, a more specific case that isn&#39;t currently handled well:</p>
+
+<p>The Database team owns MySQL and uses Chef to deploy it along with related configs
+and tools. The Monitoring team owns Collectd, which is deployed to every server
+in the organization, and they are responsible for configuring collectd and deploying
+new versions of it as needed. The core team owns ntpd and is responsible for its
+configuration.</p>
+
+<p>All teams want to follow the snapshot-based approach where they have a mono-repo
+of their own cookbooks with a few shared cookbooks pulled in via dependencies.
+When a team wants to do a release they run <code>chef update</code> to recompile their
+policy, and then use <code>chef push</code> to roll it out to each environment in sequence
+(with time in-between for testing et al). The teams also do not want to have to
+ask permission from any other team when deploying new versions of a service they
+are responsible for.</p>
+
+<p>This combination of a snapshot-based workflow without explicit team coordination
+is not currently an easy thing to do with the policy systems.</p>
+
+<h2>Specification</h2>
+
+<p>The proposed solution to the motivation described above is to allow a more composable form of policy which would be able to optionally include other policies inside it.</p>
+
+<p>This could be done with the addition of a <code>include_policy</code> directive, an example of which is shown below:</p>
+<div class="highlight"><pre><span></span><span class="n">include_policy</span> <span class="s2">&quot;base&quot;</span><span class="p">,</span> <span class="ss">git</span><span class="p">:</span> <span class="s2">&quot;github.com/myorg/policies.git&quot;</span><span class="p">,</span> <span class="ss">path</span><span class="p">:</span> <span class="s2">&quot;foo/bar/baz.lock.json&quot;</span>
+</pre></div>
+<p>The <code>include_policy</code> directive will support three sources for policies: git, chef server, and a local path.</p>
+
+<p>To use a locked policy from a local path:
+<code>
+include_policy &quot;policy_name&quot;, path: &quot;./foo/bar&quot;
+</code> </p>
+
+<p>To use a locked policy from a chef server with a specific revision id:</p>
+<div class="highlight"><pre><span></span>include_policy &quot;policy_name&quot;, policy_revision_id: &quot;abcdabcdabcd&quot;, server: &quot;http://example.com&quot;
+</pre></div>
+<p>or if the policy name on the chef server differs from the policyfile:</p>
+<div class="highlight"><pre><span></span>include_policy &quot;policy_name&quot;, policy_revision_id: &quot;abcdabcdabcd&quot;, policy_name: &quot;specific_policy_name&quot;, server: &quot;http://example.com&quot;
+</pre></div>
+<p>When using a chef server as the source, it&#39;s also possible to specify a policy group instead of a revision. When doing this, the revision of the included policy at the time the lock is created will become part of the lock data:</p>
+<div class="highlight"><pre><span></span>include_policy &quot;policy_name&quot;, policy_group: &quot;prod&quot;, policy_name: &quot;specific_policy_name&quot;, server: &quot;http://example.com&quot;
+</pre></div>
+<p>To use a locked policy from git:
+<code>
+include_policy &quot;policy_name&quot;, git: &quot;github.com/chef/policy_example&quot;, path: &quot;./foo/bar&quot;
+</code> </p>
+
+<p>When the <code>chef update</code> command is used to apply any changes to a policyfile containing the <code>include_policy</code> directive, any cookbook locks, attributes and runlists from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed. Please see the &quot;Merges and Conflicts&quot; section for how duplicate or conflicting items in any of these categories are handled.</p>
+
+<p>When included policies come from a <code>git</code> source, the SHA of the commit at the time the included lockfile was first pulled into the parent will be stored in the parent lockfile and used when the included Lockfile must be reprocessed. This ensures that only the policyfile for which the update command was called has changed. Similarly, when included policies come from a <code>server</code> source, the revision id of the included lockfile will be stored in the parent lockfile. In the event of policy files being included from a <code>local</code> source, this guarantee cannot be given and the latest Lockfile for the included policy will be used.</p>
+
+<p>Essentially what this means is that the parent .lock file is computed from the merging of the following:</p>
+
+<ul>
+<li>Data contained in the parent policyfile&#39;s .rb file</li>
+<li>Computed cookbook locks from the lock files for all policies specified with an <code>include_policy</code> directive.</li>
+</ul>
+
+<p>The single fused lockfile produced by the above would then be uploaded to the Chef server as normal, and would function as a single Policy.</p>
+
+<h2>Problems</h2>
+
+<p>The principal potential issue with this approach is that because we are pulling Policyfile elements from a number of included cookbooks, it is necessary for all included policy Lockfiles to be re-scanned upon regeneration of the parent Policyfile, so that the full set of Policyfile elements can be examined and merged. Although using the <code>git</code> source to include Policies will mean that the same commit SHA is used every time to rescan the included Lockfile and the <code>server</code> source will always ensure the same revision ID is used, when the <code>local</code> source is used we have to use whatever the current Lockfile present on disk is. This means that we cannot guarantee it has not changed since the last time it was scanned.</p>
+
+<p>A secondary problem with this approach is the question of how to handle conflicting cookbook locks, runlists or attributes, and the merging of non-conflicting items with the same name. The approach taken to solving this problem is detailed in the next section &quot;Merges and Conflicts&quot;.</p>
+
+<h2>Merges and Conflicts</h2>
+
+<p>Because the approach taken in this RFC permits one of more levels of policy includes, we must expliclty address the behaviour to be implemented in two cases:</p>
+
+<ul>
+<li>Merge - When a Policyfile element must be merged with another but <em>no</em> conflict is present</li>
+<li>Conflict - When a Policyfile element must be merged with another but a conflict <em>is</em> present.</li>
+</ul>
+
+<p>In approaching this problem, I have  taken from the original intent of Policyfiles, which is very much that what you specify in a policyfile is what you should expect to get on your node.</p>
+
+<p>For that reason, this RFC recommends a very simple approach to merging policyfile elements and resolving conflicts.</p>
+
+<p>If the necessary elements (for example several runlists from a base policy and policies that it includes) can be merged without any conflicts occurring, the merge will be done additively starting from the furthest &quot;branch&quot; policy. Ie, all elements of a particular type in included policies will be merged with elements of the same time in the base policy which includes them.</p>
+
+<p>In the event that merging runlists from multiple Policyfiles results in duplicate entries, these will be left in place and deduplicated by Chef client as is currently the case with runlists from other sources such as roles.</p>
+
+<p>In the event of any conflicts occurring, this RFC makes it explicitly clear that we will <em>not</em> attempt to resolve them. When a conflict occurs, this will be surfaced as an error at Policyfile compilation time, and an error message showing the conflicting elements and their locations will be shown.</p>
+
+<p>There are several foreseeable potential conflicts I will highlight here explicitly where we will not attempt to resolve the conflict, but will rather return an error (please note, this list is illustrative and not exclusive):</p>
+
+<ul>
+<li>Conflicting dependent cookbook versions (ie one Policyfile depends on version 1.2.4 and another on 1.2.5)</li>
+<li>Conflicting values for Policyfile attributes - if the same attribute is set in two places at different levels (ie one in a base policy, one in a branch), no merge of their values will be attempted.</li>
+<li>An include loop where a policy includes a second policy which in turn includes the first policy.</li>
+</ul>
+
+<p>Essentially, we will only merge elements from Policyfiles where we can be sure that we are not overriding something specified in another Policyfile (ie we can safely combine two sets of cookbook locks if the dependencies do not clash). My approach to this RFC is that you should never have to be surprised by the effect of including another Policy, and it should not be able to change the behavior of a Policyfile which includes it. Please see the &quot;Example&quot; section following this one for an example of a policy including another, and the resulting merged policy.</p>
+
+<p>In an ideal world, &quot;Base&quot; policies which include other policies would be absolutely minimal and only contain <code>include_policy</code> statements, but in the event that this is not the case, the principle of least surprise should still apply. </p>
+
+<h2>Example</h2>
+
+<p>This section demonstrates a base Policyfile which includes another simple Policyfile, and shows the resulting merged lockfile.</p>
+
+<p>Here we have our base policy, Myapp.rb, where we&#39;re using an internal supermarket to specify that we want one cookbook called <code>mycookbook</code> in our runlist, we&#39;re specifying an attribute, and we&#39;re including a policy called <code>base</code>
+```ruby
+name &quot;myapp&quot;</p>
+
+<p>default_source :supermarket, &quot;https://mysupermarket.mycompany.com&quot;</p>
+
+<p>run_list &quot;mycookbook::default&quot;</p>
+
+<p>cookbook &quot;mycookbook&quot;</p>
+
+<p>default[&quot;mycookbook&quot;][&quot;version&quot;] = &#39;1.7.0&#39;</p>
+
+<p>include_policy &quot;base&quot;, git: &quot;github.com/myorg/policies.git&quot;, path: &quot;policies/base.lock.json&quot;
+```</p>
+
+<p>Next, here we have the <code>base.lock.json</code> file we&#39;re including with the <code>include_policy</code> directive above. This policy has one cookbook, called <code>base</code> in its runlist, which in then depends on the <code>users</code> and <code>sudo</code> cookbooks. It also specifies some attributes.:</p>
+<div class="highlight"><pre><span></span>{
+  &quot;revision_id&quot;: &quot;abc1234abc1234abc1234abc1234abc1234abc1234abc1234&quot;,
+  &quot;name&quot;: &quot;base&quot;,
+  &quot;run_list&quot;: [
+    &quot;recipe[base::default]&quot;
+  ],
+  &quot;cookbook_locks&quot;: {
+    &quot;base&quot;: {
+      &quot;version&quot;: &quot;0.1.0&quot;,
+      &quot;identifier&quot;: &quot;abc1234&quot;,
+      &quot;dotted_decimal_identifier&quot;: &quot;1234.1234.1234.1234&quot;,
+      &quot;cache_key&quot;: &quot;base-0.1.0-mysupermarket.mycompany.com&quot;,
+       &quot;origin&quot;: &quot;https://mysupermarket.mycompany.com:443/api/v1/cookbooks/base/versions/0.1.0/download&quot;,
+       &quot;source_options&quot;: {
+          &quot;artifactserver&quot;: &quot;https://mysupermarket.mycompany.com:443/api/v1/cookbooks/base/versions/0.1.0/download&quot;,
+          &quot;version&quot;: &quot;0.1.s&quot;
+        }
+      }
+    }   
+  },
+  &quot;default_attributes&quot;: {
+    &quot;base_config&quot;: {
+      &quot;config_a&quot;: &quot;12345&quot;,
+      &quot;config_b&quot;: &quot;abc123&quot;
+    }
+  },
+  &quot;override_attributes&quot;: {
+
+  },
+  &quot;solution_dependencies&quot;: {
+    &quot;Policyfile&quot;: [
+      [
+        &quot;base&quot;,
+        &quot;= 0.1.0&quot;
+      ],
+      [
+        &quot;sudo&quot;,
+        &quot;= 3.5.3&quot;
+      ],
+      [
+        &quot;users&quot;,
+        &quot;= 5.1.0&quot;
+      ],
+      &quot;base (0.1.0)&quot;: [
+        [
+          &quot;users&quot;,
+          &quot;&gt;= 0.0.0&quot;
+        ],
+        [
+          &quot;sudo&quot;,
+          &quot;&gt;= 0.0.0&quot;
+        ]
+      ]
+    }
+  }
+}
+</pre></div>
+<p>Finally, after we&#39;ve run <code>chef update Myapp.rb</code>, here is the resulting merged <code>Myapp.json.lock</code> that would be uploaded to the Chef server:</p>
+<div class="highlight"><pre><span></span>{
+  &quot;revision_id&quot;: &quot;xyz12345xyz12345xyz12345xyz12345xyz12345xyz12345&quot;,
+  &quot;name&quot;: &quot;myapp&quot;,
+  &quot;run_list&quot;: [
+    &quot;recipe[base::default]&quot;, &quot;recipe[mycookbook::default]&quot;
+  ],
+  &quot;cookbook_locks&quot;: {
+    &quot;base&quot;: {
+      &quot;version&quot;: &quot;0.1.0&quot;,
+      &quot;identifier&quot;: &quot;abc1234&quot;,
+      &quot;dotted_decimal_identifier&quot;: &quot;1234.1234.1234.1234&quot;,
+      &quot;cache_key&quot;: &quot;base-0.1.0-mysupermarket.mycompany.com&quot;,
+       &quot;origin&quot;: &quot;https://mysupermarket.mycompany.com:443/api/v1/cookbooks/base/versions/0.1.0/download&quot;,
+       &quot;source_options&quot;: {
+          &quot;artifactserver&quot;: &quot;https://mysupermarket.mycompany.com:443/api/v1/cookbooks/base/versions/0.1.0/download&quot;,
+          &quot;version&quot;: &quot;0.1.0&quot;
+        }
+      }
+    },
+    &quot;mycookbook&quot;: {
+      &quot;version&quot;: &quot;1.7.0&quot;,
+      &quot;identifier&quot;: &quot;qrst5678&quot;,
+      &quot;dotted_decimal_identifier&quot;: &quot;5678.5678.5678.5678&quot;,
+      &quot;cache_key&quot;: &quot;mycookbook-1.7.0-mysupermarket.mycompany.com&quot;,
+       &quot;origin&quot;: &quot;https://mysupermarket.mycompany.com:443/api/v1/cookbooks/mycookbook/versions/1.7.0/download&quot;,
+       &quot;source_options&quot;: {
+          &quot;artifactserver&quot;: &quot;https://mysupermarket.mycompany.com:443/api/v1/cookbooks/mycookbook/versions/1.7.0/download&quot;,
+          &quot;version&quot;: &quot;1.7.0&quot;
+        }
+      }
+    }   
+  },
+  &quot;default_attributes&quot;: {
+    &quot;base_config&quot;: {
+      &quot;config_a&quot;: &quot;12345&quot;,
+      &quot;config_b&quot;: &quot;abc123&quot;
+    },
+    &quot;mycookbook&quot;: {
+      &quot;version&quot;: &quot;1.7.0&quot;
+    }
+  },
+  &quot;override_attributes&quot;: {
+
+  },
+  &quot;solution_dependencies&quot;: {
+    &quot;Policyfile&quot;: [
+      [
+        &quot;base&quot;,
+        &quot;= 0.1.0&quot;
+      ],
+      [
+        &quot;sudo&quot;,
+        &quot;= 3.5.3&quot;
+      ],
+      [
+        &quot;users&quot;,
+        &quot;= 5.1.0&quot;
+      ],
+      &quot;base (0.1.0)&quot;: [
+        [
+          &quot;users&quot;,
+          &quot;&gt;= 0.0.0&quot;
+        ],
+        [
+          &quot;sudo&quot;,
+          &quot;&gt;= 0.0.0&quot;
+        ]
+      ],
+      &quot;mycookbook (1.7.0)&quot;: [
+
+      ],
+    }
+  }
+}
+</pre></div>
+<h2>Downstream Impact</h2>
+
+<p>This solution would ideally not affect any tools which use existing policyfile behaviour, as the use of a single policyfile and all API calls and tools surrounding it would be unaffected - the changes here would be to how Policyfiles are compiled and updated.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Anonymous user behaviour data collection</h1>
+
+<p>In order to provide greater insight into how our Chef users interact with Chef
+tools, this RFC introduces a framework for defining the policies for the
+anonymous collection (sharing), storage, and deletion of product usage data
+that can be applied to any Chef project.</p>
+
+<h2>Scope</h2>
+
+<p>This RFC only covers Chef&#39;s open source ecosystem. It does not apply to proprietary,
+commercially available tools made by Chef Software.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As a UX designer at Chef,
+I want to understand how people use Chef tools,
+so that I can improve their experience.
+
+As a product owner at Chef,
+I want to learn which Chef tools and commands are most used,
+so I can prioritise development.
+</pre></div>
+<h2>Specification</h2>
+
+<p>This RFC defines the core of product usage data sharing. It does not define how
+individual apps will implement product usage data sharing; any app that
+wishes to do so MUST create a follow up RFC that details individual behaviour,
+and the types of data that will be shared with Chef Software.</p>
+
+<h3>Sharing by default</h3>
+
+<p>In order to gather meaningful data, Chef tools will share anonymized usage data
+by default. Experience (with Habitat and Automate) has shown that disabling
+sharing by default provides sample sets that are too small (and potentially
+biased) to draw meaningful conclusions.  The Chef tools must provide clear
+information so that users always know how to easily change their data sharing
+preference. Once set, any data sharing preference saved on an individual host
+will be honored by all Chef tools run on that host.</p>
+
+<p>On the first run of a telemetry enabled tool, the tool MUST prompt the
+user if a decision about whether to participate has not been made. That
+decision will be recorded for future use. If the tool is unable to prompt
+(because of a lack of terminal, for example), no decision will be recorded,
+and the library will select a reasonable default.</p>
+
+<p>We will implement a noun in the Chef DK, <code>chef telemetry</code>, that will
+allow users to check their opt out status and easily opt out, for
+instance with <code>chef telemetry status</code> and <code>chef telemetry disable</code>,
+respectively.</p>
+
+<p>A user may opt-out globally by touching <code>~/.chef/telemetry_opt_out</code> or
+by using the above command, or may do so in a repository or working tree
+specific way by touching <code>.chef/telemetry_opt_out</code>, which will be
+searched for by tools in the same way as for chef config.</p>
+
+<p>A user may also set the environment variable <code>CHEF_TELEMETRY_OPT_OUT</code> to
+opt out.</p>
+
+<p>Server tools may each require their own separate data sharing preference.</p>
+
+<p>The Chef Client will never collect or share telemetry.</p>
+
+<h3>High-Level Implementation</h3>
+
+<p>All Chef tools will use a centralized configuration for product usage data
+sharing, in order to provide a consistent experience. If the configuration is
+not present, a data-sharing-enabled application will create a well-formatted
+configuration file. Upon creating the configuration file, the tool will notify
+the user that product usage data sharing is enabled, and will provide clear
+information so that users always knowhow to easily change their data sharing
+preference.</p>
+
+<p>Tools should provide a command that allows a user to see and understand
+what data the tool is collecting and reporting.</p>
+
+<p>All product usage data sharing enabled applications will provide simple ways
+for a user to check their data sharing preference, and to change that
+preference.</p>
+
+<h3>Client Library Implementation</h3>
+
+<p>Since most Chef client applications are ruby based, a common gem will be
+produced to deliver telemetry data to the receivers.</p>
+
+<p>The gem will handle:
+  * sessions - decision on when to create a new session, rolling session
+  keys
+  * retries - delivery of events will be retried, with exponential back
+  off, a number of times before telemetry delivery is disabled for the
+  duration of the process.
+  * opt out - checking and setting of user opt out status.
+  * (in the future) storing and forwarding of events - if a process would complete before any events
+  are sent, the library MAY be responsible for storing the events, and
+  resending any further events at a suitable time in the future. Fresh
+  events will be prioritised over older ones. For v1, it is acceptable
+  to just throw away events that we couldn&#39;t send.</p>
+
+<p>To avoid blocking the application, the entire library will be built to
+use asynchronous operations, using the Concurrent Ruby library.</p>
+
+<p>Session management will be provided to ensure that we protect user&#39;s
+privacy by sending anonymous events, but also to allow developers to
+understand all the steps of an interaction. The library will ensure that
+a session ID times out after 10 minutes of inactivity, whilst providing
+the same ID to all clients used during the same time period.</p>
+
+<p>Events are sent using HTTP POST requests to Chef&#39;s telemetry end point. </p>
+
+<h3>Privacy and Data Retention</h3>
+
+<p>To provide user privacy and protect from de-anonymization attacks while still
+gathering data that is useful for understanding our tools, Chef tools
+will choose a new UUID for each new user session.</p>
+
+<p>To ensure that sensitive data is not collected, Chef tools should never
+collect parameters passed to command-line options, and tools will be able to
+filter more aggressively if required.</p>
+
+<p>For example, knife may report that a <code>-P</code> option was invoked, but will never
+collect the password parameter that was passed to that option.</p>
+
+<p>Chef is committed to protecting user privacy and as product usage data is
+shared with Chef, it must be stored with protection from de-anonymization
+attacks in mind. All product usage data must be anonymized, and must not
+share personally identifiable information with Chef.</p>
+
+<p>All data storage must be compliant with EU privacy law.</p>
+
+<p>All collected data will be subject to Chef&#39;s <a href="https://www.chef.io/privacy-policy/">privacy policy</a>,
+which is Privacy Shield certified. Any collected data will be deleted upon
+request.</p>
+
+<h3>Access to data</h3>
+
+<p>So that all developers can make use of the gathered data set, Chef will make
+available query mechanisms in a way that&#39;s compliant with our Privacy
+Policy and our responsibilities under the GDPR and similar legislation.</p>
+
+<h3>Prior Art</h3>
+
+<p>Many open source projects collect data from their users to help allocate
+resources. 
+* Both <a href="https://wiki.ubuntu.com/Apport">Ubuntu</a> and
+<a href="https://retrace.fedoraproject.org/">Fedora</a> collect crash dumps from their
+users, along with system information, to help developers better debug and
+improve their systems. 
+* The Debian project runs <a href="https://popcon.debian.org/">PopCon</a> to better
+understand what packages are installed and which architectures are in
+use.
+* Habitat, our sister project, collects <a href="https://www.habitat.sh/docs/about-analytics/">analytics</a>
+related to user interactions.
+* Mac Homebrew collects user behavior <a href="https://github.com/Homebrew/brew/blob/master/docs/Analytics.md">analytics</a>.
+* .NET Core CLI collects user behaviour <a href="https://blogs.msdn.microsoft.com/dotnet/2017/07/21/what-weve-learned-from-net-core-sdk-telemetry/">analytics</a></p>
+
+<h3>Types of collected data</h3>
+
+<p>Some data we envisage collecting includes, but is not limited to:</p>
+
+<ul>
+<li>Community Cookbooks used, and versions (in policyfiles or berkshelf)</li>
+<li>Kitchen plugins</li>
+<li>Vagrant boxes</li>
+<li>Commands and options attempted</li>
+<li>Versions of chef and other tools used</li>
+</ul>
+
+<h3>Examples</h3>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;message_version&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span>
+  <span class="nt">&quot;payload_version&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span>
+  <span class="nt">&quot;license_id&quot;</span><span class="p">:</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="s2">&quot;2d5a4d61-d79a-4ff9-aa71-a403c2d5a001&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;origin&quot;</span><span class="p">:</span> <span class="s2">&quot;command-line&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;track&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;chefdk&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2017-02-06T17:25:42   Z&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;payload&quot;</span><span class="p">:{</span>  
+     <span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="s2">&quot;user-command&quot;</span><span class="p">,</span>
+     <span class="nt">&quot;properties&quot;</span><span class="p">:{</span>  
+        <span class="nt">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;chef generate cookbook&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2017-02-06T17:25:42   Z&quot;</span>
+     <span class="p">}</span>
+  <span class="p">}</span> 
+<span class="p">}</span>
+</pre></div>
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
