@@ -70,7 +70,7 @@ EOF
 namespace :pages do
   desc "Generate GitHub Pages for RFCs"
   task :generate do
-    sh("git worktree add gh-pages gh-pages") unless File.directory?("gh-pages")
+    sh("git worktree add -b gh-pages gh-pages origin/gh-pages") unless File.directory?("gh-pages")
     metadata = []
     renderer = Redcarpet::Markdown.new(HTMLwithPygments, :fenced_code_blocks => true)
     Dir[File.join(File.dirname(__FILE__), "..", "rfc*.md")].each do |rfc|
