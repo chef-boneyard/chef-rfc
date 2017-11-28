@@ -39,8 +39,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
   * IRC - zts
 
 #### Server Fault
-* [Mike Fiedler](https://github.com/miketheman)
-  * [ServerFault](http://serverfault.com/users/7309/mike-fiedler)
 
 #### Chef Mailing List
 * [Noah Kantrowitz](https://github.com/coderanger)
@@ -49,8 +47,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [JJ Asghar](https://github.com/jjasghar)
   * [@jjasghar](https://twitter.com/jjasghar)
   * [jjasghar@chef.io](mailto:jjasghar@chef.io)
-* [Mike Fiedler](https://github.com/miketheman)
-  * [ServerFault](http://serverfault.com/users/7309/mike-fiedler)
 * [Nell Shamrell](https://github.com/nshamrell)
   * [@nshamrell](https://twitter.com/nshamrell)
   * [nshamrell@chef.io](mailto:nshamrell@chef.io)
