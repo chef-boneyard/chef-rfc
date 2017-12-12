@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 99
 Title: Authentication Configuration
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
@@ -13,6 +13,7 @@ management and switching of Chef Server configuration options - for
 example `knife-block`. Any non-ruby tools must also implement their own
 configuration management, since our configuration files must be parsed
 as though they were ruby.
+
 It would be delightful to provide a single configuration file that was
 solely responsible for handling authentication options, and was in a
 language agnostic format, such as TOML.
