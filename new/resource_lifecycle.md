@@ -66,7 +66,7 @@ Factors that influence and inform the decision to adopt a resource include:
 * widespread use of a resource based on analysis of publicly available supermarket cookbooks,
 * well tested and supported cookbook resources,
 * percentage of supported platforms,
-* impact of implementing as a primative that can be built upon.
+* impact of implementing as a primitive that can be built upon.
 
 ### Criteria for deprecating resources
 
