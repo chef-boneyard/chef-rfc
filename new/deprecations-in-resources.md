@@ -36,7 +36,7 @@ We will introduce 3 new methods in custom resources in order to implement this R
 
 ### deprecated method for resources
 
-This new method will let authors communicate to consumers that a resource is going away in the future. Right now we rely on readme or changelog entries, which are not a very effective way to communicate to consumers. This method will accept true, false (default), or a string. If set to true any consumer of the resource will see a canned deprecation warning. If a string, then that string becomes the warning message.
+This new method will let authors communicate to consumers that a resource is going away in the future. Right now we rely on readme or changelog entries, which are not a very effective way to communicate to consumers. This method will accept a string which becomes the warning message.
 
 #### Example
 
@@ -48,7 +48,7 @@ deprecated 'This resource will be removed in the 3.0 release of the example cook
 
 ### deprecated method for properties
 
-This new option for properties will let authors communicate to consumers that an individual property is going away in the future.  Right now we rely on readme or changelog entries, which are not a very effective way to communicate to consumers. This method will accept true, false (default), or a string. If set to true any consumer of the resource will see a canned deprecation warning. If a string, then that string becomes the warning message.
+This new option for properties will let authors communicate to consumers that an individual property is going away in the future. Right now we rely on readme or changelog entries, which are not a very effective way to communicate to consumers. This method will accept a string which becomes the warning message.
 
 #### Example
 
