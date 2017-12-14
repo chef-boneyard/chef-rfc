@@ -8,7 +8,7 @@ Type: Standards Track
 
 # Deprecation Warnings Within Custom Resources
 
-In Chef 12 we introduced deprecation warnings within the chef-client. This allowed us to start communicating future breaking changes to users. The warnings and integration within Test Kitchen have become a powerful tool allowing users to future proof their cookbooks and ease chef-client migration projects.
+In Chef 12 we introduced deprecation warnings within the chef-client. This allowed us to communicate future breaking changes to users. The warnings and integration within Test Kitchen have become a powerful tool allowing users to future proof their cookbooks and ease chef-client migration projects.
 
 This proposal extends the deprecation functionality to custom resources allowing authors to warn consumers of future breaking changes to their resources.
 
