@@ -1,5 +1,5 @@
 ---
-RFC: 012
+RFC: 12
 Author: Matt Ray <mray@chef.io>
 Title: Named Network Support in knife-openstack
 Status: Accepted

@@ -1,5 +1,5 @@
 ---
-RFC: 016
+RFC: 16
 Author: Joshua Timberman <joshua@getchef.com>
 Status: Accepted
 Type: Standards Track

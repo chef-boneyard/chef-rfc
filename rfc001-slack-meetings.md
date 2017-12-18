@@ -1,5 +1,5 @@
 ---
-RFC: 001
+RFC: 1
 Title: Chef Community Slack Meetings
 Author: Adam Jacob <adam@chef.io>
 Status: Accepted

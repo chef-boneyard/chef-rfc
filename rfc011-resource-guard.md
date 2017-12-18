@@ -1,5 +1,5 @@
 ---
-RFC: 011
+RFC: 11
 Author: Adam Edwards <adamed@chef.io>
 Title: Resource-based Guard Interpreters for Chef
 Status: Final

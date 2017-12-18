@@ -1,5 +1,5 @@
 ---
-RFC: 010
+RFC: 10
 Author: Bryan McLellan <btm@loftninjas.org>
 Title: Windows Package Resource and Providers
 Status: Final

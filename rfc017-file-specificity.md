@@ -1,5 +1,5 @@
 ---
-RFC: 017
+RFC: 17
 Title: File Specificity Overhaul
 Author: Noah Kantrowitz <noah@coderanger.net>
 Status: Final
