@@ -85,6 +85,7 @@ namespace :pages do
       metadata << output.metadata
       File.open(File.join("gh-pages", target), "w") {|fh| fh.write(PREAMBLE + output.output + POSTAMBLE) }
     end
+    metadata = metadata.sort_by { |rfc| rfc["RFC"] }
     eruby = Erubis::EscapedEruby.new(INDEX)
     File.open(File.join("gh-pages", "index.html"), "w") {|fh| fh.write(PREAMBLE + eruby.result(binding()) + POSTAMBLE) }
   end
