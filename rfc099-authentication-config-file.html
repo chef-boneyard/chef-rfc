@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Authentication Configuration</h1>
+
+<p>Currently, the Chef community maintains many tools to aid in the
+management and switching of Chef Server configuration options - for
+example <code>knife-block</code>. Any non-ruby tools must also implement their own
+configuration management, since our configuration files must be parsed
+as though they were ruby.</p>
+
+<p>It would be delightful to provide a single configuration file that was
+solely responsible for handling authentication options, and was in a
+language agnostic format, such as TOML.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As an Operations Engineer,
+I want to manage nodes on many Chef Servers,
+so that I can interact with my whole estate.
+
+As a tool developer,
+I want to use the language of my choice,
+so that I can effectively build delightful Chef features.
+</pre></div>
+<h2>Specification</h2>
+
+<p>A new file, <code>~/.chef/credentials</code>, will be supported by the chef client
+libraries, and other implementations. It is a TOML file, containing one
+or more sections, each associated with a profile.</p>
+<div class="highlight"><pre><span></span><span class="k">[default]</span>
+<span class="na">node_name</span> <span class="o">=</span> <span class="s">&quot;barney&quot;</span>
+<span class="na">client_key</span> <span class="o">=</span> <span class="s">&quot;barney_rubble.pem&quot;</span>
+<span class="na">chef_server_url</span> <span class="o">=</span> <span class="s">&quot;https://api.chef.io/organisations/bedrock&quot;</span>
+
+<span class="k">[dev]</span>
+<span class="na">client_name</span> <span class="o">=</span> <span class="s">&quot;admin&quot;</span>
+<span class="na">client_key</span> <span class="o">=</span> <span class="s">&quot;admin.pem&quot;</span>
+<span class="na">validator_key</span> <span class="o">=</span> <span class="s">&quot;test-validator.pem&quot;</span>
+<span class="na">chef_server_url</span> <span class="o">=</span> <span class="s">&quot;https://api.chef-server.dev/organizations/test&quot;</span>
+</pre></div>
+<p>File paths, such as <code>client_key</code> or <code>validator_key</code>, will be relative to
+<code>~/.chef</code> unless absolute.</p>
+
+<p>Clients can be identified with either <code>node_name</code> or <code>client_name</code>, with
+<code>client_name</code> being preferred.</p>
+
+<p>Keys can be specified inline using TOML multiline strings.</p>
+
+<p>The profile is selected using the <code>CHEF_PROFILE</code> environment variable, which
+client libraries which implement credential handling MUST support.
+Optionally, tools can also provide a <code>--profile</code> option, which would
+override the environment variable.</p>
+
+<p>To allow the user to specify statefully which profile they wish to
+use, we will introduce another new file, <code>~/.chef/context</code>, which would
+contain only the name of the profile to be used.</p>
+
+<p>It is expected that the credentials file will be parsed first, allowing
+the user&#39;s <code>knife.rb</code>/<code>config.rb</code> to continue to function as previously.</p>
+
+<p>To select the profile to use, libraries should follow the following
+order:</p>
+
+<ol>
+<li>If an argument is passed with a command line flag, use that.</li>
+<li>Otherwise, check for the <code>CHEF_PROFILE</code> environment variable, and
+use the value of that.</li>
+<li>Otherwise, check for the context file, and read the profile name
+from that.</li>
+<li>Otherwise, select the default profile.</li>
+</ol>
+
+<h2>Downstream Impact</h2>
+
+<p>Any chef API client library (such as <code>pychef</code>, <code>go-chef</code>,
+<code>rs-chef-api</code>), as well as <code>chef-config</code>, should be updated
+to support this file. </p>
+
+<p>Manage should be updated to produce a credentials file when generating a
+knife config.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
