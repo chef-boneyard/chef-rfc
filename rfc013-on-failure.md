@@ -1,5 +1,5 @@
 ---
-RFC: 013
+RFC: 13
 Author: Seth Vargo <sethvargo@gmail.com>
 Title: On Failure
 Status: On Hold

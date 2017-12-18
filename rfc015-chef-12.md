@@ -1,5 +1,5 @@
 ---
-RFC: 015
+RFC: 15
 Title: Chef 12
 Author: Serdar Sutay <serdar@chef.io>
 Status: Accepted
