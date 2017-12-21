@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 101
 Title: Resource Validation Messaging
 Author: Tim Smith <tsmith@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
@@ -12,12 +12,12 @@ Custom resources provide multiple property validators allowing authors to contro
 
 ## Motivation
 
-    As an author of custom resources, 
+    As an author of custom resources,
     I want to control property inputs while providing useful error messaging on failure,
     so that users can easily understand why input data is not acceptable
 
     As a consumer of custom resources,
-    I want detailed errors when I pass incorrect data to a resource, 
+    I want detailed errors when I pass incorrect data to a resource,
     so that I quickly resolve failed chef-client runs.
 
 ## Specification
