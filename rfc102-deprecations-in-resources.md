@@ -1,14 +1,14 @@
 ---
-RFC: unassigned
+RFC: 102
 Title: Deprecation Warnings Within Custom Resources
 Author: Tim Smith <tsmith@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
 # Deprecation Warnings Within Custom Resources
 
-In Chef 12 we introduced deprecation warnings within the chef-client. This allowed us to communicate future breaking changes to users. The warnings and integration within Test Kitchen have become a powerful tool allowing users to future proof their cookbooks and ease chef-client migration projects.
+In Chef 12, we introduced deprecation warnings within the chef-client. This allowed us to communicate future breaking changes to users. The warnings and integration within Test Kitchen have become a powerful tool allowing users to future proof their cookbooks and ease chef-client migration projects.
 
 This proposal extends the deprecation functionality to custom resources allowing authors to warn consumers of future breaking changes to their resources.
 
@@ -55,19 +55,19 @@ This new option for properties will let authors communicate to consumers that an
 in resources/example.rb
 
 ```ruby
-property :destroy_everything, 
-         kind_of: [true, false], 
-         default: true, 
+property :destroy_everything,
+         kind_of: [true, false],
+         default: true,
          deprecated: 'Turns out destroying everything was a bad idea. This property will be removed in the 3.0 release of this cookbook in April 2018 and will throw an error if set at that time.'
 ```
 
 ### deprecated_property_alias
 
-Currently if a resource author decides to change the name of a property they have two options: 
+Currently if a resource author decides to change the name of a property they have two options:
 	- Use alias_method which silently routes old properties to the new names
 	- Define both properties in the resource and include functionality to set the new value using the old value while warning the user.
 
-alias_method doesn't alert cookbook consumers to the change and writing your own code to perform deprecation warnings is cumbersome and rarely done. A new deprecated_property_alias would behave similar to a alias_method, but throw deprecation warnings while providing backwards compatibility. It would accept and optional String value that would be used in place of a generic deprecation message.
+`alias_method` doesn't alert cookbook consumers to the change and writing your own code to perform deprecation warnings is cumbersome and rarely done. A new deprecated_property_alias would behave similar to a `alias_method`, but throw deprecation warnings while providing backwards compatibility. It would accept and optional String value that would be used in place of a generic deprecation message.
 
 #### Example
 
