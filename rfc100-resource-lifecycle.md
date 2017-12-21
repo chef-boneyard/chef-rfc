@@ -1,11 +1,9 @@
 ---
-RFC: unassigned
+RFC: 100
 Title: Establish Core Resource Lifecycle
 Author: Jennifer Davis <sigje@chef.io>
-Status: Draft
+Status: Accepted
 Type: Process
-<Tracking:>
-<  - https://github.com/chef/chef/issues/X>
 ---
 
 # Core Resource Lifecycle
@@ -29,12 +27,13 @@ This RFC describes the support lifecycle of [core resources](https://docs.chef.i
 ## Guiding Principles
 
 Core resources ...
+
 1. Should be reasonable. Actions should reflect expected behaviors.
 2. Should be usable. Resource can be used in multiple contexts.
 3. Should be well-designed and self contained.
 4. Should be tested.
 5. Should be maintained on [supported platforms](https://github.com/chef/chef-rfc/blob/master/rfc021-platform-support-policy.md) as relevant.
-4. Should minimize surprises.
+6. Should minimize surprises.
 
 At any given time current resources have an implicit state. To clarify and be explicit about these states, it is proposed that resources have the following states:
 
@@ -59,6 +58,7 @@ Resources in deprecated state have been identified as having significant issues 
 Resources in retired state have been in deprecated state and emitting warnings and on the next major release of Chef removed from code.
 
 ## Specification
+
 ### Criteria for adopting resources
 
 Factors that influence and inform the decision to adopt a resource include:
