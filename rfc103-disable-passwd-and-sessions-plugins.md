@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 103
 Title: Disable Passwd and Sessions Ohai plugins
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Informational
 ---
 
