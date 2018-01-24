@@ -22,8 +22,9 @@ groups make the whole situation a little more murky.
 
 We will expose the automatic attribute `chef_environment`. In non-policy
 setups, the attribute will expose the environment that the node is in.
+
 In policy setups, it will expose the name of the policy group the node
-is in. 
+is in. We will also ensure that `node.chef_environment` returns the same data.
 
 ## Downstream Impact
 
