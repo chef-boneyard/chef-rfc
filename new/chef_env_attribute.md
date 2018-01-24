@@ -1,16 +1,16 @@
 ---
 RFC: unassigned
-Title: `chef_environment` as an attribute
+Title: Expose more settings as attributes
 Author: Thom May <thom@chef.io>
 Status: Draft
 Type: Standards Track
 ---
 
-# Exposing the chef\_environment attribute
+# Exposing some core settings as attributes
 
-Historically we've not exposed the Chef environment as an automatic
-attribute, although tools such as poise-hoist have changed that. Policy
-groups make the whole situation a little more murky.
+There are a number of settings, such as the node name and the environment, that we've historically not exposed as automatic attributes.
+The environment attribute is a bit more complicated in the world of
+policy groups, and this RFC clarifies that situation too
 
 ## Motivation
 
@@ -20,16 +20,18 @@ groups make the whole situation a little more murky.
 
 ## Specification
 
+We will expose the automatic attribute `name`, reflecting the name of
+the node.
+
 We will expose the automatic attribute `chef_environment`. In non-policy
 setups, the attribute will expose the environment that the node is in.
 
 In policy setups, it will expose the name of the policy group the node
-is in. We will also ensure that `node.chef_environment` returns the same data.
+is in. We will also ensure that `node.chef_environment` returns the same data. We'll also expose `policy_group` and `policy_name`, to go along with `policy_revision`.
 
 ## Downstream Impact
 
-Cookbooks will have easy access to see which environment they're running
-in.
+Cookbooks will have easy access to more attributes.
 
 ## Copyright
 
