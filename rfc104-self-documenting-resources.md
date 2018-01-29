@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 104
 Title: Self Documenting Resources
 Author: Tim Smith <tsmith@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
