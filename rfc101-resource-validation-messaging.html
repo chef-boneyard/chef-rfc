@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Resource Validation Messaging</h1>
+
+<p>Custom resources provide multiple property validators allowing authors to control property input beyond just simple data types. Authors can expect strings to match predefined strings, match a regex, or return true from a callback method. This gives the author great control over the input data, but doesn&#39;t provide the consumer with much information when the validator fails. This RFC provides the author with the ability control the error text when the validator fails.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As an author of custom resources,
+I want to control property inputs while providing useful error messaging on failure,
+so that users can easily understand why input data is not acceptable
+
+As a consumer of custom resources,
+I want detailed errors when I pass incorrect data to a resource,
+so that I quickly resolve failed chef-client runs.
+</pre></div>
+<h2>Specification</h2>
+
+<p>This RFC will implement a new <code>validation_message</code> option for properties, which accepts a string. This message will be shown on failure in place of a generic failure message.</p>
+
+<h3>Example</h3>
+
+<p>in resources/example.rb</p>
+<div class="highlight"><pre><span></span><span class="n">property</span> <span class="ss">:version</span><span class="p">,</span>
+          <span class="ss">kind_of</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+          <span class="ss">default</span><span class="p">:</span> <span class="s1">&#39;8.0.35&#39;</span>
+          <span class="ss">regex</span><span class="p">:</span> <span class="o">[</span><span class="sr">/^(?:(\d+)\.)?(?:(\d+)\.)?(\*|\d+)$/</span><span class="o">]</span>
+          <span class="ss">validation_message</span><span class="p">:</span> <span class="s1">&#39;Version must be a X.Y.Z format String type&#39;</span>
+</pre></div>
+<h2>Downstream Impact</h2>
+
+<p>No anticipated downstream impact</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>

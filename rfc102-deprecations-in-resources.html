@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Deprecation Warnings Within Custom Resources</h1>
+
+<p>In Chef 12, we introduced deprecation warnings within the chef-client. This allowed us to communicate future breaking changes to users. The warnings and integration within Test Kitchen have become a powerful tool allowing users to future proof their cookbooks and ease chef-client migration projects.</p>
+
+<p>This proposal extends the deprecation functionality to custom resources allowing authors to warn consumers of future breaking changes to their resources.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As an author of custom resources,
+I want to warn users of my resources of future breaking changes to resources,
+so that they can update their wrapper cookbooks before my next release.
+
+As an author of custom resources,
+I want to provide immediate backwards compatibility in property names while still warning users,
+so that they can update their wrapper cookbooks before my next release.
+
+As an author of custom resources,
+I want to entirely deprecate a resource that users are consuming,
+so that they can update their wrapper cookbooks before my next release.
+
+As a consumer of custom resources,
+I want to be warned when I use deprecated functionality,
+so that I can update my wrapper cookbooks.
+</pre></div>
+<h2>Specification</h2>
+
+<p>We will introduce 3 new methods in custom resources in order to implement this RFC:</p>
+
+<h3>deprecated method for resources</h3>
+
+<p>This new method will let authors communicate to consumers that a resource is going away in the future. Right now we rely on readme or changelog entries, which are not a very effective way to communicate to consumers. This method will accept a string which becomes the warning message.</p>
+
+<h4>Example</h4>
+
+<p>in resources/example.rb</p>
+<div class="highlight"><pre><span></span><span class="n">deprecated</span> <span class="s1">&#39;This resource will be removed in the 3.0 release of the example cookbook in April 2018. You should use example_ng instead. See the readme for additional information.&#39;</span>
+</pre></div>
+<h3>deprecated method for properties</h3>
+
+<p>This new option for properties will let authors communicate to consumers that an individual property is going away in the future. Right now we rely on readme or changelog entries, which are not a very effective way to communicate to consumers. This method will accept a string which becomes the warning message.</p>
+
+<h4>Example</h4>
+
+<p>in resources/example.rb</p>
+<div class="highlight"><pre><span></span><span class="n">property</span> <span class="ss">:destroy_everything</span><span class="p">,</span>
+         <span class="ss">kind_of</span><span class="p">:</span> <span class="o">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="o">]</span><span class="p">,</span>
+         <span class="ss">default</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+         <span class="ss">deprecated</span><span class="p">:</span> <span class="s1">&#39;Turns out destroying everything was a bad idea. This property will be removed in the 3.0 release of this cookbook in April 2018 and will throw an error if set at that time.&#39;</span>
+</pre></div>
+<h3>deprecated<em>property</em>alias</h3>
+
+<p>Currently if a resource author decides to change the name of a property they have two options:
+    - Use alias_method which silently routes old properties to the new names
+    - Define both properties in the resource and include functionality to set the new value using the old value while warning the user.</p>
+
+<p><code>alias_method</code> doesn&#39;t alert cookbook consumers to the change and writing your own code to perform deprecation warnings is cumbersome and rarely done. A new deprecated<em>property</em>alias would behave similar to a <code>alias_method</code>, but throw deprecation warnings while providing backwards compatibility. It would accept and optional String value that would be used in place of a generic deprecation message.</p>
+
+<h4>Example</h4>
+
+<p>in resources/example.rb</p>
+<div class="highlight"><pre><span></span><span class="n">deprecated_property_alias</span> <span class="ss">:set</span><span class="p">,</span> <span class="ss">:set_impact</span><span class="p">,</span> <span class="s1">&#39;The set property has been renamed to set_impact. Set will be removed from this cookbook in the next release in April 2018.&#39;</span>
+</pre></div>
+<h2>Downstream Impact</h2>
+
+<p>No anticipated downstream impact</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>

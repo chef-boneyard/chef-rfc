@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Self Documenting Resources</h1>
+
+<p>Chef has allowed organizations to embrace infrastructure as code, but with codified infrastructure comes the need for accurate documentation for that codebase. This RFC aims to improve the ability to document resources within Chef code so that we can ensure documentation is accurate and automatically generated. This is applicable to both resources within chef-client and those which ship in cookbooks.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As an author of custom resources,
+I want to manage code and documentation in a single location
+so that I can have up to date documentation with minimal work
+
+As a maintainer of chef
+I want docs to automatically update when new chef-client releases are made
+so that manual release steps and mistakes can be reduced
+
+As a consumer of custom resources
+I want accurate and up to date documentation
+so that I can easily write cookbooks utilizing custom resources
+</pre></div>
+<h2>Specification</h2>
+
+<p>We will introduce 4 new methods in custom resources in order to implement this RFC:</p>
+
+<h3>description (resource level)</h3>
+
+<p>Description is a String value that allows the user to describe the resource and its functionality. This information would be similar to what you would expect to find in a readme or the Chef Docs site describing the usage of a resource.</p>
+
+<h3>introduced (resource level)</h3>
+
+<p>Introduced is a String value that documents when the resource was introduced. In a cookbook this would be a particular cookbook release. In the chef-client itself this would be a chef-client release.</p>
+
+<h3>examples (resource level)</h3>
+
+<p>Examples is a String value containing examples for how to use the resource. This allows the author to show and describe various ways the resource can be used.</p>
+
+<h3>description (property level)</h3>
+
+<p>Description is a String value that documents the usage of the individual property. Useful information here would be allowed values, validation regexes, or input coercions.</p>
+
+<h3>description (action level)</h3>
+
+<p>Description is a String that describes the functionality of the action.</p>
+
+<h2>Example</h2>
+<div class="highlight"><pre><span></span><span class="n">description</span> <span class="s1">&#39;The apparmor_policy resource is used to add or remove policy files from a cookbook file&#39;</span>
+
+<span class="n">introduced</span> <span class="s1">&#39;14.1&#39;</span>
+
+<span class="n">property</span> <span class="ss">:source_cookbook</span><span class="p">,</span>
+         <span class="nb">String</span><span class="p">,</span>
+         <span class="ss">description</span><span class="p">:</span> <span class="s1">&#39;The cookbook to source the policy file from&#39;</span>
+<span class="n">property</span> <span class="ss">:source_filename</span><span class="p">,</span>
+         <span class="nb">String</span><span class="p">,</span>
+         <span class="ss">description</span><span class="p">:</span> <span class="s1">&#39;The name of the source file if it differs from the apparmor.d file being created&#39;</span>
+
+<span class="n">action</span> <span class="ss">:add</span> <span class="k">do</span>
+  <span class="n">description</span> <span class="s1">&#39;Adds an apparmor policy&#39;</span>
+
+  <span class="n">cookbook_file</span> <span class="s2">&quot;/etc/apparmor.d/</span><span class="si">#{</span><span class="n">new_resource</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">do</span>
+    <span class="n">cookbook</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">source_cookbook</span> <span class="k">if</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">source_cookbook</span>
+    <span class="n">source</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">source_filename</span> <span class="k">if</span> <span class="n">new_resource</span><span class="o">.</span><span class="n">source_filename</span>
+    <span class="n">owner</span> <span class="s1">&#39;root&#39;</span>
+    <span class="n">group</span> <span class="s1">&#39;root&#39;</span>
+    <span class="n">mode</span> <span class="s1">&#39;0644&#39;</span>
+    <span class="n">notifies</span> <span class="ss">:reload</span><span class="p">,</span> <span class="s1">&#39;service[apparmor]&#39;</span><span class="p">,</span> <span class="ss">:immediately</span>
+  <span class="k">end</span>
+
+  <span class="n">service</span> <span class="s1">&#39;apparmor&#39;</span> <span class="k">do</span>
+    <span class="n">supports</span> <span class="ss">status</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="ss">restart</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="ss">reload</span><span class="p">:</span> <span class="kp">true</span>
+    <span class="n">action</span> <span class="o">[</span><span class="ss">:nothing</span><span class="o">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+<h2>Reasons for not using YARD</h2>
+
+<p>The goal of introducing minimal DSL changes is to extend the existing data already contained within each resource to include the necessary information to fully document resources. Documenting resources in YARD would require significant duplication of documentation, which most users probably won&#39;t do. Out of the box even without these new DSL extensions we can already document resources fairly well. These new extensions incentivize users to provide us with a small amount of addition information that would fully fill out the resource documentation. Within our own configuration management industry other projects have gone different routes to document their equivalence of resources. One project uses a hybrid comment / code method, which feels bolted on and overly complex. The other project fully documents code in comments which results in near 100% duplication of effort. Simple DSL extensions seem like they are more likely to be utilized and provide a better user experience.</p>
+
+<h2>Downstream Impact</h2>
+
+<p>The implementation of this RFC will enable the automatic generation of docs at docs.chef.io.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
