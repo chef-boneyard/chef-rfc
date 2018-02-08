@@ -53,7 +53,7 @@ The configuration required for this new functionality can be placed in the clien
  * **data_collector_token**: optional. A pre-shared token that, if present, will be passed as an HTTP header named `x-data-collector-token` to the Data Collector server. The server can choose to accept or reject the data posted based on the token or lack thereof.
  * **data_collector_mode**: The Chef mode in which the Data Collector will be enabled. For example, you may wish to only enable the Data Collector when running in Chef Solo Mode. Must be one of: `:solo`, `:client`, or `:both`. The `:solo` value is used for Chef operating in Chef Solo Mode or Chef Solo Legacy Mode. Default: `:both`.
  * **data_collector_raise_on_failure**: If true, the Chef run will fatally exit if it is unable to successfully POST to the Data Collector server. Default: `false`
- * **data_collector_output_locations**: optional. An array of URLs and / or file paths to which data collection payloads will also be written. This may be used without specifying the `data_collector_server_url` configuration parameter
+ * **data_collector_output_locations**: optional. An array of URLs and/or file paths to which data collection payloads will also be written. This may be used without specifying the `data_collector_server_url` configuration parameter
 
 ### Schemas
 
