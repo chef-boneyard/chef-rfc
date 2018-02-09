@@ -39,6 +39,8 @@ The implementation must work with Chef running in any mode:
 
 All payloads will be sent to the Data Collector server via HTTP POST to the URL specified in the `data_collector_server_url` configuration parameter. Users should be encouraged to use a TLS-protected endpoint.
 
+Optionally, payloads may also be written out to multiple HTTP endpoints or JSON files on the local filesystem (of the node running chef-client) by specifying the `data_collector_output_locations` configuration parameter.
+
 For the initial implementation, transmissions to the Data Collector server can optionally be authenticated with the use of a pre-shared token which will be sent in a HTTP header. Given that the receiver is not the Chef Server, existing methods of using a Chef `client` key to authenticate the request are unavailable.
 
 ### Configuration
@@ -47,10 +49,11 @@ The configuration required for this new functionality can be placed in the clien
 
 #### Parameters
 
- * **data_collector_server_url**: required. The full URL to the data collector server API. All messages will be POST'd to this URL. The Data Collector class will be registered and enabled if this config parameter is specified.
+ * **data_collector_server_url**: required*. The full URL to the data collector server API. All messages will be POST'd to this URL. The Data Collector class will be registered and enabled if this config parameter is specified. * If the `data_collector_output_locations` configuration parameter is specified, this setting may be omitted.
  * **data_collector_token**: optional. A pre-shared token that, if present, will be passed as an HTTP header named `x-data-collector-token` to the Data Collector server. The server can choose to accept or reject the data posted based on the token or lack thereof.
  * **data_collector_mode**: The Chef mode in which the Data Collector will be enabled. For example, you may wish to only enable the Data Collector when running in Chef Solo Mode. Must be one of: `:solo`, `:client`, or `:both`. The `:solo` value is used for Chef operating in Chef Solo Mode or Chef Solo Legacy Mode. Default: `:both`.
  * **data_collector_raise_on_failure**: If true, the Chef run will fatally exit if it is unable to successfully POST to the Data Collector server. Default: `false`
+ * **data_collector_output_locations**: optional. An array of URLs and/or file paths to which data collection payloads will also be written. This may be used without specifying the `data_collector_server_url` configuration parameter
 
 ### Schemas
 
