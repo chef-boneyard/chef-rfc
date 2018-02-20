@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 106
 Title: Expose more settings as attributes
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
