@@ -54,6 +54,8 @@ so that I may better understand the impacts of my changes and may better detect 
 
 <p>All payloads will be sent to the Data Collector server via HTTP POST to the URL specified in the <code>data_collector_server_url</code> configuration parameter. Users should be encouraged to use a TLS-protected endpoint.</p>
 
+<p>Optionally, payloads may also be written out to multiple HTTP endpoints or JSON files on the local filesystem (of the node running chef-client) by specifying the <code>data_collector_output_locations</code> configuration parameter.</p>
+
 <p>For the initial implementation, transmissions to the Data Collector server can optionally be authenticated with the use of a pre-shared token which will be sent in a HTTP header. Given that the receiver is not the Chef Server, existing methods of using a Chef <code>client</code> key to authenticate the request are unavailable.</p>
 
 <h3>Configuration</h3>
@@ -63,10 +65,11 @@ so that I may better understand the impacts of my changes and may better detect 
 <h4>Parameters</h4>
 
 <ul>
-<li><strong>data<em>collector</em>server_url</strong>: required. The full URL to the data collector server API. All messages will be POST&#39;d to this URL. The Data Collector class will be registered and enabled if this config parameter is specified.</li>
-<li><strong>data<em>collector</em>token</strong>: optional. A pre-shared token that, if present, will be passed as an HTTP header named <code>x-data-collector-token</code> to the Data Collector server. The server can choose to accept or reject the data posted based on the token or lack thereof.</li>
-<li><strong>data<em>collector</em>mode</strong>: The Chef mode in which the Data Collector will be enabled. For example, you may wish to only enable the Data Collector when running in Chef Solo Mode. Must be one of: <code>:solo</code>, <code>:client</code>, or <code>:both</code>. The <code>:solo</code> value is used for Chef operating in Chef Solo Mode or Chef Solo Legacy Mode. Default: <code>:both</code>.</li>
-<li><strong>data<em>collector</em>raise<em>on</em>failure</strong>: If true, the Chef run will fatally exit if it is unable to successfully POST to the Data Collector server. Default: <code>false</code></li>
+<li><strong>data_collector_server_url</strong>: required*. The full URL to the data collector server API. All messages will be POST&#39;d to this URL. The Data Collector class will be registered and enabled if this config parameter is specified. * If the <code>data_collector_output_locations</code> configuration parameter is specified, this setting may be omitted.</li>
+<li><strong>data_collector_token</strong>: optional. A pre-shared token that, if present, will be passed as an HTTP header named <code>x-data-collector-token</code> to the Data Collector server. The server can choose to accept or reject the data posted based on the token or lack thereof.</li>
+<li><strong>data_collector_mode</strong>: The Chef mode in which the Data Collector will be enabled. For example, you may wish to only enable the Data Collector when running in Chef Solo Mode. Must be one of: <code>:solo</code>, <code>:client</code>, or <code>:both</code>. The <code>:solo</code> value is used for Chef operating in Chef Solo Mode or Chef Solo Legacy Mode. Default: <code>:both</code>.</li>
+<li><strong>data_collector_raise_on_failure</strong>: If true, the Chef run will fatally exit if it is unable to successfully POST to the Data Collector server. Default: <code>false</code></li>
+<li><strong>data_collector_output_locations</strong>: optional. An array of URLs and/or file paths to which data collection payloads will also be written. This may be used without specifying the <code>data_collector_server_url</code> configuration parameter</li>
 </ul>
 
 <h3>Schemas</h3>

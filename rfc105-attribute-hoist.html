@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/6.2.2/css/foundation.min.css">
+    <style>
+      a { color: #f18b21; }
+      a:hover, a:focus { color: #3f5364; }
+    </style>
+    <title>Chef RFCs</title>
+  </head>
+  <body>
+    <div class="row medium-12 columns">
+      <header class="clearfix">
+        <div class="left">
+          <a href="/chef-rfc"><h1>Chef RFCs</h1></a>
+        </div>
+      </header>
+<h1>Integrate Hoisting in core Chef</h1>
+
+<p>Most users of Policies rely on &quot;hoisting&quot; to provide group specific
+attributes. This approach was formalised in the <code>poise-hoist</code> extension,
+which we&#39;d like to move in to the Chef Client and formalise.</p>
+
+<p>To hoist an attribute, the user would provide a default attribute
+structure in their Policyfile similar to:
+<code>
+default[&#39;staging&#39;][&#39;myapp&#39;][&#39;title&#39;] = &quot;My Staging App&quot;
+default[&#39;production&#39;][&#39;myapp&#39;][&#39;title&#39;] = &quot;My App&quot;
+</code>
+and would access the node attribute in their cookbook as:
+<code>
+node[&#39;myapp&#39;][&#39;title&#39;]
+</code>
+The correct attribute would then be provided based on the <code>policy_group</code>
+of the node, so with a <code>policy_group</code> of <code>staging</code> the attribute would
+contain &quot;My Staging App&quot;.</p>
+
+<h2>Motivation</h2>
+<div class="highlight"><pre><span></span>As a cookbook author,
+I want to write cookbooks generically,
+so that they work in any operational context.
+
+As an operations engineer,
+I want to leverage policy groups to describe my estate,
+so that I can isolate environments correctly.
+</pre></div>
+<h2>Specification</h2>
+
+<p>Hoisting will be enabled by default for all Policyfile using chef-client
+runs. We will not inherit the data bag hoisting that poise-hoist
+supports.
+Attributes of the form <code>policy_group</code>.<code>&lt;path&gt;</code> will be made available as 
+<code>&lt;path&gt;</code>, at the level of <code>role_default</code> or <code>role_override</code>, which is where
+Policyfile <code>default</code> or <code>override</code> attributes are levelled currently.</p>
+
+<h2>Downstream Impact</h2>
+
+<p>Poise-hoist will not be required in chef client 14.</p>
+
+<h2>Copyright</h2>
+
+<p>This work is in the public domain. In jurisdictions that do not allow for this,
+this work is available under CC0. To the extent possible under law, the person
+who associated CC0 with this work has waived all copyright and related or
+neighboring rights to this work.</p>
+    </div>
+  </body>
+</html>
