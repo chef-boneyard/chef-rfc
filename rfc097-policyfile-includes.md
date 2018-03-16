@@ -104,9 +104,14 @@ To use a locked policy from git:
 include_policy "policy_name", git: "github.com/chef/policy_example", path: "./foo/bar"
 ``` 
 
+To use a locked policy from git with a specific commit SHA:
+```
+include_policy "policy_name", git: "github.com/chef/policy_example", sha: "abcd1234", path: "./foo/bar"
+``` 
+
 When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, any cookbook locks, attributes and runlists from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed. Please see the "Merges and Conflicts" section for how duplicate or conflicting items in any of these categories are handled.
 
-When included policies come from a ```git``` source, the SHA of the commit at the time the included lockfile was first pulled into the parent will be stored in the parent lockfile and used when the included Lockfile must be reprocessed. This ensures that only the policyfile for which the update command was called has changed. Similarly, when included policies come from a ```server``` source, the revision id of the included lockfile will be stored in the parent lockfile. In the event of policy files being included from a ```local``` source, this guarantee cannot be given and the latest Lockfile for the included policy will be used.
+When included policies come from a ```git``` source, the SHA of the commit at the time the included lockfile was first pulled into the parent (or the SHA optionally specified in the include directive itself) will be stored in the parent lockfile and used when the included Lockfile must be reprocessed. This ensures that only the policyfile for which the update command was called has changed. Similarly, when included policies come from a ```server``` source, the revision id of the included lockfile will be stored in the parent lockfile. In the event of policy files being included from a ```local``` source, this guarantee cannot be given and the latest Lockfile for the included policy will be used.
 
 Essentially what this means is that the parent .lock file is computed from the merging of the following:
 
