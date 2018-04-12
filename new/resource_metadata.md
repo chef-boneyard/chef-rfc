@@ -111,7 +111,7 @@ Example:
 ```
 ## Downstream Impact
 
-* Stove will be updated to run `chef-resource-inspector` as part of the upload process.
+* `stove`/`knife supermarket` will be updated to run `chef-resource-inspector` as part of the upload process.
 * Supermarket will add a new tab displaying resources in a cookbook.
 
 ## Copyright
