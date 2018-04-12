@@ -83,7 +83,7 @@ Example:
         "introduced": null,
         "is": [
           "TrueClass",
-        "FalseClass"
+          "FalseClass"
         ],
         "deprecated": false
       },
@@ -93,7 +93,7 @@ Example:
         "introduced": null,
         "is": [
           "TrueClass",
-        "FalseClass"
+          "FalseClass"
         ],
         "deprecated": false
       },
