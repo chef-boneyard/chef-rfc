@@ -41,6 +41,7 @@ Each property has the following keys:
 * Description: A description of the property.
 * Introduced: The cookbook version that added the property
 * Deprecated: Is the property deprecated?
+* Name Property: Is this property the name property for the resource
 
 Example:
 ```json
