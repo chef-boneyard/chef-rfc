@@ -2,8 +2,9 @@
 RFC: 106
 Title: Expose more settings as attributes
 Author: Thom May <thom@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
+Tracking: https://github.com/chef/chef/pull/6967
 ---
 
 # Exposing some core settings as attributes

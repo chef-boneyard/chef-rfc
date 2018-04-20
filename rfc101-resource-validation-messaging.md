@@ -2,8 +2,9 @@
 RFC: 101
 Title: Resource Validation Messaging
 Author: Tim Smith <tsmith@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
+Tracking: https://github.com/chef/chef/pull/6818
 ---
 
 # Resource Validation Messaging
