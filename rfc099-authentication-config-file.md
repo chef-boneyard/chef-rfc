@@ -2,8 +2,9 @@
 RFC: 99
 Title: Authentication Configuration
 Author: Thom May <thom@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
+Tracking: https://github.com/chef/chef/pull/6660
 ---
 
 # Authentication Configuration

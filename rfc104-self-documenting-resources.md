@@ -2,8 +2,9 @@
 RFC: 104
 Title: Self Documenting Resources
 Author: Tim Smith <tsmith@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
+Tracking: https://github.com/chef/chef/pull/6818
 ---
 
 # Self Documenting Resources

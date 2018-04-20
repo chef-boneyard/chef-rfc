@@ -2,8 +2,9 @@
 RFC: 96
 Title: Improved Log Levels
 Author: Thom May <thom@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
+Tracking: https://github.com/chef/chef/pull/6910
 ---
 
 # Improved Log Levels

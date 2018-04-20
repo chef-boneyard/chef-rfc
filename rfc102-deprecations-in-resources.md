@@ -2,8 +2,9 @@
 RFC: 102
 Title: Deprecation Warnings Within Custom Resources
 Author: Tim Smith <tsmith@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
+Tracking: https://github.com/chef/chef/pull/7050
 ---
 
 # Deprecation Warnings Within Custom Resources
