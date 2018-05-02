@@ -98,16 +98,14 @@ migration. Starting from the top:
 
 1. A resource is added in a cookbook.
 2. That resource is nominated for core inclusion (see above section).
-3. The resource is added to core with an annotation of `defer_to_cookbook_until '>= x.0'`,
-   where `x.0` is the next major version for the cookbook in which the resource
-   will be removed.
+3. The resource is added to core with an annotation of `allow_cookbook_override: true`.
 4. Chef releases a minor (features-only) version with the new resource. It will
    remain inert if the original cookbook is active until the given version.
 5. At some point in the future, the cookbook does the major version release. Users
    can upgrade to it when they feel ready, otherwise they will see no change in
    behavior even with the new Chef release.
 6. The following April, as Chef prepares for the yearly major release, all pending
-   `defer_to_cookbook_until` annotations will be removed.
+   `allow_cookbook_override` annotations will be removed.
 7. If/when the user chooses to upgrade to the Chef major version, even if the
    old cookbook is still present in their environment, the resource from core
    will be used.
