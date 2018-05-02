@@ -78,7 +78,7 @@ Factors that influence and inform the decision to deprecate a resource include:
 * complex implementation that lacks clarity of consequences of use.
 * impact of using the resource incorrectly.
 
-### Process for adopting resources
+### Process for adopting resources from a community cookbook
 
 * Identify resources for adoption.
 * Create an RFC following the [Chef RFC](https://github.com/chef/chef-rfc) process.
@@ -88,6 +88,64 @@ Factors that influence and inform the decision to deprecate a resource include:
 * Any bugs discovered must be repaired in the cookbook and released prior to adoption.
 * Resource is added to core chef and documentation is updated.
 * Add deprecated cookbook warnings for conflicting cookbooks.
+
+#### Timeline of resource migration
+
+While we strive to ensure the migration of a resource from a cookbook to core is
+100% compatible, small issues can still arise. In order to ensure that Chef feature
+releases do not cause destabilization, we follow a multi-part timeline for the
+migration. Starting from the top:
+
+1. A resource is added in a cookbook.
+2. That resource is nominated for core inclusion (see above section).
+3. The resource is added to core with an annotation of `defer_to_cookbook_until '>= x.0'`,
+   where `x.0` is the next major version for the cookbook in which the resource
+   will be removed.
+4. Chef releases a minor (features-only) version with the new resource. It will
+   remain inert if the original cookbook is active until the given version.
+5. At some point in the future, the cookbook does the major version release. Users
+   can upgrade to it when they feel ready, otherwise they will see no change in
+   behavior even with the new Chef release.
+6. The following April, as Chef prepares for the yearly major release, all pending
+   `defer_to_cookbook_until` annotations will be removed.
+7. If/when the user chooses to upgrade to the Chef major version, even if the
+   old cookbook is still present in their environment, the resource from core
+   will be used.
+
+To summarize this timeline as a table, imagine we have a cookbook that adds a
+new resource in version 3.5, and then nominates it for core inclusion as part of
+Chef 15.3:
+
+```
++-------------+--------+--------+-----------+
+|             | old cb | new cb | future cb |
+|             | (3.4)  | (3.5)  | (4.0)     |
++-------------+--------+--------+-----------+
+| old chef    | none   | cb     | none      |
+| (15.2)      |        |        |           |
++-------------+--------+--------+-----------+
+| new chef    | core   | cb     | core      |
+| (15.3)      |        |        |           |
++-------------+--------+--------+-----------+
+| future chef | core   | core   | core      |
+| (16.0)      |        |        |           |
++-------------+--------+--------+-----------+
+```
+
+This shows that if the resource was already in use, a change in behavior only
+comes from a major version of upgrade of either Chef or the cookbook, which
+allows fine-grained user control of the upgrade process from both sides.
+
+### Process for adding a new resource not already part of a cookbook
+
+Not all resources make sense to develop in a cookbook if there is a clear and
+direct need for it in core, such as new package or service systems. These can
+follow an accelerated path depending on the level of complexity of the resource.
+
+* Identify resources for addition.
+* Create an RFC following the [Chef RFC](https://github.com/chef/chef-rfc) process.
+* Announce on Chef mailing list and Chef Community Slack.
+* Resource is added to core chef and documentation is updated.
 
 ### Process for deprecating resources
 
