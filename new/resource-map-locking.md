@@ -46,6 +46,12 @@ used in Chef core as part of the RFC100 adoption process. The second is
 name in the map. This can be used by advanced users for things like pointing all
 `package` resources at some new code or other very edge case things.
 
+Cookbooks adding new providers to core resources is less problematic, but for
+consistency will work the same way so it will generally require the use of the
+`__core_override__` option. We may want to revisit this in the future for core
+resources which are most commonly extended like `package` and `service`, but
+this is still rare enough to be called out as a special case.
+
 In order to not disrupt the Chef 14 cycle, we can either change the behavior so
 that during Chef 14 when you `provides` over an existing name, it logs the
 deprecation warning but still adds the name, or we could add `allow_cookbook_override`
