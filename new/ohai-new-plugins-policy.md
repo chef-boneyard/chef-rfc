@@ -23,15 +23,24 @@ policy for clarity.
 
 ## Specification
 
-As of Ohai 14, most plugins are disabled by default. New plugins have no effect
-on the behavior of Ohai or Chef unless actively turned on.
+New Ohai plugins should be able to be added in the current version, provided
+they do not change an existing namespace in a non-additive way (see below for
+examples). Adding such a plugin to current-1 Ohai, should also be permitted,
+provided `optional` is set to `true` for maximum safety.,
 
-Therefore, for any supported version of Chef/Ohai (including current-1), as long
-as that version is >= 14 it is safe to add new plugins that only affect a new
-namespace.
+Examples:
 
-As such, the community should accept newly contributed Ohai plugins which do not
-alter the namespaces of existing plugins.
+* Adding new fields to an existing plugin namespace should be allowed in
+  `current` and set to `optional` in `current-1`.
+  Example: https://github.com/chef/ohai/pull/1104/
+* Adding an entirely new plugin that uses a distinct top-level namespace
+  should be allowed in `current` and `current-1`.
+  Example: https://github.com/chef/ohai/pull/1170
+* Fixing a bug should be allowed in `current` and `current-1`.
+  Example: https://github.com/chef/ohai/pull/1084
+* Changing an existing namespace should not be allowed in `current` or
+  `current-1`
+  Example: Moving `node['filesystem']` to the `filesystem2` format.
 
 ## Downstream Impact
 
