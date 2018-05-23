@@ -47,7 +47,7 @@ name in the map. This can be used by advanced users for things like pointing all
 `package` resources at some new code or other very edge case things.
 
 Any resource which has `allow_cookbook_override: true` set should be marked as
-"experimental" in the documentation. This will help communicate that between
+"preview" in the documentation. This will help communicate that between
 the minor version where a resource is added and the following major release when
 it takes over from cookbooks forcibly is a trial run and we may continue to
 improve the resource (which should be coordinated with the cookbook).
