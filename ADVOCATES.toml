@@ -48,6 +48,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
         "jjasghar",
         "nshamrell",
         "robbkidd",
+        "adamleff",
         "cheeseplus",
         "eeyun",
         "benr",
@@ -151,7 +152,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Adam Leff"
     GitHub = "adamleff"
     Twitter = "adamleff"
-    email = "adamleff@chef.io"
+    email = "adam@leff.io"
 
   [people.cheeseplus]
     Name = "Seth Thomas"
@@ -178,7 +179,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
   [people.thommay]
     Name = "Thom May"
     GitHub = "thommay"
-    email = "tmay@chef.io"
+    email = "thom@may.lt"
 
   [people.jbrand]
     Name = "Josh Brand"
