@@ -48,10 +48,16 @@ More information can be found in the [Chef Community Guidelines](https://github.
         "jjasghar",
         "nshamrell",
         "robbkidd",
-        "cwebberops",
         "adamleff",
         "cheeseplus",
-        "eeyun"
+        "eeyun",
+        "benr",
+        "jbrand",
+        "mh",
+        "btm",
+        "nathenharvey",
+        "thommay",
+        "tomduffield"
       ]
     [Org.Advocates.GitHub]
       title = "GitHub"
@@ -146,7 +152,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Adam Leff"
     GitHub = "adamleff"
     Twitter = "adamleff"
-    email = "adamleff@chef.io"
+    email = "adam@leff.io"
 
   [people.cheeseplus]
     Name = "Seth Thomas"
@@ -159,6 +165,36 @@ More information can be found in the [Chef Community Guidelines](https://github.
     GitHub = "eeyun"
     Twitter = "eeyun___"
     email = "ian@habitat.sh"
+
+  [people.benr]
+    Name = "Ben Rockwood"
+    GitHub = "benr"
+    email = "benr@chef.io"
+
+  [people.mh]
+    Name = "Mark Harrison"
+    GitHub = "mivok"
+    email = "mh@chef.io"
+
+  [people.thommay]
+    Name = "Thom May"
+    GitHub = "thommay"
+    email = "thom@may.lt"
+
+  [people.jbrand]
+    Name = "Josh Brand"
+    GitHub = "joshbrand"
+    email = "jbrand@chef.io"
+
+  [people.tomduffield]
+    Name = "Tom Duffield"
+    GitHub = "tduffield"
+    email = "tom@chef.io"
+
+  [people.btm]
+    Name = "Bryan McLellan"
+    GitHub = "btm"
+    email = "btm@chef.io"
 
   [people.vacant]
     Name = "Vacant - Submit a PR to become a Chef Community Advocate"
