@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 107
 Title: Resource Map Locking
 Author: Noah Kantrowitz <noah@coderanger.net>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
