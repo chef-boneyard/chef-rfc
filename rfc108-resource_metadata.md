@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 108
 Title: Resource Metadata
 Author: Thom May <thom@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 

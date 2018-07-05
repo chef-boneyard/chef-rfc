@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 109
 Title: Ohai new plugins policy
 Author: Phil Dibowitz <phil@ipom.com>
-Status: Draft
+Status: Accepted
 Type: <Standards Track, Informational, Process>
 ---
 

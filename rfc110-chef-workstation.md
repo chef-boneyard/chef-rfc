@@ -1,10 +1,10 @@
 ---
-RFC: unassigned
+RFC: 110
 Title: The Future of Chef Workstation
 Author:
 - Jon Morrow <jmorrow@chef.io>
 - Noah Kantrowitz <noah@coderanger.net>
-Status: Draft
+Status: Accepted
 Type: Informational
 ---
 
