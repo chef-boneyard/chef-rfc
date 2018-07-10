@@ -95,8 +95,10 @@ This method has no parameters.
 The request body will be similar to:
 
 
-``` { "name": "node_name", "chef_environment": "_default", "run_list": [
-"recipe[recipe_name]" ], "normal": { "tags": [ ] } } ```
+```
+{ "name": "node_name", "chef_environment": "_default", "run_list": [
+"recipe[recipe_name]" ], "normal": { "tags": [ ] } }
+```
 
 The response will return the updated desired data in the same format as the
 request.
@@ -135,8 +137,10 @@ This method has no parameters.
 
 The response will be similar to:
 
-``` { "name": "node_name", "default": { [...] }, "override": { [...] },
-"automatic": { [...] } } ```
+```
+{ "name": "node_name", "default": { [...] }, "override": { [...] },
+"automatic": { [...] } }
+```
 
 Response Codes:
 
@@ -156,8 +160,10 @@ This method has no parameters.
 
 The request body will be similar to:
 
-``` { "name": "node_name", "default": { [...] }, "override": { [...] },
-"automatic": { [...] } } ```
+```
+{ "name": "node_name", "default": { [...] }, "override": { [...] },
+"automatic": { [...] } }
+```
 
 The response will return the updated desired data in the same format as the
 request.
