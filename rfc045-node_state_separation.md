@@ -71,8 +71,10 @@ This method has no parameters.
 
 The response will be similar to:
 
-``` { "name": "node_name", "chef_environment": "_default", "run_list": [
-"recipe[recipe_name]" ], "normal": { "tags": [ ] } } ```
+```
+{ "name": "node_name", "chef_environment": "_default", "run_list": [
+"recipe[recipe_name]" ], "normal": { "tags": [ ] } }
+```
 
 Response Codes:
 
