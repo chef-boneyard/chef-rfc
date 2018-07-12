@@ -247,10 +247,10 @@ For a node will be allowed to PUT it
 * MUST have UPDATE on the node\_current object
 * MUST have one of
    * UPDATE on the node_desired object
-   * READ on the node_desired object, and there be no change to the
-   actual data.
+   * READ on the node_desired object, and the request will not result
+   in a change to the node_desired object.
 
-403 forbidden will be returned if this isn't met. 
+403 forbidden will be returned if this isn't met.
 
 The purpose of this is to allow old clients who are well behaved and
 don't edit the desired state to continue to function, even when the
@@ -389,27 +389,16 @@ supports writing to the new and old server APIs.
 Any change to either the desired or current state will result in the whole node
 object being submitted to solr for indexing.
 
-### Future
+### Enforcement
 
-In order to implement the ability to make the desired state read-only there
-will need to be some additional changes outside of the scope of this RFC.  The
-implementation of read-only desired state will most likely require using an
-adminstrative key to create both the client and the node (a form of
-validatorless bootstrapping).  To have the client create both the new current
-and desired state object and then drop its perms on the desired node object
-would require a client to drop its own GRANT perms which is an antipattern and
-should not be allowed.  Instead an admin key will need to create both the new
-client and the new desired and current state node objects.  A helper API
-endpoint may be written to move that logic server-side and keep it consistent.
-It also may be useful to introduce per-org configuration state to control
-default ACLs and other behavior of that endpoint. It would be useful
-to update the chef-server-ctl command to allow controlling broad
-policies. Those implementation details are well beyond the scope of
-this RFC. The implementation of this node state
-seperation, however, allows for all of those future implementations.
+Enforcement will be handled through the ACLs on the node_current and node_desired
+objects, and the current_node_state and desired_node_state containers.  To lock
+down an org the CREATE, UPDATE and DELETE permissions on the desired_node_state container
+will need to be restricted to administrative users, along with replicating that
+configuration to all existing node_desired objects.
 
-This RFC does not directly solve the problem of configuring servers so that
-desired node state is read-only to the node.
+This is an implementation detail required by the ACL+container architecture of
+the erlang Chef Server, in general per-node ACLs are not mandated by this RFC.
 
 ## Thanks
 
