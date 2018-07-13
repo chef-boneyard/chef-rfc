@@ -55,9 +55,9 @@ https://youtu.be/CMO3AcFL-q4
 ### Update Checking Specification
 
 #### Update Checks
-The update checks will occur in a daemon that runs in the background. By default this will be configured to start on user login, and may be started by chef-workstation tooling if it’s not running when chef-workstation commands are executed
+The update checks will occur in a daemon that runs in the background. By default this will be configured to start on user login, and may be started by chef-workstation tooling if it’s not running when chef-workstation commands are executed.
 
-This daemon may provide additional functionality beyond update checking n the future. The prompt for installation will occur from the Tray Application that Chef Workstation ships with.
+This daemon may provide additional functionality beyond update checking in the future. The prompt for installation will occur from the Tray Application that Chef Workstation ships with.
 
 #### When Update Checks Run 
 
@@ -85,13 +85,15 @@ At this time, updates will be installed via the operating system’s default pac
 
 #### Disabling Update Checks
 
-Users and administrators will have multiple methods to disable updates if necessary. 
+Users and administrators will have multiple methods to disable updates if necessary:
 
-From the tray application preferences
-From the Chef Workstation command line
-From the Chef Workstation configuration file
+- From the tray application preferences
+- From the Chef Workstation command line
+- From the Chef Workstation configuration file
 
 The user will still be able to manually check for updates. 
+
+For configuring updates, there will be the ability to set both per-user and administrator-owned host-wide configuration options. These configuration options will merge, and host configuration option will take precedence. If the host configuration is set, the user will receive feedback. 
 
 ## Alternatives
 
