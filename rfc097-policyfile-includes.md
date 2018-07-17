@@ -2,7 +2,7 @@
 RFC: 97
 Title: Policyfile Includes
 Author: Jon Cowie <jcowie@chef.io>
-Status: Accepted
+Status: Final
 Type: Standards Track
 ---
 
