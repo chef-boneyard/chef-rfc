@@ -58,10 +58,44 @@ changing that default would be a breaking change.
 
 ### API Schema
 
+These new resources will be considered part of a new API version of
+the protocol. (The actual protocol version number will determined at
+implementation time.)
+
+#### Authorization details
+
+Two new containers, desired\_node\_state and current\_node_state will
+be created. On migration they will inherit the current value of the
+node container. CREATE, DELETE will consult one or
+both of those as appropriate.
+
+On migration, the ACL for the individual nodes will be duplicated, and
+the current and desired state will get their own copy. Once
+duplicated, these ACLs will be independent, and can be edited
+separately. Individual operations may touch on one or both of those
+ACLs, depending on whether the individual parts or the whole node is
+being accessed.
+
 #### `/nodes/:name/desired`
 
 This endpoint is for manipulating desired data (`run_list`, environment, tags,
 normal attributes)
+
+##### `HEAD /nodes/:name/desired`
+
+(rationale: we are supporting HEAD request on the named node endpoint in
+https://github.com/chef/chef-server/pull/1218), we should continue
+that work as we touch things. It should be implemented to do the
+minimal database touch.
+
+This method has no parameters:
+
+* 200 OK. The node is present
+* 401 Unauthorized.  The user or client who made the request could not be
+  authenticated. Verify the user/client name, and that the correct key was used
+  to sign the request.
+* 404 Not found. The requested node does not exist.
+
 
 ##### `GET /nodes/:name/desired`
 
@@ -196,16 +230,39 @@ This endpoint is unchanged, and is only included here for context.
 ##### `GET /nodes/:name`
 
 This method will return the combined desired and current data and its semantics
-will be unchanged.
+will be unchanged, except for ACLs.
+
+In the proposed, the ACLs on both the desired and current state
+objects will be checked for READ, and 403 will be returned if either
+is not allowed. This will not break existing systems unless a user
+chooses to edit the ACLs to remove READ permission.
 
 ##### `PUT /nodes/:name`
 
-This method will create a new node with the combined desired and current data
-and its semantics will be unchanged.
+This method will update a node with the combined desired
+and current data and its semantics will be unchanged, except as
+described here.
+
+For a node will be allowed to PUT it
+* MUST have UPDATE on the node\_current object
+* MUST have one of
+   * UPDATE on the node_desired object
+   * READ on the node_desired object, and the request will not result
+   in a change to the node_desired object.
+
+403 forbidden will be returned if this isn't met.
+
+The purpose of this is to allow old clients who are well behaved and
+don't edit the desired state to continue to function, even when the
+permissions are locked down to protect against editing.
 
 ##### `DELETE /nodes/:name`
 
-This method will delete a node and its semantics will be unchanged.
+This method will delete a node and its semantics will be unchanged,
+except for ACLs.
+
+In the proposed change, the ACLs on both the desired\_state and
+current\_state containers will need to have DELETE permission.
 
 #### `/nodes`
 
@@ -233,7 +290,9 @@ The ACLs on the node will also be composed of the ACLs on the underlying
 current and desired objects.  As part of the data migration on the server
 upgrade the ACLs on the node objects will be copied to both the desired and the
 current state (preserving the default behavior that nodes may update their own
-desired state).  The ACLs on the composed endpoints (e.g. `GET /nodes/:name`)
+desired state). New containers, node\_state\_desired and node\_state\_current
+
+The ACLs on the composed endpoints (e.g. `GET /nodes/:name`)
 will be composed of the ACLs on the underlying desired and current state and
 will require both of those to be allowed for the operation to succeed.  There
 will be no support for getting partial results back if the client has only
@@ -330,25 +389,16 @@ supports writing to the new and old server APIs.
 Any change to either the desired or current state will result in the whole node
 object being submitted to solr for indexing.
 
-### Future
+### Enforcement
 
-In order to implement the ability to make the desired state read-only there
-will need to be some additional changes outside of the scope of this RFC.  The
-implementation of read-only desired state will most likely require using an
-adminstrative key to create both the client and the node (a form of
-validatorless bootstrapping).  To have the client create both the new current
-and desired state object and then drop its perms on the desired node object
-would require a client to drop its own GRANT perms which is an antipattern and
-should not be allowed.  Instead an admin key will need to create both the new
-client and the new desired and current state node objects.  A helper API
-endpoint may be written to move that logic server-side and keep it consistent.
-It also may be useful to introduce per-org configuration state to control
-default ACLs and other behavior of that endpoint.  Those implementation details
-are well beyond the scope of this RFC.  The implementation of this node state
-seperation, however, allows for all of those future implementations.
+Enforcement will be handled through the ACLs on the node_current and node_desired
+objects, and the current_node_state and desired_node_state containers.  To lock
+down an org the CREATE, UPDATE and DELETE permissions on the desired_node_state container
+will need to be restricted to administrative users, along with replicating that
+configuration to all existing node_desired objects.
 
-This RFC does not directly solve the problem of configuring servers so that
-desired node state is read-only to the node.
+This is an implementation detail required by the ACL+container architecture of
+the erlang Chef Server, in general per-node ACLs are not mandated by this RFC.
 
 ## Thanks
 
