@@ -16,15 +16,21 @@ This RFC describes the support lifecycle of [core resources](https://docs.chef.i
 As a Chef user,
 I want core resources to be usable, reasonable and supported,
 so that using Chef is a quality experience.
+```
 
+```
 As a Chef user,
 I want Chef to ship with resources out of the box,
 so that I can easily automate my systems without additional dependencies.
+```
 
+```
 As a Chef user,
 I want to understand the current state of documented resources,
 so that I implement resources correctly.
+```
 
+```
 As a Chef developer,
 I want a process for adding new resources to Chef,
 so that I improve the usability of Chef.
@@ -34,7 +40,7 @@ so that I improve the usability of Chef.
 
 ### Resource Scope
 
-Core resources should exist to automate all components of the underlying operating system and common subsystem services. This includes components such as authentication, raid, disk partitions, firewalls, or remote management transports. This does not include specific applications that users may want to automate such as database or webservers, as these are better suited for resources within cookbooks that can be rapidly iterated upon new software releases.
+Ideally core resources should exist to automate all components of the underlying operating system and common subsystem services. This includes components such as authentication, raid, disk partitions, firewalls, containers, or virtualization systems. This does not include specific applications that users may want to automate such as database, application servers, or webservers. Application resources are better suited for resources within cookbooks that can be rapidly iterated upon new application releases.
 
 ### Design
 
@@ -42,11 +48,11 @@ Core resources should be well-designed and self contained. Resources should work
 
 ### Maturity
 
-Users should have an expectation of stability within core resources and this requires resources to have be proven out before being shipped in core Chef. In order to accomplish this resources should first be shipped in cookbooks where the resource design can be proven and refined and support for all current supported platforms](<https://github.com/chef/chef-rfc/blob/master/rfc021-platform-support-policy.md>) can be added.
+Users should have an expectation of stability within core resources and this requires resources to have be proven out before being shipped in Chef. In order to accomplish this resources should first be shipped in cookbooks where the resource design can be proven and refined and support added for all currently supported platforms](<https://github.com/chef/chef-rfc/blob/master/rfc021-platform-support-policy.md>).
 
 ### Testing
 
-Initial and ongoing resource stability is a key concern of core resources. All resources should be fully integration tested within the cookbook they are adopted from. Additionally all methods and overall resource logic should be unit tested to prevent future regressions.
+Initial and ongoing resource stability is a key concern of core resources. All resources should be fully integration tested within the cookbook they are adopted from. Additionally all action_class methods and and property logic should be unit tested to prevent future regressions.
 
 At any given time current resources have an implicit state. To clarify and be explicit about these states, it is proposed that resources have the following states:
 
