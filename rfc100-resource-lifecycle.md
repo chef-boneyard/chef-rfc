@@ -1,7 +1,7 @@
 ---
 RFC: 100
 Title: Establish Core Resource Lifecycle
-Author: Jennifer Davis <sigje@chef.io>
+Author: 'Jennifer Davis <sigje@chef.io>, Tim Smith <tsmith@chef.io>'
 Status: Accepted
 Type: Process
 ---
@@ -12,17 +12,23 @@ This RFC describes the support lifecycle of [core resources](https://docs.chef.i
 
 ## Motivation
 
-    As a Chef user,
-    I want core resources to be usable, reasonable and supported,
-    so that using Chef is a quality experience.
+```
+As a Chef user,
+I want core resources to be usable, reasonable and supported,
+so that using Chef is a quality experience.
 
-    As a Chef user,
-    I want to understand the current state of documented resources,
-    so that I implement resources correctly.
+As a Chef user,
+I want Chef to ship with resources out of the box,
+so that I can easily automate my systems without additional dependencies.
 
-    As a Chef developer,
-    I want to develop useful resources and reduce complexity by eliminating unhelpful resources,
-    so that I improve the usability of Chef.
+As a Chef user,
+I want to understand the current state of documented resources,
+so that I implement resources correctly.
+
+As a Chef developer,
+I want a process for adding new resources to Chef,
+so that I improve the usability of Chef.
+```
 
 ## Guiding Principles
 
