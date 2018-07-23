@@ -32,14 +32,21 @@ so that I improve the usability of Chef.
 
 ## Guiding Principles
 
-Core resources ...
+### Resource Scope
 
-1. Should be reasonable. Actions should reflect expected behaviors.
-2. Should be usable. Resource can be used in multiple contexts.
-3. Should be well-designed and self contained.
-4. Should be tested.
-5. Should be maintained on [supported platforms](https://github.com/chef/chef-rfc/blob/master/rfc021-platform-support-policy.md) as relevant.
-6. Should minimize surprises.
+Core resources should exist to automate all components of the underlying operating system and common subsystem services. This includes components such as authentication, raid, disk partitions, firewalls, or remote management transports. This does not include specific applications that users may want to automate such as database or webservers, as these are better suited for resources within cookbooks that can be rapidly iterated upon new software releases.
+
+### Design
+
+Core resources should be well-designed and self contained. Resources should work as end-users would expect them to work and care should be taken to reduce surprises.
+
+### Maturity
+
+Users should have an expectation of stability within core resources and this requires resources to have be proven out before being shipped in core Chef. In order to accomplish this resources should first be shipped in cookbooks where the resource design can be proven and refined and support for all current supported platforms](<https://github.com/chef/chef-rfc/blob/master/rfc021-platform-support-policy.md>) can be added.
+
+### Testing
+
+Initial and ongoing resource stability is a key concern of core resources. All resources should be fully integration tested within the cookbook they are adopted from. Additionally all methods and overall resource logic should be unit tested to prevent future regressions.
 
 At any given time current resources have an implicit state. To clarify and be explicit about these states, it is proposed that resources have the following states:
 
