@@ -40,7 +40,7 @@ so that I improve the usability of Chef.
 
 ### Resource Scope
 
-Ideally core resources should exist to automate all components of the underlying operating system and common subsystem services. This includes components such as authentication, raid, disk partitions, firewalls, containers, or virtualization systems. This does not include specific applications that users may want to automate such as database, application servers, or webservers. Application resources are better suited for resources within cookbooks that can be rapidly iterated upon new application releases.
+Ideally core resources should exist to automate all components of the underlying operating system and common subsystem services. This includes components such as authentication, raid, disk partitions, firewalls, containers, or virtualization systems. This does not include specific applications that users may want to automate such as database, application servers, or web servers. Application resources are better suited for resources within cookbooks that can be rapidly iterated upon new application releases.
 
 ### Design
 
@@ -120,10 +120,9 @@ While we strive to ensure the migration of a resource from a cookbook to core is
 
 1. A resource is added in a cookbook.
 2. That resource is nominated for core inclusion (see above section).
-3. The resource is added to core with an annotation of `allow_cookbook_override: true`.
+3. The resource is added to core with an annotation of `preview_resource true`.
 4. Chef releases a minor (features-only) version with the new resource. It will remain inert if the original cookbook is active until the given version.
-5. At some point in the future, the cookbook does the major version release. Users can upgrade to it when they feel ready, otherwise they will see no change in behavior even with the new Chef release.
-6. The following April, as Chef prepares for the yearly major release, all pending `allow_cookbook_override` annotations will be removed.
+5. The following April, as Chef prepares for the yearly major release, all pending `preview_resource` annotations will be removed.
 7. If/when the user chooses to upgrade to the Chef major version, even if the old cookbook is still present in their environment, the resource from core will be used.
 
 To summarize this timeline as a table, imagine we have a cookbook that adds a new resource in version 3.5, and then nominates it for core inclusion as part of Chef 15.3:
