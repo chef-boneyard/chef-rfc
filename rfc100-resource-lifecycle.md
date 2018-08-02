@@ -149,10 +149,11 @@ This shows that if the resource was already in use, a change in behavior only co
 
 Not all resources make sense to develop in a cookbook if there is a clear and direct need for it in core, such as new package or service systems. These can follow an accelerated path depending on the level of complexity of the resource.
 
-- Identify resources for addition.
-- Create an RFC following the [Chef RFC](https://github.com/chef/chef-rfc) process.
-- Announce on Chef mailing list and Chef Community Slack.
-- Resource is added to core chef and documentation is updated.
+1. Identify resources for addition.
+2. Create a ticket outlining the proposed resource including the purpose, action, and properties
+3. Announce on Chef mailing list and Chef Community Slack.
+4. Resource is added to core chef with an annotation of `preview_resource true`
+5. The following April, as Chef prepares for the yearly major release, the `preview_resource` annotations will be removed.
 
 ### Process for deprecating resources
 
