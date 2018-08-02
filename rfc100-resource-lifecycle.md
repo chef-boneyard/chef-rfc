@@ -102,16 +102,12 @@ Factors that influence and inform the decision to deprecate a resource include:
 ### Process for adopting resources from a community cookbook
 
 - Identify resources for adoption.
-- Create an RFC following the [Chef RFC](https://github.com/chef/chef-rfc) process.
+- Create an issue at [https://github.com/chef/chef] outlining the reason for shipping the resource in core
 - Announce on Chef mailing list and Chef Community Slack.
 - Any proposed changes to the interfaces must be implemented in the cookbook prior to adoption.
-
   - If there are fundamental issues with the resource whether due to naming standards or interface implementation, a new cookbook should be created implementing the resource as intended.
-
 - Any bugs discovered must be repaired in the cookbook and released prior to adoption.
-
 - Resource is added to core chef and documentation is updated.
-
 - Add deprecated cookbook warnings for conflicting cookbooks.
 
 #### Timeline of resource migration
