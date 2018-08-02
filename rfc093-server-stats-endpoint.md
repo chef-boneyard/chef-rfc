@@ -11,7 +11,7 @@ Type: Standards Track
 Monitoring Chef Server is an involved task. There are several services that make
 up a Chef Server, all of which need to be monitored. These services each have their
 own set of metrics, and each has it's own way obtaining those metrics. The Chef Server
-component itself has 2 ways that provide a different set of metrics: pushing to statsd 
+component itself has 2 ways that provide a different set of metrics: pushing to statsd
 and through Folsom, which can be set up to push to Graphite.
 
 This RFC introduces a stats endpoint to Chef Server which is capable of providing metrics
@@ -187,7 +187,7 @@ The `_stats` endpoint could potentially provide information useful in compromisi
 Server. For this reason, there should be an option to protect this endpoint with basic access authentication
 for operators who do not want this endpoint accessible to all. A username and password will be generated if
 it not provided. By using basic authentication, we provide some level of access control to this endpoint
-while still making usuable to metrics systems, as most will provide a way to access endpoints that have
+while still making useable to metrics systems, as most will provide a way to access endpoints that have
 basic auth.
 
 ## Yet Another Way to Get Metrics

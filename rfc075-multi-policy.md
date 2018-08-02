@@ -123,7 +123,7 @@ warning. This is probably not a big issue as today Chef will do the same thing
 in similar situations (i.e. if the names don't match but `package_name` does).
 Weird stomping could also occur if two policies are trying to "own" a service
 like Nginx and using two different versions of the same cookbook. These are all
-deemed problems out of scope for a technical solution. When using mutli-policy
+deemed problems out of scope for a technical solution. When using multi-policy
 workflows, external synchronization (i.e. talking to each other) will be needed
 to establish some idea of who is responsible for what.
 

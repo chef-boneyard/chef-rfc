@@ -75,8 +75,8 @@ config_context(:telemetry) do
   resource true # captures per resource execution time taken
   recipe true # captures per recipe execution time taken
   gc true # captures GC stats during main chef events
-  process true  # captures process memroy stats from /proc during main chef events
-  client_run true # captures time spent on major chef run milstones
+  process true  # captures process memory stats from /proc during main chef events
+  client_run true # captures time spent on major chef run milestones
   publish_using(
    Chef::Telemetry::Publisher::Statsd.new(host: '192.168.2.11', port: 7676), # emit data to statsd
    Chef::Telemetry::Publisher::NodeAttribute.new('chef-metrics') # save all metrics under node['chef-metrics'] attribute

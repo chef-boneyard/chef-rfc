@@ -18,8 +18,8 @@ Mixlib Install's new API is currently used for downloads.chef.io and omnitruck.c
 
 ## Motivation
 
-    As a Kitchen User, 
-    I want to separate which product version to install from how the product is installed, 
+    As a Kitchen User,
+    I want to separate which product version to install from how the product is installed,
     so that I can easily control how an instance is bootstrapped with a specified product version.
 
     As a Kitchen User,
@@ -53,7 +53,7 @@ This work is separated into 3 phases.
 * Inform the community of the upcoming Kitchen changes and reasoning (Chef blog, Community Slack)
 
 ##### Phase 3 - Make the switch
-* Raise errors along with instructions when using deprecated options 
+* Raise errors along with instructions when using deprecated options
 * `ScriptGenerator` code path removed from Kitchen
 * docs.chef.io and kitchen.ci documentation updates
 * Inform the community when Kitchen is released
@@ -152,7 +152,7 @@ By simplifying the use cases, can we automate the install and upgrade paths with
 Note, this is not a requirement for this work, but definitely something to think about.
 
 #### Mixlib Install changes
-A new script param, `install_strategy`, will be added to `install.sh` and `install.ps1`. The option will determine how the install functions will install the package. TThe default params will be set to maintain the current behavior of always installing the specified package.
+A new script param, `install_strategy`, will be added to `install.sh` and `install.ps1`. The option will determine how the install functions will install the package. The default params will be set to maintain the current behavior of always installing the specified package.
 
 Adding `install_strategy` to the install scripts moves all responsibility for determining how to install packages to a canonical source. This also decouples the logic in Kitchen for determining installs and upgrades from Mixlib Install's ScriptGenerator.
 
