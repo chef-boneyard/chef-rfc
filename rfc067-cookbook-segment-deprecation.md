@@ -45,7 +45,7 @@ config parameter.
 
 ## Request/Response Format
 
-The old format of GET/PUT requests to coobooks/NAME/VERSION looks like:
+The old format of GET/PUT requests to cookbooks/NAME/VERSION looks like:
 
 ```
 {

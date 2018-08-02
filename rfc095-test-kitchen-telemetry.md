@@ -8,8 +8,7 @@ Type: Standards Track
 
 # Use of telemetry in Test Kitchen
 
-This RFC is a description of Test Kitchen's implementation of <the
-telemetry RFC, as yet unumbered>, as required in that RFC.
+This RFC is a description of Test Kitchen's implementation of RFC-94, as required in that RFC.
 
 ## What questions do we hope to answer?
 
@@ -44,7 +43,7 @@ using the `kitchen-hyperv` driver on Windows 10, and the `debian-9-amd64` bento 
 This results in the following events:
 
 ```json
-{ 
+{
     "product": "test-kitchen",
     "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {
@@ -62,7 +61,7 @@ Running test first destroys the instance, and then creates, converges and verifi
 Lastly, the instance is destroyed again.
 
 ```json
-{ 
+{
     "product": "test-kitchen",
     "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {
@@ -76,7 +75,7 @@ Lastly, the instance is destroyed again.
 ```
 
 ```json
-{ 
+{
     "product": "test-kitchen",
     "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {
@@ -118,7 +117,7 @@ chef client `13`, using the new style configuration. They're using Policyfiles:
 We now proceed to verifying the instance:
 
 ```json
-{ 
+{
     "product": "test-kitchen",
     "session_id": "504ec380-5a75-458c-9f56-afa3c47b8705",
     "payload": {

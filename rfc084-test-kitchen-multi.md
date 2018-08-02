@@ -108,7 +108,7 @@ supersuites" (rather than platforms x suites as normal). Multiple supersuites
 can be present, though a suite can only be a member of a single supersuite to
 allow the existing instance state machine to remain mostly unchanged. A single
 suite can also be referenced multiple times to allow for upgrade/downgrade
-testing and idempotence testing.
+testing and idempotency testing.
 
 The step syntax is built to be similar to the `kitchen` command line utility to
 make it easier to get started with for experience Test Kitchen users. It consists

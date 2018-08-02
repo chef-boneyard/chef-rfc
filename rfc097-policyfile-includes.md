@@ -78,7 +78,7 @@ The ```include_policy``` directive will support three sources for policies: git,
 To use a locked policy from a local path:
 ```
 include_policy "policy_name", path: "./foo/bar"
-``` 
+```
 
 To use a locked policy from a chef server with a specific revision id:
 
@@ -102,12 +102,12 @@ include_policy "policy_name", policy_group: "prod", policy_name: "specific_polic
 To use a locked policy from git:
 ```
 include_policy "policy_name", git: "github.com/chef/policy_example", path: "./foo/bar"
-``` 
+```
 
 To use a locked policy from git with a specific commit SHA:
 ```
 include_policy "policy_name", git: "github.com/chef/policy_example", sha: "abcd1234", path: "./foo/bar"
-``` 
+```
 
 When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, any cookbook locks, attributes and runlists from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed. Please see the "Merges and Conflicts" section for how duplicate or conflicting items in any of these categories are handled.
 
@@ -128,7 +128,7 @@ A secondary problem with this approach is the question of how to handle conflict
 
 ## Merges and Conflicts
 
-Because the approach taken in this RFC permits one of more levels of policy includes, we must expliclty address the behaviour to be implemented in two cases:
+Because the approach taken in this RFC permits one of more levels of policy includes, we must explicitly address the behaviour to be implemented in two cases:
 
 * Merge - When a Policyfile element must be merged with another but *no* conflict is present
 * Conflict - When a Policyfile element must be merged with another but a conflict *is* present.
@@ -150,8 +150,8 @@ There are several foreseeable potential conflicts I will highlight here explicit
 * An include loop where a policy includes a second policy which in turn includes the first policy.
 
 Essentially, we will only merge elements from Policyfiles where we can be sure that we are not overriding something specified in another Policyfile (ie we can safely combine two sets of cookbook locks if the dependencies do not clash). My approach to this RFC is that you should never have to be surprised by the effect of including another Policy, and it should not be able to change the behavior of a Policyfile which includes it. Please see the "Example" section following this one for an example of a policy including another, and the resulting merged policy.
- 
-In an ideal world, "Base" policies which include other policies would be absolutely minimal and only contain ``include_policy`` statements, but in the event that this is not the case, the principle of least surprise should still apply. 
+
+In an ideal world, "Base" policies which include other policies would be absolutely minimal and only contain ``include_policy`` statements, but in the event that this is not the case, the principle of least surprise should still apply.
 
 ## Example
 
