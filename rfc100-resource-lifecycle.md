@@ -54,6 +54,10 @@ Users should have an expectation of stability within core resources and this req
 
 Initial and ongoing resource stability is a key concern of core resources. All resources should be fully integration tested within the cookbook they are adopted from. Additionally all action_class methods and and property logic should be unit tested to prevent future regressions.
 
+### Documentation
+
+In order for resources to meet end user needs they must be properly documented. All resources should include in-resource documentation using the `introduced` and `description` options on the resource itself, all properties, and all actions.
+
 ## Resource States
 
 At any given time current resources have an implicit state. To clarify and be explicit about these states, it is proposed that resources have the following states:
