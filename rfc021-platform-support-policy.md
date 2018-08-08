@@ -12,6 +12,13 @@ The purpose of this RFC is to clarify which platforms the Chef community chooses
 
 The [chef docs site](https://docs.chef.io/) has [details of the platforms Chef Software, Inc validates for release](https://docs.chef.io/platforms.html).
 
+# Types of Support
+
+This RFC outlines the process for community support of a platforms on Chef, but it's worth noting the distinction between community supported and Chef Software Inc. supported:
+
+- Commercial Support consists of the platforms that are supported as part of a paid commercial support contract with Chef Software Inc. For a complete list of commercially supported platforms see the [Chef Platform Support Docs ](https://docs.chef.io/platforms.html).
+- Community Support is made up of platforms for which support is only available through the Chef community on a best effort basis.
+
 # Adding a new platform
 
 Community maintenance of a platform requires that core chef resources,
