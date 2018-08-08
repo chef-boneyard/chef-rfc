@@ -24,8 +24,8 @@ This RFC outlines the process for community support of a platforms on Chef, but 
 Community maintenance of a platform requires that core chef resources,
 including `package`, `file`, and `service`, MUST have working providers
 for the platform. For example, on Debian the package provider supports both
-`dpkg` and `apt`. Ohai SHOULD also be able to gather relevant
-information on the platform.
+`dpkg` and `apt`. Ohai MUST also be able to gather relevant information on
+the platform such as platform information, cpu type/count, and available memory.
 
 In addition to support in code, there SHOULD be a Lieutenant for the
 platform, per RFC 30. There MAY also be one or more Maintainers for the
