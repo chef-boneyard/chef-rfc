@@ -29,30 +29,25 @@ supported.
 
 # Currently supported platforms
 
-If not specified, chef works with all versions of a given
-platform that the manufacturer supports.
-
-Platform | Versions | Architectures | Package Format
- ---- | --- | --- | --- 	
-AIX | 6.1, 7.1, 7.2 | ppc64 | bff
-CentOS | 5, 6, 7 | i386, x86_64 | rpm
-Cisco IOS XR | 6 | x86_64 | rpm
-Cisco NX-OS | 7 | x86_64 | rpm
-Debian | 7, 8 | i386, x86_64 | deb
-FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg
-Mac OS X | 10.9, 10.10, 10.11, 10.12 | x86_64 | dmg
-Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm
-Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm
-Solaris | 10u11, 11 | sparc, x86 | shar
-Windows | 7, 8, 8.1, 2008R2, 2012, 2012R2 | x86, x86_64 | msi
-Ubuntu Linux | | x86, x86_64 | deb
-SUSE Linux Enterprise Server  | 11, 12 | x86_64
-Scientific Linux | 5.x, 6.x and 7.x | i386, x86_64		
-Fedora  | | x86_64 | 
-OpenSUSE | | x86_64 | 
-OmniOS | | x86_64 | 
-Gentoo Linux | | x86_64 |
-Arch Linux | | x86_64 |
+Platform | Architectures | Package Format
+ ---- | --- | ---
+ AIX  | ppc64 | bff
+ Arch Linux | x86_64 | pacman
+ CentOS | i386, x86_64 | rpm
+ Debian | i386, x86_64 | deb
+ Fedora  | x86_64 | rpm
+ FreeBSD  | i386, amd64 | pkg
+ Gentoo Linux | x86_64 |
+ macOS | x86_64 | dmg
+ OmniOS | x86_64 | ips
+ OpenSUSE | x86_64 | rpm
+ Oracle Enterprise Linux | i386, x86_64 | rpm
+ Red Hat Enterprise Linux | x86_64, s390x, ppc64le (7.x), ppc64 (7.x) | rpm
+ Scientific Linux | i386, x86_64	| rpm
+ Solaris | sparc, x86 | shar
+ SUSE Linux Enterprise Server  | x86_64, s390x, ppc64le, ppc64 | rpm
+ Ubuntu Linux | x86, x86_64 | deb
+ Windows | x86, x86_64 | msi
 
 ## Copyright
 
