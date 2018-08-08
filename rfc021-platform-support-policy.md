@@ -56,6 +56,28 @@ Platform | Architectures | Package Format
  Ubuntu Linux | x86, x86_64 | deb
  Windows | x86, x86_64 | msi
 
+# Platform Support EOL Policy
+
+The Chef community will support a given platform version until the vendor's EOL
+date for that platform version. Because different vendors use different
+terminology, the following table clarifies when Chef products are end-of-life
+according to those vendors’ terms:
+
+Platform | Vendor End of Life
+---- | ---
+AIX | IBM End of Support Date
+Debian | End of maintenance updates
+Enterprise Linux (covers RedHat Enterprise Linux, CentOS) | End of Production 3
+Fedora | End of Life
+FreeBSD | End of Life
+Microsoft Windows | End of Extended Support
+openSUSE | End of Life
+Oracle Enterprise Linux | Premier Support Ends
+Oracle Solaris | Premier Support Ends
+SUSE Linux Enterprise Server | General Support Ends
+Ubuntu Linux | End of maintenance updates
+
+
 ## Copyright
 
 This work is in the public domain. In jurisdictions that do not allow for this, this work is available under CC0. To the extent possible under law, the person who associated CC0 with this work has waived all copyright and related or neighboring rights to this work.
