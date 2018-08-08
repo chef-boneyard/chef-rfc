@@ -66,11 +66,9 @@ At any given time current resources have an implicit state. These states allow u
 
 Resources in proposed state are being evaluated to identify if a resource is appropriate and necessary within the chef-client. A resource could be in this state whether it's a popular widely used resource in a community cookbook or a gap in common infrastructure element.
 
-Users may propose new resources for inclusion in the chef-client by filing a resource proposal issue in the Chef GitHub repository. The chef-client maintainers will work with the user proposing the new resource to fully document the needs and the proposed design. Upon approval from two core maintainers the proposal will be marked `Approved for Development`
-
 ### Development
 
-Resources in development state are in active development. The value of adding the resource is understood. The number of impacted users has been estimated.
+Resources in development state are in active development. The value of adding the resource is understood and the design for the resource has been approved.
 
 ### Supported
 
@@ -105,23 +103,33 @@ Factors that influence and inform the decision to deprecate a resource include:
 - complex implementation that lacks clarity of consequences of use.
 - impact of using the resource incorrectly.
 
-### Process for adopting resources from a community cookbook
+### Process for proposing / developing new resources
+
+Users may propose new resources for inclusion in the chef-client by filing a resource proposal issue in the Chef GitHub repository. The chef-client maintainers will work with the user proposing the new resource to fully document the needs and the proposed design. Upon approval from two core maintainers the proposal will be marked `Status: Approved for Development` and the development phase may begin.
+
+#### Proposal Process
 
 - Identify resources for adoption.
-- Create an issue at [https://github.com/chef/chef] outlining the reason for shipping the resource in core
-- Announce on Chef mailing list and Chef Community Slack.
-- Any proposed changes to the interfaces must be implemented in the cookbook prior to adoption.
-  - If there are fundamental issues with the resource whether due to naming standards or interface implementation, a new cookbook should be created implementing the resource as intended.
-- Any bugs discovered must be repaired in the cookbook and released prior to adoption.
-- Resource is added to core chef and documentation is updated.
-- Add deprecated cookbook warnings for conflicting cookbooks.
+- Create an issue at [https://github.com/chef/chef] outlining the reason for shipping the resource in core.
+- Announce your proposal in the #chef-dev channel on Chef Community Slack.
+- Chef-client maintainers will work with you to fully document the needs and the proposed design of the resource.
+- Once two chef-client maintainers have approved the proposal the `Status: Approved for Development` label will be applied and development may begin.
+
+#### Development Process
+
+- All development must take place initially in a cookbook.
+  - If an existing cookbook exists for the resource the resource must be updated there to the final design before inclusion in the chef-client.
+  - If writing a new resource create a cookbook just for the resource to provide backwards compatibility for users on previous chef-client versions.
+- Resource is added to core chef.
+- Release notes must be updated mentioning the new resource and it's usage.
+- Documentation must be updated for the new resource.
 
 #### Timeline of resource migration
 
 While we strive to ensure the migration of a resource from a cookbook to core is 100% compatible, small issues can still arise. In order to ensure that Chef feature releases do not cause destabilization, we follow a multi-part timeline for the migration. Starting from the top:
 
 1. A resource is added in a cookbook.
-2. That resource is nominated for core inclusion (see above section).
+2. That resource is proposed for core inclusion (see above section).
 3. The resource is added to core with an annotation of `preview_resource true`.
 4. Chef releases a minor (features-only) version with the new resource. It will remain inert if the original cookbook is active until the given version.
 5. The following April, as Chef prepares for the yearly major release, all pending `preview_resource` annotations will be removed.
@@ -147,15 +155,6 @@ To summarize this timeline as a table, imagine we have a cookbook that adds a ne
 
 This shows that if the resource was already in use, a change in behavior only comes from a major version of upgrade of either Chef or the cookbook, which allows fine-grained user control of the upgrade process from both sides.
 
-### Process for adding a new resource not already part of a cookbook
-
-Not all resources make sense to develop in a cookbook if there is a clear and direct need for it in core, such as new package or service systems. These can follow an accelerated path depending on the level of complexity of the resource.
-
-1. Identify resources for addition.
-2. Create a ticket outlining the proposed resource including the purpose, action, and properties
-3. Announce on Chef mailing list and Chef Community Slack.
-4. Resource is added to core chef with an annotation of `preview_resource true`
-5. The following April, as Chef prepares for the yearly major release, the `preview_resource` annotations will be removed.
 
 ### Process for deprecating resources
 
