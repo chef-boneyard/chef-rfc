@@ -60,11 +60,13 @@ In order for resources to meet end user needs they must be properly documented. 
 
 ## Resource States
 
-At any given time current resources have an implicit state. To clarify and be explicit about these states, it is proposed that resources have the following states:
+At any given time current resources have an implicit state. These states allow us to define how a resource goes from a proposal to a shipped resource and eventually how it is retired when it is no longer useful.
 
-### Analysis
+### Proposed
 
-Resources in analysis state are being evaluated to identify who, what, when, and why a resource is (still) needed. A resource could be in this state whether it's a popular widely used resource in a community cookbook or a gap in common infrastructure element. A resource could re-enter this state when it has been identified as a problematic resource that needs to be evaluated for continued support.
+Resources in proposed state are being evaluated to identify if a resource is appropriate and necessary within the chef-client. A resource could be in this state whether it's a popular widely used resource in a community cookbook or a gap in common infrastructure element.
+
+Users may propose new resources for inclusion in the chef-client by filing a resource proposal issue in the Chef GitHub repository. The chef-client maintainers will work with the user proposing the new resource to fully document the needs and the proposed design. Upon approval from two core maintainers the proposal will be marked `Approved for Development`
 
 ### Development
 
