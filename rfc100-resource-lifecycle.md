@@ -8,7 +8,7 @@ Type: Process
 
 # Core Resource Lifecycle
 
-This RFC describes the support lifecycle of [core resources](https://docs.chef.io/resources.html) provided in Chef.
+This RFC describes the support lifecycle of [core resources](https://docs.chef.io/resources.html) provided within the chef-client.
 
 ## Motivation
 
@@ -40,7 +40,7 @@ so that I improve the usability of Chef.
 
 ### Resource Scope
 
-Ideally core resources should exist to automate all components of the underlying operating system and common subsystem services. This includes components such as authentication, raid, disk partitions, firewalls, containers, or virtualization systems. This does not include specific applications that users may want to automate such as database, application servers, or web servers. Application resources are better suited for resources within cookbooks that can be rapidly iterated upon new application releases.
+Ideally core resources should exist to automate all components of the underlying operating system and common subsystem services. This includes components such as authentication, raid, disk partitions, firewalls, containers, or virtualization systems. This does not include specific applications that users may want to automate such as database, application servers, or web servers. Application resources are better suited within cookbooks that can be rapidly iterated upon new application releases.
 
 ### Design
 
