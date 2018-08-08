@@ -1,10 +1,10 @@
 ---
-RFC: unassigned
+RFC: 111
 Title: In-Repo Draft Guides for Chef
 Author:
 - Noah Kantrowitz <noah@coderanger.net>
 - Kimberly Garmoe <kgarmoe@chef.io>
-Status: Draft
+Status: Accepted
 Type: Process
 ---
 
