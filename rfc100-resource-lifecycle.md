@@ -117,6 +117,7 @@ Users may propose new resources for inclusion in the chef-client by filing a res
 
 #### Development Process
 
+- The developer working on the resource will state so in the ticket and the ticket will be assigned to them.
 - All development must take place initially in a cookbook.
   - If an existing cookbook exists for the resource the resource must be updated there to the final design before inclusion in the chef-client.
   - If writing a new resource create a cookbook just for the resource to provide backwards compatibility for users on previous chef-client versions.
