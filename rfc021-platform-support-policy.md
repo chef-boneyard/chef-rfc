@@ -1,6 +1,6 @@
 ---
 RFC: 21
-Author: Julian Dunn <jdunn@chef.io>
+Author: Julian Dunn <jdunn@chef.io>, Tim Smith <tsmith@chef.io>
 Title: Chef Platform Support Policy
 Status: Accepted
 Type: Informational
@@ -10,49 +10,44 @@ Type: Informational
 
 The purpose of this RFC is to clarify which platforms the Chef community chooses to work on, and how those platforms are maintained.
 
-The [chef docs site](https://docs.chef.io/) has [details of the platforms Chef Software, Inc validates for release](https://docs.chef.io/platforms.html).
+The [chef docs site](https://docs.chef.io/) has [details of the platforms Chef Software, Inc. supports commercially](https://docs.chef.io/platforms.html).
+
+# Commercial vs. Community Support
+
+This RFC is concerned with platforms maintained by the community within Chef OSS projects. These additional platforms are not supported by Chef Software Inc. commercially, and are maintained on a best effort basis by community members.
 
 # Adding a new platform
 
-Community maintenance of a platform requires that core chef resources,
-including `package`, `file`, and `service`, MUST have working providers
-for the platform. For example, on Debian the package provider supports both
-`dpkg` and `apt`. Ohai SHOULD also be able to gather relevant
-information on the platform.
+Community maintenance of a platform requires that core chef resources, including `package`, `file`, and `service`, MUST have working providers for the platform. For example, on Debian the package provider supports both `dpkg` and `apt`. Ohai MUST also be able to gather relevant information on the platform such as platform information, cpu type/count, and available memory.
 
-In addition to support in code, there SHOULD be a Lieutenant for the
-platform, per RFC 30. There MAY also be one or more Maintainers for the
-platform. The Lieutenant and any Maintainers are responsible for
-reviewing RFCs and code that affects the platform, and SHOULD be
-responsible for ensuring that new versions of the platform are
-supported.
+In addition to support in code, there SHOULD be a Lieutenant for the platform, per RFC 30. There MAY also be one or more Maintainers for the platform. The Lieutenant and any Maintainers are responsible for reviewing RFCs and code that affects the platform, and SHOULD be responsible for ensuring that new versions of the platform are supported.
 
 # Currently supported platforms
 
-If not specified, chef works with all versions of a given
-platform that the manufacturer supports.
+Platform | Architectures | Package Format
+ ---- | --- | ---
+ Arch Linux | x86_64 | pacman
+ Fedora  | x86_64 | rpm
+ Debian | x86_64 | deb
+ Gentoo Linux | x86_64 |
+ OmniOS | x86_64 | ips
+ OpenSUSE | x86_64 | rpm
+ Ubuntu Linux (non-LTS) | x86, x86_64 | deb
 
-Platform | Versions | Architectures | Package Format
- ---- | --- | --- | --- 	
-AIX | 6.1, 7.1, 7.2 | ppc64 | bff
-CentOS | 5, 6, 7 | i386, x86_64 | rpm
-Cisco IOS XR | 6 | x86_64 | rpm
-Cisco NX-OS | 7 | x86_64 | rpm
-Debian | 7, 8 | i386, x86_64 | deb
-FreeBSD | 9, 10 | i386, amd64 | pkg_add pkg
-Mac OS X | 10.9, 10.10, 10.11, 10.12 | x86_64 | dmg
-Oracle Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm
-Red Hat Enterprise Linux | 5, 6, 7 | i386, x86_64 | rpm
-Solaris | 10u11, 11 | sparc, x86 | shar
-Windows | 7, 8, 8.1, 2008R2, 2012, 2012R2 | x86, x86_64 | msi
-Ubuntu Linux | | x86, x86_64 | deb
-SUSE Linux Enterprise Server  | 11, 12 | x86_64
-Scientific Linux | 5.x, 6.x and 7.x | i386, x86_64		
-Fedora  | | x86_64 | 
-OpenSUSE | | x86_64 | 
-OmniOS | | x86_64 | 
-Gentoo Linux | | x86_64 |
-Arch Linux | | x86_64 |
+# Platform Support EOL Policy
+
+The Chef community will support a given platform version until the vendor's EOL
+date for that platform version. Because different vendors use different
+terminology, the following table clarifies when Chef products are end-of-life
+according to those vendors’ terms:
+
+Platform | Vendor End of Life
+---- | ---
+Debian | End of maintenance updates
+Fedora | End of Life
+OmniOS | End of Support
+openSUSE | End of Life
+Ubuntu Linux | End of maintenance updates
 
 ## Copyright
 
