@@ -90,13 +90,13 @@ The Chef Community advocates are well informed on how to deal with incidents. Re
 * Decider
   * Adam Jacob - &lt;[adam@chef.io](mailto:adam@chef.io)&gt; - Slack: holoway
 * Ombudsperson
-  * Nathen Harvey - &lt;[nharvey@chef.io](mailto:nharvey@chef.io)&gt; - +1 202-368-7264 - Slack: nathenharvey
+  * Mandi Walls - &lt;[mandi@chef.io](mailto:mandi@chef.io)&gt; - +1 703-582-7396 - Slack: lnxchk
 * Advocates -
   * IRC
     * \#chef - jonlives, zts
     * \#chef-hacking - jonlives, zts
   * [Chef Mailing List](http://discourse.chef.io)
-    * [Nathen Harvey](https://discourse.chef.io/users/nathenharvey/),
+    * [Mandi Walls](https://discourse.chef.io/users/mandi_walls/),
     * [Noah Kantrowitz](https://discourse.chef.io/users/coderanger)
     * [JJ Asghar](https://discourse.chef.io/users/jjasghar)
     * [Mike Fiedler](https://discourse.chef.io/users/mike)
