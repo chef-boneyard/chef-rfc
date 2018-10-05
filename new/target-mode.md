@@ -23,9 +23,11 @@ A node is any machine - physical, virtual, cloud, network device, etc. - that
 is managed by Chef. While typically the Chef client runs on the node that it is
 managing, target mode would enable the client to manage a remote node.
 
-The management node is the node that Chef client runs on. This could be a
-dedicated machine for running the client against multiple nodes, an
-administrators workstation, etc.
+The management node is the machine that Chef client runs on and is likely to be a
+specific machine chosen for running the client against multiple target nodes.
+Ad-hoc runs against target nodes are intended to be exposed to the user through
+the 'chef apply' ad-hoc user experience currently associated with Chef
+Workstation.
 
 Having each target node be represented by a separate Chef node leverages
 the existing functionality in the ecosystem with only minimal modification. For
@@ -54,19 +56,31 @@ leveraged until that time. Otherwise, target mode would require `platform` to
 be set on the node object via `--json-attributes` or a similar fashion. An
 `fqdn` or `ipaddress` attribute would also have to be set in the same way.
 
-A new `target_mode?` method would be added to Chef::Provider and would default
-to `false`. The existing platform mapping pattern would be used for target
-mode. Over time some core resources and providers would be updated or modified
-to support target mode. Initially only the `execute` resource would be expected
-to be supported but custom resources could quickly be developed in cookbooks.
+`Chef::NodeMap` would be modified such that `Chef::Provider.provides` would
+take a `target_mode` option. This ensures that only providers that support
+target\_mode are available when running in target mode. For example:
+
+```
+provides :interface, platform: "cisco", target_mode: true
+```
+
+Initially only the `execute` resource would be expected to be supported but
+custom resources could quickly be developed in cookbooks.  Over time some core
+resources and providers may be updated or modified to support target mode
+against traditional platforms. This would facilitate `chef apply` use without
+having to install the chef-client on the target node and managing nodes running
+on esoteric architectures that we don't build binaries for.
 
 Train would be used as the transport library for connecting to target nodes.
 Providers could use a new mixin that would use the Train connection if we were
 in a target mode or otherwise shell\_out to execute a command.
 
+FIXME: secrets
+
 ## Downstream Impact
 
-Chef Workstation / chef-apply would need an equivalent experience.
+Chef Workstation / chef-apply would be modified to use target mode when the
+remote machine doesn't have a supported Chef installation.
 
 ## Copyright
 
