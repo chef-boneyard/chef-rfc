@@ -75,7 +75,14 @@ Train would be used as the transport library for connecting to target nodes.
 Providers could use a new mixin that would use the Train connection if we were
 in a target mode or otherwise shell\_out to execute a command.
 
-FIXME: secrets
+### Secrets
+
+The storage of usernames, passwords, keys, and other secrets will be
+initallly accomplished using the credentials file defined in
+[RFC099](https://github.com/chef/chef-rfc/blob/master/rfc099-authentication-config-file.md).
+We expect to later develop a secrets abstraction layer that facilitates the use
+of existing secrets solutions like encrypted data bags, Chef Vault, and Hashi
+Vault, without having to add support to all of these to target mode directly.
 
 ## Downstream Impact
 
