@@ -1,8 +1,8 @@
 ---
-RFC: unassigned
+RFC: 112
 Title: Chef Target Mode
 Author: Bryan McLellan <btm@chef.io>
-Status: Draft
+Status: Accepted
 Type: Standards Track
 ---
 
@@ -43,7 +43,7 @@ This could be either from a configuration file or a command line argument, e.g.
 `chef-client --target router.local`. When in target mode, many default local
 file paths would automatically change based on the target name. For example,
 the lock file name could change to `chef-client-TARGET_NAME.pid` and the
-cache path could have a subdirectory added based on the target name. This
+cache path could have a sub-directory added based on the target name. This
 allows all other settings such as `chef_server_url` and `client_key` to be
 inherited from the management nodes `client.rb`. Alternatively, multiple
 configuration files could be maintained, one for each target node.
@@ -78,7 +78,7 @@ in a target mode or otherwise shell\_out to execute a command.
 ### Secrets
 
 The storage of usernames, passwords, keys, and other secrets will be
-initallly accomplished using the credentials file defined in
+initially accomplished using the credentials file defined in
 [RFC099](https://github.com/chef/chef-rfc/blob/master/rfc099-authentication-config-file.md).
 We expect to later develop a secrets abstraction layer that facilitates the use
 of existing secrets solutions like encrypted data bags, Chef Vault, and Hashi
