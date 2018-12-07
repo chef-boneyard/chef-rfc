@@ -13,7 +13,7 @@ Title: Make Homebrew OS X's Default Package Provider
 
 ## Specification
 
-`Chef::Provider::Package::Macports` is the default for platforms `mac_os_x` and `mac_os_x_server` in Chef's [platform provider mapping](https://github.com/opscode/chef/blob/master/lib/chef/platform/provider_mapping.rb).
+`Chef::Provider::Package::Macports` is the default for platforms `mac_os_x` and `mac_os_x_server` in Chef's [platform provider mapping](https://github.com/chef/chef/blob/master/lib/chef/platform/provider_mapping.rb).
 
 ```ruby
 :mac_os_x => {

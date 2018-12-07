@@ -72,7 +72,7 @@ Any physical violence or intimidation, threatened or acted on, is a serious offe
 
 #### Roles
 
-* The **Decider** has final say on community guidelines and final authority on corrective actions and appeals. As per the [Chef RFC process](https://github.com/opscode/chef-rfc/blob/master/rfc000-rfc-process.md), the top-level decider is [Adam Jacob](mailto:adam@chef.io).
+* The **Decider** has final say on community guidelines and final authority on corrective actions and appeals. As per the [Chef RFC process](https://github.com/chef/chef-rfc/blob/master/rfc000-rfc-process.md), the top-level decider is [Adam Jacob](mailto:adam@chef.io).
 * The **Community Ombudsperson** guides and meets regularly with community advocates, helps enforce corrective actions, hears appeals, is responsible for maintaining a list of incidents, and ensures pertinent information is shared with necessary parties.  The Community Ombudsperson is appointed by the decider.
 * **Community Advocates** may be assigned for each area where the community convenes online (Slack, IRC, email list, GitHub, etc.).  Community Advocates are volunteers who have the best interests of our community in mind.  They act in good faith to help enforce our community guidelines and respond to incidents when they occur.
 * A **Community Member** is anyone who participates with the community whether in-person or via online channels.  Community members are responsible for following the community guidelines, suggesting updates to the guidelines when warranted, and helping enforce community guidelines.

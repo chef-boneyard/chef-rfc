@@ -9,7 +9,7 @@ Type: Process
 
 # Chef GitHub Issues Workflow
 
-This RFC codifies the workflow Chef uses to track bug reports and contributions using [GitHub Issues](https://github.com/opscode/chef/issues).
+This RFC codifies the workflow Chef uses to track bug reports and contributions using [GitHub Issues](https://github.com/chef/chef/issues).
 The terms and policies used in this workflow are defined by [RFC 30](https://github.com/chef/chef-rfc/blob/master/rfc030-maintenance-policy.md).
 
 ## Terms

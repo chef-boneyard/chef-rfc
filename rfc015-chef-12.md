@@ -43,7 +43,7 @@ At a given time:
 
 ### Operating System Versions
 
-Supported Operating Systems and versions are covered by a separate [proposed RFC](https://github.com/opscode/chef-rfc/pull/21).
+Supported Operating Systems and versions are covered by a separate [proposed RFC](https://github.com/chef/chef-rfc/pull/21).
 
 ## Chef 12
 
@@ -63,7 +63,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
 ### Feature Proposals
 
 #### Enable SSL Verification by Default
-* https://github.com/opscode/chef/issues/1542
+* https://github.com/chef/chef/issues/1542
 * **Breaks Backwards Compatibility? (Workstation):** Yes
 * **Breaks Backwards Compatibility? (Cookbooks):**   No
 * **User Benefit:** High
@@ -72,7 +72,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
   * Chef 11 already contains the necessary certificates and debugging tools to enable SSL verification if needed. Chef 12 will contain the necessary bootstrapping improvements to make the functionality work out of the box. Tooling around updating existing nodes with the required certificates will be available with the Chef 12 release.
 
 #### Guard interpreter default for powershell_script set to powershell_script
-* https://github.com/opscode/chef/issues/1714
+* https://github.com/chef/chef/issues/1714
 * **Breaks Backwards Compatibility? (Workstation):** No
 * **Breaks Backwards Compatibility? (Cookbooks):**  Yes
 * **User Benefit:** Medium
@@ -81,7 +81,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
   * Short description of the impact: powershell_script resources with guards not using guard_interpreter will return different results until guard expressions in those cookbooks are rewritten. Some scripts may execute more often than they should.
 
 #### Guard interpreter default for batch set to :batch
-* https://github.com/opscode/chef/issues/1713
+* https://github.com/chef/chef/issues/1713
 * **Breaks Backwards Compatibility? (Workstation):** No
 * **Breaks Backwards Compatibility? (Cookbooks):**  Yes
 * **User Benefit:** Medium
@@ -106,7 +106,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
     needs to ensure that it is installed via the appropriate mechanism.
 
 #### Require `name` Attribute in Cookbook Metadata
-* https://github.com/opscode/chef/issues/1712
+* https://github.com/chef/chef/issues/1712
 * **Breaks Backwards Compatibility? (Workstation):** (Yes)
 * **Breaks Backwards Compatibility? (Cookbooks):**   (Yes)
 * **User Benefit:** (Medium)
@@ -124,7 +124,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
     unrelated cookbook does not cause an error when uploading a different cookbook.
 
 #### Enable client-side key generation by default
-* https://github.com/opscode/chef/issues/1711
+* https://github.com/chef/chef/issues/1711
 * **Breaks Backwards Compatibility? (Workstation):** (No)
 * **Breaks Backwards Compatibility? (Cookbooks):**   (No)
 * **User Benefit:** (Medium)
@@ -138,7 +138,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
     compatibility with any supported version of the server.
 
 #### Add simple DSL method to interact with encrypted data bags
-* https://github.com/opscode/chef/issues/1710
+* https://github.com/chef/chef/issues/1710
 * **Breaks Backwards Compatibility? (Workstation):** No
 * **Breaks Backwards Compatibility? (Cookbooks):**  No
 * **User Benefit:** Low
@@ -148,7 +148,7 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
 
 #### Homebrew As OS X Default Package Provider
 
-* https://github.com/opscode/chef/issues/1709
+* https://github.com/chef/chef/issues/1709
 * **Breaks Backwards Compatibility? (Workstation):** No
 * **Breaks Backwards Compatibility? (Cookbooks):**  Yes
 * **User Benefit:** High
@@ -159,4 +159,4 @@ With this in mind, feature proposals below are categorized in terms of **Breaks 
 
 ### Bug Fixes
 
-We are keeping track of the minor things that need to be fixed or included in Chef 12 on [GitHub Issues](https://github.com/opscode/chef/issues) with `Milestone: Chef 12`. Feel free to check them out or file a new issue there.
+We are keeping track of the minor things that need to be fixed or included in Chef 12 on [GitHub Issues](https://github.com/chef/chef/issues) with `Milestone: Chef 12`. Feel free to check them out or file a new issue there.

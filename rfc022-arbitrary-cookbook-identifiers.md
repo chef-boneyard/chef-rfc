@@ -113,7 +113,7 @@ to get cookbook objects with links to individual files it can download.
 
 This mode is already partially implemented (using currently available
 APIs) here:
-https://github.com/opscode/chef/blob/9d277e5a4505e5e83e9c4eb30328fdc7148f15c6/lib/chef/policy_builder/policyfile.rb
+https://github.com/chef/chef/blob/9d277e5a4505e5e83e9c4eb30328fdc7148f15c6/lib/chef/policy_builder/policyfile.rb
 
 ### What Happens to the Existing Cookbooks API
 

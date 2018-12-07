@@ -62,7 +62,7 @@ Do you really want to delete this server? (Y/N)
 
 ## Future work
 
-This RFC is focused on associating with known named networks and these changes will be included in future releases after the [knife-cloud](https://github.com/opscode/knife-cloud/) refactoring. The knife-cloud refactoring will make these options available to additional knife plugins.
+This RFC is focused on associating with known named networks and these changes will be included in future releases after the [knife-cloud](https://github.com/chef/knife-cloud/) refactoring. The knife-cloud refactoring will make these options available to additional knife plugins.
 
 ### knife openstack server list
 

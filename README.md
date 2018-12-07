@@ -4,7 +4,7 @@ The repository for proposals for major changes to Chef, Chef Server, and related
 
 ## Usage
 
-Read [RFC000](https://github.com/opscode/chef-rfc/blob/master/rfc000-rfc-process.md#submitting-an-rfc) for more information on how to submit an RFC and get it reviewed.
+Read [RFC000](https://github.com/chef/chef-rfc/blob/master/rfc000-rfc-process.md#submitting-an-rfc) for more information on how to submit an RFC and get it reviewed.
 
 ## Generating HTML Documentation
 

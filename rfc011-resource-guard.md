@@ -621,4 +621,4 @@ Chef Client.
 * Chef resource documentation: <http://docs.opscode.com/resource.html>
 * Chef guard documentation: <http://docs.opscode.com/resource_common.html>.
 * Chef guard_interpreter documentation: <http://docs.opscode.com/resource_common.html>.
-* Chef Client open source project: <https://github.com/opscode/chef>. 
+* Chef Client open source project: <https://github.com/chef/chef>. 

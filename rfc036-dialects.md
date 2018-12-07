@@ -114,7 +114,7 @@ Ruby. Even for experienced users, simpler file formats can boost productivity
 and reduce the maintenance burden.
 
 This will also help unify file loading logic between things like chef_fs and
-knife. This could allow moving forward with [RFC 31](https://github.com/opscode/chef-rfc/blob/master/rfc31-replace-solo-with-local-mode.md).
+knife. This could allow moving forward with [RFC 31](https://github.com/chef/chef-rfc/blob/master/rfc31-replace-solo-with-local-mode.md).
 
 ## Acceptance
 

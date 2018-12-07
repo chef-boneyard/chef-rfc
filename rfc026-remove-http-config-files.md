@@ -28,7 +28,7 @@ Remove the ability to specify HTTP config files with `chef-client -c http://blah
 
 ## Rationale
 
-There are already bugs in the chef-client because we assume client is a path (`config_dir` is [File.dirname(`config_file`)](https://github.com/opscode/chef/blob/master/lib/chef/config.rb#L84), and some [rather crucial values](https://github.com/opscode/chef/blob/master/lib/chef/config.rb#L365) are inferred from `config_dir`).  While we could find and fix them all, we could also just make the code simpler by removing this capability.
+There are already bugs in the chef-client because we assume client is a path (`config_dir` is [File.dirname(`config_file`)](https://github.com/chef/chef/blob/master/lib/chef/config.rb#L84), and some [rather crucial values](https://github.com/chef/chef/blob/master/lib/chef/config.rb#L365) are inferred from `config_dir`).  While we could find and fix them all, we could also just make the code simpler by removing this capability.
 
 ## Impact and Workaround
 
