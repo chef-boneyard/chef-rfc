@@ -93,8 +93,8 @@ The Chef Community advocates are well informed on how to deal with incidents. Re
   * Mandi Walls - &lt;[mandi@chef.io](mailto:mandi@chef.io)&gt; - +1 703-582-7396 - Slack: lnxchk
 * Advocates -
   * IRC
-    * \#chef - jonlives, zts
-    * \#chef-hacking - jonlives, zts
+    * \#chef - zts
+    * \#chef-hacking - zts
   * [Chef Mailing List](http://discourse.chef.io)
     * [Mandi Walls](https://discourse.chef.io/users/mandi_walls/),
     * [Noah Kantrowitz](https://discourse.chef.io/users/coderanger)
