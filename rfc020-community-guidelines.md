@@ -6,7 +6,7 @@ Status: Accepted
 Type: Informational
 ---
 
-*Date of Last Revision: September 16, 2014*
+*Date of Last Revision: January 28, 2019*
 
 # Chef Community Guidelines
 
@@ -85,28 +85,7 @@ Community Advocates must be agreed on by the community:  a simple majority of ot
 
 Disagreements, both social and technical, happen all the time. When they occur, we seek to resolve disagreements and differing views constructively and with the help of the community and community processes. When disagreements escalate, we ask our community advocates to step in to moderate, mediate, and help resolve tense situations.
 
-The Chef Community advocates are well informed on how to deal with incidents. Report the incident (preferably in writing) to one of the community advocates listed below.  See the "Roles" section above for a description of each role.
-
-* Decider
-  * Adam Jacob - &lt;[adam@chef.io](mailto:adam@chef.io)&gt; - Slack: holoway
-* Ombudsperson
-  * Mandi Walls - &lt;[mandi@chef.io](mailto:mandi@chef.io)&gt; - +1 703-582-7396 - Slack: lnxchk
-* Advocates -
-  * IRC
-    * \#chef - jonlives, zts
-    * \#chef-hacking - jonlives, zts
-  * [Chef Mailing List](http://discourse.chef.io)
-    * [Mandi Walls](https://discourse.chef.io/users/mandi_walls/),
-    * [Noah Kantrowitz](https://discourse.chef.io/users/coderanger)
-    * [JJ Asghar](https://discourse.chef.io/users/jjasghar)
-    * [Mike Fiedler](https://discourse.chef.io/users/mike)
-    * [Nell Shamrell-Harrington](https://discourse.chef.io/users/nell_shamrell)
-    * [Robb Kidd](https://discourse.chef.io/users/robbkidd)
-  * GitHub -
-  * Stackoverflow -
-  * Serverfault - [Mike Fiedler](http://serverfault.com/users/7309/mike-fiedler),  [GitHub:  miketheman](https://github.com/miketheman)
-  * LinkedIn Chef Users' Group -
-  * [chef_opscode reddit](https://www.reddit.com/r/chef_opscode/)
+The Chef Community advocates are well informed on how to deal with incidents. Report the incident (preferably in writing) to one of the [community advocates](ADVOCATES.md).  See the "Roles" section above for a description of each role.
 
 #### Guidelines for handling conflict
 
