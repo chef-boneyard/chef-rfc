@@ -34,9 +34,9 @@ namespace :advocates do
     out << "# " + advocates["Preamble"]["title"] + "\n\n"
     out <<  advocates["Preamble"]["text"] + "\n"
     out << "# " + advocates["Org"]["Lead"]["title"] + "\n\n"
-    out << person(advocates["people"], advocates["Org"]["Lead"]["person"]) + "\n\n"
+    out << person_data(advocates["people"].fetch(advocates["Org"]["Lead"]["person"])) + "\n\n"
     out << "## " + advocates["Org"]["Ombudsperson"]["title"] + "\n\n"
-    out << person(advocates["people"], advocates["Org"]["Ombudsperson"]["person"]) + "\n\n"
+    out << person_data(advocates["people"].fetch(advocates["Org"]["Ombudsperson"]["person"])) + "\n\n"
     out << "## Advocates\n\n"
     out << components(advocates["people"], advocates["Org"]["Advocates"])
     File.open(TARGET, "w") { |fn|
@@ -57,22 +57,22 @@ end
 def advocates(list, people)
   o = ""
   people.each do |p|
-    o << person(list, p) + "\n"
+    o << person_data(list.fetch(p)) + "\n"
   end
   o
 end
 
-def person(list, person)
-  if list[person].has_key?("GitHub")
-    out = "* [#{list[person]["Name"]}](https://github.com/#{list[person]["GitHub"]})"
+def person_data(person)
+  if person.has_key?("GitHub")
+    out = "* [#{person["Name"]}](https://github.com/#{person["GitHub"]})"
   else
-    out =  "* #{list[person]["Name"]}"
+    out =  "* #{person["Name"]}"
   end
-  out << "\n  * IRC - #{list[person]["IRC"]}" if list[person].has_key?("IRC")
-  out << "\n  * [@#{list[person]["Twitter"]}](https://twitter.com/#{list[person]["Twitter"]})" if list[person].has_key?("Twitter")
-  out << "\n  * [#{list[person]["email"]}](mailto:#{list[person]["email"]})" if list[person].has_key?("email")
-  out << "\n  * #{list[person]["phone"]}" if list[person].has_key?("phone")
-  out << "\n  * [ServerFault](#{list[person]["ServerFault"]})" if list[person].has_key?("ServerFault")
-  out << "\n  * [StackOverflow](#{list[person]["StackOverflow"]})" if list[person].has_key?("StackOverflow")
+  out << "\n  * Slack - #{person["Slack"]}" if person.has_key?("Slack")
+  out << "\n  * [@#{person["Twitter"]}](https://twitter.com/#{person["Twitter"]})" if person.has_key?("Twitter")
+  out << "\n  * [#{person["email"]}](mailto:#{person["email"]})" if person.has_key?("email")
+  out << "\n  * #{person["phone"]}" if person.has_key?("phone")
+  out << "\n  * [ServerFault](#{person["ServerFault"]})" if person.has_key?("ServerFault")
+  out << "\n  * [StackOverflow](#{person["StackOverflow"]})" if person.has_key?("StackOverflow")
   out
 end

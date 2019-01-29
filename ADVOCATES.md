@@ -14,31 +14,38 @@ More information can be found in the [Chef Community Guidelines](https://github.
 # Decider
 
 * [Adam Jacob](https://github.com/adamhjk)
-  * IRC - holoway
 
 ## Ombudsperson
 
-* [Nathen Harvey](https://github.com/nathenharvey)
-  * IRC - nathenharvey
-  * [@nathenharvey](https://twitter.com/nathenharvey)
-  * [nharvey@chef.io](mailto:nharvey@chef.io)
+* Mandi Walls
+  * Slack - lnxchk
+  * [mandi@chef.io](mailto:mandi@chef.io)
+  * +1 703-582-7396
 
 ## Advocates
 
 
-#### \#chef IRC
-* [Jon Cowie](https://github.com/jonlives)
-  * IRC - jonlives
-* [Zac Stevens](https://github.com/zts)
-  * IRC - zts
-
-#### \#chef-hacking IRC
-* [Jon Cowie](https://github.com/jonlives)
-  * IRC - jonlives
-* [Zac Stevens](https://github.com/zts)
-  * IRC - zts
-
-#### Server Fault
+#### Chef Community Slack
+* [Tim Smith](https://github.com/tas50)
+  * Slack - tas50
+  * [tsmith@chef.io](mailto:tsmith@chef.io)
+* [Seth Thomas](https://github.com/cheeseplus)
+  * Slack - cheeseplus
+  * [@cheeseplus](https://twitter.com/cheeseplus)
+  * [cheeseplus@chef.io](mailto:cheeseplus@chef.io)
+* [Jerry Aldrich](https://github.com/jerryaldrichiii)
+  * Slack - jerry
+  * [jerry@chef.io](mailto:jerry@chef.io)
+* [Stuart Preston](https://github.com/stuartpreston)
+  * Slack - stuart
+  * [spreston@chef.io](mailto:spreston@chef.io)
+* [Joshua Timberman](https://github.com/jtimberman)
+  * Slack - jtimberman
+  * [jtimberman@chef.io](mailto:jtimberman@chef.io)
+* [Robb Kidd](https://github.com/robbkidd)
+  * Slack - robbkidd
+  * [@robbkidd](https://twitter.com/robbkidd)
+  * [rkidd@chef.io](mailto:rkidd@chef.io)
 
 #### Chef Mailing List
 * [Noah Kantrowitz](https://github.com/coderanger)
@@ -48,15 +55,18 @@ More information can be found in the [Chef Community Guidelines](https://github.
   * [@jjasghar](https://twitter.com/jjasghar)
   * [jjasghar@chef.io](mailto:jjasghar@chef.io)
 * [Nell Shamrell](https://github.com/nshamrell)
+  * Slack - nshamrell
   * [@nshamrell](https://twitter.com/nshamrell)
   * [nshamrell@chef.io](mailto:nshamrell@chef.io)
 * [Robb Kidd](https://github.com/robbkidd)
+  * Slack - robbkidd
   * [@robbkidd](https://twitter.com/robbkidd)
   * [rkidd@chef.io](mailto:rkidd@chef.io)
 * [Adam Leff](https://github.com/adamleff)
   * [@adamleff](https://twitter.com/adamleff)
   * [adam@leff.io](mailto:adam@leff.io)
 * [Seth Thomas](https://github.com/cheeseplus)
+  * Slack - cheeseplus
   * [@cheeseplus](https://twitter.com/cheeseplus)
   * [cheeseplus@chef.io](mailto:cheeseplus@chef.io)
 * [Ian Henry](https://github.com/eeyun)
@@ -71,7 +81,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [Bryan McLellan](https://github.com/btm)
   * [btm@chef.io](mailto:btm@chef.io)
 * [Nathen Harvey](https://github.com/nathenharvey)
-  * IRC - nathenharvey
   * [@nathenharvey](https://twitter.com/nathenharvey)
   * [nharvey@chef.io](mailto:nharvey@chef.io)
 * [Thom May](https://github.com/thommay)
@@ -80,11 +89,15 @@ More information can be found in the [Chef Community Guidelines](https://github.
   * [tom@chef.io](mailto:tom@chef.io)
 
 #### GitHub
+* [Tim Smith](https://github.com/tas50)
+  * Slack - tas50
+  * [tsmith@chef.io](mailto:tsmith@chef.io)
+
+#### Server Fault
 * Vacant - Submit a PR to become a Chef Community Advocate
 
 #### Stack Overflow
 * [Martin Smith](https://github.com/martinb3)
-  * IRC - martinb3
   * [@martinb3](https://twitter.com/martinb3)
   * [martin@mbs3.org](mailto:martin@mbs3.org)
   * [StackOverflow](http://stackoverflow.com/users/70665/martin)
