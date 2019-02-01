@@ -21,25 +21,19 @@ More information can be found in the [Chef Community Guidelines](https://github.
 
   [Org.Ombudsperson]
     title = "Ombudsperson"
-    person = "nathenharvey"
+    person = "lnxchk"
 
 
   [Org.Advocates]
-    [Org.Advocates.ChefIRC]
-      title = "#chef IRC"
+    [Org.Advocates.Slack]
+      title = "Chef Community Slack"
       advocates = [
-        "jonlives",
-        "zts"
-      ]
-    [Org.Advocates.ChefHackingIRC]
-      title = "#chef-hacking IRC"
-      advocates = [
-        "jonlives",
-        "zts"
-      ]
-    [Org.Advocates.Serverfault]
-      title = "Server Fault"
-      advocates = [
+        "tas50",
+        "cheeseplus",
+        "jerry",
+        "stuart",
+        "jtimberman",
+        "robbkidd"
       ]
     [Org.Advocates.ChefMailingList]
       title = "Chef Mailing List"
@@ -61,6 +55,11 @@ More information can be found in the [Chef Community Guidelines](https://github.
       ]
     [Org.Advocates.GitHub]
       title = "GitHub"
+      advocates = [
+        "tas50"
+      ]
+    [Org.Advocates.Serverfault]
+      title = "Server Fault"
       advocates = [
         "vacant"
       ]
@@ -86,6 +85,12 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Adam Jacob"
     GitHub = "adamhjk"
     IRC = "holoway"
+
+  [people.lnxchk]
+    Name = "Mandi Walls"
+    Slack = "lnxchk"
+    email = "mandi@chef.io"
+    phone = "+1 703-582-7396"
 
   [people.nathenharvey]
     Name = "Nathen Harvey"
@@ -128,6 +133,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Nell Shamrell"
     GitHub = "nshamrell"
     Twitter = "nshamrell"
+    Slack = "nshamrell"
     email = "nshamrell@chef.io"
 
   [people.coderanger]
@@ -140,6 +146,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Robb Kidd"
     GitHub = "robbkidd"
     Twitter = "robbkidd"
+    Slack = "robbkidd"
     email = "rkidd@chef.io"
 
   [people.cwebberops]
@@ -158,6 +165,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Seth Thomas"
     GitHub = "cheeseplus"
     Twitter = "cheeseplus"
+    Slack = "cheeseplus"
     email = "cheeseplus@chef.io"
 
   [people.eeyun]
@@ -195,6 +203,30 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Bryan McLellan"
     GitHub = "btm"
     email = "btm@chef.io"
+
+  [people.tas50]
+    Name = "Tim Smith"
+    GitHub = "tas50"
+    Slack = "tas50"
+    email = "tsmith@chef.io"
+
+  [people.jerry]
+    Name = "Jerry Aldrich"
+    GitHub = "jerryaldrichiii"
+    Slack = "jerry"
+    email = "jerry@chef.io"
+
+  [people.stuart]
+    Name = "Stuart Preston"
+    GitHub = "stuartpreston"
+    Slack = "stuart"
+    email = "spreston@chef.io"
+
+  [people.jtimberman]
+    Name = "Joshua Timberman"
+    GitHub = "jtimberman"
+    Slack = "jtimberman"
+    email = "jtimberman@chef.io"
 
   [people.vacant]
     Name = "Vacant - Submit a PR to become a Chef Community Advocate"
