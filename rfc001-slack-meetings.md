@@ -20,25 +20,24 @@ repository on GitHub.
 
 ### Time
 
-Every Thursday, at 9am Pacific. 50 minutes.  Each meeting's agenda will include the date and time and be announced in advance on the chef-dev mailing list.
+Every Thursday, at 9am Pacific. 50 minutes.  Each meeting's agenda will include the date and time and be announced in advance on the #community-meetings channel.
 
 ### Location
 
-The #developer-meetings channel of [chef-community.slack.com](http://chef-community.slack.com) - sign-up at [http://community-slack.chef.io](http://community-slack.chef.io)
+The #community-meetings channel of [chef-community.slack.com](http://chef-community.slack.com) - sign-up at [http://community-slack.chef.io](http://community-slack.chef.io)
 
 ### Roles
 
-* Moderator: [Adam Jacob](mailto:adam@chef.io)
-* Secretary: [Nathen Harvey](mailto:nathen@chef.io)
+* Moderator: [Tim Smith](mailto:tsmith@chef.io)
+* Speakers: Anyone who wants to speak
 
 ### Standing Agenda
 
-* Agenda Review, speaker Nathen Harvey (nathenharvey): 2 minutes
+* Agenda Review, speaker Tim Smith (tas50): 2 minutes
 * Updates: 15 minutes max.
-  * Community update, speaker Nathen Harvey (nathenharvey): 5 minutes
-  * Chef company update, speaker Adam Jacob (holoway): 5 minutes
+  * Community update, speaker Tim Smith (tas50): 5 minutes
   * Software update, speaker - various people: 5 minutes
-* Review action items from last meeting (nathenharvey): 5 minutes
+* Review action items from last meeting, speaker Tim Smith (tas50): 5 minutes
 * Review PRs:  35 minutes
   * Review new PRs and/or PRs deferred during last meeting
   * Review PRs previously discussed
@@ -50,10 +49,9 @@ The #developer-meetings channel of [chef-community.slack.com](http://chef-commun
 Each meeting must have the following roles assigned:
 
 1. Moderator: this person decides who has the floor, and is in charge of moving the agenda along.
-2. Secretary: this person is responsible for condensing the content of the meeting into meeting notes, and sharing them with the chef-dev list within 24 hours of the meetings conclusion.
 2. Speakers: the agenda may have multiple speakers assigned to a topic.
 
-If the standing Moderator or Secretary is unavailable to attend, they will delegate their role to another
+If the standing Moderator is unavailable to attend, they will delegate their role to another
 community member.
 
 ## Agendas
@@ -65,14 +63,13 @@ unless otherwise stated in advance.
 
 ### Timing
 
-Meetings should be run to a schedule. Agendas should have draft time slots,
-and the boundaries should be held.
+Meetings should be run to a schedule. Agendas should have draft time slots, and the boundaries 
+should be held.
 
 ### Agendas are shared prior to the meeting
 
-Agendas will be sent out 24 hours prior to the meeting, via email to the chef-dev
-mailing list. If no agenda is sent out in advance, the standing agenda is the
-meetings agenda.
+Agendas will be sent out 24 hours prior to the meeting, via Slack in the #community-meetings
+channel. If no agenda is sent out in advance, the standing agenda is the meeting's agenda.
 
 ## Running a meeting
 
