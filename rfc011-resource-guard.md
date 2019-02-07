@@ -24,8 +24,8 @@ Client.
 Specifically, the document specifies the behavior and records the reasoning for the
 `guard_interpreter` and `convert_boolean_return` attributes of Chef resources
 as implemented in
-[Chef 11.12.0](http://www.getchef.com/blog/2014/04/08/release-chef-client-11-12-0-10-32-2/)
-and later versions of the Chef Client. See  <https://docs.opscode.com> for
+[Chef 11.12.0](http://www.chef.io/blog/2014/04/08/release-chef-client-11-12-0-10-32-2/)
+and later versions of the Chef Client. See  <https://docs.chef.io> for
 authoritative, updated documentation on these features.
 
 ## Motivation
@@ -67,7 +67,7 @@ the following use cases:
 
 ## Definitions
 This document assumes familiarity with the Chef resource DSL, which is
-documented at <http://docs.opscode.com/chef/resources.html>.
+documented at <http://docs.chef.io/chef/resources.html>.
 
 These definitions are used throughout the discussion:
 
@@ -242,7 +242,7 @@ end
 ## Guard interpreter formal specification
 
 The documented behavior for guards can be found at
-<http://docs.opscode.com/resource_common.html>. Guards are expressed via the optional
+<http://docs.chef.io/resource_common.html>. Guards are expressed via the optional
 `not_if` and `only_if` attributes -- the expression following the attribute
 may be either a block or a string.
 
@@ -617,8 +617,8 @@ Chef Client.
 
 ## References and further reading
 
-* Chef documentation: <http://docs.opscode.com>
-* Chef resource documentation: <http://docs.opscode.com/resource.html>
-* Chef guard documentation: <http://docs.opscode.com/resource_common.html>.
-* Chef guard_interpreter documentation: <http://docs.opscode.com/resource_common.html>.
-* Chef Client open source project: <https://github.com/chef/chef>. 
+* Chef documentation: <http://docs.chef.io>
+* Chef resource documentation: <http://docs.chef.io/resource.html>
+* Chef guard documentation: <http://docs.chef.io/resource_common.html>.
+* Chef guard_interpreter documentation: <http://docs.chef.io/resource_common.html>.
+* Chef Client open source project: <https://github.com/chef/chef>.

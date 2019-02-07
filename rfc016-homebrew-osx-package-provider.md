@@ -9,7 +9,7 @@ Title: Make Homebrew OS X's Default Package Provider
 
 # Make Homebrew OS X's Default Package Provider
 
-[Homebrew](http://brew.sh) is a very popular source-compile based package manager for OS X. A [cookbook](https://supermarket.getchef.com/cookbooks/homebrew) providing a homebrew as the OS X default provider for Chef's package resource has existed for years. Currently in Chef, the default package provider on `mac_os_x` platforms is [Macports](http://www.macports.org/). Since the cookbook makes homebrew the default in a `libraries` file, it is automatically loaded and present on any node that has the homebrew cookbook downloaded as a dependency, even if they're not using it. Many users may not even be aware that macports is the Chef default.
+[Homebrew](http://brew.sh) is a very popular source-compile based package manager for OS X. A [cookbook](https://supermarket.chef.io/cookbooks/homebrew) providing a homebrew as the OS X default provider for Chef's package resource has existed for years. Currently in Chef, the default package provider on `mac_os_x` platforms is [Macports](http://www.macports.org/). Since the cookbook makes homebrew the default in a `libraries` file, it is automatically loaded and present on any node that has the homebrew cookbook downloaded as a dependency, even if they're not using it. Many users may not even be aware that macports is the Chef default.
 
 ## Specification
 
@@ -43,9 +43,9 @@ This RFC proposes to change this to:
 }
 ```
 
-It would largely leverage the code in the homebrew cookbook's `homebrew_package.rb` [libraries](https://github.com/opscode-cookbooks/homebrew/blob/master/libraries/homebrew_package.rb). We would probably need to clean some things up and modernize it to better fit with the rest of the Chef core package providers, and we would definitely need to have tests added.
+It would largely leverage the code in the homebrew cookbook's `homebrew_package.rb` [libraries](https://github.com/chef-cookbooks/homebrew/blob/master/libraries/homebrew_package.rb). We would probably need to clean some things up and modernize it to better fit with the rest of the Chef core package providers, and we would definitely need to have tests added.
 
-Macports would still remain in Chef as an alternative for those who use it, and it could be set as default similar to what the homebrew cookbook does now, in its [own cookbook](https://supermarket/getchef.com/cookbooks/macports).
+Macports would still remain in Chef as an alternative for those who use it, and it could be set as default similar to what the homebrew cookbook does now, in its [own cookbook](https://supermarket/chef.io/cookbooks/macports).
 
 ## Motivation
 
@@ -65,8 +65,8 @@ The `homebrew` cookbook maintained by CHEF is the reference implementation. It l
 
 ## Copyright
 
-The code to implement this feature will come directly from CHEF's homebrew cookbook. It was originally written by Graeme Mathieson, and was licensed under the [Apache 2.0 Software License](https://github.com/opscode-cookbooks/homebrew/blob/49936df5fd8cc6610262621b3c41c1e3bcbb9c62/metadata.rb#L3). The current copyrights listed in the cookbook are:
+The code to implement this feature will come directly from CHEF's homebrew cookbook. It was originally written by Graeme Mathieson, and was licensed under the [Apache 2.0 Software License](https://github.com/chef-cookbooks/homebrew/blob/49936df5fd8cc6610262621b3c41c1e3bcbb9c62/metadata.rb#L3). The current copyrights listed in the cookbook are:
 
 - Copyright 2011, Graeme Mathieson <mathie@woss.name>
 - Copyright 2011-2013, Opscode, Inc. <legal@opscode.com>
-- Copyright 2014, Chef Software, Inc <legal@getchef.com>
+- Copyright 2014, Chef Software, Inc <legal@chef.io>

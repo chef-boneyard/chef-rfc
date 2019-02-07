@@ -1,7 +1,7 @@
 ---
 RFC: 22
 Title: Arbitrary Cookbook Identifiers
-Author: Daniel DeLeo <ddeleo@getchef.com>
+Author: Daniel DeLeo <ddeleo@chef.io>
 Status: Accepted
 Type: Standards Track
 Chef-Version: 12
@@ -74,7 +74,7 @@ look like:
     "identifier": "886757f9ae3cf2520c82b791195c27ecafd93656",
     "version": "1.10.4",
     "url": "https://chef.example.org/organizations/:org/cookbook_artifacts/apache2/886757f9ae3cf2520c82b791195c27ecafd93656",
-    "origin_url": "https://supermarket.getchef.com/cookbooks/apache2/versions/1.10.4/download",
+    "origin_url": "https://supermarket.chef.io/cookbooks/apache2/versions/1.10.4/download",
     "origin_id": "1.10.4"
   }
 ```
