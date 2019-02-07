@@ -69,7 +69,7 @@ should be held.
 ### Agendas are shared prior to the meeting
 
 Agendas will be sent out 24 hours prior to the meeting, via Slack in the #community-meetings
-channel. If no agenda is sent out in advance, the standing agenda is the meetings agenda.
+channel. If no agenda is sent out in advance, the standing agenda is the meeting's agenda.
 
 ## Running a meeting
 
