@@ -2,7 +2,7 @@
 RFC: 48
 Title: Chef GitHub Issues Workflow
 Author: Serdar Sutay <serdar@chef.io>
-Author: Thom May <thom@chef.io>
+Author: Thom May <thom@may.lt>
 Status: Accepted
 Type: Process
 ---

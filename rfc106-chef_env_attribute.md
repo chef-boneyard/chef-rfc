@@ -1,7 +1,7 @@
 ---
 RFC: 106
 Title: Expose more settings as attributes
-Author: Thom May <thom@chef.io>
+Author: Thom May <thom@may.lt>
 Status: Final
 Type: Standards Track
 Tracking: https://github.com/chef/chef/pull/6967

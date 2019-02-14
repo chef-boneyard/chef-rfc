@@ -1,7 +1,7 @@
 ---
 RFC: 80
 Title: Developer Certificate of Origin (DCO) for Contributions
-Author: Nathen Harvey <nharvey@chef.io>
+Author: Nathen Harvey <nathenharvey@google.com>
 Status: Accepted
 Type: Process
 ---
@@ -40,7 +40,7 @@ The DCO is an attestation attached to every contribution made by every developer
 
     (b) The contribution is based upon previous work that, to the
         best of my knowledge, is covered under an appropriate open
-        source license and I have the right under that license to   
+        source license and I have the right under that license to
         submit that work with modifications, whether created in whole
         or in part by me, under the same open source license (unless
         I am permitted to submit under a different license), as

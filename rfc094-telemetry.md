@@ -1,7 +1,7 @@
 ---
 RFC: 94
 Title: Anonymous user behaviour data collection
-Author: Thom May <thom@chef.io>, Charles Johnson <charles@chef.io>
+Author: Thom May <thom@may.lt>, Charles Johnson <charles@chef.io>
 Status: Accepted
 Type: Informational
 ---

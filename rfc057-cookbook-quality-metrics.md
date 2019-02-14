@@ -1,7 +1,7 @@
 ---
 RFC: 57
 Title: Cookbook Quality Metrics
-Author: Nathen Harvey <nharvey@chef.io>
+Author: Nathen Harvey <nathenharvey@google.com>
 Status: Accepted
 Type: Informational
 ---
