@@ -17,7 +17,7 @@ First some data for information purposes:
 
 * Currently Chef Client has two major versions that are supported. The latest versions that are soon to be released are 10.34.0 & 11.14.0. Chef 10 has been around since Jun 18 2012 and Chef 11 has been around since Feb 1 2013.
 * All supported versions of Chef Client supports Ruby versions `1.8.7` (End of Lifed on June  2013), `1.9.3-p484` (will End of Life on Feb 23 2015) & `2.1.2`.
-* Based on the release cadence we've established around the time of [11.6.0](http://www.getchef.com/blog/2013/07/23/chef-client-11-6-0-ohai-6-18-0-and-more/) release, Chef Client ships with a minor version bump approximately every 3 months and with a major version bump approximately every year.
+* Based on the release cadence we've established around the time of [11.6.0](http://www.chef.io/blog/2013/07/23/chef-client-11-6-0-ohai-6-18-0-and-more/) release, Chef Client ships with a minor version bump approximately every 3 months and with a major version bump approximately every year.
 
 ## Chef Support Statement
 

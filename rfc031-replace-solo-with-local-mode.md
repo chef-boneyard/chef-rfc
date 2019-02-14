@@ -1,7 +1,7 @@
 ---
 RFC: 31
 Title: Replace chef-solo with chef-client local mode
-Author: Joshua Timberman <joshua@getchef.com>
+Author: Joshua Timberman <joshua@chef.io>
 Status: Accepted
 Type: Standards Track
 ---

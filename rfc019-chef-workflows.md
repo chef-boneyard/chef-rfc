@@ -1,7 +1,7 @@
 ---
 RFC: 19
 Title: The Great Workflow RFC
-Author: Adam Jacob <adam@getchef.com>
+Author: Adam Jacob <adam@chef.io>
 Status: Accepted
 Type: Standards Track
 Chef-Version: 12
@@ -34,7 +34,7 @@ The workflows in this document are "supported" for three reasons:
 
 If you think you have another workflow, that's amazing! The currently supported workflows came about from experimentation just like yours. If it becomes mature enough to have broad ecosystem support, propose a change to this RFC.
 
-All workflows and commands documented in this RFC assume you are using the [Chef Development Kit](http://downloads.getchef.com/chef-dk/).
+All workflows and commands documented in this RFC assume you are using the [Chef Development Kit](http://downloads.chef.io/chef-dk/).
 
 ## Chef DK & Knife
 
@@ -56,9 +56,9 @@ Rather than detail every step here, lets call out a couple of important principl
 
 1. There are no shortcuts to building complex infrastructure - by extension, there are no shortcuts to building complex infrastructure with Chef. You have to learn things, piece by piece. Zooming someone to the end doesn't help - it actually hurts.
 1. The concept of [Progressive Disclosure](http://en.wikipedia.org/wiki/Progressive_disclosure) should always be kept in mind. Make more information available easily, but don't overwhelm users with every feature and possibility.
-1. The [Learn Chef](http://learn.getchef.com) site is the place for collaborating on early
+1. The [Learn Chef](http://learn.chef.io) site is the place for collaborating on early
 stage tutorial content. If a user needs to learn the basics, send them here.
-1. The [Fundamentals Webinar](http://learn.getchef.com/additional-resources/) is a series of video tutorials and attendant slide decks that can augment the Learn Chef content.
+1. The [Fundamentals Webinar](http://learn.chef.io/additional-resources/) is a series of video tutorials and attendant slide decks that can augment the Learn Chef content.
 
 Regardless of the workflow you eventually settle in to, these rules and basics apply across the board.
 
@@ -123,7 +123,7 @@ $ git commit -a -m "Super dope policy"
 
 ### How to manage external dependencies
 
-In this workflow, all external dependencies are tracked within the same source code repository as your custom-built source code. To install, for example, a 3rd party cookbook called "apache2" from the [supermarket](http://supermarket.getchef.com):
+In this workflow, all external dependencies are tracked within the same source code repository as your custom-built source code. To install, for example, a 3rd party cookbook called "apache2" from the [supermarket](http://supermarket.chef.io):
 
 ```
 $ chef vendor dependencies

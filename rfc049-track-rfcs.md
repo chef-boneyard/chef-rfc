@@ -33,7 +33,7 @@ For example, metadata might look like this:
 ```yaml
 ---
 RFC: XXX
-Author: Daniel DeLeo <dan@getchef.com>
+Author: Daniel DeLeo <dan@chef.io>
 Status: Final
 Type: Standards Track
 Chef-Version: 12.0

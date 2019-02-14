@@ -1,7 +1,7 @@
 ---
 RFC: 18
 Title: Attribute Subkey Syntax
-Author: Steven Danna <steve@getchef.com>
+Author: Steven Danna <steve@chef.io>
 Status: Accepted
 Type: Standards Track
 Chef-Version: 12

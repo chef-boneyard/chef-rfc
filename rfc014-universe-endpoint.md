@@ -1,7 +1,7 @@
 ---
 RFC: 14
 Title: Universe Endpoint for Chef Server
-Author: Daniel DeLeo <dan@getchef.com>
+Author: Daniel DeLeo <dan@chef.io>
 Status: Final
 Type: Standards Track
 Tracking:
