@@ -38,7 +38,7 @@ current editors are:
   * Noah Kantrowitz \<noah@coderanger.net\>
   * Jon Cowie \<jcowie@chef.io\>
   * Bryan McLellan \<btm@loftninjas.org\>
-  * Adam Leff \<adam@leff.co\>
+  * Tim Smith \<tsmith@chef.io\>
   * Thom May \<tmay@chef.io\>
 * The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
@@ -46,10 +46,10 @@ also implement the feature or process once accepted.
 
 ## Submitting an RFC
 
-RFCs are managed in the [chef-rfc GitHub repository](#). When creating a new
-RFC, add it to the `new/` folder. A template is provided [below](#). Submit a
-pull-request with your new RFC. The Editors will review your submission to
-ensure it is formatted correctly.
+RFCs are managed in the [chef-rfc GitHub repository](https://github.com/chef/chef-rfc).
+When creating a new RFC, add it to the `new/` folder. A template is provided
+[below](#). Submit a pull-request with your new RFC. The Editors will review your
+submission to ensure it is formatted correctly.
 
 The community will discuss the proposed changes on the pull-request and during
 regular community meetings (see RFC001). When the Decider feels consensus has
@@ -109,18 +109,18 @@ the original one should be marked as Replaced.
 ```
   +-------+        +----------+       +-------+
   |       |        |          |       |       |
-  | Draft +--------> Accepted +---+---> Final |
-  |       |        |          |   |   |       |
-  +---+---+        +----+-----+   |   +---+---+
-      |                 |         |       |
-      |                 |         +-------+
-      |                 |                 |
-      |                 |                 |
-+-----v-----+      +----v-----+    +------v---+
-|           |      |          |    |          |
-| Withdrawn |      | On Hold  |    | Replaced |
-|           |      |          |    |          |
-+-----------+      +----------+    +----------+
+  | Draft +--------> Accepted +---+---> Final |--
+  |       |        |          |   |   |       |  |
+  +---+---+        +----+-----+   |   +---+---+  |
+      |                 |         |       |      |
+      |                 |         +-------+      |
+      |                 |                 _______|_______
+      |                 |                |               |
++-----v-----+      +----v-----+    +-----v----+    +-----v----+
+|           |      |          |    |          |    |          |
+| Withdrawn |      | On Hold  |    | Replaced |    | Removed  |
+|           |      |          |    |          |    |          |
++-----------+      +----------+    +----------+    +----------+
 ```
 
 ### RFC Status Reference
@@ -131,6 +131,7 @@ the original one should be marked as Replaced.
 * **Withdrawn** – The RFC has been voluntarily withdrawn from consideration.
 * **Final** – The RFC has been implemented. *(Standards Track type only)*
 * **Replaced** – The RFC has been superseded by another RFC.
+* **Removed** – The RFC has been removed after being accepted, but has no replacement.
 
 ### Changing an Accepted RFC
 
