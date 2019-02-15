@@ -60,9 +60,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
   * Slack - robbkidd
   * [@robbkidd](https://twitter.com/robbkidd)
   * [rkidd@chef.io](mailto:rkidd@chef.io)
-* [Adam Leff](https://github.com/adamleff)
-  * [@adamleff](https://twitter.com/adamleff)
-  * [adam@leff.io](mailto:adam@leff.io)
 * [Seth Thomas](https://github.com/cheeseplus)
   * Slack - cheeseplus
   * [@cheeseplus](https://twitter.com/cheeseplus)
@@ -82,8 +79,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
   * Slack - nathenharvey
   * [@nathenharvey](https://twitter.com/nathenharvey)
   * [nharvey@chef.io](mailto:nharvey@chef.io)
-* [Thom May](https://github.com/thommay)
-  * [thom@may.lt](mailto:thom@may.lt)
 * [Tom Duffield](https://github.com/tduffield)
   * [tom@chef.io](mailto:tom@chef.io)
 
