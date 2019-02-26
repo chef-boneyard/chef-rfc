@@ -10,13 +10,13 @@ Type: Standards Track
 
 # Policyfile Remote Includes
 
-This RFC specifies how an `include_policy` will use a `remote` source. [RFC097 Policyfile Includes](https://github.com/chef/chef-rfc/blob/master/rfc097-policyfile-includes.md) specifies that policyfiles may use `include_policy` to include other policies through `path`, `git`, and `server` sources. The `path` mechanism is specifically for local filesystems, but users may want to retrieve a policy from a remote filesystem via HTTP or HTTPS (ie. Artifactory).
+This RFC specifies how an `include_policy` will use a `remote` source. [RFC097 "Policyfile Includes"](https://github.com/chef/chef-rfc/blob/master/rfc097-policyfile-includes.md) specifies that policyfiles may use `include_policy` to include other policies through `path`, `git`, and `server` sources. The `path` mechanism is specifically for local filesystems, but users may want to retrieve a policy from a remote filesystem via HTTP or HTTPS (ie. Artifactory).
 
 ## Motivation
 
-    As a maintainer of a CI/CD pipeline for building policies through a,
+    As a maintainer of policies built through inclusion of different layers,
     I want to include policies that I may not have source control access to
-    so that I can test and build policies.
+    so that I can test and build policies without manually downloading remote files.
 
 In an organization with different teams responsible for layers of the infrastructure, using `include_policy` is a consistent approach to separating concerns within the Chef-managed stack. The existing `path`, `git`, and `server` sources cover most use cases, but including a policy from a remote server is not currently available.
 
@@ -46,6 +46,10 @@ The URI provided by the `remote:` source will be downloaded as a lock file for i
 ## Problems
 
 If the remote included policy references cookbooks from the `path` source option they will not be found. All other behavior should be unchanged.
+
+## Code
+
+Within the [Chef DK](https://github.com/chef/chef-dk) repository, the [policyfile_location_specification.rb](https://github.com/chef/chef-dk/blob/master/lib/chef-dk/policyfile/policyfile_location_specification.rb) will need to be updated and a new RemoteLockFetcher will need to be implemented, similar to the existing [local_lock_fetcher.rb](https://github.com/chef/chef-dk/blob/master/lib/chef-dk/policyfile/local_lock_fetcher.rb)
 
 ## Downstream Impact
 
