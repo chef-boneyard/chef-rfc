@@ -90,7 +90,7 @@ To use a locked policy from a remote URI:
 include_policy "policy_name", remote: "https://internal.example.com/foo/bar"
 ```
 
-To use a locked policy from a local path with a specific revision id:
+To use a locked policy from a remote URI with a specific revision id:
 ```
 include_policy "policy_name", policy_revision_id: "abcdabcdabcd", remote: "https://internal.example.com/foo/bar"
 ```
