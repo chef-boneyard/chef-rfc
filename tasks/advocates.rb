@@ -1,7 +1,7 @@
 #
-# Author:: Thom May (tmay@chef.io)
-# Author:: Nathen Harvey (nharvey@chef.io)
-# Copyright:: Copyright (c) 2015, Chef Software, Inc
+# Author:: Thom May (thom@may.lt)
+# Author:: Nathen Harvey (nathenharvey@google.com)
+# Copyright:: Copyright (c) 2015-2019, Chef Software, Inc
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

@@ -1,7 +1,7 @@
 ---
 RFC: 20
 Title: Chef Community Guidelines
-Author: Nathen Harvey <nharvey@chef.io>
+Author: Nathen Harvey <nathenharvey@google.com>
 Status: Accepted
 Type: Informational
 ---

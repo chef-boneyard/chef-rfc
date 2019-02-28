@@ -1,7 +1,7 @@
 ---
 RFC: 108
 Title: Resource Metadata
-Author: Thom May <thom@chef.io>
+Author: Thom May <thom@may.lt>
 Status: Accepted
 Type: Standards Track
 ---

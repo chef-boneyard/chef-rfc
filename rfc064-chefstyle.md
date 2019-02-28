@@ -1,7 +1,7 @@
 ---
 RFC: 64
 Title: Chef code should have a consistent style
-Author: Thom May <thom@chef.io>
+Author: Thom May <thom@may.lt>
 Status: Final
 Type: Standards Track
 Tracking:

@@ -1,7 +1,7 @@
 ---
 RFC: 94
 Title: Anonymous user behaviour data collection
-Author: Thom May <thom@chef.io>, Charles Johnson <charles@chef.io>
+Author: Thom May <thom@may.lt>, Charles Johnson <fahrv242@gmail.com>
 Status: Accepted
 Type: Informational
 ---
@@ -112,7 +112,7 @@ understand all the steps of an interaction. The library will ensure that
 a session ID times out after 10 minutes of inactivity, whilst providing
 the same ID to all clients used during the same time period.
 
-Events are sent using HTTP POST requests to Chef's telemetry end point. 
+Events are sent using HTTP POST requests to Chef's telemetry end point.
 
 ### Privacy and Data Retention
 
@@ -147,11 +147,11 @@ Policy and our responsibilities under the GDPR and similar legislation.
 ### Prior Art
 
 Many open source projects collect data from their users to help allocate
-resources. 
+resources.
 * Both [Ubuntu](https://wiki.ubuntu.com/Apport) and
 [Fedora](https://retrace.fedoraproject.org/) collect crash dumps from their
 users, along with system information, to help developers better debug and
-improve their systems. 
+improve their systems.
 * The Debian project runs [PopCon](https://popcon.debian.org/) to better
 understand what packages are installed and which architectures are in
 use.
@@ -183,13 +183,13 @@ Some data we envisage collecting includes, but is not limited to:
   "type": "track",
   "product": "chefdk",
   "timestamp": "2017-02-06T17:25:42   Z",
-  "payload":{  
+  "payload":{
      "event":"user-command",
-     "properties":{  
+     "properties":{
         "command": "chef generate cookbook",
         "timestamp": "2017-02-06T17:25:42   Z"
      }
-  } 
+  }
 }
 ```
 

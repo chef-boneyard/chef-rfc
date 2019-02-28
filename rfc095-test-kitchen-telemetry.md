@@ -1,7 +1,7 @@
 ---
 RFC: 95
 Title: Use of telemetry in Test Kitchen
-Author: Thom May <thom@chef.io>
+Author: Thom May <thom@may.lt>
 Status: Accepted
 Type: Standards Track
 ---

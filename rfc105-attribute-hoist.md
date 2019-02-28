@@ -1,7 +1,7 @@
 ---
 RFC: 105
 Title: Integrate hoisting of policy\_group attributes
-Author: Thom May <thom@chef.io>
+Author: Thom May <thom@may.lt>
 Status: Final
 Type: Standards Track
 ---

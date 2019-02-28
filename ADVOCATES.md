@@ -5,7 +5,7 @@
 
 This file lists the Community Advocates for the Chef project.  Community
 Advocates may be assigned for each area where the community convenes online
-(IRC, email list, GitHub, etc.).  Community Advocates are volunteers who have
+(Slack, email list, GitHub, etc.).  Community Advocates are volunteers who have
 the best interests of our community in mind.  They act in good faith to help
 enforce our community guidelines and respond to incidents when they occur.
 
@@ -14,6 +14,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
 # Decider
 
 * [Adam Jacob](https://github.com/adamhjk)
+  * Slack - holoway
 
 ## Ombudsperson
 
@@ -32,7 +33,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [Seth Thomas](https://github.com/cheeseplus)
   * Slack - cheeseplus
   * [@cheeseplus](https://twitter.com/cheeseplus)
-  * [cheeseplus@chef.io](mailto:cheeseplus@chef.io)
+  * [seth.g.thomas@gmail.com](mailto:seth.g.thomas@gmail.com)
 * [Jerry Aldrich](https://github.com/jerryaldrichiii)
   * Slack - jerry
   * [jerry@chef.io](mailto:jerry@chef.io)
@@ -51,9 +52,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [Noah Kantrowitz](https://github.com/coderanger)
   * [@kantrn](https://twitter.com/kantrn)
   * [noah@coderanger.net](mailto:noah@coderanger.net)
-* [JJ Asghar](https://github.com/jjasghar)
-  * [@jjasghar](https://twitter.com/jjasghar)
-  * [jjasghar@chef.io](mailto:jjasghar@chef.io)
 * [Nell Shamrell](https://github.com/nshamrell)
   * Slack - nshamrell
   * [@nshamrell](https://twitter.com/nshamrell)
@@ -62,13 +60,10 @@ More information can be found in the [Chef Community Guidelines](https://github.
   * Slack - robbkidd
   * [@robbkidd](https://twitter.com/robbkidd)
   * [rkidd@chef.io](mailto:rkidd@chef.io)
-* [Adam Leff](https://github.com/adamleff)
-  * [@adamleff](https://twitter.com/adamleff)
-  * [adam@leff.io](mailto:adam@leff.io)
 * [Seth Thomas](https://github.com/cheeseplus)
   * Slack - cheeseplus
   * [@cheeseplus](https://twitter.com/cheeseplus)
-  * [cheeseplus@chef.io](mailto:cheeseplus@chef.io)
+  * [seth.g.thomas@gmail.com](mailto:seth.g.thomas@gmail.com)
 * [Ian Henry](https://github.com/eeyun)
   * [@eeyun___](https://twitter.com/eeyun___)
   * [ian@habitat.sh](mailto:ian@habitat.sh)
@@ -81,10 +76,9 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * [Bryan McLellan](https://github.com/btm)
   * [btm@chef.io](mailto:btm@chef.io)
 * [Nathen Harvey](https://github.com/nathenharvey)
+  * Slack - nathenharvey
   * [@nathenharvey](https://twitter.com/nathenharvey)
   * [nharvey@chef.io](mailto:nharvey@chef.io)
-* [Thom May](https://github.com/thommay)
-  * [thom@may.lt](mailto:thom@may.lt)
 * [Tom Duffield](https://github.com/tduffield)
   * [tom@chef.io](mailto:tom@chef.io)
 
@@ -98,6 +92,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
 
 #### Stack Overflow
 * [Martin Smith](https://github.com/martinb3)
+  * Slack - martinb3
   * [@martinb3](https://twitter.com/martinb3)
   * [martin@mbs3.org](mailto:martin@mbs3.org)
   * [StackOverflow](http://stackoverflow.com/users/70665/martin)
@@ -106,6 +101,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
 * Vacant - Submit a PR to become a Chef Community Advocate
 
 #### Chef_Opscode Reddit ([https://www.reddit.com/r/chef_opscode/](https://www.reddit.com/r/chef_opscode/))
-* [JJ Asghar](https://github.com/jjasghar)
-  * [@jjasghar](https://twitter.com/jjasghar)
-  * [jjasghar@chef.io](mailto:jjasghar@chef.io)
+* [Tim Smith](https://github.com/tas50)
+  * Slack - tas50
+  * [tsmith@chef.io](mailto:tsmith@chef.io)

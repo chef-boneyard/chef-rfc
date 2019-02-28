@@ -39,7 +39,7 @@ current editors are:
   * Jon Cowie \<jcowie@chef.io\>
   * Bryan McLellan \<btm@loftninjas.org\>
   * Tim Smith \<tsmith@chef.io\>
-  * Thom May \<tmay@chef.io\>
+  * Thom May \<thom@may.lt\>
 * The **Author(s)** submit RFCs and shepherd them through the process with the
 assistance of the editors. Unless otherwise specified, the author(s) of an RFC
 also implement the feature or process once accepted.

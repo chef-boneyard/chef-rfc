@@ -1,6 +1,6 @@
 ---
 RFC: 16
-Author: Joshua Timberman <joshua@getchef.com>
+Author: Joshua Timberman <joshua@chef.io>
 Status: Accepted
 Type: Standards Track
 Chef-Version: 12

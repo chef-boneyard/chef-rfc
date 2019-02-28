@@ -7,7 +7,7 @@
   text = """
 This file lists the Community Advocates for the Chef project.  Community
 Advocates may be assigned for each area where the community convenes online
-(IRC, email list, GitHub, etc.).  Community Advocates are volunteers who have
+(Slack, email list, GitHub, etc.).  Community Advocates are volunteers who have
 the best interests of our community in mind.  They act in good faith to help
 enforce our community guidelines and respond to incidents when they occur.
 
@@ -22,7 +22,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
   [Org.Ombudsperson]
     title = "Ombudsperson"
     person = "lnxchk"
-
 
   [Org.Advocates]
     [Org.Advocates.Slack]
@@ -39,10 +38,8 @@ More information can be found in the [Chef Community Guidelines](https://github.
       title = "Chef Mailing List"
       advocates = [
         "coderanger",
-        "jjasghar",
         "nshamrell",
         "robbkidd",
-        "adamleff",
         "cheeseplus",
         "eeyun",
         "benr",
@@ -50,7 +47,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
         "mh",
         "btm",
         "nathenharvey",
-        "thommay",
         "tomduffield"
       ]
     [Org.Advocates.GitHub]
@@ -76,15 +72,14 @@ More information can be found in the [Chef Community Guidelines](https://github.
     [Org.Advocates.Reddit]
       title = "Chef_Opscode Reddit ([https://www.reddit.com/r/chef_opscode/](https://www.reddit.com/r/chef_opscode/))"
       advocates = [
-        "jjasghar"
+        "tas50"
       ]
-
 
 [people]
   [people.adamhjk]
     Name = "Adam Jacob"
     GitHub = "adamhjk"
-    IRC = "holoway"
+    Slack = "holoway"
 
   [people.lnxchk]
     Name = "Mandi Walls"
@@ -96,19 +91,19 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Name = "Nathen Harvey"
     GitHub = "nathenharvey"
     Twitter = "nathenharvey"
-    IRC = "nathenharvey"
+    Slack = "nathenharvey"
     email = "nharvey@chef.io"
     Phone = "+1-202-368-7264"
 
   [people.jonlives]
     Name = "Jon Cowie"
     GitHub = "jonlives"
-    IRC = "jonlives"
+    Slack = "jonlives"
 
   [people.zts]
     Name = "Zac Stevens"
     GitHub = "zts"
-    IRC = "zts"
+    Slack = "zts"
 
   [people.miketheman]
     Name = "Mike Fiedler"
@@ -120,14 +115,8 @@ More information can be found in the [Chef Community Guidelines](https://github.
     GitHub = "martinb3"
     StackOverflow = "http://stackoverflow.com/users/70665/martin"
     Twitter = "martinb3"
-    IRC = "martinb3"
+    Slack = "martinb3"
     email = "martin@mbs3.org"
-
-  [people.jjasghar]
-    Name = "JJ Asghar"
-    GitHub = "jjasghar"
-    Twitter = "jjasghar"
-    email = "jjasghar@chef.io"
 
   [people.nshamrell]
     Name = "Nell Shamrell"
@@ -149,12 +138,6 @@ More information can be found in the [Chef Community Guidelines](https://github.
     Slack = "robbkidd"
     email = "rkidd@chef.io"
 
-  [people.cwebberops]
-    Name = "Chris Webber"
-    GitHub = "cwebberops"
-    Twitter = "cwebber"
-    email = "cwebber@chef.io"
-
   [people.adamleff]
     Name = "Adam Leff"
     GitHub = "adamleff"
@@ -166,7 +149,7 @@ More information can be found in the [Chef Community Guidelines](https://github.
     GitHub = "cheeseplus"
     Twitter = "cheeseplus"
     Slack = "cheeseplus"
-    email = "cheeseplus@chef.io"
+    email = "seth.g.thomas@gmail.com"
 
   [people.eeyun]
     Name = "Ian Henry"

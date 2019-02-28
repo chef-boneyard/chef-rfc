@@ -1,7 +1,7 @@
 ---
 RFC: 76
 Title: Change Ohai version numbers to match Chef
-Author: Thom May <thom@chef.io>
+Author: Thom May <thom@may.lt>
 Status: Accepted
 Type: Process
 ---
