@@ -17,7 +17,7 @@ area they are currently lacking is in dealing with multi-team organizations.
 Currently each node can be attached to exactly one policy and one policy group.
 The organizational manifestation of this is generally that there needs to be a
 single "owner" for the policy of that node. This might be a CI tool like Jenkins
-or Chef Delivery, but in a lot of cases in the current workflow this will be the
+or Chef Workflow, but in a lot of cases in the current workflow this will be the
 team within the company that uses the machine most.
 
 This works great for the "owner" team, they can use all the power and
@@ -73,11 +73,26 @@ This could be done with the addition of a ```include_policy``` directive, an exa
 include_policy "base", git: "github.com/myorg/policies.git", path: "foo/bar/baz.lock.json"
 ```
 
-The ```include_policy``` directive will support three sources for policies: git, chef server, and a local path.
+The ```include_policy``` directive will support four sources for policies: `git`, Chef `server`, a `remote` URI, and a local `path`.
 
 To use a locked policy from a local path:
 ```
 include_policy "policy_name", path: "./foo/bar"
+```
+
+To use a locked policy from a local path with a specific revision id:
+```
+include_policy "policy_name", policy_revision_id: "abcdabcdabcd", path: "./foo/bar"
+```
+
+To use a locked policy from a remote URI:
+```
+include_policy "policy_name", remote: "https://internal.example.com/foo/bar"
+```
+
+To use a locked policy from a remote URI with a specific revision id:
+```
+include_policy "policy_name", policy_revision_id: "abcdabcdabcd", remote: "https://internal.example.com/foo/bar"
 ```
 
 To use a locked policy from a chef server with a specific revision id:
@@ -111,7 +126,7 @@ include_policy "policy_name", git: "github.com/chef/policy_example", sha: "abcd1
 
 When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, any cookbook locks, attributes and runlists from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed. Please see the "Merges and Conflicts" section for how duplicate or conflicting items in any of these categories are handled.
 
-When included policies come from a ```git``` source, the SHA of the commit at the time the included lockfile was first pulled into the parent (or the SHA optionally specified in the include directive itself) will be stored in the parent lockfile and used when the included Lockfile must be reprocessed. This ensures that only the policyfile for which the update command was called has changed. Similarly, when included policies come from a ```server``` source, the revision id of the included lockfile will be stored in the parent lockfile. In the event of policy files being included from a ```local``` source, this guarantee cannot be given and the latest Lockfile for the included policy will be used.
+When included policies come from a ```git``` source, the SHA of the commit at the time the included lockfile was first pulled into the parent (or the SHA optionally specified in the include directive itself) will be stored in the parent lockfile and used when the included Lockfile must be reprocessed. This ensures that only the policyfile for which the update command was called has changed. Similarly, when included policies come from a ```server``` source, the revision id of the included lockfile will be stored in the parent lockfile. In the event of policy files being included from a ```path``` or ```remote``` source, this guarantee cannot be given and the latest Lockfile for the included policy will be used. If the ```policy_revision_id``` is provided with the ```path``` or ```remote``` source, it will be used to validate the revision ID and fail if it does not match.
 
 Essentially what this means is that the parent .lock file is computed from the merging of the following:
 
@@ -122,9 +137,11 @@ The single fused lockfile produced by the above would then be uploaded to the Ch
 
 ## Problems
 
-The principal potential issue with this approach is that because we are pulling Policyfile elements from a number of included cookbooks, it is necessary for all included policy Lockfiles to be re-scanned upon regeneration of the parent Policyfile, so that the full set of Policyfile elements can be examined and merged. Although using the ```git``` source to include Policies will mean that the same commit SHA is used every time to rescan the included Lockfile and the ```server``` source will always ensure the same revision ID is used, when the ```local``` source is used we have to use whatever the current Lockfile present on disk is. This means that we cannot guarantee it has not changed since the last time it was scanned.
+The principal potential issue with this approach is that because we are pulling Policyfile elements from a number of included cookbooks, it is necessary for all included policy Lockfiles to be re-scanned upon regeneration of the parent Policyfile, so that the full set of Policyfile elements can be examined and merged. Although using the ```git``` source to include Policies will mean that the same commit SHA is used every time to rescan the included Lockfile and the ```server``` source will always ensure the same revision ID is used, when the ```path``` source is used we have to use whatever the current Lockfile present on disk is. This means that we cannot guarantee it has not changed since the last time it was scanned.
 
 A secondary problem with this approach is the question of how to handle conflicting cookbook locks, runlists or attributes, and the merging of non-conflicting items with the same name. The approach taken to solving this problem is detailed in the next section "Merges and Conflicts".
+
+A third problem with ```remote``` sources is that if the remote included policy references cookbooks from the `path` source option they will not be found and an error will be generated.
 
 ## Merges and Conflicts
 
@@ -133,7 +150,7 @@ Because the approach taken in this RFC permits one of more levels of policy incl
 * Merge - When a Policyfile element must be merged with another but *no* conflict is present
 * Conflict - When a Policyfile element must be merged with another but a conflict *is* present.
 
-In approaching this problem, I have  taken from the original intent of Policyfiles, which is very much that what you specify in a policyfile is what you should expect to get on your node.
+In approaching this problem, I have taken from the original intent of Policyfiles, which is very much that what you specify in a policyfile is what you should expect to get on your node.
 
 For that reason, this RFC recommends a very simple approach to merging policyfile elements and resolving conflicts.
 
@@ -193,7 +210,7 @@ Next, here we have the ```base.lock.json``` file we're including with the ```inc
           "version": "0.1.s"
         }
       }
-    }   
+    }
   },
   "default_attributes": {
     "base_config": {
@@ -266,7 +283,7 @@ Finally, after we've run ```chef update Myapp.rb```, here is the resulting merge
           "version": "1.7.0"
         }
       }
-    }   
+    }
   },
   "default_attributes": {
     "base_config": {
