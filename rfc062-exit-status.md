@@ -33,7 +33,7 @@ All exit codes defined should be usable on all supported Chef Platforms.  Also t
  * Any numbers below that have a strike-through are used below in the **Exit Codes in Use** section
  * Exit Codes Available for Chef use :
      * ~~35,37,40,41,42~~,43,44,45,46,47,48,49,79,81,90,91,92,93,94,95,96,97
-     * 98,99,115,116,168,169,172,175,176,177,178,179,181,184,185,204,211
+     * 98,99,115,116,168,169,~172~,175,176,177,178,179,181,184,185,204,211
      * ~~213~~,219,227,228,235,236,237,238,239,241,242,243,244,245
 
 ### Precedence
@@ -63,6 +63,7 @@ Exit Code        | Reason             | Details
 2                | SIGINT received    | Received an interrupt signal
 3                | SIGTERM received   | Received an terminate signal
 42               | Audit Mode Failure | Audit mode failed, but chef converged successfully.
+172              | License Acceptance | Failure accepting the Chef end user license agreement
 213              | Chef upgrade       | Chef has exited during a client upgrade
 
 * \*Next release should deprecate any use of this exit code.
