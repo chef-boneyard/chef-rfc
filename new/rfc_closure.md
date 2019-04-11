@@ -32,7 +32,7 @@ This policy RFC serves to close out the Chef RFC Process as it has been superced
 
 This PR closes out the Chef RFC process in favor of the processes outlined in our [Chef-OSS-Practices](https://github.com/chef/chef-oss-practices) repository. Those processes apply to not only Chef, but also InSpec, Habitat, and now Automate, which gives a single governance and community contract to all projects maintained by Chef Software.
 
-Once this RFC is accepted teams will beging the process of implementing the guidelines, which occurs the project level and also the repository level within projects.
+Once this RFC is accepted teams will begin the process of implementing the guidelines, which occurs at the project level and also the repository level within projects.
 
 **Project level:**
   - Establishing which repositories are included in a project
