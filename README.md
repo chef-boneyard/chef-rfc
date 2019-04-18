@@ -2,6 +2,12 @@
 
 The repository for proposals for major changes to Chef, Chef Server, and related public projects.
 
+**<-----DEPRECATED----->**
+
+This process has been superceded by the guidelines outlined in the https://github.com/chef/chef-oss-practices and no longer applies to Chef Software projects
+
+**<-----DEPRECATED----->**
+
 ## Usage
 
 Read [RFC000](https://github.com/chef/chef-rfc/blob/master/rfc000-rfc-process.md#submitting-an-rfc) for more information on how to submit an RFC and get it reviewed.
